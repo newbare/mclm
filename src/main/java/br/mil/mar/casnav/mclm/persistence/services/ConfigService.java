@@ -1,0 +1,68 @@
+package br.mil.mar.casnav.mclm.persistence.services;
+
+import br.mil.mar.casnav.mclm.misc.Configurator;
+import br.mil.mar.casnav.mclm.persistence.entity.Config;
+import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.InsertException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.UpdateException;
+import br.mil.mar.casnav.mclm.persistence.repository.ConfigRepository;
+
+public class ConfigService {
+	private ConfigRepository rep;
+	
+	public ConfigService() throws DatabaseConnectException {
+		this.rep = new ConfigRepository();
+	}
+	
+	public String getAsJson() throws Exception {
+		return "";
+	}
+
+	public void updateConfig(Config config) throws Exception {
+		Config oldConfig;
+
+		try {
+			oldConfig = rep.getConfig();
+		} catch ( Exception e) {
+			throw new UpdateException( e.getMessage() );
+		}		
+		
+		oldConfig.setBaseLayer( config.getBaseLayer() );
+		oldConfig.setGeoserverPassword( config.getGeoserverPassword() );
+		oldConfig.setGeoserverUrl( config.getGeoserverUrl() );
+		oldConfig.setGeoserverUser( config.getGeoserverUser() );
+		oldConfig.setNonProxyHosts( config.getNonProxyHosts() );
+		oldConfig.setProxyHost( config.getProxyHost() );
+		oldConfig.setProxyPassword( config.getProxyPassword() );
+		oldConfig.setProxyPort( config.getProxyPort() );
+		oldConfig.setProxyUser( config.getProxyUser() );
+		oldConfig.setUseProxy( config.isUseProxy() );
+		oldConfig.setExternalWorkspaceName( config.getExternalWorkspaceName() );
+		oldConfig.setExternalLayersToLocalServer( config.isExternalLayersToLocalServer() );
+
+		rep.newTransaction();
+		rep.updateConfig(oldConfig);
+		
+		Configurator cfg = Configurator.getInstance();
+		cfg.updateConfiguration(oldConfig);
+
+	}	
+
+	
+	public Config getConfig() throws Exception{
+		return rep.getConfig();
+	}
+
+	public void newTransaction() {
+		if ( !rep.isOpen() ) {
+			rep.newTransaction();
+		}
+	}
+	
+	public Config insertConfig(Config config) throws InsertException {
+		Config expRet = rep.insertConfig( config );
+		return expRet ;
+	}	
+
+
+}

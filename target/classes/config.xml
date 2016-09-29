@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+	
+	<mclm>
+		<databaseName>mclm</databaseName>
+		<userName>postgres</userName>
+		<password>admin</password>
+	</mclm>
+	
+</configuration>
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>MCLMv2.0</title>
+
+<!-- EXT JS -->
+<script type="text/javascript" src="extjs/ext-all.js"></script>
+<script type="text/javascript" src="extjs/classic/theme-gray/theme-gray.js"></script>
+<link rel="stylesheet" type="text/css" href="extjs/classic/theme-gray/resources/theme-gray-all.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
+<!-- OPENLAYERS -->
+<script type="text/javascript" src="js/openlayers3.15.js"></script>
+<link rel="stylesheet" href="css/openlayers3.15.css" type="text/css">
+
+<!-- JQUERY -->
+<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+
+<!-- INTERNO -->
+<script type="text/javascript" src="js/buttons.js"></script>
+<script type="text/javascript" src="js/layer-tree-store.js"></script>
+<script type="text/javascript" src="js/layer-tree-tree.js"></script>
+<script type="text/javascript" src="js/cenario-tree-store.js"></script>
+<script type="text/javascript" src="js/cenario-tree-tree.js"></script>
+<script type="text/javascript" src="js/painel-direito.js"></script>
+<script type="text/javascript" src="js/painel-esquerdo.js"></script>
+<script type="text/javascript" src="js/painel-inferior.js"></script>
+<script type="text/javascript" src="js/painel-central.js"></script>
+<script type="text/javascript" src="js/aba01.js"></script>
+<script type="text/javascript" src="js/aba02.js"></script>
+<script type="text/javascript" src="js/tips.js"></script>
+
+
+<script type="text/javascript">
+
+
+    Ext.Loader.setConfig({ 
+        enabled: true 
+    });
+    
+
+   Ext.onReady(function() {
+	   
+       Ext.create('Ext.tab.Panel', {
+           plugins: 'viewport',
+           items: [ aba01, aba02 ],
+		   renderTo : Ext.getBody()
+       });        	
+       
+       initTips();
+	         
+   });
+   
+</script>
+
+</head>
+<body></body>
+
+</html>
