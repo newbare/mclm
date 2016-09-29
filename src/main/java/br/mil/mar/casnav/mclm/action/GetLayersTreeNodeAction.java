@@ -1,13 +1,10 @@
 
 package br.mil.mar.casnav.mclm.action;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -15,9 +12,11 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import br.mil.mar.casnav.mclm.misc.PathFinder;
+import br.mil.mar.casnav.mclm.misc.TreeNode;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.services.NodeService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Action (value = "getLayersTreeNode", results = {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) } ) 
@@ -42,9 +41,16 @@ public class GetLayersTreeNodeAction extends BasicActionClass {
 			
 			NodeService ns = new NodeService();
 			Set<NodeData> nodes = ns.getList( idParent );
+			//List<TreeNode> treeNodes = new ArrayList<TreeNode>();
 			
-
-			String resp = "";
+			JSONArray arrayObj = new JSONArray();
+			for ( NodeData node : nodes ) {
+				TreeNode tn = new TreeNode( node );
+				JSONObject itemObj = JSONObject.fromObject( tn );
+	            arrayObj.add( itemObj );				
+			}
+			
+			String resp = arrayObj.toString();
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

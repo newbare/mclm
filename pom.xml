@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
   
 	<groupId>br.mil.mar.casnav</groupId>
-	<artifactId>proto01</artifactId>
+	<artifactId>mclm</artifactId>
 	<version>1.0</version>
 	<packaging>war</packaging>
-	<name>Prototipo 01</name>
+	<name>MCLM</name>
 	<url>http://zodiac.cmabreu.com.br</url>
 
 	<properties>
@@ -161,7 +161,7 @@
 
 	
 	<build>
-		<finalName>webomt</finalName>
+		<finalName>mclm</finalName>
 		<plugins>
 		
 			<plugin>

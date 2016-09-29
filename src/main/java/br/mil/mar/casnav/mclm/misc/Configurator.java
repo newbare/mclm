@@ -1,5 +1,7 @@
 package br.mil.mar.casnav.mclm.misc;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.Authenticator;
 import java.util.Properties;
@@ -135,6 +137,13 @@ public class Configurator {
 		return config;
 	}
 	
+	public String getRootFolder() throws Exception {
+		File f = new File( this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath() );
+		String rootFolder =  f.getAbsolutePath();
+		rootFolder = rootFolder.substring(0, rootFolder.lastIndexOf( File.separator ) + 1).replace(File.separator, "/");
+		return rootFolder;
+	}	
+	
 	public boolean isExternalLayersToLocalServer() {
 		return config.isExternalLayersToLocalServer();
 	}
@@ -147,46 +156,36 @@ public class Configurator {
 	}
 	
 	private Configurator(String file) throws Exception {
+		System.out.println("loading XML data from " + file );
+		
+		File fil = new File( file );
+		if ( !fil.exists() ) {
+			System.out.println("xml config file not found at folder");
+			System.out.println( file );
+			System.exit(0);
+		}
+		
 		try {
-			
-			// Load only database parameters...
-			InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
+			InputStream is = new FileInputStream( file ); 
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(is);
 			doc.getDocumentElement().normalize();
-			loadMainConfig();
 		} catch (Exception e) {
-			System.out.println("Error: XML file " + file + " not found.");
-		}			
+			e.printStackTrace();
+			System.out.println("XML file " + file + " not found.");
+		}		
 	}
 	
 	
 	public void loadMainConfig()  {
-		NodeList mapconfig = doc.getElementsByTagName("geoexplorer");
+		NodeList mapconfig = doc.getElementsByTagName("mclm");
 		Node mpconfig = mapconfig.item(0);
 		Element mpElement = (Element) mpconfig;
 		try {
-			
-			//firstDelayLimitSeconds = Long.valueOf( getTagValue("firstDelayLimitSeconds", mpElement) );
-			//CSVDelimiter = getTagValue("CSVDelimiter", mpElement).charAt(0);
-			
 			userName = getTagValue("userName", mpElement);
 			password = getTagValue("password", mpElement);
 			databaseName = getTagValue("databaseName", mpElement);
-
-			/*
-			geoserverUrl = getTagValue("geoserverUrl", mpElement);
-			baseLayer = getTagValue("baseLayer", mpElement);
-			useProxy = Boolean.valueOf( getTagValue("useProxy", mpElement).toLowerCase() );
-			proxyHost = getTagValue("proxyHost", mpElement);
-			proxyUser = getTagValue("proxyUser", mpElement);
-			proxyPassword = getTagValue("proxyPassword", mpElement);
-			geoserverUser = getTagValue("geoserverUser", mpElement);
-			geoserverPassword = getTagValue("geoserverPassword", mpElement);
-			proxyPort = Integer.valueOf( getTagValue("proxyPort", mpElement) );
-			*/
-			
 		} catch ( Exception e ) {
 			System.out.println( e.getMessage() );
 		}

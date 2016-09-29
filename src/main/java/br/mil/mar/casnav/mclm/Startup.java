@@ -40,7 +40,7 @@ public class Startup implements ServletContextListener {
     	try {
        
     		
-    		String configFile = path + "/WEB-INF/classes/config.xml";
+    		String configFile = path + "WEB-INF/classes/config.xml";
 			Configurator config = Configurator.getInstance( configFile );
 			config.loadMainConfig();
 			
