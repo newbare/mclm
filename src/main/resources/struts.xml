@@ -7,35 +7,13 @@
 	<constant name="struts.devMode" value="false" />
 	<constant name="struts.multipart.maxSize" value="20971520" />
 	
-	<constant name="struts.action.excludePattern" value="/websocket/[a-zA-Z_0-9]*"/>
-	 
-	<package name="chart" extends="jfreechart-default" >
-	 	<interceptors> 
-			<interceptor name="autorizador" class="br.mil.mar.casnav.mclm.interceptor.ClientAccessInterceptor" />
 
-			<interceptor-stack name="seguranca">  
-				<interceptor-ref name="autorizador" />
-				<interceptor-ref name="defaultStack" />
-			</interceptor-stack>
-			
-		</interceptors>
-
-		<global-results>
-			<result name="notLogged">/index.jsp</result> 
-		</global-results>
-		
-	</package> 
-	 
 	<package name="default" extends="struts-default">
 	
 	 	<interceptors> 
 			<interceptor name="autorizador" class="br.mil.mar.casnav.mclm.interceptor.ClientAccessInterceptor" />
 			
 			<interceptor-stack name="seguranca">  
-				<interceptor-ref name="fileUpload">
-				    <param name="maximumSize">268435456000000</param>
-				</interceptor-ref>			
-			
 				<interceptor-ref name="autorizador" />
 				<interceptor-ref name="defaultStack" />
 			</interceptor-stack>

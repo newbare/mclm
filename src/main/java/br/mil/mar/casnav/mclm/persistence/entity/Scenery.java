@@ -66,12 +66,15 @@ public class Scenery {
 	}
     
     public boolean isNodeInThisScenery( int nodeId ) {
+    	/*
     	for ( SceneryLayer layer : layers ) {
     		if ( layer.getNode().getIdNode() == nodeId ) return true;
     	}
+    	*/
     	return false;
     }
     
+    /*
     public void addNode( Node node ) {
     	SceneryLayer sl = new SceneryLayer();
     	sl.setScenery( this );
@@ -88,7 +91,7 @@ public class Scenery {
     		}
     	}
     }
-    
+    */
 	public boolean isActive() {
 		return active;
 	}

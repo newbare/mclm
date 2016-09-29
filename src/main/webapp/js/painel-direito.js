@@ -2,9 +2,9 @@ var painelDireito = {
     region:'east',
     floatable: true,
     margin: '0 0 0 0',
-    width: 50,
-    minWidth: 50,
-    maxWidth: 60,
+    width: 40,
+    minWidth: 40,
+    maxWidth: 50,
     collapsed: false,
     collapsible: false,
     items : [{

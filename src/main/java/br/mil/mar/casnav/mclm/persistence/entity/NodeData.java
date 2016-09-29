@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="node_data") 
@@ -18,7 +19,13 @@ public class NodeData {
 
 	@Column(name="id_node_parent")
 	private int idNodeParent;
+
+	@Column(name="index_order")
+	private int indexOrder;	
 	
+	@Transient
+	private int children;
+
 	@Column(length=250)
 	private String serviceUrl;
 	
@@ -88,6 +95,14 @@ public class NodeData {
 
 	public void setIdNodeParent(int idNodeParent) {
 		this.idNodeParent = idNodeParent;
+	}
+
+	public int getChildren() {
+		return children;
+	}
+
+	public void setChildren(int children) {
+		this.children = children;
 	}
 	
 }

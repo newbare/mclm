@@ -1,7 +1,7 @@
 var aba01 = {
     xtype : 'panel',
     layout: 'border',
-    title: 'Painel 01',
+    title: 'Mapa',
     bodyBorder: false,
     defaults: {
         collapsible: true,

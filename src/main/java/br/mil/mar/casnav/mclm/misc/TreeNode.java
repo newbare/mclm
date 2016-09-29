@@ -1,20 +1,31 @@
 package br.mil.mar.casnav.mclm.misc;
 
-import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
-
 public class TreeNode {
 	private String id;
-	private String leaf;
+	private boolean leaf;
 	private String Cls;
-	private String selected;
+	private boolean checked;
 	private String text;
+	private String serviceUrl;
+	private String originalServiceUrl;
+	private String layerName;
+	private int index;
+	private int idNodeParent;
 	
-	public TreeNode( NodeData data ) {
-		this.id = String.valueOf( data.getIdNodeData() );
-		this.leaf = "false";
-		this.selected = "false";
+	public TreeNode( UserTableEntity ute ) {
+		int children = Integer.valueOf( ute.getData("children") );
+
+		this.idNodeParent = Integer.valueOf( ute.getData("id_node_parent") );
+		this.index = Integer.valueOf( ute.getData("index_order") );
+		this.layerName = ute.getData("layername");
+		this.originalServiceUrl = ute.getData("originalserviceurl");
+		this.serviceUrl = ute.getData("serviceurl");		
+		
+		this.id = ute.getData("id_node_data");
+		this.leaf = children == 0;
+		this.checked = false;
 		this.Cls = "";
-		this.text = data.getLayerAlias();
+		this.text =  ute.getData("layeralias");
 	}
 
 	public String getText() {
@@ -34,14 +45,6 @@ public class TreeNode {
 		this.id = id;
 	}
 
-	public String getLeaf() {
-		return leaf;
-	}
-
-	public void setLeaf(String leaf) {
-		this.leaf = leaf;
-	}
-
 	public String getCls() {
 		return Cls;
 	}
@@ -50,14 +53,62 @@ public class TreeNode {
 		Cls = cls;
 	}
 
-	public String getSelected() {
-		return selected;
+	public boolean isLeaf() {
+		return leaf;
 	}
 
-	public void setSelected(String selected) {
-		this.selected = selected;
+	public void setLeaf(boolean leaf) {
+		this.leaf = leaf;
 	}
-	
-	
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
+	public String getServiceUrl() {
+		return serviceUrl;
+	}
+
+	public void setServiceUrl(String serviceUrl) {
+		this.serviceUrl = serviceUrl;
+	}
+
+	public String getOriginalServiceUrl() {
+		return originalServiceUrl;
+	}
+
+	public void setOriginalServiceUrl(String originalServiceUrl) {
+		this.originalServiceUrl = originalServiceUrl;
+	}
+
+	public String getLayerName() {
+		return layerName;
+	}
+
+	public void setLayerName(String layerName) {
+		this.layerName = layerName;
+	}
+
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public int getIdNodeParent() {
+		return idNodeParent;
+	}
+
+	public void setIdNodeParent(int idNodeParent) {
+		this.idNodeParent = idNodeParent;
+	}
+
 	
 }

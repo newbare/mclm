@@ -3,7 +3,6 @@ package br.mil.mar.casnav.mclm.persistence.services;
 import java.util.Set;
 
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
-import br.mil.mar.casnav.mclm.persistence.entity.SceneryLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.User;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
@@ -41,6 +40,7 @@ public class SceneryService {
 	}
 	
 	public void clone( int idScenery, String sceneryName, String mapCenter, String zoomLevel, User user ) throws Exception {
+		/*
 		Scenery source = getScenery(idScenery);
 		Scenery target = new Scenery();
 		
@@ -63,10 +63,11 @@ public class SceneryService {
 		
 		user.addScenery( target );
 		user.deactivateScenery( source );
-
+	*/
 	}
 	
 	public void updateScenery(Scenery scenery) throws UpdateException {
+		/*
 		Scenery oldScenery;
 
 		try {
@@ -88,7 +89,7 @@ public class SceneryService {
 
 		rep.newTransaction();
 		rep.updateScenery(oldScenery);
-
+	*/
 	}	
 
 	public Scenery getScenery(int idScenery) throws Exception{

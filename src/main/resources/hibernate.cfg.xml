@@ -28,7 +28,6 @@
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.User"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Config"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.NodeData"/>
-		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Node"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Scenery"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.SceneryLayer"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Server"/>		

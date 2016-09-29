@@ -3,13 +3,13 @@ var cenarioTree = Ext.create('Ext.tree.Panel', {
 	xtype: 'tree-grid',
     columns: [{
         xtype: 'treecolumn', 
-        text: 'Task',
+        text: 'Nome',
         dataIndex: 'text',
         flex: 2,
         sortable: true
     }, {
-        text: 'Duration',
-        dataIndex: 'id',
+        text: 'Origem',
+        dataIndex: 'layerName',
         flex: 1,
         sortable: true,
         align: 'center'
@@ -46,6 +46,7 @@ function cenarioTreeItemClick(view, record, item, index, e ) {
 	
     Ext.Msg.alert('Clicked on a Tree Node', 
         'Node id: ' + record.get('id') + '\n' +
+        'Node index: ' + record.get('index') + '\n' +
         'Node Text: ' + record.get('text') + '\n' +
         'Parent Node id: ' + record.get('parentId') + '\n' +
         'Is it a leaf?: ' + record.get('leaf') + '\n' +

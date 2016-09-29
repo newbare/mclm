@@ -14,16 +14,18 @@ public class NodeRepository extends BasicRepository {
 		super();
 	}
 
-	public Set<NodeData> getList( int idParent ) throws Exception {
+	public Set<NodeData> getList( ) throws Exception {
 		DaoFactory<NodeData> df = new DaoFactory<NodeData>();
 		IDao<NodeData> fm = df.getDao(this.session, NodeData.class);
 		Set<NodeData> node = null;
+		
 		try {
-			node = new HashSet<NodeData>( fm.getList("select * from node_data where id_node_parent = " + idParent ) );
+			node = new HashSet<NodeData>( fm.getList("select * from node_data" ) );
 		} catch ( Exception e ) {
 			closeSession();
 			throw e;
 		}
+		
 		closeSession();
 		return node;
 	}

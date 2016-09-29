@@ -10,9 +10,6 @@ import java.util.Map;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.WebClient;
-import br.mil.mar.casnav.mclm.persistence.entity.Node;
-import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
-import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 
 public class LayerService {
 	

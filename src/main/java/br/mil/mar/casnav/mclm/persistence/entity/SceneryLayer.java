@@ -25,21 +25,14 @@ public class SceneryLayer {
 	@Column
 	private int transparency = 1;
 	
+	
 	@ManyToOne()
 	@JoinColumn(name="id_node", foreignKey = @ForeignKey(name = "fk_scenery_layer_node"))
-	private Node node;
+	private NodeData node;
 	
 	@ManyToOne()
 	@JoinColumn(name="id_scenery", foreignKey = @ForeignKey(name = "fk_scenery_layer_scenery"))
 	private Scenery scenery;	
-	
-	public Node getNode() {
-		return node;
-	}
-	
-	public void setNode(Node node) {
-		this.node = node;
-	}
 	
 	public Scenery getScenery() {
 		return scenery;

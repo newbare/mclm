@@ -1,7 +1,7 @@
-.map-icon {
-	background-image: url('../img/worldwide.svg') !important; 
+.setting-icon {
+	background-image: url('../img/settings.svg') !important; 
 }
 
-.image-icon {
-	background-image: url('../img/image.svg') !important; 
+.server-icon {
+	background-image: url('../img/servers.svg') !important;
 }

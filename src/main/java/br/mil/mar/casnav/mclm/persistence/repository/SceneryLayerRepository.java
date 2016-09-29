@@ -3,7 +3,6 @@ package br.mil.mar.casnav.mclm.persistence.repository;
 import java.util.HashSet;
 import java.util.Set;
 
-import br.mil.mar.casnav.mclm.persistence.entity.Node;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryLayer;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
@@ -35,6 +34,7 @@ public class SceneryLayerRepository extends BasicRepository {
 
 	
 	public void insertSceneryLayerList(Set<SceneryLayer> sceneryLayerList) throws Exception {
+		/*
 		DaoFactory<SceneryLayer> df = new DaoFactory<SceneryLayer>();
 		IDao<SceneryLayer> fm = df.getDao(this.session, SceneryLayer.class);
 
@@ -62,6 +62,7 @@ public class SceneryLayerRepository extends BasicRepository {
 			throw e;
 		}
 		closeSession();
+		*/
 	}
 	
 	
