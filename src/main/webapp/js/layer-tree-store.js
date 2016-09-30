@@ -10,7 +10,6 @@
 var layerStore = Ext.create('Ext.data.TreeStore', {
 	autoSync:true,
 	fields: [
-	            
 	            { name: 'index', type: 'int' },
 	            { name: 'text', type: 'string' },
 	            { name: 'serviceUrl', type: 'string' },
@@ -19,13 +18,19 @@ var layerStore = Ext.create('Ext.data.TreeStore', {
 	         ],
 	proxy: {
         type: 'ajax',
-        url: 'getLayersTreeNode',
         reader: {
             type: 'json'
+        }, 
+        api: {
+            read: 'getLayersTreeNode',
+            create: 'createLayersTreeNode',
+            update: 'updateLayersTreeNode',
+            destroy: 'destroyLayersTreeNode'
         },        
         writer: {
             type:'json',
             allowSingle:false,
+            writeAllFields : false,
             encode:true,
             rootProperty:'data'
         }        
@@ -36,11 +41,6 @@ var layerStore = Ext.create('Ext.data.TreeStore', {
         id: 0,
         index:0,
         expanded: true
-    },
-    listeners : {
-        write: function(store, operation, opts){
-        	alert("Fired!");
-        }
     }
     
 });

@@ -24,7 +24,6 @@ var buttons = [{
 	    width: btnWidth,
 	    height: btnHeight,
 	    iconCls: 'server-icon',
-        tooltip: 'This is a an example QuickTip for a toolbar item',
         handler: function() {
             alert("Ai");
         }       

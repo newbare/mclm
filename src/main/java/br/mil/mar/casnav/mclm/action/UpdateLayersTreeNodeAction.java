@@ -10,32 +10,20 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import br.mil.mar.casnav.mclm.persistence.services.NodeService;
-
-@Action (value = "getLayersTreeNode", results = {  
+@Action (value = "updateLayersTreeNode", results = {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) } ) 
 
 @ParentPackage("default")
-public class GetLayersTreeNodeAction extends BasicActionClass {
-	private String node;
+public class UpdateLayersTreeNodeAction extends BasicActionClass {
+	private String data;
 	
 	public String execute () {
 
-		System.out.println("CALL DETECTED ! Node = " + node );
+		System.out.println("CALL DETECTED :  Data=" + data);
 
 		String resp = "";
 		
 		try {
-			int idParent = 0;
-			try {
-				idParent = Integer.valueOf( node );
-				NodeService ns = new NodeService();
-				resp = ns.getNodesAsJSON( idParent );
-				System.out.println( resp );
-			} catch ( Exception e ) {
-				//
-			}
-			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.setContentType("application/json");
@@ -47,10 +35,10 @@ public class GetLayersTreeNodeAction extends BasicActionClass {
 		return "ok";
 	}
 
-	public void setNode(String node) {
-		this.node = node;
+	public void setData(String data) {
+		this.data = data;
 	}
 	
-
+	
 
 }

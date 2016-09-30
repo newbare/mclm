@@ -15,6 +15,12 @@ function initTips() {
       text: 'Configura aspectos gerais do sistema.',
       width: 150,
       dismissDelay: 5000 
+    }, {
+        target: 'id112',
+        title: 'Fonte de Dados',
+        text: 'Gerencia os servidores de fontes de mapas.',
+        width: 150,
+        dismissDelay: 5000 
     });	
 	
 }

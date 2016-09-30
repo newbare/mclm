@@ -7,7 +7,7 @@ var layerTree = Ext.create('Ext.tree.Panel', {
     },
     scrollable: true,
     scroll: 'both',
-    height: 350,
+    //height: 350,
     width: 300,
     flex:1,
     useArrows: true,
@@ -63,8 +63,7 @@ function layerTreeItemClick(view, record, item, index, e ) {
 }
 
 function layerTreeExpandir() {
-	layerStore.save();
-	//layerTree.expandAll();
+	layerTree.expandAll();
 }
 
 function layerTreeRecolher() {
