@@ -21,7 +21,7 @@ public class GetLayersTreeNodeAction extends BasicActionClass {
 	
 	public String execute () {
 
-		System.out.println("CALL DETECTED ! Node = " + node );
+		System.out.println("Enviar filhos do nó " + node );
 
 		String resp = "";
 		

@@ -32,19 +32,18 @@ public class NodeData {
 	@Column(length=250)
 	private String originalServiceUrl;
 
+	@Column(length=250)
+	private String description;
+	
+	@Column(length=250)
+	private String institute;
+	
 	@Column(length=100)
 	private String layerName;
 	
 	@Column(length=50)
 	private String layerAlias;
 	
-	public NodeData( String serviceUrl, String layerName, String layerAlias, String originalServiceUrl ) {
-		this.serviceUrl = serviceUrl;
-		this.layerName = layerName;
-		this.layerAlias = layerAlias;
-		this.originalServiceUrl = originalServiceUrl;
-	}
-
 	public NodeData() {
 		// TODO Auto-generated constructor stub
 	}
@@ -103,6 +102,30 @@ public class NodeData {
 
 	public void setChildren(int children) {
 		this.children = children;
+	}
+
+	public int getIndexOrder() {
+		return indexOrder;
+	}
+
+	public void setIndexOrder(int indexOrder) {
+		this.indexOrder = indexOrder;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getInstitute() {
+		return institute;
+	}
+
+	public void setInstitute(String institute) {
+		this.institute = institute;
 	}
 	
 }

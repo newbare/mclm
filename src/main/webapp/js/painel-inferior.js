@@ -6,5 +6,5 @@ var painelInferior = {
     maxHeight: 150,
     collapsed: true,
     animCollapse: false,            	            
-    html: '<p>Footer content</p>'
+    html: '<div id="pointerCoordinates"></div>'
 };

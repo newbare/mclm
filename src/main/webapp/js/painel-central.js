@@ -18,24 +18,9 @@ var painelCentral = {
 }
 
 function drawMap( owner ) {
-	var ownerId = owner.body.dom.id;
-	
-    osmLayer = new ol.layer.Tile({
-      source: new ol.source.OSM()
-    }),
-
-    city = ol.proj.transform([-24.9609375,-20.303417518489297], 'EPSG:4326', 'EPSG:3857'),
-
-    view = new ol.View({
-      center: city,
-      zoom: 4
-    });
-
-    map = new ol.Map({
-        target: ownerId,
-        renderer: 'canvas',
-        layers: [osmLayer],
-        view: view
-    });  
+	var container = owner.body.dom.id;
+	// loadMap('${geoserverUrl}', '${baseLayer}', '${activeScenery.zoomLevel}', '${activeScenery.mapCenter}', '${activeScenery.graticule}');
+	// loadMap( container, geoserver, baseLayer, theMapZoom, mapCenter, graticuleStatus )
+	loadMap(container,"http://10.5.115.122/geoserver/osm/wms","osm:AA_OpenStreetMap", 3, "-24.9609375,-20.303417518489297",false);
 }
 

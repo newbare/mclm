@@ -5,7 +5,7 @@ var cenarioStore = Ext.create('Ext.data.TreeStore', {
     },
     root: {
         text: 'Cenarios',
-        id: '000',
+        id: '0',
         expanded: true
     },
     folderSort: true,

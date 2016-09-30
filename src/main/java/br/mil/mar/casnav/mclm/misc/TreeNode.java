@@ -9,6 +9,9 @@ public class TreeNode {
 	private String serviceUrl;
 	private String originalServiceUrl;
 	private String layerName;
+	private String description;
+	private String institute;
+	private String layerAlias;
 	private int index;
 	private int idNodeParent;
 	
@@ -20,6 +23,9 @@ public class TreeNode {
 		this.layerName = ute.getData("layername");
 		this.originalServiceUrl = ute.getData("originalserviceurl");
 		this.serviceUrl = ute.getData("serviceurl");		
+		this.description = ute.getData("description");		
+		this.institute = ute.getData("institute");		
+		this.layerAlias = ute.getData("layeralias");		
 		
 		this.id = ute.getData("id_node_data");
 		this.leaf = children == 0;
@@ -108,6 +114,30 @@ public class TreeNode {
 
 	public void setIdNodeParent(int idNodeParent) {
 		this.idNodeParent = idNodeParent;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getInstitute() {
+		return institute;
+	}
+
+	public void setInstitute(String institute) {
+		this.institute = institute;
+	}
+
+	public String getLayerAlias() {
+		return layerAlias;
+	}
+
+	public void setLayerAlias(String layerAlias) {
+		this.layerAlias = layerAlias;
 	}
 
 	

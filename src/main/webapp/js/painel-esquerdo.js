@@ -1,3 +1,22 @@
+var layerTreeDetails = Ext.create('Ext.form.Panel', {
+   frame: true,
+   title: 'Form Fields',
+   width: 300,
+   items: [{
+	      xtype: 'displayfield', 
+	      name: 'serviceUrl',
+	      fieldLabel: 'serviceUrl',
+	      value: ''
+	   },{
+	      xtype: 'displayfield', 
+	      name: 'description',
+	      fieldLabel: 'description',
+	      value: ''
+	   }
+	]
+});
+
+
 var painelEsquerdo = {
     title: 'Camadas',
     region:'west',
@@ -8,11 +27,6 @@ var painelEsquerdo = {
     maxWidth: 300,
     collapsed: false,
     animCollapse: false,            	            
-    items : [
-		{
-			xtype: layerTree,
-			margin: '0 0 0 0'
-		}
-	]
+    items : [{ xtype: layerTree }, { xtype:layerTreeDetails } ]
 } 
 
