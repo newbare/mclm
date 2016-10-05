@@ -28,7 +28,12 @@ public class TreeNode {
 		this.layerAlias = ute.getData("layeralias");		
 		
 		this.id = ute.getData("id_node_data");
-		this.leaf = children == 0;
+		this.leaf = ( children == 0 );
+		
+		if ( this.layerName == null || this.layerName.equals("") ) {
+			this.leaf = false;
+		}
+		
 		this.checked = false;
 		this.Cls = "";
 		this.text =  ute.getData("layeralias");

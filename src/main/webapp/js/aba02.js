@@ -1,7 +1,8 @@
-var aba02 = {
+var aba02 =  new Ext.Panel({
     xtype : 'panel',
     layout: 'border',
     title: 'Painel 02',
+    id:'aba02',
     bodyBorder: false,
     defaults: {
         collapsible: true,
@@ -12,4 +13,4 @@ var aba02 = {
 		xtype: cenarioTree,
 		margin: '0 0 0 0'
 	}
-}
+});

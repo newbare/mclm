@@ -15,6 +15,7 @@ var mapZoom = 5;
 var mapCenterLat = 0;
 var mapCenterLong = 0;	
 
+var mainConfig = null;
 
 // Interactions
 var dragRotateAndZoomInteraction = null;
@@ -40,6 +41,7 @@ var params = {
 
 var geoserverUrl = '';
 
+/*
 function panTo( lat, lon ) {
 	// panTo(-0.12755, 51.507222); ( Londres )
 	var coordinate = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');
@@ -50,34 +52,50 @@ function panTo( lat, lon ) {
 	map.beforeRender(pan);
 	theView.setCenter( coordinate );	
 }
+*/
 
 
 function unbindMapClick() {
 	if ( onClickBindKey ) {
-		clearRoutingLayer();
-		removeMapillaryLayer();
 		map.unByKey( onClickBindKey );
-		$("#clearRouting").css("display","none");
 	}
 }
 
 function updateMapCenter() {
 	var center = map.getView().getCenter();
 	var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
-	
 	mapCenterLong = center2[0];
 	mapCenterLat = center2[1];
-	
 	mapZoom = map.getView().getZoom();
 }
 
-function loadMap(container, geoserver, baseLayer, theMapZoom, mapCenter, graticuleStatus ) {
-	geoserverUrl = geoserver;
-	mapZoom = theMapZoom;
+/* 
+ * Cria o mapa no painel central baseado nas configuracoes recebidas pelo ajax do arquivo index.html.
+ * 
+ * {	
+ * 		"baseLayer":"osm:AA_OpenStreetMap","proxyPassword":"senha","useProxy":true,"externalWorkspaceName":"external",
+ * 		"proxyHost":"proxy-i2a.mb","proxyPort":6060,"nonProxyHosts":"localhost|127.0.0.1|10.5.115.22|172.21.81.43|10.5.115.122",
+ * 		"idConfig":1,"geoserverPassword":"senha","externalLayersToLocalServer":false,"proxyUser":"user",
+ * 		"geoserverUrl":"http://10.5.115.122/geoserver","geoserverUser":"admin"
+ * }
+ *  
+ */
+
+function loadMap(container, config ) {
+	mainConfig = config;
+
+	geoserverUrl = config.geoserverUrl;
+	baseLayer = config.baseLayer;
+	
+	// Deveria vir pelo cenario ativo do usuário...
+	mapZoom = 5; 
+	mapCenter = "-24.9609375,-20.303417518489297";
+	graticuleStatus = false;
+	// =======================================
+
 	
 	arrayMapCenter = JSON.parse("[" + mapCenter + "]");
 
-	// *********************************************
 	var landLayer = new ol.layer.Tile({
 	    source: new ol.source.TileWMS({
 	        url: geoserverUrl,
@@ -93,25 +111,14 @@ function loadMap(container, geoserver, baseLayer, theMapZoom, mapCenter, graticu
 	
 	bindTileEvent( landLayer );
 
-	//***********************************************
-	
-	var routesLayer = new ol.layer.Vector({
-		source: new ol.source.Vector({
-			features: [startPoint, destPoint]
-		})
-	});
-	
-	
-	
-	//************************************************
-    
+   
 	theView = new ol.View({
 		center: ol.proj.transform(arrayMapCenter, 'EPSG:4326', 'EPSG:3857'),
 		zoom: mapZoom
 	})
 	
 	map = new ol.Map({
-		layers: [ landLayer, routesLayer ],
+		layers: [ landLayer ],
 		target: container,
 		renderer: 'canvas',
 	    loadTilesWhileAnimating: true,
@@ -126,7 +133,6 @@ function loadMap(container, geoserver, baseLayer, theMapZoom, mapCenter, graticu
             	   var coord = ol.coordinate.toStringHDMS( coordinate );
             	   $("#pointerCoordinates").text( coord );
             	   return coord;
-                   //return ol.coordinate.format(coordinate, '{y}, {x}', 4);
                }
            })
         
@@ -134,8 +140,6 @@ function loadMap(container, geoserver, baseLayer, theMapZoom, mapCenter, graticu
 		view: theView
 	});
 	
-	
-	/*
 	map.getView().on('propertychange', function(e) {
 		switch (e.key) {  
 			case 'center':
@@ -143,11 +147,11 @@ function loadMap(container, geoserver, baseLayer, theMapZoom, mapCenter, graticu
 				break;
 			case 'resolution':  
 				updateMapCenter();
-				updateMapillary();
 				break;  
 		}
 	});	
 	
+	/*
 	if ( graticuleStatus == 'true' ) {
 		graticule.setMap( map );
 		graticuleEnabled = true;
@@ -168,21 +172,21 @@ function bindTileEvent( layer ) {
 		
 		layer.getSource().on('tileloadstart', function(event) {
 			//console.log("tile '"+layerName+"' load start");
-			$("#" + layerId).css("display","block");
-			$("#" + layerId + "2").css("display","none");
+			//$("#" + layerId).css("display","block");
+			//$("#" + layerId + "2").css("display","none");
 			showMainLoader();
 		});
 	
 		layer.getSource().on('tileloadend', function(event) {
 			//console.log("tile '"+layerName+"' load end");
-			$("#" + layerId).css("display","none");
-			$("#" + layerId + "2").css("display","none");
+			//$("#" + layerId).css("display","none");
+			//$("#" + layerId + "2").css("display","none");
 			hideMainLoader();
 		});
 		
 		layer.getSource().on('tileloaderror', function(event) {
-			$("#" + layerId).css("display","none");
-			$("#" + layerId + "2").css("display","block");
+			//$("#" + layerId).css("display","none");
+			//$("#" + layerId + "2").css("display","block");
 			hideMainLoader();
 		});
 	}
@@ -196,7 +200,6 @@ function showMainLoader() {
 function hideMainLoader() {
 	
 }
-
 
 function addLayer( serverUrl, serverLayers, layerName ) {
 	

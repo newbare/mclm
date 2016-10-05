@@ -1,5 +1,7 @@
 package br.mil.mar.casnav.mclm.persistence.services;
 
+import org.json.JSONObject;
+
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -15,7 +17,9 @@ public class ConfigService {
 	}
 	
 	public String getAsJson() throws Exception {
-		return "";
+		Config cfg = getConfig();
+		JSONObject itemObj = new JSONObject( cfg );
+		return itemObj.toString();
 	}
 
 	public void updateConfig(Config config) throws Exception {

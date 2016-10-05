@@ -58,16 +58,44 @@
 	    
 	
 	   Ext.onReady(function() {
+
+		   Ext.Ajax.request({
+               url: 'getConfig',
+               success: function(response, opts) {
+                  var config = Ext.decode(response.responseText);
+                  runSystem( config );
+               },
+               failure: function(response, opts) {
+            	   Ext.Msg.alert('Erro ao receber a configuração so servidor' );
+               }
+            });		   
+		   
+		         
+	   });
+
+	   
+	   function runSystem( config ) {
 		   
 	       Ext.create('Ext.tab.Panel', {
 	           plugins: 'viewport',
 	           items: [ aba01, aba02 ],
-			   renderTo : Ext.getBody()
-	       });        	
+			   renderTo : Ext.getBody(),
+			   listeners:{
+			    	afterrender:function(){
+			    		drawMap( config )
+			        }
+			   } 			   
+	       });      
 	       
 	       initTips();
-		         
-	   });
+	       
+	   }
+	   
+	   
+	   function drawMap( config ) {
+			var container = painelCentral.body.dom.id;
+			loadMap( container, config ); 
+		}	   
 	   
 	</script>
 

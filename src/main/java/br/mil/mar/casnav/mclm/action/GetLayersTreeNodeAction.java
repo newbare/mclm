@@ -21,8 +21,6 @@ public class GetLayersTreeNodeAction extends BasicActionClass {
 	
 	public String execute () {
 
-		System.out.println("Enviar filhos do nó " + node );
-
 		String resp = "";
 		
 		try {

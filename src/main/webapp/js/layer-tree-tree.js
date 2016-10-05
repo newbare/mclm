@@ -1,10 +1,11 @@
 /*
  * Arvore de Camadas
  * Usa: 
- * 		layer-tree-store.js
+ * 		layer-tree-store.js para implementar "layerStore"
  * 
  * O Store solicita ao servidor os nos que sao filhos do 
- * no raiz "Camadas" criado no atributo "root" ( ID=0 ).
+ * no raiz "Camadas" criado no atributo "root" ( ID=0 )
+ * no store (layer-tree-store.js)
  * 
  * O atributo "rootVisible: false" abaixo faz com que o root
  * nao seja exibido.
@@ -58,11 +59,34 @@ var layerTree = Ext.create('Ext.tree.Panel', {
     }],
     listeners: {
     	itemclick: layerTreeItemClick,
-        checkchange: layerTreeCheckChange
+        checkchange: layerTreeCheckChange,
+        itemcontextmenu: contextMenu
+       
     }
     
 });
 
+function contextMenu(tree, record, item, index, e, eOpts ) {
+	
+    var menu_grid = new Ext.menu.Menu({ 
+    	items: [
+          { text: 'Adicionar Pasta', handler: function() { addFolderUnderNode(record.data); } },
+          { text: 'Apagar', handler: function() { deleteNodeAndChildren( node ); } }
+        ]
+    });
+    
+    var position = [e.getX()-10, e.getY()-10];
+    e.stopEvent();
+    menu_grid.showAt( position );
+}
+
+function addFolderUnderNode( node ) {
+	Ext.Msg.alert( node.id + " " + node.layerAlias );
+}
+
+function deleteNodeAndChildren( node ) {
+	Ext.Msg.alert( node.id + " " + node.layerAlias );
+}
 
 function layerTreeItemClick(view, record, item, index, e ) {
 	layerTreeDetails.getForm().setValues( item.attributes );

@@ -1,5 +1,13 @@
-var layerTreeDetails = Ext.create('Ext.form.Panel', {
+/*
+ * Monta o painel esquerdo da aba principal.
+ * Eh chamado pelo arquivo aba01.js
+ * 
+ * Precisa do arquivo layer-tree-tree.js para implementar "layerTree".
+ */
+
+var layerTreeDetails =  new Ext.Panel({
    frame: true,
+   id:'layerTreeDetails',
    title: 'Form Fields',
    width: 300,
    items: [{
@@ -17,7 +25,7 @@ var layerTreeDetails = Ext.create('Ext.form.Panel', {
 });
 
 
-var painelEsquerdo = {
+var painelEsquerdo =  new Ext.Panel({
     title: 'Camadas',
     region:'west',
     floatable: true,
@@ -27,6 +35,6 @@ var painelEsquerdo = {
     maxWidth: 300,
     collapsed: false,
     animCollapse: false,            	            
-    items : [{ xtype: layerTree }, { xtype:layerTreeDetails } ]
-} 
+    items : [layerTree, layerTreeDetails]
+});
 

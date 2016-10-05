@@ -38,12 +38,12 @@ public class NodeData {
 	@Column(length=250)
 	private String institute;
 	
-	@Column(length=100)
+	@Column(length=150)
 	private String layerName;
 	
-	@Column(length=50)
+	@Column(length=150)
 	private String layerAlias;
-	
+
 	public NodeData() {
 		// TODO Auto-generated constructor stub
 	}

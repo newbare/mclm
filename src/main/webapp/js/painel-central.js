@@ -1,26 +1,28 @@
+/*
+ * 
+ * Monta o painel central da aba 01
+ * que contem o mapa.
+ * Eh chamado pelo arquivo aba01.js
+ * Precisa das configuracoes recebidas pelo Ajax efetuado
+ * no arquivo index.html ( getConfig ).
+ * 
+ */
+
 var map = null;
 
-var painelCentral = {
+
+var painelCentral = new Ext.Panel({
    collapsible: false,
    region: 'center',
    margin: '0 0 0 0',
    layout:'fit',
-
+   id: 'painelCentral',
    xtype:'panel',
    listeners:{
-    	afterrender:function(){
-    		drawMap( this );
-        },
         resize: function () {
             map.updateSize();
         }
    }            	            
-}
+});
 
-function drawMap( owner ) {
-	var container = owner.body.dom.id;
-	// loadMap('${geoserverUrl}', '${baseLayer}', '${activeScenery.zoomLevel}', '${activeScenery.mapCenter}', '${activeScenery.graticule}');
-	// loadMap( container, geoserver, baseLayer, theMapZoom, mapCenter, graticuleStatus )
-	loadMap(container,"http://10.5.115.122/geoserver/osm/wms","osm:AA_OpenStreetMap", 3, "-24.9609375,-20.303417518489297",false);
-}
 
