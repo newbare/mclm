@@ -14,6 +14,7 @@ var arrayMapCenter = null;
 var mapZoom = 5;
 var mapCenterLat = 0;
 var mapCenterLong = 0;	
+var landLayer = null;
 
 var mainConfig = null;
 
@@ -88,7 +89,7 @@ function loadMap(container, config ) {
 	baseLayer = config.baseLayer;
 	
 	// Deveria vir pelo cenario ativo do usuário...
-	mapZoom = 5; 
+	mapZoom = 4; 
 	mapCenter = "-24.9609375,-20.303417518489297";
 	graticuleStatus = false;
 	// =======================================
@@ -96,7 +97,7 @@ function loadMap(container, config ) {
 	
 	arrayMapCenter = JSON.parse("[" + mapCenter + "]");
 
-	var landLayer = new ol.layer.Tile({
+	landLayer = new ol.layer.Tile({
 	    source: new ol.source.TileWMS({
 	        url: geoserverUrl,
 	        isBaseLayer : true,
@@ -107,11 +108,8 @@ function loadMap(container, config ) {
 	    })
 	});	
 	
-	console.log(landLayer);
-	
 	bindTileEvent( landLayer );
 
-   
 	theView = new ol.View({
 		center: ol.proj.transform(arrayMapCenter, 'EPSG:4326', 'EPSG:3857'),
 		zoom: mapZoom
@@ -137,7 +135,8 @@ function loadMap(container, config ) {
            })
         
 		]),
-		view: theView
+		view: theView,
+		crossOrigin: ''
 	});
 	
 	map.getView().on('propertychange', function(e) {

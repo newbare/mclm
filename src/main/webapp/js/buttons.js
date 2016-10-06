@@ -14,7 +14,7 @@ var buttons = [{
 	    height: btnHeight,
 	    iconCls: 'setting-icon',
         handler: function() {
-            alert("Ui");
+        	queryMap();
         }       
     }, 
     '-', 

@@ -47,8 +47,10 @@
 
 <!-- MAPA -->
 	<script type="text/javascript" src="js/mapa/wms.js"></script>
+	<script type="text/javascript" src="js/mapa/interrogacao.js"></script>
 
-	<!-- STARTUP -->
+<!-- STARTUP -->
+
 	<!-- Aqui eh o ponto de entrada do sistema -->
 	<script type="text/javascript">
 	
@@ -58,7 +60,7 @@
 	    
 	
 	   Ext.onReady(function() {
-
+		   // Solicita a configuracao do sistema. Caso Ok, inicia a interface.	
 		   Ext.Ajax.request({
                url: 'getConfig',
                success: function(response, opts) {
