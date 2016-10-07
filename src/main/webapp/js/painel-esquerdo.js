@@ -5,6 +5,7 @@
  * Precisa do arquivo layer-tree-tree.js para implementar "layerTree".
  */
 
+/*
 var layerTreeDetails =  new Ext.Panel({
    frame: true,
    id:'layerTreeDetails',
@@ -23,6 +24,32 @@ var layerTreeDetails =  new Ext.Panel({
 	   }
 	]
 });
+*/
+
+var layerGridDetails =  new Ext.grid.Panel ({
+    width: 400,
+    height: 200,
+    title: 'Camadas Ativas',
+    columns: [
+        {
+            text: 'Nome',
+            width: 100,
+            sortable: false,
+            hideable: false,
+            dataIndex: 'name'
+        },
+        {
+            text: 'Email Address',
+            width: 150,
+            dataIndex: 'email',
+        },
+        {
+            text: 'Phone Number',
+            flex: 1,
+            dataIndex: 'phone'
+        }
+    ]
+});
 
 
 var painelEsquerdo =  new Ext.Panel({
@@ -35,6 +62,6 @@ var painelEsquerdo =  new Ext.Panel({
     maxWidth: 300,
     collapsed: false,
     animCollapse: false,            	            
-    items : [layerTree, layerTreeDetails]
+    items : [layerTree, layerGridDetails]
 });
 
