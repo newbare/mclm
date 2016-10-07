@@ -21,6 +21,12 @@ function initTips() {
         text: 'Gerencia os servidores de fontes de mapas.',
         width: 150,
         dismissDelay: 5000 
+    }, {
+        target: 'id113',
+        title: 'Previsão do Tempo',
+        text: 'Diversos aspectos climáticos em tempo real.',
+        width: 150,
+        dismissDelay: 5000 
     });	
 	
 }

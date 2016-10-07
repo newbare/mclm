@@ -5,3 +5,7 @@
 .server-icon {
 	background-image: url('../img/servers.svg') !important;
 }
+
+.forecast-icon {
+	background-image: url('../img/fogg.svg') !important;
+}

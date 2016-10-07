@@ -15,8 +15,10 @@ var mapZoom = 5;
 var mapCenterLat = 0;
 var mapCenterLong = 0;	
 var landLayer = null;
+var openSeaMapLayer = null;
 
 var mainConfig = null;
+var geoserverUrl = '';
 
 // Interactions
 var dragRotateAndZoomInteraction = null;
@@ -34,27 +36,10 @@ var graticule = new ol.Graticule({
 	})
 });
 
-
 var params = {
 		LAYERS: 'osm:pgrouting',
 		FORMAT: 'image/png'
 };
-
-var geoserverUrl = '';
-
-/*
-function panTo( lat, lon ) {
-	// panTo(-0.12755, 51.507222); ( Londres )
-	var coordinate = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');
-	var pan = ol.animation.pan({
-		duration: 2000,
-		source: ( theView.getCenter() )
-	});
-	map.beforeRender(pan);
-	theView.setCenter( coordinate );	
-}
-*/
-
 
 function unbindMapClick() {
 	if ( onClickBindKey ) {
@@ -97,12 +82,20 @@ function loadMap(container, config ) {
 	
 	arrayMapCenter = JSON.parse("[" + mapCenter + "]");
 
+	openSeaMapLayer = new ol.layer.Tile({
+		  source: new ol.source.OSM({
+		    crossOrigin: null,
+		    url: 'http://t1.openseamap.org/seamark/{z}/{x}/{y}.png'
+		})
+	});
+	
+	// O Layer-base
 	landLayer = new ol.layer.Tile({
 	    source: new ol.source.TileWMS({
 	        url: geoserverUrl,
 	        isBaseLayer : true,
 	        params: {
-	            'LAYERS': baseLayer,
+	            'LAYERS': baseLayer, 
 	            'FORMAT': 'image/png'
 	        }
 	    })
@@ -116,7 +109,7 @@ function loadMap(container, config ) {
 	})
 	
 	map = new ol.Map({
-		layers: [ landLayer ],
+		layers: [ landLayer,openSeaMapLayer ],
 		target: container,
 		renderer: 'canvas',
 	    loadTilesWhileAnimating: true,
@@ -135,8 +128,7 @@ function loadMap(container, config ) {
            })
         
 		]),
-		view: theView,
-		crossOrigin: ''
+		view: theView
 	});
 	
 	map.getView().on('propertychange', function(e) {
