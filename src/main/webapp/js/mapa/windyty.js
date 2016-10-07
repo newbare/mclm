@@ -1,4 +1,5 @@
-/*
+var windytyWindow = false;
+
 function changeToTemp() {
 	Ext.getDom('iframe-win').src = "https://embed.windytv.com/?-13.808,-53.013,609,message,temp,marker,metric.wind.km/h";
 }
@@ -22,34 +23,21 @@ function changeToWaves() {
 function changeToPressure() {
 	Ext.getDom('iframe-win').src = "https://embed.windytv.com/?-13.808,-53.013,609,message,pressure,marker,metric.wind.km/h";
 }
-*/
+
 
 function showTemperatureMap() {
-
-	new Ext.Window({
-		title : "Previsão do Tempo",
-		width : 790,
-		height: 650,
-		renderTo: Ext.getBody(),
-		layout : 'fit',
-		items : [{
-			xtype : "component",
-			id:'iframe-win',
-			margin: '0 0 0 0',
-            frame: false,
-            border: false,			
-			autoEl : {
-				tag : "iframe",
-				src : "https://embed.windytv.com/?-13.808,-53.013,609,menu,message,marker,metric.wind.km/h"
-			}
-		}]
-	}).show();
 	
-}
-
-/*
- 
- 	    dockedItems: [{
+	if ( windytyWindow ) return;
+	
+	Ext.create('Ext.Window',{
+		title : "Previsão do Tempo",
+		id : 'windytyWindow',
+		width : 750,
+		height: 500,
+		layout : 'fit',
+		constrain: true,
+		renderTo: Ext.getBody(),
+	    dockedItems: [{
 	        xtype: 'toolbar',
 	        items: [{
 	            text: 'Temperatura',
@@ -71,11 +59,36 @@ function showTemperatureMap() {
 	            handler : changeToPressure
 	        }]
 	    }],
- 
- 
- 
- */
+		
+		items : [{
+			xtype : "component",
+			id:'iframe-win',
+			margin: '0 0 0 0',
+	        frame: false,
+	        border: false,			
+			autoEl : {
+				tag : "iframe",
+				src : "https://embed.windytv.com/?-13.808,-53.013,609,message,marker,metric.wind.km/h"
+			}
+		}],
+		
+        listeners: {
+            destroy: function (wnd, eOpts) {
+                windytyWindow = false;
+            },
+            close: function (wnd, eOpts) {
+                windytyWindow = false;
+            },
+            hide: function (wnd, eOpts) {
+                windytyWindow = false;
+            }
+        }		
+		
+	}).show();
 
+	windytyWindow = true;
+
+}
 
 /*
 <iframe 

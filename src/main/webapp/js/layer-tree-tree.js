@@ -1,7 +1,9 @@
 /*
  * Arvore de Camadas
  * Usa: 
- * 		layer-tree-store.js para implementar "layerStore"
+ * 		layer-tree-store.js para implementar "layerStore".
+ * 		wms.js para adicionar / remover camadas.
+ * 		layer-stack.js para controlar as camadas selecionadas.
  * 
  * O Store solicita ao servidor os nos que sao filhos do 
  * no raiz "Camadas" criado no atributo "root" ( ID=0 )
@@ -44,7 +46,7 @@ var layerTree = Ext.create('Ext.tree.Panel', {
     
     scrollable: true,
     scroll: 'both',
-    height: 450,
+    height: 410,
     width: 300,
     useArrows: true,
     dockedItems: [{
@@ -82,6 +84,22 @@ function contextMenu(tree, record, item, index, e, eOpts ) {
 
 function addFolderUnderNode( node ) {
 	Ext.Msg.alert( node.id + " " + node.layerAlias );
+	/*
+	 	Exemplo...
+		var newTask = Ext.create('Task');
+		newTask.set({
+		    task: 'Task1',
+		    user: 'Name',
+		    duration: '10',
+		    expanded: true,
+		    loaded: true,
+		    leaf: false,
+		    icon: 'icon-leaf'
+		});
+		
+		selNode.insertChild(0, newTask);	
+	  
+	 */
 }
 
 function deleteNodeAndChildren( node ) {
@@ -89,11 +107,7 @@ function deleteNodeAndChildren( node ) {
 }
 
 function layerTreeItemClick(view, record, item, index, e ) {
-	layerTreeDetails.getForm().setValues( item.attributes );
-
-	console.log( record );
-	// Click
-	
+	layerTreeDetails.getForm().setValues( record.data );
 }
 
 function layerTreeExpandir() {
@@ -106,14 +120,18 @@ function layerTreeRecolher() {
 
 function toggleNode( node ) {
 	var serviceUrl = node.get('serviceUrl');
-	var serverLayers = node.get('layerName');
-	var layerName = node.get('layerAlias');
+	var layerName = node.get('layerName');
+	var layerAlias = node.get('layerAlias');
 	var checked = node.get('checked');
+
+	if ( layerName == "" ) return;
 	
 	if( checked == true ) {
-		addLayer( serviceUrl, serverLayers, layerName );
+		addLayer( serviceUrl, layerName, layerAlias );
+		addToLayerStack( node.data );
 	} else {
-		removeLayer( layerName );
+		removeLayer( layerAlias );
+		removeFromLayerStack( layerAlias )
 	}	
 }
 

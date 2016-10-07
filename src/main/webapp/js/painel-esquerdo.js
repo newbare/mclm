@@ -5,28 +5,56 @@
  * Precisa do arquivo layer-tree-tree.js para implementar "layerTree".
  */
 
-/*
-var layerTreeDetails =  new Ext.Panel({
+
+var layerTreeDetails = Ext.create('Ext.form.Panel', {
    frame: true,
+   border:false,
    id:'layerTreeDetails',
-   title: 'Form Fields',
-   width: 300,
+   title: 'Detalhes da Camada',
+   width: 295,
+   height:150,
+   scrollable: true,
    items: [{
 	      xtype: 'displayfield', 
-	      name: 'serviceUrl',
-	      fieldLabel: 'serviceUrl',
+	      labelAlign : 'left',
+	      name: 'text',
+	      fieldLabel: 'Nome',
+	      labelWidth: 55,
 	      value: ''
 	   },{
 	      xtype: 'displayfield', 
 	      name: 'description',
-	      fieldLabel: 'description',
+	      labelAlign : 'left',
+	      fieldLabel: 'Descrição',
+	      labelWidth: 55,
+	      value: ''
+	   },{
+	      xtype: 'displayfield', 
+	      name: 'institute',
+	      labelAlign : 'left',
+	      fieldLabel: 'Fonte',
+	      labelWidth: 55,
+	      value: ''
+	   },{
+	      xtype: 'displayfield', 
+	      name: 'layerName',
+	      labelAlign : 'left',
+	      fieldLabel: 'Camada',
+	      labelWidth: 55,
+	      value: ''
+	   },{
+	      xtype: 'displayfield', 
+	      name: 'serviceUrl',
+	      labelAlign : 'left',
+	      fieldLabel: 'Provedor',
+	      labelWidth: 55,
 	      value: ''
 	   }
 	]
 });
-*/
 
-var layerGridDetails =  new Ext.grid.Panel ({
+/*
+var layerGridDetails = Ext.create('Ext.grid.Panel',{
     width: 400,
     height: 200,
     title: 'Camadas Ativas',
@@ -36,23 +64,24 @@ var layerGridDetails =  new Ext.grid.Panel ({
             width: 100,
             sortable: false,
             hideable: false,
-            dataIndex: 'name'
+            dataIndex: 'text'
         },
         {
-            text: 'Email Address',
+            text: 'URL',
             width: 150,
-            dataIndex: 'email',
+            dataIndex: 'serviceUrl',
         },
         {
-            text: 'Phone Number',
+            text: 'Descrição',
             flex: 1,
-            dataIndex: 'phone'
+            dataIndex: 'description'
         }
     ]
 });
+*/
 
 
-var painelEsquerdo =  new Ext.Panel({
+var painelEsquerdo = Ext.create('Ext.Panel',{
     title: 'Camadas',
     region:'west',
     floatable: true,
@@ -62,6 +91,6 @@ var painelEsquerdo =  new Ext.Panel({
     maxWidth: 300,
     collapsed: false,
     animCollapse: false,            	            
-    items : [layerTree, layerGridDetails]
+    items : [layerTree, layerTreeDetails]
 });
 

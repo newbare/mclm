@@ -24,6 +24,8 @@ public class GetConfigAction {
 			
 			String config = new ConfigService().getAsJson();
 		
+			System.out.println("Resposta getConfig: " + config );
+			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.getWriter().write( config );  

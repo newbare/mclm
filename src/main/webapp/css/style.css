@@ -9,3 +9,11 @@
 .forecast-icon {
 	background-image: url('../img/fogg.svg') !important;
 }
+
+.buoy-icon {
+	background-image: url('../img/buoy.svg') !important;
+}
+
+.grid-icon {
+	background-image: url('../img/grid.svg') !important;
+}

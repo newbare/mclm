@@ -57,29 +57,33 @@ public class NodeService {
 		JSONArray ja = new JSONArray( data );
 		NodeData oldNode = null;
 		for( int x=0; x < ja.length(); x++ ) {
-			JSONObject jo = ja.getJSONObject( x );
-			// Pega o novo indice do no e seu ID
-			int id = jo.getInt( "id" ) ;
-			int index = jo.getInt( "index" );
-			
-			rep.newTransaction();
-			// Pega o nó no BD
-			oldNode = rep.getNode( id );
-			// Guarda o pai atual
-			int parentId = oldNode.getIdNodeParent();
-			
 			try {
-				// O pai foi alterado? Se não foi, não haverá esta variável no 
-				// objeto JSON e um erro será gerado.
-				parentId = jo.getInt( "parentId" );
-			} catch ( Exception ignored ) {	}
+				JSONObject jo = ja.getJSONObject( x );
+				// Pega o novo indice do no e seu ID
+				int id = jo.getInt( "id" ) ;
+				int index = jo.getInt( "index" );
+				
+				rep.newTransaction();
+				// Pega o nó no BD
+				oldNode = rep.getNode( id );
+				// Guarda o pai atual
+				int parentId = oldNode.getIdNodeParent();
+				
+				try {
+					// O pai foi alterado? Se não foi, não haverá esta variável no 
+					// objeto JSON e um erro será gerado.
+					parentId = jo.getInt( "parentId" );
+				} catch ( Exception ignored ) {	}
+				
+				oldNode.setIndexOrder( index );
+				oldNode.setIdNodeParent( parentId );
 			
-			oldNode.setIndexOrder( index );
-			oldNode.setIdNodeParent( parentId );
-			
-			rep.newTransaction();
-			rep.updateNode( oldNode );
-			
+				rep.newTransaction();
+				rep.updateNode( oldNode );
+
+			} catch ( Exception ex ) {
+				// Os dados da requisição deste item "x" não vieram como esperado. Tentar o próximo item...
+			}
 		}
 		
 		return "";

@@ -25,9 +25,6 @@ var dragRotateAndZoomInteraction = null;
 var dragPanInteraction = null;
 var mouseWheelZoomInteraction = null;
 
-// Controls
-var overviewMap = new ol.control.OverviewMap({collapsed: true});
-
 var graticule = new ol.Graticule({
 	strokeStyle: new ol.style.Stroke({
 		color: 'rgba(255,120,0,0.9)',
@@ -76,7 +73,6 @@ function loadMap(container, config ) {
 	// Deveria vir pelo cenario ativo do usuário...
 	mapZoom = 4; 
 	mapCenter = "-24.9609375,-20.303417518489297";
-	graticuleStatus = false;
 	// =======================================
 
 	
@@ -88,6 +84,8 @@ function loadMap(container, config ) {
 		    url: 'http://t1.openseamap.org/seamark/{z}/{x}/{y}.png'
 		})
 	});
+	openSeaMapLayer.set('name', 'OpenSeaMap');
+	openSeaMapLayer.set('alias', 'OpenSeaMap');
 	
 	// O Layer-base
 	landLayer = new ol.layer.Tile({
@@ -142,18 +140,6 @@ function loadMap(container, config ) {
 		}
 	});	
 	
-	/*
-	if ( graticuleStatus == 'true' ) {
-		graticule.setMap( map );
-		graticuleEnabled = true;
-	} else {
-		graticule.setMap( null );
-		graticuleEnabled = false;
-	}
-	
-	//map.addControl( overviewMap );
-	*/
-	
 }
 
 function bindTileEvent( layer ) {
@@ -205,30 +191,57 @@ function addLayer( serverUrl, serverLayers, layerName ) {
 	        projection: ol.proj.get('EPSG:4326')
 	    })
 	});	
-	newLayer.set('name', layerName);
+	newLayer.set('alias', layerName);
+	newLayer.set('name', serverLayers);
+	newLayer.set('serverUrl', serverUrl);
 		
 	bindTileEvent( newLayer );
 	map.addLayer( newLayer );
 
-	//Ext.Msg.alert('Acionar Camada', 'Camada "' + layerName + '" adicionada ao mapa.' );	
-	
 	return newLayer;
 }
 
-function removeLayer( layerName ) {
+function isLayerEnabled( layerName ) {
+	// lyr.U.name || lyr.U.alias || lyr.U.serverUrl
 	var achou = false;
 	map.getLayers().forEach(function (lyr) {
 		if( lyr.U.name == layerName ) {
-			map.removeLayer( lyr );	
+			achou = true;
 		}
 	});
-	
-	//Ext.Msg.alert('Acionar Camada', 'Camada "' + layerName + '" removida do mapa.' );
+	return achou;
 }
 
+function toggleMapGrid() {
+	if ( graticuleEnabled ) {
+		graticule.setMap( null );
+		graticuleEnabled = false;
+	} else {
+		graticule.setMap( map );
+		graticuleEnabled = true;
+	}	
+}
+
+function removeLayer( layerAlias ) {
+	map.getLayers().forEach(function (lyr) {
+		if( lyr.U.alias == layerAlias ) {
+			map.removeLayer( lyr );	
+			return;
+		}
+	});
+}
 
 function removeBlanks( value ) {
 	var res = value.split(' ').join('_');
 	return res;
 }
+
+function toggleSeaMapLayer() {
+	if ( isLayerEnabled('OpenSeaMap') ) {
+		removeLayer( 'OpenSeaMap' );
+	} else {
+		map.addLayer( openSeaMapLayer );	
+	}
+}
+
 

@@ -21,7 +21,7 @@ public class UpdateLayersTreeNodeAction extends BasicActionClass {
 	
 	public String execute () {
 
-		System.out.println("Editar elementos: " + data); // = [{"index":1,"id":"1"},{"index":2,"id":"2"},{"index":3,"id":"3"},{"index":0,"id":"4"}]
+		System.out.println("Cliente requisitou updateLayersTreeNode com os dados: " + data); 
 
 		String resp = "";
 		
