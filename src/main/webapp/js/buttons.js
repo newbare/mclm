@@ -59,6 +59,16 @@ var buttons = [{
         handler: function() {
         	toggleMapGrid();
         }
+    }, 
+    {
+    	xtype: 'button',
+    	id: 'id116',
+	    width: btnWidth,
+	    height: btnHeight,
+	    iconCls: 'layers-icon',
+        handler: function() {
+        	showLayerStack();
+        }
     }
 ];
 
@@ -94,6 +104,12 @@ function initTips() {
         target: 'id115',
         title: 'Grade Auxiliar',
         text: 'Exibe a grade auxiliar do mapa.',
+        width: 150,
+        dismissDelay: 5000 
+    }, {
+        target: 'id116',
+        title: 'Controle de Camadas',
+        text: 'Controla a disposição e visualizaçao das camadas ativas no mapa.',
         width: 150,
         dismissDelay: 5000 
     });	

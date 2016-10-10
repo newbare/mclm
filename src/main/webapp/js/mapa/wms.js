@@ -236,6 +236,7 @@ function removeBlanks( value ) {
 	return res;
 }
 
+// Liga/ Desliga o mapa do OpenSeaMap
 function toggleSeaMapLayer() {
 	if ( isLayerEnabled('OpenSeaMap') ) {
 		removeLayer( 'OpenSeaMap' );
@@ -245,3 +246,65 @@ function toggleSeaMapLayer() {
 }
 
 
+// Busca o indice de uma camada no mapa dado o seu nome
+function indexOf(layers, layer) {
+	var length = layers.getLength();
+	for (var i = 0; i < length; i++) {
+		var testLayer = layers.item( i );
+		
+		if ( layer === testLayer ) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+function findByName(name) {
+	var layers = map.getLayers();
+	var length = layers.getLength();
+	for (var i = 0; i < length; i++) {
+		if (name === layers.item(i).get('name')) {
+			return layers.item(i);
+		}
+	}
+	return null;
+}
+
+function selectLayer( layerName ) {
+	selectedLayer = findByName( layerName );
+}
+
+function getSelectedLayerOpacity() {
+	if ( selectedLayer ) {
+		return selectedLayer.getOpacity();
+	} else {
+		return 0;
+	}
+}
+
+function setSelectedLayerOpacity( opacity ) {
+	if ( selectedLayer ) {
+		selectedLayer.setOpacity( opacity );
+	} 
+}
+
+function setNewIndex( layerName , newIndex ) {
+	var layer = findByName( layerName );
+	var layers = map.getLayers();
+	var length = layers.getLength();
+	var index = indexOf(layers, layer);
+	newIndex = length - newIndex;
+    var layer = map.getLayers().removeAt( index );
+    map.getLayers().insertAt( newIndex, layer );	
+}
+
+function getMapCurrentBbox() {
+	var extent = map.getView().calculateExtent( map.getSize() );
+	
+    var bottomLeft = ol.proj.transform(ol.extent.getBottomLeft( extent ),
+    	      'EPSG:3857', 'EPSG:4326');
+    var topRight = ol.proj.transform(ol.extent.getTopRight( extent ),
+    	      'EPSG:3857', 'EPSG:4326');
+
+	return bottomLeft + "," + topRight;
+}

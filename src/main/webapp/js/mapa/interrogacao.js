@@ -10,13 +10,6 @@ function queryMap() {
 	var virgula = "";
 	var layerNames = "";
 	
-	var extent = map.getView().calculateExtent( map.getSize() );
-	var c1 = [ extent[0], extent[1] ];
-	var c2 = [ extent[2], extent[1] ];
-	var c3 = [ extent[2], extent[3] ];
-	var c4 = [ extent[0], extent[3] ];
-	//var arrExt = [c1, c2, c3, c4];	
-	
 	try {
 		var serverUrl = landLayer.getSource().getUrls()[0];
 	} catch (err) {
@@ -31,7 +24,9 @@ function queryMap() {
 		}
 	});
 	
-	var requestUrl = serverUrl + "/?BBOX=" + c1 + "," + c4 + "&CRS=EPSG:4326&QUERY_LAYERS=" + 
+	var bbox = getMapCurrentBbox();
+	
+	var requestUrl = serverUrl + "/?BBOX=" + bbox + "&CRS=EPSG:4326&QUERY_LAYERS=" + 
 		layerNames + "&SERVICE=WMS&REQUEST=GetFeatureInfo&FEATURE_COUNT=10&VERSION=1.3.0&FORMAT=image/png&LAYERS=" + 
 		layerNames + "&info_format=application/json";
 	
