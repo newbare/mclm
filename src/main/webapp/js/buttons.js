@@ -46,6 +46,7 @@ var buttons = [{
 	    width: btnWidth,
 	    height: btnHeight,
 	    iconCls: 'buoy-icon',
+	    enableToggle: true,
         handler: function() {
         	toggleSeaMapLayer();
         }
@@ -56,6 +57,7 @@ var buttons = [{
 	    width: btnWidth,
 	    height: btnHeight,
 	    iconCls: 'grid-icon',
+	    enableToggle: true,
         handler: function() {
         	toggleMapGrid();
         }

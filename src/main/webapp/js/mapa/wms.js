@@ -107,7 +107,7 @@ function loadMap(container, config ) {
 	})
 	
 	map = new ol.Map({
-		layers: [ landLayer,openSeaMapLayer ],
+		layers: [ landLayer ],
 		target: container,
 		renderer: 'canvas',
 	    loadTilesWhileAnimating: true,
@@ -307,4 +307,12 @@ function getMapCurrentBbox() {
     	      'EPSG:3857', 'EPSG:4326');
 
 	return bottomLeft + "," + topRight;
+}
+
+// Retorna a URL para pegar a imagem PNG de uma camada 'layerName' do servidor 'serviceUrl'
+// Usa o BBOX atual da viewport do mapa
+function getLayerImagePreview( layerName, serviceUrl) {
+	var	bbox = getMapCurrentBbox();
+	var thumImg = serviceUrl + "?service=WMS&srs=EPSG:4326&width=245&height=150&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&bbox="+bbox;
+	return thumImg;
 }

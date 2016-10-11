@@ -10,8 +10,7 @@
  * 
  */
 
-var aba01 =  new Ext.Panel({
-    xtype : 'panel',
+var aba01 = Ext.create('Ext.Panel',{
     layout: 'border',
     title: 'Mapa',
     id:'aba01',

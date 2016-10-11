@@ -23,16 +23,33 @@ var storeDos = Ext.create('Ext.data.Store', {
 });
 
 function addToLayerStack( data ) {
-	alert( bbox );
 	layerStack.push( data );
 	storeDos.loadData( layerStack );
+	mountImagePreview();
 }
 
+// remove uma camada da lista de camadas. eh chamada quando o usuario desmarca um no da arvore
 function removeFromLayerStack( layerAlias ) {
 	layerStack = layerStack.filter(function(el) {
 	    return el.layerAlias !== layerAlias;
 	});	
 	storeDos.loadData( layerStack );
+	mountImagePreview();
+}
+
+// Atualiza as imagens das camadas na lista 
+function mountImagePreview() {
+	myComponentImg1.body.update("");
+	var content = "";
+	var zindex = 0;
+	storeDos.each( function( record ){
+		var layerName = record.get('layerName');
+		var serviceUrl = record.get('serviceUrl');
+		var thumImg = getLayerImagePreview (layerName, serviceUrl);
+		Ext.get( layerName ).dom.src = thumImg;
+		content = content + "<img style='z-index:"+zindex+";position: absolute;height:150px' src='"+thumImg+"' />";
+	});          		
+	myComponentImg1.body.update(content);
 }
 
 function showLayerStack() {
@@ -83,9 +100,12 @@ function showLayerStack() {
             xtype: 'templatecolumn',
             tpl: [
                 '<tpl for=".">',
-                        '<div style="float: left; width: 90%; padding:0px;">',
-                            '<div style=" padding: 0px;"><b>{layerAlias}</b></div>',
-                            '<div style=" padding: 5px 5px 2px 5px;">{description}</div>',
+                        '<div style="float: left; width: 100%; padding:0px;">',
+	                        '<div style="float: left;width:100px"><div style="padding: 0px;"><img style="border:1px solid black;width:100px;height:50px" id="{layerName}" src=""></div></div>',
+	                        '<div style="float: left;margin-left:5px">',
+	                            '<div style=" padding: 0px;"><b>{layerAlias}</b></div>',
+	                            '<div style=" padding: 2px 5px 2px 5px;">{description}</div>',
+	                        '</div>',    
                         '</div>',
                  '</tpl>'
                 ]
@@ -99,17 +119,11 @@ function showLayerStack() {
             	    setNewIndex( layerName , indx );
             	    indx++;
             	});            	
-            	
+            	mountImagePreview();
             },
             rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
-        		var layerName = record.get('layerName');
-        		var serviceUrl = record.get('serviceUrl');
-        		var	bbox = getMapCurrentBbox();
-        		var thumImg = serviceUrl + "?service=WMS&srs=EPSG:4326&width=100&height=50&version=1.1.1&request=GetMap&layers="+layerName+"&format=image/png&bbox="+bbox;
-        		
-        		myComponentImg1.body.update("<img style='height:150px' src='"+thumImg+"' />");
-        		
-        		selectLayer( layerName );
+            	var layerName = record.get('layerName');
+            	selectLayer( layerName );
         		var opacity = getSelectedLayerOpacity();
         		var newOpacity = opacity * 10;
         		slider.setValue( 0, newOpacity );
@@ -121,7 +135,7 @@ function showLayerStack() {
     
 	myComponentImg1 = Ext.create('Ext.panel.Panel',{
 		height : 150,
-		html: "<img style='height:150px' src='img/buoy.svg' alt='get File' />"
+		html: "<img style='height:150px' src='img/defesa.jpg' />"
 	});	
 
 	var layerControl = Ext.create('Ext.panel.Panel',{
@@ -144,8 +158,8 @@ function showLayerStack() {
 	    dockedItems: [{
 	        xtype: 'toolbar',
 	        items: [{
-	            text: 'Teste 01',
-	            //handler : function...
+	            text: 'Atualizar',
+	            handler : mountImagePreview
 	        }, {
 	            text: 'Teste 02',
 	            //handler : function...

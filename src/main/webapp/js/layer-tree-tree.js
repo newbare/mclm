@@ -46,9 +46,11 @@ var layerTree = Ext.create('Ext.tree.Panel', {
     
     scrollable: true,
     scroll: 'both',
-    height: 410,
-    width: 300,
+
+    region:'center',
+    
     useArrows: true,
+    border:false,
     dockedItems: [{
         xtype: 'toolbar',
         items: [{
@@ -107,7 +109,10 @@ function deleteNodeAndChildren( node ) {
 }
 
 function layerTreeItemClick(view, record, item, index, e ) {
-	layerTreeDetails.getForm().setValues( record.data );
+	//layerTreeDetails.getForm().setValues( record.data );
+	var temData = [];
+	temData.push( record.data );
+	layerDetailStore.loadData( temData );
 }
 
 function layerTreeExpandir() {

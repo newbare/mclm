@@ -5,92 +5,50 @@
  * Precisa do arquivo layer-tree-tree.js para implementar "layerTree".
  */
 
-
-var layerTreeDetails = Ext.create('Ext.form.Panel', {
-   frame: true,
-   border:false,
-   id:'layerTreeDetails',
-   title: 'Detalhes da Camada',
-   width: 295,
-   height:150,
-   scrollable: true,
-   items: [{
-	      xtype: 'displayfield', 
-	      labelAlign : 'left',
-	      name: 'text',
-	      fieldLabel: 'Nome',
-	      labelWidth: 55,
-	      value: ''
-	   },{
-	      xtype: 'displayfield', 
-	      name: 'description',
-	      labelAlign : 'left',
-	      fieldLabel: 'Descrição',
-	      labelWidth: 55,
-	      value: ''
-	   },{
-	      xtype: 'displayfield', 
-	      name: 'institute',
-	      labelAlign : 'left',
-	      fieldLabel: 'Fonte',
-	      labelWidth: 55,
-	      value: ''
-	   },{
-	      xtype: 'displayfield', 
-	      name: 'layerName',
-	      labelAlign : 'left',
-	      fieldLabel: 'Camada',
-	      labelWidth: 55,
-	      value: ''
-	   },{
-	      xtype: 'displayfield', 
-	      name: 'serviceUrl',
-	      labelAlign : 'left',
-	      fieldLabel: 'Provedor',
-	      labelWidth: 55,
-	      value: ''
-	   }
-	]
+var layerDetailStore = Ext.create('Ext.data.Store', {
+    requires: ['Ext.data.proxy.Memory'],
+    fields: [{name: 'layerAlias'},{name: 'description'},{name: 'layerName'},{name: 'serviceUrl'},{name: 'institute'} ], 
+    proxy: { type: 'memory' }
 });
 
-/*
 var layerGridDetails = Ext.create('Ext.grid.Panel',{
-    width: 400,
-    height: 200,
-    title: 'Camadas Ativas',
-    columns: [
-        {
-            text: 'Nome',
-            width: 100,
-            sortable: false,
-            hideable: false,
-            dataIndex: 'text'
-        },
-        {
-            text: 'URL',
-            width: 150,
-            dataIndex: 'serviceUrl',
-        },
-        {
-            text: 'Descrição',
-            flex: 1,
-            dataIndex: 'description'
-        }
-    ]
+	border:false,
+	store:layerDetailStore,
+    region:'south',
+    
+    height: 150,
+    columns: [{
+    	cellWrap: true,
+    	header:'Detalhes da Camada',
+        flex: 1,
+        sortable: false,
+        hideable: false,
+        xtype: 'templatecolumn',
+        tpl: [
+            '<tpl for=".">',
+                    '<div style="float: left; width: 95%; padding:0px;">',
+                        '<div style="font-weight:bold;padding: 0px 0px 5px 0px;">{layerAlias}</div>',
+                        '<div style="font-weight:bold;padding: 0px;">{institute}</div>',
+                        '<div style=" padding: 0px;">{layerName}</div>',
+                        '<div style=" padding: 0px;">{serviceUrl}</div>',
+                        '<div style=" padding: 0px;">{description}</div>',
+                    '</div>',
+             '</tpl>'
+            ]
+    }],
 });
-*/
-
 
 var painelEsquerdo = Ext.create('Ext.Panel',{
     title: 'Camadas',
     region:'west',
+    layout: 'border',
     floatable: true,
-    margin: '0 0 0 0',
+
     width: 300,
     minWidth: 100,
     maxWidth: 300,
     collapsed: false,
     animCollapse: false,            	            
-    items : [layerTree, layerTreeDetails]
+    items : [layerTree, layerGridDetails]
 });
 
