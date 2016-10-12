@@ -1,5 +1,7 @@
 package br.mil.mar.casnav.mclm.misc;
 
+import java.util.UUID;
+
 public class TreeNode {
 	private String id;
 	private boolean leaf;
@@ -14,6 +16,7 @@ public class TreeNode {
 	private String layerAlias;
 	private int index;
 	private int idNodeParent;
+	private String serialId;
 	
 	public TreeNode( UserTableEntity ute ) {
 		int children = Integer.valueOf( ute.getData("children") );
@@ -25,7 +28,8 @@ public class TreeNode {
 		this.serviceUrl = ute.getData("serviceurl");		
 		this.description = ute.getData("description");		
 		this.institute = ute.getData("institute");		
-		this.layerAlias = ute.getData("layeralias");		
+		this.layerAlias = ute.getData("layeralias");
+		this.serialId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
 		
 		this.id = ute.getData("id_node_data");
 		this.leaf = ( children == 0 );
@@ -145,5 +149,12 @@ public class TreeNode {
 		this.layerAlias = layerAlias;
 	}
 
+	public String getSerialId() {
+		return serialId;
+	}
+	
+	public void setSerialId(String serialId) {
+		this.serialId = serialId;
+	}
 	
 }

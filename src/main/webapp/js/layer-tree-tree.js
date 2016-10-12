@@ -14,10 +14,7 @@
  * 
  * O servidor devera retornar um JSON como este:
  * 
- * [ 
- * 	{"serviceUrl":"","index":0,"description":"Descrição Teste","checked":false,"institute":"","id":"26","cls":"","text":"IBGE","layerName":"","leaf":false,"idNodeParent":0,"originalServiceUrl":""},
- * 	{"serviceUrl":"","index":1,"description":"Descrição Teste","checked":false,"institute":"","id":"27","cls":"","text":"OSM","layerName":"","leaf":false,"idNodeParent":0,"originalServiceUrl":""}
- * ]
+ * [{"layerAlias":"IBGE","serviceUrl":"","index":0,"description":"Descrição Teste","cls":"","leaf":false,"serialId":"45268d4ffb","checked":false,"institute":"","id":"26","text":"IBGE","layerName":"","idNodeParent":0,"originalServiceUrl":""},{"layerAlias":"OSM","serviceUrl":"","index":1,"description":"Descrição Teste","cls":"","leaf":false,"serialId":"809f4aa016","checked":false,"institute":"","id":"27","text":"OSM","layerName":"","idNodeParent":0,"originalServiceUrl":""}]
  * 
  */
 
@@ -109,10 +106,9 @@ function deleteNodeAndChildren( node ) {
 }
 
 function layerTreeItemClick(view, record, item, index, e ) {
-	//layerTreeDetails.getForm().setValues( record.data );
-	var temData = [];
-	temData.push( record.data );
-	layerDetailStore.loadData( temData );
+	var tempData = [];
+	tempData.push( record.data );
+	layerDetailStore.loadData( tempData );
 }
 
 function layerTreeExpandir() {
@@ -123,16 +119,27 @@ function layerTreeRecolher() {
 	layerTree.collapseAll();
 }
 
+// Quando o usuario marca / desmarca um no na arvore.
+// Precisa agora criar ou remover a camada apropriada no mapa.
+// Os dados da camada estao na variavel "node" e vieram pelo JSON quando a arvore foi montada
+// e/ou o no-pai foi expandido.
+// Tambem eh necessario adicionar ou remover a camada da lista de camadas ativas (Stack).
+// Os metodos "addLayer" e "removeLayer" estao no arquivo "wms.js"
+// "addToLayerStack" e "removeFromLayerStack" estao no arquivo "layer-stack.js"
+// Para adicionar um novo atributo na camada/no basta adicionar na classe Java "TreeNode.java"
+// e no store da arvore (layerStore) no arquivo "layer-tree-store.js"
+// e automaticamante ele vira para ca.
 function toggleNode( node ) {
 	var serviceUrl = node.get('serviceUrl');
 	var layerName = node.get('layerName');
 	var layerAlias = node.get('layerAlias');
 	var checked = node.get('checked');
+	var serialId = node.get('serialId');
 
 	if ( layerName == "" ) return;
 	
 	if( checked == true ) {
-		addLayer( serviceUrl, layerName, layerAlias );
+		addLayer( serviceUrl, layerName, layerAlias, serialId );
 		addToLayerStack( node.data );
 	} else {
 		removeLayer( layerAlias );

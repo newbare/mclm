@@ -50,6 +50,15 @@ function updateMapCenter() {
 	mapCenterLong = center2[0];
 	mapCenterLat = center2[1];
 	mapZoom = map.getView().getZoom();
+	
+	var baseLayerUrlPreview = getLayerImagePreview( baseLayer, geoserverUrl);
+	var imgElement = Ext.get( 'mclm_landlayer_cmoa' );
+	if( imgElement ) {
+		imgElement.dom.src = baseLayerUrlPreview;
+	}
+	
+	mountImagePreview();
+	
 }
 
 /* 
@@ -86,6 +95,8 @@ function loadMap(container, config ) {
 	});
 	openSeaMapLayer.set('name', 'OpenSeaMap');
 	openSeaMapLayer.set('alias', 'OpenSeaMap');
+	openSeaMapLayer.set('serverUrl', '' );
+	openSeaMapLayer.set('serialId', 'mclm_openseamap_cmoa');
 	
 	// O Layer-base
 	landLayer = new ol.layer.Tile({
@@ -98,6 +109,10 @@ function loadMap(container, config ) {
 	        }
 	    })
 	});	
+	landLayer.set('name', baseLayer );
+	landLayer.set('alias', 'Camada Base' );
+	landLayer.set('serverUrl', geoserverUrl );
+	landLayer.set('serialId', 'mclm_landlayer_cmoa');
 	
 	bindTileEvent( landLayer );
 
@@ -135,6 +150,7 @@ function loadMap(container, config ) {
 				updateMapCenter();
 				break;
 			case 'resolution':  
+				$(".alert-icon").css("display","block");
 				updateMapCenter();
 				break;  
 		}
@@ -143,27 +159,27 @@ function loadMap(container, config ) {
 }
 
 function bindTileEvent( layer ) {
-	var layerName =  layer.get('name');
-	if ( layerName ) {
-		var layerId = removeBlanks( layerName );
+	var serialId =  layer.get('serialId');
+	if ( serialId ) {
 		
 		layer.getSource().on('tileloadstart', function(event) {
-			//console.log("tile '"+layerName+"' load start");
-			//$("#" + layerId).css("display","block");
-			//$("#" + layerId + "2").css("display","none");
+			//console.log("tile '"+serialId+"' load start");
+			$("#alert_" + serialId).css("display","block");
+			$("#error_" + serialId).css("display","none");
 			showMainLoader();
 		});
 	
 		layer.getSource().on('tileloadend', function(event) {
-			//console.log("tile '"+layerName+"' load end");
-			//$("#" + layerId).css("display","none");
-			//$("#" + layerId + "2").css("display","none");
+			//console.log("tile '"+serialId+"' load end");
+			$("#alert_" + serialId).css("display","none");
+			$("#error_" + serialId).css("display","none");
 			hideMainLoader();
 		});
 		
 		layer.getSource().on('tileloaderror', function(event) {
-			//$("#" + layerId).css("display","none");
-			//$("#" + layerId + "2").css("display","block");
+			//console.log("tile '"+serialId+"' load error");
+			$("#alert_" + serialId).css("display","none");
+			$("#error_" + serialId).css("display","block");
 			hideMainLoader();
 		});
 	}
@@ -178,8 +194,14 @@ function hideMainLoader() {
 	
 }
 
-function addLayer( serverUrl, serverLayers, layerName ) {
-	
+
+function removeInvalidIdChar( value ) {
+	var res = value.split(':').join('_');
+	return res;
+}
+
+// Adiciona uma nova camada no mapa
+function addLayer( serverUrl, serverLayers, layerName, serialId ) {
 	var newLayer = new ol.layer.Tile({
 	    source: new ol.source.TileWMS({
 	        url: serverUrl,
@@ -194,7 +216,8 @@ function addLayer( serverUrl, serverLayers, layerName ) {
 	newLayer.set('alias', layerName);
 	newLayer.set('name', serverLayers);
 	newLayer.set('serverUrl', serverUrl);
-		
+	newLayer.set('serialId', serialId);
+	
 	bindTileEvent( newLayer );
 	map.addLayer( newLayer );
 
@@ -259,11 +282,13 @@ function indexOf(layers, layer) {
 	return -1;
 }
 
+// Retorna uma camada do mapa dado o seu nome
 function findByName(name) {
 	var layers = map.getLayers();
 	var length = layers.getLength();
 	for (var i = 0; i < length; i++) {
-		if (name === layers.item(i).get('name')) {
+		var layerName = layers.item(i).get('name');
+		if (name === layerName) {
 			return layers.item(i);
 		}
 	}
@@ -293,11 +318,12 @@ function setNewIndex( layerName , newIndex ) {
 	var layers = map.getLayers();
 	var length = layers.getLength();
 	var index = indexOf(layers, layer);
-	newIndex = length - newIndex;
+	//newIndex = length - newIndex;
     var layer = map.getLayers().removeAt( index );
     map.getLayers().insertAt( newIndex, layer );	
 }
 
+// Retorna o bounding box atual do mapa
 function getMapCurrentBbox() {
 	var extent = map.getView().calculateExtent( map.getSize() );
 	
@@ -305,7 +331,6 @@ function getMapCurrentBbox() {
     	      'EPSG:3857', 'EPSG:4326');
     var topRight = ol.proj.transform(ol.extent.getTopRight( extent ),
     	      'EPSG:3857', 'EPSG:4326');
-
 	return bottomLeft + "," + topRight;
 }
 
@@ -313,6 +338,33 @@ function getMapCurrentBbox() {
 // Usa o BBOX atual da viewport do mapa
 function getLayerImagePreview( layerName, serviceUrl) {
 	var	bbox = getMapCurrentBbox();
-	var thumImg = serviceUrl + "?service=WMS&srs=EPSG:4326&width=245&height=150&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&bbox="+bbox;
+	var thumImg = serviceUrl + "/?service=WMS&srs=EPSG:4326&width=245&height=150&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&bbox="+bbox;
 	return thumImg;
 }
+
+//Retorna a URL para pegar a imagem PNG da legenda de uma camada 'layerName' do servidor 'serviceUrl'
+function getLayerLegendImage( layerName, serviceUrl ) {
+	var url = serviceUrl + "/?service=WMS&version=1.3&request=GetLegendGraphic&format=image/png&layer=" + layerName;
+	return url;
+}
+
+function getCurrentLayersInMap() {
+	listLayers();
+	return map.getLayers();
+}
+
+
+// Apenas para debug. Apagar assim que possível.
+function listLayers() {
+	var layers = map.getLayers();
+	var length = layers.getLength();
+	console.log("CAMADAS EXISTENTES NO MAPA: -----------------------");
+	for (var i = 0; i < length; i++) {
+		var layerName = layers.item(i).get('name');
+		var serverUrl = layers.item(i).get('serverUrl');
+		var serialId = layers.item(i).get('serialId');
+		console.log("   > [" + i + "] " + layerName + "   " + serverUrl + "   " + serialId);
+	}
+	console.log("---------------------------------------------------");
+}
+
