@@ -7,8 +7,10 @@
  * 		do no que esta sendo aberto como pai ( parent_id ).
  */
 
+
 var layerStore = Ext.create('Ext.data.TreeStore', {
 	autoSync:true,
+	lazyFill: true,
 	fields: [
 	            { name: 'index', type: 'int' },
 	            { name: 'text', type: 'string' },
@@ -42,6 +44,7 @@ var layerStore = Ext.create('Ext.data.TreeStore', {
         id: 0,
         index:0,
         expanded: true
-    }
+    }   
+  
     
 });

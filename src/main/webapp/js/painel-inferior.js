@@ -1,4 +1,15 @@
-var painelInferior = {
+
+/*
+var dummyGrid = Ext.create('Ext.grid.Panel', {
+	border:false,
+    frame: false,
+    flex:1,
+    columns: []
+});
+*/
+
+
+var painelInferior =  Ext.create('Ext.Panel', {
 	title: 'Footer',
     region: 'south',
     height: 100,
@@ -6,5 +17,5 @@ var painelInferior = {
     maxHeight: 150,
     collapsed: true,
     animCollapse: false,            	            
-    html: '<div id="pointerCoordinates"></div>'
-};
+    html : 'lalalal'
+});

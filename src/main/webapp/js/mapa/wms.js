@@ -45,34 +45,22 @@ function unbindMapClick() {
 }
 
 function updateMapCenter() {
+	
 	var center = map.getView().getCenter();
 	var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
 	mapCenterLong = center2[0];
 	mapCenterLat = center2[1];
 	mapZoom = map.getView().getZoom();
 	
-	var baseLayerUrlPreview = getLayerImagePreview( baseLayer, geoserverUrl);
-	var imgElement = Ext.get( 'mclm_landlayer_cmoa' );
-	if( imgElement ) {
-		imgElement.dom.src = baseLayerUrlPreview;
-	}
-	
-	mountImagePreview();
-	
+	// Atualiza sempre que arrasta ou muda o zoom, mas gasta muito acesso a rede e deixa mais lento.
+	// Optei por deixar o usuario atualizar pelo botao "atualizar" no painel de camadas ativas.
+	//mountImagePreview();
 }
 
-/* 
+/* loadMap()
+ * ---------
  * Cria o mapa no painel central baseado nas configuracoes recebidas pelo ajax do arquivo index.html.
- * 
- * {	
- * 		"baseLayer":"osm:AA_OpenStreetMap","proxyPassword":"senha","useProxy":true,"externalWorkspaceName":"external",
- * 		"proxyHost":"proxy-i2a.mb","proxyPort":6060,"nonProxyHosts":"localhost|127.0.0.1|10.5.115.22|172.21.81.43|10.5.115.122",
- * 		"idConfig":1,"geoserverPassword":"senha","externalLayersToLocalServer":false,"proxyUser":"user",
- * 		"geoserverUrl":"http://10.5.115.122/geoserver","geoserverUser":"admin"
- * }
- *  
  */
-
 function loadMap(container, config ) {
 	mainConfig = config;
 
@@ -113,9 +101,9 @@ function loadMap(container, config ) {
 	landLayer.set('alias', 'Camada Base' );
 	landLayer.set('serverUrl', geoserverUrl );
 	landLayer.set('serialId', 'mclm_landlayer_cmoa');
-	
 	bindTileEvent( landLayer );
 
+	
 	theView = new ol.View({
 		center: ol.proj.transform(arrayMapCenter, 'EPSG:4326', 'EPSG:3857'),
 		zoom: mapZoom
@@ -156,6 +144,10 @@ function loadMap(container, config ) {
 		}
 	});	
 	
+	// Algumas vezes o OpenLayers nao dispara o evento "tileloadend" e o icone "loading" fica 
+	// na tela ate mexer no mapa denovo. Isso ira remover todos os icones "loading"
+	// apos 5 segundos. 
+	setInterval( function(){ $(".alert-icon").css("display","none"); }, 5000);
 }
 
 function bindTileEvent( layer ) {
@@ -163,14 +155,14 @@ function bindTileEvent( layer ) {
 	if ( serialId ) {
 		
 		layer.getSource().on('tileloadstart', function(event) {
-			//console.log("tile '"+serialId+"' load start");
+			console.log("tile '"+serialId+"' load start");
 			$("#alert_" + serialId).css("display","block");
 			$("#error_" + serialId).css("display","none");
 			showMainLoader();
 		});
 	
 		layer.getSource().on('tileloadend', function(event) {
-			//console.log("tile '"+serialId+"' load end");
+			console.log("tile '"+serialId+"' load end");
 			$("#alert_" + serialId).css("display","none");
 			$("#error_" + serialId).css("display","none");
 			hideMainLoader();
@@ -207,7 +199,9 @@ function addLayer( serverUrl, serverLayers, layerName, serialId ) {
 	        url: serverUrl,
 	        isBaseLayer : false,
 	        params: {
+	        	tiled: true,
 	            'layers': serverLayers,
+	            'VERSION': '1.3.0',
 	            'format': 'image/png'
 	        },
 	        projection: ol.proj.get('EPSG:4326')
@@ -338,7 +332,7 @@ function getMapCurrentBbox() {
 // Usa o BBOX atual da viewport do mapa
 function getLayerImagePreview( layerName, serviceUrl) {
 	var	bbox = getMapCurrentBbox();
-	var thumImg = serviceUrl + "/?service=WMS&srs=EPSG:4326&width=245&height=150&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&bbox="+bbox;
+	var thumImg = serviceUrl + "/?service=WMS&srs=EPSG:4326&width=238&height=150&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&bbox="+bbox;
 	return thumImg;
 }
 
@@ -367,4 +361,6 @@ function listLayers() {
 	}
 	console.log("---------------------------------------------------");
 }
+
+
 

@@ -39,12 +39,26 @@ function removeFromLayerStack( layerAlias ) {
 
 // Atualiza as imagens das camadas na lista 
 function mountImagePreview() {
-	if ( !layerMiniImage ) return;
+	
+	// Se a tela nao esta visivel, nao atualiza nada.
+	if ( !layerStackWindow ) return;
 	
 	layerMiniImage.body.update("");
 	var content = "";
-	
 	var zindex = 0;
+	
+	// Atualiza a imagem da camada base. "getLayerImagePreview()" estah em "wms.js"
+	var baseLayerUrlPreview = getLayerImagePreview( baseLayer, geoserverUrl);
+	var imgElement = Ext.get( 'mclm_landlayer_cmoa' );
+	if( imgElement ) {
+		imgElement.dom.src = baseLayerUrlPreview;
+		content = content + "<img style='z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+baseLayerUrlPreview+"' />";
+		zindex++;
+	}	
+	
+	// Atualiza as imagens de preview das camadas na lista de camadas
+	// "getLayerImagePreview()" estah em "wms.js" e fornece a URL da imagem
+	// de uma camada do geoserver dado o seu nome e a URL do servidor.
 	storeDos.each( function( record ){
 		var layerName = record.get('layerName');
 		var serviceUrl = record.get('serviceUrl');
@@ -53,32 +67,13 @@ function mountImagePreview() {
 		var imgElement = Ext.get( serialId );
 		if( imgElement ) {
 			imgElement.dom.src = thumImg;
-			content = content + "<img style='z-index:"+ zindex +";position: absolute;height:150px' src='"+thumImg+"' />";
+			content = content + "<img style='z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+thumImg+"' />";
 		}
 		zindex++;
 	});
 	
-	
-	/*
-	var layersArray = getCurrentLayersInMap();
-	var arrayLength = layersArray.getLength();
-	for (var i = 0; i < arrayLength; i++) {
-		var layerName = layersArray.item(i).get('name');
-		var serviceUrl = layersArray.item(i).get('serverUrl');
-		var serialId = layersArray.item(i).get('serialId');
-		
-		console.log( layerName + " " + serialId );
-		
-		var thumImg = getLayerImagePreview ( layerName, serviceUrl );
-		var imgElement = Ext.get( serialId );
-		if( imgElement ) {
-			imgElement.dom.src = thumImg;
-			content = content + "<img style='z-index:"+ i +";position: absolute;height:150px' src='"+thumImg+"' />";
-		}
-	}	
-	*/
-	
 	layerMiniImage.body.update( content );
+
 }
 
 function showLayerStack() {
@@ -86,7 +81,7 @@ function showLayerStack() {
 
 	layerMiniImage = Ext.create('Ext.panel.Panel',{
 		height : 150,
-		html: "<img style='height:150px' src='' />"
+		html: "<img style='z-index:0;position: absolute;width:238px;height:150px' src='' />"
 	});		
 
 	// Slider para ajustar a opacidade da camada
@@ -135,8 +130,8 @@ function showLayerStack() {
             tpl: [
                 '<tpl for=".">',
                         '<div data-qtip="Arraste para alterar <br> a ordem das camadas." style="position:relative;float: left; width: 100%; padding:0px;">',
-	                        '<div style="float: left;width:100px"><div style="padding: 0px;"><img style="border:1px solid black;width:100px;height:50px" id="{serialId}" src=""></div></div>',
-	                        '<div style="float: left;margin-left:5px">',
+	                        '<div style="float: left;width:23%"><div style="padding: 0px;"><img style="border:1px solid black;width:100px;height:50px" id="{serialId}" src="img/loading2.gif"></div></div>',
+	                        '<div style="float: left;margin-left:5px;width:75%">',
 	                            '<div style=" padding: 0px;"><b>{layerAlias}</b></div>',
 	                            '<div style=" padding: 2px 5px 2px 5px;">{description}</div>',
 	                        '</div>',    
@@ -183,7 +178,7 @@ function showLayerStack() {
 		border: false,
 		bodyPadding: 5,
 		html: '<div data-qtip="A Camada de Base não pode <br> ter sua ordem modificada." style="position:relative;float: left; width: 100%; padding:0px;">' +
-        '<div style="float: left;width:100px"><div style="padding: 0px;"><img style="border:1px solid black;width:100px;height:50px" id="mclm_landlayer_cmoa" src=""></div></div>' +
+        '<div style="float: left;width:100px"><div style="padding: 0px;"><img style="border:1px solid black;width:100px;height:50px" id="mclm_landlayer_cmoa" src="img/loading2.gif"></div></div>' +
         '<div style="float: left;margin-left:5px">'+
             '<div style="padding: 0px;"><b>Camada de Base</b></div>'+
             '<div id="mclm_landlayer_cmoa_layer" style="padding: 2px 5px 2px 5px;">A camada de base do mapa.</div>'+
@@ -209,7 +204,7 @@ function showLayerStack() {
 	
 	Ext.create('Ext.Window',{
 		title : "Camadas Ativas",
-		width : 700,
+		width : 750,
 		height: 400,
 		layout : 'border',
 		constrain: true,
@@ -221,8 +216,8 @@ function showLayerStack() {
 	            text: 'Atualizar',
 	            handler : mountImagePreview
 	        }, {
-	            text: 'Teste 02',
-	            //handler : function...
+	            text: 'Interroga',
+	            handler : bindMapToQueryTool
 	        }]
 	    }],	
 
@@ -241,14 +236,15 @@ function showLayerStack() {
 		items : [ layersDetailPanel,layerControl ]
 	}).show();
 	
-	mountImagePreview();
-	layerStackWindow = true;
 	
-
+	// Exibe os dados da camada base
 	var baseLayerNameElement = Ext.get( 'mclm_landlayer_cmoa_layer' );
 	if( baseLayerNameElement ) {
 		baseLayerNameElement.update( baseLayer + "<br>" + geoserverUrl );
 	}	
+	
+	layerStackWindow = true;
+	mountImagePreview();	
 	
 	
 };	
