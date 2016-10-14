@@ -8,9 +8,11 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
+import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.entity.User;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
+import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
 import br.mil.mar.casnav.mclm.persistence.services.UserService;
 
 @WebListener
@@ -29,13 +31,6 @@ public class Startup implements ServletContextListener {
 
     	System.out.println( path );
     	
-    	// Teste de configurar pelo ambiente ==================================================
-    	String databaseName = System.getProperty("SAGITARII_DATABASE");
-    	String password = System.getProperty("SAGITARII_PASSWORD");
-    	String userName = System.getProperty("SAGITARII_USER");
-    	System.out.println( " >>>>> " + userName + "@" + password + ":" + databaseName );
-    	// ====================================================================================
-		
     	UserService us;
     	try {
        
@@ -66,6 +61,9 @@ public class Startup implements ServletContextListener {
 				us.insertUser(usr);
 				loggerDebug("System Administrator created");
 			}
+			
+			Config cfg = new ConfigService().getConfig();
+			Configurator.getInstance().updateConfiguration( cfg );
 			
 		} catch (Exception e) { 
 			e.printStackTrace(); 

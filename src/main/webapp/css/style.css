@@ -18,6 +18,10 @@
 	background-image: url('../img/grid.svg') !important;
 }
 
+.query-icon {
+	background-image: url('../img/query.svg') !important;
+}
+
 .layers-icon {
 	background-image: url('../img/layers.svg') !important;
 }

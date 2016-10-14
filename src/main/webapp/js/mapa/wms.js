@@ -66,13 +66,9 @@ function loadMap(container, config ) {
 
 	geoserverUrl = config.geoserverUrl;
 	baseLayer = config.baseLayer;
-	
-	// Deveria vir pelo cenario ativo do usuário...
-	mapZoom = 4; 
-	mapCenter = "-24.9609375,-20.303417518489297";
-	// =======================================
+	mapZoom = config.mapZoom; 
+	mapCenter = config.mapCenter;
 
-	
 	arrayMapCenter = JSON.parse("[" + mapCenter + "]");
 
 	openSeaMapLayer = new ol.layer.Tile({

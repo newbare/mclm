@@ -6,79 +6,59 @@ function bindMapToQueryTool() {
 	
 } 
 
-
-function getKeysFromJson( obj ) {
-    var keys = [];
-    for (var key in obj) {
-        if ( obj.hasOwnProperty(key) ) {
-            keys.push(key);
-        }
-    }
-    return keys;	
+function toggleQueryTool() {
+	// o botao aponta para cá.
+	bindMapToQueryTool() ;
+	// To unbind: unbindMapClick();
 }
+
+
 
 function queryMap( coordinate ) {
 	var virgula = "";
 	var layerNames = "";
-
+	var content = [];
 	var urlFeatureInfo = "";
 	var viewResolution = theView.getResolution();
 	
 	map.getLayers().forEach( function (layer) {
 		var layerName = layer.U.name;
 		if ( layerName ) {
-	
-			urlFeatureInfo = layer.getSource().getGetFeatureInfoUrl(
-				coordinate, viewResolution, theView.getProjection(),
-		          {'QUERY_LAYERS': layerName,  'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 100} );
-			
-
-			/*
-			if ( lyr.U.name ) {
-				console.log( lyr );
-				layerNames = virgula + lyr.U.name;
-				virgula = ",";
-			}
-			 */
+			console.log( layer );
+			//if ( !layer.isBaseLayer ) {
+				urlFeatureInfo = layer.getSource().getGetFeatureInfoUrl(
+					coordinate, viewResolution, theView.getProjection(),
+			        {'buffer':5, 'QUERY_LAYERS': layerName,  'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 100} 
+				);
+				var encodedUrl = encodeURIComponent( urlFeatureInfo );
+				addDataFrom( layerName, encodedUrl );
+			//}
 		}
 	});
 
-	console.log( urlFeatureInfo );
-	console.log("-----------------------------------------------------");
-	
-	Ext.Ajax.request({
-       url: urlFeatureInfo,
-       success: function(response, opts) {
-    	   console.log( response );
-    	   painelInferior.update( response );
-       },
-       failure: function(response, opts) {
-    	   console.log( "CORS ERROR" );
-    	  // Ext.Msg.alert('Erro ao receber a configuração so servidor' );
-       }
-    });		
-	
-	/*
-	var bbox = getMapCurrentBbox();
-	var requestUrl = serverUrl + "/?BBOX=" + bbox + "&CRS=EPSG:4326&QUERY_LAYERS=" + 
-		layerNames + "&SERVICE=WMS&REQUEST=GetFeatureInfo&FEATURE_COUNT=10&VERSION=1.3.0&FORMAT=image/png&LAYERS=" + 
-		layerNames + "&info_format=application/json";
-	
-	console.log( requestUrl );
-	*/
-	/*
-	Ext.Ajax.request({
-		url: 'getConfig',
-		success: function(response, opts) {
-				Ext.Msg.alert('Recebido Ok. Veja o Log do browser.' );
-				console.log( response );
-			},
-			failure: function(response, opts) {
-				Ext.Msg.alert('Erro ao receber a configuração so servidor' );
-			}
-	});		   
-	*/
 }
 
-
+function addDataFrom( layerName, encodedUrl ) {
+	aba02.removeAll();
+	
+	Ext.Ajax.request({
+       url: 'proxyRequest',
+       params: {
+           'targetUrl': encodedUrl,
+           'layerName' : layerName 
+       },       
+       success: function(response, opts) {
+    	   var jsonObj = JSON.parse(response.responseText);
+    	   //var data = jsonObj.features[0].properties; // properties,type,id,geometry.type,geometry_name 
+    	   var rawData = [];
+    	   for ( x=0; x<jsonObj.features.length;x++ ) {
+    		   rawData.push( jsonObj.features[x].properties );
+    	   }
+    	   addGrid( layerName, rawData );
+       },
+       failure: function(response, opts) {
+    	   // Nao esquecer de avisar ao usuario que este dado nao esta disponivel
+       }
+    });				
+}
 

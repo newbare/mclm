@@ -12,7 +12,9 @@ import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
@@ -22,11 +24,15 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.routing.HttpRoutePlanner;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HttpContext;
 
 
 public class WebClient {
@@ -73,7 +79,7 @@ public class WebClient {
 		String proxyUser = cfg.getProxyUser();
 		String proxyPassword = cfg.getProxyPassword();
 		int proxyPort = cfg.getProxyPort();
-
+		
 		if ( !useProxy ) {
 			httpClient = HttpClientBuilder.create().build();
 			httppost = new HttpPost( url );
@@ -88,8 +94,12 @@ public class WebClient {
 
 		}
 		
-		// Colocar num IF
-		String encoding = new String( Base64.encodeBase64( "admin:casnav2013".getBytes() ) );
+		
+		String geoServerPassword = cfg.getGeoserverPassword();
+		String geoServerUser = cfg.getGeoserverUser();
+		String credString = geoServerUser + ":" + geoServerPassword;
+		String encoding = new String( Base64.encodeBase64( credString.getBytes() ) );
+		
 		httppost.setHeader("User-Agent", USER_AGENT);
 		httppost.setHeader("Authorization", "Basic " + encoding);
 		httppost.setHeader("Content-type", "text/xml");
@@ -118,7 +128,7 @@ public class WebClient {
 		String result = "NO_ANSWER";
 		CloseableHttpClient httpClient;
 		HttpGet getRequest;
-
+		
 		Configurator cfg = Configurator.getInstance();
 		boolean useProxy = cfg.useProxy();
 		String proxyHost = cfg.getProxyHost();
@@ -133,14 +143,15 @@ public class WebClient {
 			CredentialsProvider credsProvider = new BasicCredentialsProvider();
 			credsProvider.setCredentials( new AuthScope(proxyHost, proxyPort),  new UsernamePasswordCredentials(proxyUser, proxyPassword));		
 			HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+
+			HttpRoutePlanner routePlanner = getHttpRoutePlanner( proxy, cfg );			
+			
 			RequestConfig config = RequestConfig.custom().setProxy(proxy).build();			 
-			httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();	
+			httpClient = HttpClients.custom().setRoutePlanner(routePlanner).setDefaultCredentialsProvider(credsProvider).build();	
 			getRequest = new HttpGet(url);
 			getRequest.setConfig(config);			 
-
 		}
-
-
+		
 		getRequest.addHeader("accept", "application/json");
 		getRequest.addHeader("Content-Type", "plain/text; charset=utf-8");
 		getRequest.setHeader("User-Agent", USER_AGENT);
@@ -151,7 +162,7 @@ public class WebClient {
 		int stCode = response.getStatusLine().getStatusCode();
 
 		if ( stCode != 200) {
-			System.out.println("WebClient: Error " + stCode + " when accessing URL " + url);
+			result = "Error " + stCode + " when accessing URL " + url;
 		} else {
 			HttpEntity entity = response.getEntity();
 			InputStreamReader isr = new InputStreamReader(entity.getContent(), "UTF-8");
@@ -170,6 +181,21 @@ public class WebClient {
 		String retorno = s.hasNext() ? s.next() : "";
 		s.close();
 		return retorno;
-	}		
-
+	}
+	
+	// Ignora enderecos locais no proxy
+	private HttpRoutePlanner getHttpRoutePlanner ( HttpHost proxy, Configurator cfg ) {
+		HttpRoutePlanner routePlanner = new DefaultProxyRoutePlanner( proxy ) {
+		    @Override
+		    public HttpRoute determineRoute( final HttpHost host, final HttpRequest request, final HttpContext context) throws HttpException {
+		        String hostname = host.getHostName();
+		        if ( cfg.getNonProxyHosts().contains( hostname ) ) {
+		            return new HttpRoute(host);
+		        }
+		        return super.determineRoute(host, request, context);
+		    }
+		};
+		return routePlanner;
+	}
+	
 }

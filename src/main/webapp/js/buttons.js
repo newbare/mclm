@@ -71,6 +71,17 @@ var buttons = [{
         handler: function() {
         	showLayerStack();
         }
+    }, 
+    {
+    	xtype: 'button',
+    	id: 'id117',
+	    width: btnWidth,
+	    height: btnHeight,
+	    enableToggle: true,
+	    iconCls: 'query-icon',
+        handler: function() {
+        	toggleQueryTool();
+        }
     }
 ];
 
@@ -112,6 +123,12 @@ function initTips() {
         target: 'id116',
         title: 'Controle de Camadas',
         text: 'Controla a disposição e visualizaçao das camadas ativas no mapa.',
+        width: 150,
+        dismissDelay: 5000 
+    }, {
+        target: 'id117',
+        title: 'Interrogar Camadas',
+        text: 'Interroga as camadas ativas no mapa em determinada posição.',
         width: 150,
         dismissDelay: 5000 
     });	

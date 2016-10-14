@@ -23,10 +23,10 @@ public class Config {
 	private String baseLayer;
 	
 	@Column
-	private boolean useProxy = false;
+	private Boolean useProxy = false;
 	
 	@Column
-	private boolean externalLayersToLocalServer = false;
+	private Boolean externalLayersToLocalServer = false;
 	
 	@Column(length=100, name = "external_workspace_name")
 	private String externalWorkspaceName = "ExternalLayers";
@@ -44,7 +44,7 @@ public class Config {
 	private String proxyPassword;
 	
 	@Column(name = "proxy_port")
-	private int proxyPort;
+	private Integer proxyPort;
 	
 	@Column(length=50, name = "geoserver_user")
 	private String geoserverUser;
@@ -52,11 +52,17 @@ public class Config {
 	@Column(length=50, name = "geoserver_password")
 	private String geoserverPassword;	
 	
-	public int getIdConfig() {
+	@Column(name = "map_zoom")
+	private Integer mapZoom;
+
+	@Column(name = "map_center")
+	private String mapCenter;
+	
+	public Integer getIdConfig() {
 		return idConfig;
 	}
 
-	public void setIdConfig(int idConfig) {
+	public void setIdConfig(Integer idConfig) {
 		this.idConfig = idConfig;
 	}
 
@@ -80,7 +86,7 @@ public class Config {
 		return useProxy;
 	}
 
-	public void setUseProxy(boolean useProxy) {
+	public void setUseProxy(Boolean useProxy) {
 		this.useProxy = useProxy;
 	}
 
@@ -108,11 +114,11 @@ public class Config {
 		this.proxyPassword = proxyPassword;
 	}
 
-	public int getProxyPort() {
+	public Integer getProxyPort() {
 		return proxyPort;
 	}
 
-	public void setProxyPort(int proxyPort) {
+	public void setProxyPort(Integer proxyPort) {
 		this.proxyPort = proxyPort;
 	}
 
@@ -148,13 +154,28 @@ public class Config {
 		this.externalWorkspaceName = externalWorkspaceName;
 	}
 
-	public boolean isExternalLayersToLocalServer() {
+	public Boolean isExternalLayersToLocalServer() {
 		return externalLayersToLocalServer;
 	}
 
-	public void setExternalLayersToLocalServer(boolean externalLayersToLocalServer) {
+	public void setExternalLayersToLocalServer(Boolean externalLayersToLocalServer) {
 		this.externalLayersToLocalServer = externalLayersToLocalServer;
 	}	
 	
+	public Integer getMapZoom() {
+		return mapZoom;
+	}
+	
+	public void setMapZoom(Integer mapZoom) {
+		this.mapZoom = mapZoom;
+	}
+	
+	public String getMapCenter() {
+		return mapCenter;
+	}
+	
+	public void setMapCenter(String mapCenter) {
+		this.mapCenter = mapCenter;
+	}
 	
 }

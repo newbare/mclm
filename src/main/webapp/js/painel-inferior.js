@@ -1,21 +1,14 @@
 
-/*
-var dummyGrid = Ext.create('Ext.grid.Panel', {
-	border:false,
-    frame: false,
-    flex:1,
-    columns: []
-});
-*/
 
-
-var painelInferior =  Ext.create('Ext.Panel', {
-	title: 'Footer',
+var painelInferior = Ext.create('Ext.Panel', {
+	title: 'Painel Vazio',
     region: 'south',
-    height: 100,
+    height: 250,
     minHeight: 75,
-    maxHeight: 150,
+    maxHeight: 250,
     collapsed: true,
-    animCollapse: false,            	            
-    html : 'lalalal'
+    animCollapse: false,   
+    scrollable: true,
+    scroll: 'both',    
+    html : 'This is not the panel you are looking for. Move Along.'
 });
