@@ -54,6 +54,9 @@ public class Config {
 	
 	@Column(name = "map_zoom")
 	private Integer mapZoom;
+	
+	@Column(name = "query_factor_radius")
+	private Integer queryFactorRadius;
 
 	@Column(name = "map_center")
 	private String mapCenter;
@@ -178,4 +181,11 @@ public class Config {
 		this.mapCenter = mapCenter;
 	}
 	
+	public Integer getQueryFactorRadius() {
+		return queryFactorRadius;
+	}
+	
+	public void setQueryFactorRadius(Integer queryFactorRadius) {
+		this.queryFactorRadius = queryFactorRadius;
+	}
 }

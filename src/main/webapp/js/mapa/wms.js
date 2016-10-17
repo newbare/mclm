@@ -16,6 +16,7 @@ var mapCenterLat = 0;
 var mapCenterLong = 0;	
 var landLayer = null;
 var openSeaMapLayer = null;
+var queryFactorRadius = 4;
 
 var mainConfig = null;
 var geoserverUrl = '';
@@ -64,10 +65,15 @@ function updateMapCenter() {
 function loadMap(container, config ) {
 	mainConfig = config;
 
+	// Configuracoes vindas do servidor, tabela "config".
+	// Se desejar uma configuracao nova, basta criar o atributo na classe "Config.java"
+	// que ele vira automaticamente para ca. Nao esqueca de setar o valor default no banco e
+	// criar a entrada na tela de configuracao 
 	geoserverUrl = config.geoserverUrl;
 	baseLayer = config.baseLayer;
 	mapZoom = config.mapZoom; 
 	mapCenter = config.mapCenter;
+	queryFactorRadius = config.queryFactorRadius;
 
 	arrayMapCenter = JSON.parse("[" + mapCenter + "]");
 

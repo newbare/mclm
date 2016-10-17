@@ -177,7 +177,7 @@ function showLayerStack() {
 	                        '</div>',    
                         '</div>',
                         '<div id="error_{serialId}" style="display:none;position:absolute;top:2px;left:2px"><img style="width:24px;height:24px;" src="img/alert.png"></div>',
-                        '<div class="alert-icon" id="alert_{serialId}" style="display:none;position:absolute;top:2px;left:2px"><img style="width:24px;height:24px;" src="img/loading.gif"></div>',
+                        '<div class="alert-icon" id="alert_{serialId}" style="position:absolute;top:2px;left:2px"><img style="width:24px;height:24px;" src="img/loading.gif"></div>',
                  '</tpl>'
                 ]
         }],
@@ -226,7 +226,7 @@ function showLayerStack() {
             '<div id="mclm_landlayer_cmoa_layer" style="padding: 2px 5px 2px 5px;">A camada de base do mapa.</div>'+
         '</div></div>'+
         '<div id="error_mclm_landlayer_cmoa" style="display:none;position:absolute;top:2px;left:2px"><img style="width:24px;height:24px;" src="img/alert.png"></div>'+
-        '<div class="alert-icon" id="alert_mclm_landlayer_cmoa" style="display:none;position:absolute;top:2px;left:2px"><img style="width:24px;height:24px;" src="img/loading.gif"></div>',
+        '<div class="alert-icon" id="alert_mclm_landlayer_cmoa" style="position:absolute;top:2px;left:2px"><img style="width:24px;height:24px;" src="img/loading.gif"></div>',
 	});	
 	
 	var layersDetailPanel = Ext.create('Ext.panel.Panel',{
@@ -257,9 +257,6 @@ function showLayerStack() {
 	        items: [{
 	            text: 'Atualizar',
 	            handler : mountImagePreview
-	        }, {
-	            text: 'MERGE',
-	            handler : imageMerge
 	        }]
 	    }],	
 
