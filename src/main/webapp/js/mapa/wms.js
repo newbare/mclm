@@ -149,8 +149,8 @@ function loadMap(container, config ) {
 	
 	// Algumas vezes o OpenLayers nao dispara o evento "tileloadend" e o icone "loading" fica 
 	// na tela ate mexer no mapa denovo. Isso ira remover todos os icones "loading"
-	// apos 15 segundos. 
-	// setInterval( function(){ $(".alert-icon").css("display","none"); }, 15000);
+	// apos 5 segundos. 
+	setInterval( function(){ checkLayerIsReady(); }, 5000);
 }
 
 function bindTileEvent( layer ) {
@@ -253,6 +253,17 @@ function removeLayer( layerAlias ) {
 		if( lyr.U.alias == layerAlias ) {
 			map.removeLayer( lyr );	
 			return;
+		}
+	});
+}
+
+//Para esconder o icone de loading caso o evendo ontileend funcione fora de sincronismo
+function checkLayerIsReady() {
+	map.getLayers().forEach( function ( layer ) {
+		var ready = layer.get('ready');
+		if ( ready ) {
+			var serialId = layer.get('serialId');
+			$("#alert_" + serialId).css("display","none");
 		}
 	});
 }
