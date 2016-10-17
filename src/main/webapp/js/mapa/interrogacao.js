@@ -24,7 +24,7 @@ function queryMap( coordinate ) {
 	map.getLayers().forEach( function (layer) {
 		var layerName = layer.U.name;
 		if ( layerName ) {
-			console.log( layer );
+			
 			//if ( !layer.isBaseLayer ) {
 				urlFeatureInfo = layer.getSource().getGetFeatureInfoUrl(
 					coordinate, viewResolution, theView.getProjection(),
@@ -48,17 +48,24 @@ function addDataFrom( layerName, encodedUrl ) {
            'layerName' : layerName 
        },       
        success: function(response, opts) {
-    	   var jsonObj = JSON.parse(response.responseText);
-    	   //var data = jsonObj.features[0].properties; // properties,type,id,geometry.type,geometry_name 
-    	   var rawData = [];
-    	   for ( x=0; x<jsonObj.features.length;x++ ) {
-    		   rawData.push( jsonObj.features[x].properties );
+    	   try {
+	    	   var jsonObj = JSON.parse(response.responseText);
+	    	   //var data = jsonObj.features[0].properties; // properties,type,id,geometry.type,geometry_name 
+	    	   var rawData = [];
+	    	   for ( x=0; x<jsonObj.features.length;x++ ) {
+	    		   rawData.push( jsonObj.features[x].properties );
+	    	   }
+	    	   addGrid( layerName, rawData );
+    	   } catch ( err ) {
+    		   ajaxError( response, layerName );
     	   }
-    	   addGrid( layerName, rawData );
        },
        failure: function(response, opts) {
-    	   // Nao esquecer de avisar ao usuario que este dado nao esta disponivel
+    	   ajaxError( response, layerName );
        }
     });				
 }
 
+function ajaxError( response, layerName ) {
+	console.log( "Ajax Error: " + response + " " + layerName );
+}

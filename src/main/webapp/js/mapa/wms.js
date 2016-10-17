@@ -81,6 +81,7 @@ function loadMap(container, config ) {
 	openSeaMapLayer.set('alias', 'OpenSeaMap');
 	openSeaMapLayer.set('serverUrl', '' );
 	openSeaMapLayer.set('serialId', 'mclm_openseamap_cmoa');
+	openSeaMapLayer.set('ready', true);
 	
 	// O Layer-base
 	landLayer = new ol.layer.Tile({
@@ -97,6 +98,7 @@ function loadMap(container, config ) {
 	landLayer.set('alias', 'Camada Base' );
 	landLayer.set('serverUrl', geoserverUrl );
 	landLayer.set('serialId', 'mclm_landlayer_cmoa');
+	landLayer.set('ready', false);
 	bindTileEvent( landLayer );
 
 	
@@ -134,7 +136,6 @@ function loadMap(container, config ) {
 				updateMapCenter();
 				break;
 			case 'resolution':  
-				$(".alert-icon").css("display","block");
 				updateMapCenter();
 				break;  
 		}
@@ -142,8 +143,8 @@ function loadMap(container, config ) {
 	
 	// Algumas vezes o OpenLayers nao dispara o evento "tileloadend" e o icone "loading" fica 
 	// na tela ate mexer no mapa denovo. Isso ira remover todos os icones "loading"
-	// apos 5 segundos. 
-	setInterval( function(){ $(".alert-icon").css("display","none"); }, 5000);
+	// apos 15 segundos. 
+	// setInterval( function(){ $(".alert-icon").css("display","none"); }, 15000);
 }
 
 function bindTileEvent( layer ) {
@@ -154,20 +155,25 @@ function bindTileEvent( layer ) {
 			console.log("tile '"+serialId+"' load start");
 			$("#alert_" + serialId).css("display","block");
 			$("#error_" + serialId).css("display","none");
+			layer.set('ready', false);
 			showMainLoader();
 		});
 	
+		// Tile Carregado. Temos ao menos alguma coisa da camada.
+		// Oculta os icones de alerta e loading. 
 		layer.getSource().on('tileloadend', function(event) {
 			console.log("tile '"+serialId+"' load end");
 			$("#alert_" + serialId).css("display","none");
 			$("#error_" + serialId).css("display","none");
+			layer.set('ready', true);
 			hideMainLoader();
 		});
 		
 		layer.getSource().on('tileloaderror', function(event) {
-			//console.log("tile '"+serialId+"' load error");
+			console.log("tile '"+serialId+"' load error");
 			$("#alert_" + serialId).css("display","none");
 			$("#error_" + serialId).css("display","block");
+			layer.set('ready', false);
 			hideMainLoader();
 		});
 	}
@@ -207,6 +213,7 @@ function addLayer( serverUrl, serverLayers, layerName, serialId ) {
 	newLayer.set('name', serverLayers);
 	newLayer.set('serverUrl', serverUrl);
 	newLayer.set('serialId', serialId);
+	newLayer.set('ready', false);
 	
 	bindTileEvent( newLayer );
 	map.addLayer( newLayer );
