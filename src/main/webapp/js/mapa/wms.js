@@ -88,6 +88,7 @@ function loadMap(container, config ) {
 	openSeaMapLayer.set('serverUrl', '' );
 	openSeaMapLayer.set('serialId', 'mclm_openseamap_cmoa');
 	openSeaMapLayer.set('ready', true);
+	openSeaMapLayer.set('baseLayer', false);
 	
 	// O Layer-base
 	landLayer = new ol.layer.Tile({
@@ -105,6 +106,7 @@ function loadMap(container, config ) {
 	landLayer.set('serverUrl', geoserverUrl );
 	landLayer.set('serialId', 'mclm_landlayer_cmoa');
 	landLayer.set('ready', false);
+	landLayer.set('baseLayer', true);
 	bindTileEvent( landLayer );
 
 	
@@ -220,6 +222,7 @@ function addLayer( serverUrl, serverLayers, layerName, serialId ) {
 	newLayer.set('serverUrl', serverUrl);
 	newLayer.set('serialId', serialId);
 	newLayer.set('ready', false);
+	newLayer.set('baseLayer', false);
 	
 	bindTileEvent( newLayer );
 	map.addLayer( newLayer );

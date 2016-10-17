@@ -29,17 +29,24 @@ function queryMap( coordinate ) {
 	
 	map.getLayers().forEach( function (layer) {
 		var layerName = layer.U.name;
-		if ( layerName ) {
+		var baseLayer = layer.U.baseLayer;
+		
+		if ( layerName && ( !baseLayer ) ) {
 			// "queryFactorRadius" esta definido em "wms.js" e o valor vem da configuracao do servidor
-			urlFeatureInfo = layer.getSource().getGetFeatureInfoUrl(
-				coordinate, viewResolution, theView.getProjection(),
-		        {'buffer':queryFactorRadius, 'QUERY_LAYERS': layerName,  'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 100} 
-			);
-			var encodedUrl = encodeURIComponent( urlFeatureInfo );
-			addDataFrom( layerName, encodedUrl );
+			try {
+				urlFeatureInfo = layer.getSource().getGetFeatureInfoUrl(
+					coordinate, viewResolution, theView.getProjection(),
+			        {'buffer':queryFactorRadius, 'QUERY_LAYERS': layerName,  'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 100} 
+				);
+				var encodedUrl = encodeURIComponent( urlFeatureInfo );
+				addDataFrom( layerName, encodedUrl );
+			} catch ( err ) {
+				//
+			}
 		}
 	});
-
+	
+	mainPanel.setActiveTab( aba02 );
 }
 
 function addDataFrom( layerName, encodedUrl ) {
@@ -59,7 +66,7 @@ function addDataFrom( layerName, encodedUrl ) {
 	    	   for ( x=0; x<jsonObj.features.length;x++ ) {
 	    		   rawData.push( jsonObj.features[x].properties );
 	    	   }
-	    	   addGrid( layerName, rawData );
+	    	   if ( rawData.length > 0 ) addGrid( layerName, rawData );
     	   } catch ( err ) {
     		   ajaxError( response, layerName );
     	   }

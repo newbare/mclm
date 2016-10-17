@@ -5,6 +5,8 @@
  * 
  * as funcoes estao em wms.js
  * 
+ * showConfig() estah em "config.js"
+ * 
  */
 
 var btnHeight = 32;
@@ -17,7 +19,7 @@ var buttons = [{
 	    height: btnHeight,
 	    iconCls: 'setting-icon',
         handler: function() {
-        	queryMap();
+        	showConfig();
         }       
     }, 
     {

@@ -25,7 +25,7 @@ public class ProxyRequestAction {
 
 		try { 
 			
-			System.out.println( targetUrl );
+			
 			String result = "";
 			
 			if ( targetUrl != null ) {

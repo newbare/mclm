@@ -43,6 +43,7 @@
 	<script type="text/javascript" src="js/painel-central.js"></script>
 	<script type="text/javascript" src="js/aba01.js"></script>
 	<script type="text/javascript" src="js/aba02.js"></script>
+	<script type="text/javascript" src="js/config.js"></script>
 
 <!-- MAPA -->
 	<script type="text/javascript" src="js/mapa/wms.js"></script>
@@ -56,31 +57,32 @@
 	<!-- Aqui eh o ponto de entrada do sistema -->
 	<script type="text/javascript">
 	
-	   Ext.Loader.setConfig({ 
-	       enabled: true 
-	   });
+		var mainPanel = null;
+	
+		Ext.Loader.setConfig({ 
+			enabled: true 
+		});
 	   
 	
-	   Ext.onReady(function() {
+		Ext.onReady(function() {
 		   // Solicita a configuracao do sistema. Caso Ok, inicia a interface.	
-		   Ext.Ajax.request({
-               url: 'getConfig',
-               success: function(response, opts) {
-                  var config = Ext.decode(response.responseText);
-                  runSystem( config );
-               },
-               failure: function(response, opts) {
-            	   Ext.Msg.alert('Erro ao receber a configuração do servidor' );
-               }
-            });		   
-		   
+			Ext.Ajax.request({
+				url: 'getConfig',
+				success: function(response, opts) {
+					var config = Ext.decode(response.responseText);
+					runSystem( config );
+				},
+				failure: function(response, opts) {
+					Ext.Msg.alert('Erro ao receber a configuração do servidor' );
+				}
+			});		   
 		         
-	   });
+		});
 
 	   
 	   function runSystem( config ) {
 		   
-	       Ext.create('Ext.tab.Panel', {
+	      mainPanel = Ext.create('Ext.tab.Panel', {
 	           plugins: 'viewport',
 	           items: [ aba01, aba02 ],
 			   renderTo : Ext.getBody(),

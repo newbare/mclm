@@ -27,16 +27,8 @@ function createGrid( layerName, store, columnNames ) {
 	    margin: "10 0 0 0", 
 	    flex:1,
 	    loadMask: true,
-	    columns:columnNames,
-		bbar: Ext.create('Ext.PagingToolbar', {
-		    store: store,
-		    displayInfo: true,
-		    displayMsg: 'Displaying topics {0} - {1} of {2}',
-		    emptyMsg: "No topics to display",
-		    inputItemWidth: 35
-		}),	    
+	    columns:columnNames
 	});
-	store.loadPage(1);
 	return dummyGrid;
 }
 
@@ -49,9 +41,8 @@ function createStore( storeData, columns ) {
 	} 
 	
 	var store =  Ext.create('Ext.data.Store',{
-        pageSize: 10,
         fields: columns,
-		//autoLoad: true,
+		autoLoad: true,
 		data: theData
 	}); 	
 	return store;
@@ -74,3 +65,4 @@ var aba02 = Ext.create('Ext.Panel', {
     scroll: 'both',    
     html : ''
 });
+
