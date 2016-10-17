@@ -1,4 +1,6 @@
+var queryToolEnabled = false;
 
+ 
 function bindMapToQueryTool() {
 	onClickBindKey = map.on('click', function(event) {
 		queryMap( event.coordinate );
@@ -6,13 +8,43 @@ function bindMapToQueryTool() {
 	
 } 
 
+// invocado pelo botao da barra de ferramentas lateral.
+// "unbindMapClick()" estah no arquivo "wms.js"
 function toggleQueryTool() {
-	// o botao aponta para cá.
-	bindMapToQueryTool() ;
-	// To unbind: unbindMapClick();
+	if ( !queryToolEnabled ) {
+		bindMapToQueryTool() ;
+		queryToolEnabled = true;
+	} else {
+		unbindMapClick();
+		queryToolEnabled = false;
+	}
 }
 
+function imageMerge() {
+	var canvas = document.getElementById('myCanvas');
+	var context = canvas.getContext('2d');
 
+	$('.mergeable').each(function(){
+		var me = $( this );
+		canvas.width = me.width;
+		canvas.height = me.height;
+		var img = new Image();
+		img.src = me.attr("src"); 
+		context.drawImage( img, 0, 0);
+	});	
+	
+	var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+	window.location.href=image;	
+	
+	/*
+	var img1 = document.getElementById('img1');
+	var img2 = document.getElementById('img2');
+	context.globalAlpha = 1.0;
+	context.drawImage(img1, 0, 0);
+	context.globalAlpha = 0.5; //Remove if pngs have alpha
+	context.drawImage(img2, 0, 0);
+	*/	
+}
 
 function queryMap( coordinate ) {
 	var virgula = "";

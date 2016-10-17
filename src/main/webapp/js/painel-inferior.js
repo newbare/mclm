@@ -10,5 +10,5 @@ var painelInferior = Ext.create('Ext.Panel', {
     animCollapse: false,   
     scrollable: true,
     scroll: 'both',    
-    html : 'This is not the panel you are looking for. Move Along.'
+    html : '<canvas id="myCanvas" width="200" height="100"></canvas>'
 });

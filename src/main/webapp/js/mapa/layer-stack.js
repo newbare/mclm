@@ -71,9 +71,9 @@ function mountImagePreview() {
 		// Imagem pequena da lista de camadas
 		imgElement.dom.src = baseLayerUrlPreview;
 		// Imagem do painel grande
-		content = content + "<img class='minithumb' id='big_mclm_landlayer_cmoa' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+baseLayerUrlPreview+"' />";
+		content = content + "<img class='minithumb mergeable' id='big_mclm_landlayer_cmoa' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+baseLayerUrlPreview+"' />";
 		zindex++;
-		checkLayerIsReady( baseLayer );
+		
 	}	
 	
 	// Atualiza as imagens de preview das camadas na lista de camadas
@@ -89,9 +89,9 @@ function mountImagePreview() {
 			// Imagem pequena da lista de camadas 
 			imgElement.dom.src = thumImg;
 			// Imagem do painel grande
-			content = content + "<img class='minithumb' id='big_"+serialId+"' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+thumImg+"' />";
+			content = content + "<img class='minithumb mergeable' id='big_"+serialId+"' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+thumImg+"' />";
 		}
-		checkLayerIsReady( layerName );
+		
 		zindex++;
 	});
 	layerMiniImage.body.update( content );
@@ -99,20 +99,6 @@ function mountImagePreview() {
 	checkPreviewImages();
 }
 
-// Verifica se a camada ja foi carregada completamente antes de mostrarmos o icone "loading".
-// Como este icone eh controlado pelos eventos dos tiles da camada, se eles ja tiverem sido
-// carregados o icone de "loading" ficara sendo exibido na tela pra sempre.
-function checkLayerIsReady( layerName ) {
-	
-	var layer = findByName( layerName );
-	var ready = layer.get('ready');
-	console.log( "verifiquei " + layerName + ": " + ready );
-	if ( ready ) {	
-		var serialId = layer.get('serialId');
-		$("#alert_" + serialId).css("display","none");
-	}
-	
-}
 
 // Verifica cada imagem de preview se ela ja foi completamente carregada e entao
 // permite que ela seja exibida. Sem isso ficaria um icone de "imagem quebrada" no lugar da
@@ -272,8 +258,8 @@ function showLayerStack() {
 	            text: 'Atualizar',
 	            handler : mountImagePreview
 	        }, {
-	            text: 'Interroga',
-	            handler : bindMapToQueryTool
+	            text: 'MERGE',
+	            handler : imageMerge
 	        }]
 	    }],	
 
