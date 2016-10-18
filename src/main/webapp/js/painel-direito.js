@@ -1,4 +1,4 @@
-var painelDireito = {
+var painelDireito = Ext.create('Ext.Panel', {
     region:'east',
     floatable: true,
     margin: '0 0 0 0',
@@ -13,5 +13,5 @@ var painelDireito = {
         overflowHandler: 'scroller',
         items: buttons
     }],
-} 
+}); 
 

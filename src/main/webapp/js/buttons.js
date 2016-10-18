@@ -29,7 +29,7 @@ var buttons = [{
 	    height: btnHeight,
 	    iconCls: 'server-icon',
         handler: function() {
-        	//
+        	manageServers();
         }       
     }, 
     {
@@ -91,7 +91,23 @@ function initTips() {
 	
     Ext.tip.QuickTipManager.init();
 
-    Ext.tip.QuickTipManager.register({
+    Ext.tip.QuickTipManager.register(
+	{
+	  target: 'id011',
+	  title: 'Expandir Tudo',
+	  text: 'Expande toda a árvore. Poderá demorar.',
+	  width: 150,
+	  dismissDelay: 5000 
+	  	      
+    },     	
+    {
+      target: 'id012',
+      title: 'Recolher Tudo',
+      text: 'Recolhe toda a árvore.',
+      width: 150,
+      dismissDelay: 5000 
+    	      
+    }, {
       target: 'id111',
       title: 'Configurações',
       text: 'Configura aspectos gerais do sistema.',
@@ -99,8 +115,8 @@ function initTips() {
       dismissDelay: 5000 
     }, {
         target: 'id112',
-        title: 'Fonte de Dados',
-        text: 'Gerencia os servidores de fontes de mapas.',
+        title: 'Fontes Externas',
+        text: 'Gerencia os servidores de fontes externas de mapas.',
         width: 150,
         dismissDelay: 5000 
     }, {

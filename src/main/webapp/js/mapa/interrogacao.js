@@ -50,7 +50,9 @@ function queryMap( coordinate ) {
 }
 
 function addDataFrom( layerName, encodedUrl ) {
+	
 	aba02.removeAll();
+	aba02.update( defaultQueryContent );
 	
 	Ext.Ajax.request({
        url: 'proxyRequest',
@@ -66,7 +68,11 @@ function addDataFrom( layerName, encodedUrl ) {
 	    	   for ( x=0; x<jsonObj.features.length;x++ ) {
 	    		   rawData.push( jsonObj.features[x].properties );
 	    	   }
-	    	   if ( rawData.length > 0 ) addGrid( layerName, rawData );
+	    	   if ( rawData.length > 0 ) {
+	    		  addGrid( layerName, rawData );
+	    		  $('#waitForQueryResultIcon').css('display','none');
+	    	   }
+	    	   
     	   } catch ( err ) {
     		   ajaxError( response, layerName );
     	   }

@@ -1,3 +1,5 @@
+var defaultQueryContent = '<img id="waitForQueryResultIcon" style="margin:40px" src="img/loading.gif">';
+
 function getStoreColumnsFromJson( obj ) {
     var keys = [];
     for (var key in obj) {

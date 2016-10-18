@@ -120,13 +120,13 @@ var layerTree = Ext.create('Ext.tree.Panel', {
     rootVisible: false,
     
     plugins: [{  ptype: 'treefilter', allowParentFolders: true }],
-    
+    /*
     viewConfig: {
         plugins: {
             ptype: 'treeviewdragdrop',
         }
     },
-    
+    */
     scrollable: true,
     scroll: 'both',
 
@@ -137,10 +137,12 @@ var layerTree = Ext.create('Ext.tree.Panel', {
     dockedItems: [{
         xtype: 'toolbar',
         items: [{
-            text: 'Expandir',
+        	iconCls: 'forecast-icon',
+        	id: 'id011',
             handler : layerTreeExpandir
         }, {
-            text: 'Recolher',
+        	iconCls: 'forecast-icon',
+        	id: 'id012',
             handler : layerTreeRecolher
         }, searchBar]
     }],
@@ -154,37 +156,35 @@ var layerTree = Ext.create('Ext.tree.Panel', {
 });
 
 function contextMenu(tree, record, item, index, e, eOpts ) {
-	
-    var menu_grid = new Ext.menu.Menu({ 
-    	items: [
-          { text: 'Adicionar Pasta', handler: function() { addFolderUnderNode(record.data); } },
-          { text: 'Apagar', handler: function() { deleteNodeAndChildren( node ); } }
-        ]
-    });
-    
+	if ( !record.data.leaf ) {
+	    var menu_grid = new Ext.menu.Menu({ 
+	    	items: [
+	          { iconCls: 'forecast-icon', text: 'Adicionar Camada KML', handler: function() { addNewLayer(record.data); } },
+	          { iconCls: 'add-wms-icon', text: 'Adicionar Camada WMS', handler: function() { addNewLayer(record.data); } },
+	          { iconCls: 'grid-icon', text: 'Adicionar Camada SHP', handler: function() { addNewLayer(record.data); } },
+	          { xtype: 'menuseparator' },
+	          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { addNewFolder(record.data); } },
+	          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { deleteNodeAndChildren( record ); } }
+	        ]
+	    });
+	} else {
+	    var menu_grid = new Ext.menu.Menu({ 
+	    	items: [
+	          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { deleteLayer( record ); } }
+	        ]
+	    });
+	}
     var position = [e.getX()-10, e.getY()-10];
-    e.stopEvent();
     menu_grid.showAt( position );
+	e.stopEvent();
 }
 
-function addFolderUnderNode( node ) {
+function addNewFolder( node ) {
 	Ext.Msg.alert( node.id + " " + node.layerAlias );
-	/*
-	 	Exemplo...
-		var newTask = Ext.create('Task');
-		newTask.set({
-		    task: 'Task1',
-		    user: 'Name',
-		    duration: '10',
-		    expanded: true,
-		    loaded: true,
-		    leaf: false,
-		    icon: 'icon-leaf'
-		});
-		
-		selNode.insertChild(0, newTask);	
-	  
-	 */
+}
+
+function addNewLayer( node ) {
+	Ext.Msg.alert( node.id + " " + node.layerAlias );
 }
 
 function deleteNodeAndChildren( node ) {

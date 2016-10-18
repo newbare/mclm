@@ -1,96 +1,215 @@
+var configForm = null;
+var configWindow = null;
+
+function onCloseMessage() {
+	//configWindow.close();
+	location.reload(); 
+}
+
 function showConfig() {
 
-	// Resposta deve ser: { "success": true, "msg": "User added successfully" }
-
-	var configModel = Ext.create('Ext.data.Model', {
-	    fields: ['firstName', 'lastName', 'birthDate'],
-	    proxy: {
-	        type: 'ajax',
-	        api: {
-	            read: 'loadConfig',
-	            update: 'updateConfig'
-	        },
-	        reader: {
-	            type: 'json',
-	            root: 'users'
-	        }
-	    }
-	});	
+	Ext.Ajax.request({
+		url: 'getConfig',
+		success: function(response, opts) {
+			showConfigForm();
+			var config = Ext.decode(response.responseText);
+			configForm.getForm().setValues( config );
+		},
+		failure: function(response, opts) {
+			Ext.Msg.alert('Erro ao receber a configuração do servidor' );
+		}
+	});			
 	
-	var configPanel = Ext.create('Ext.form.Panel', {
-	    bodyPadding: 10,
+}
+
+function showConfigForm() {
+	Ext.define('Config', {
+        extend: 'Ext.data.Model',
+	    fields: [{name:'geoserverUrl', type: 'string'},   
+	             {name:'baseLayer',type: 'string'},
+	             {name:'externalWorkspaceName',type: 'string'},
+	             {name:'proxyHost',type: 'string'},
+	             {name:'nonProxyHosts',type: 'string'},
+	             {name:'proxyUser',type: 'string'},
+	             {name:'proxyPassword',type: 'string'},
+	             {name:'proxyPort',type: 'int'},
+	             {name:'queryFactorRadius',type: 'int'},
+	             {name:'idConfig',type: 'int'},
+	             {name:'mapZoom',type: 'int'},
+	             {name:'useProxy',type: 'boolean'},
+	             {name:'externalLayersToLocalServer',type: 'boolean'},
+	             {name:'geoserverUser',type: 'string'},
+	             {name:'geoserverPassword',type: 'string'},
+	             {name:'mapCenter',type: 'string'}
+	]});	
+	
+	configForm = Ext.create('Ext.form.Panel', {
+	    bodyPadding: 5,
 	    defaultType: 'textfield',
-	    url: 'updateConfig',
-	    reader: {
-	        type : 'json',
-	        model: configModel
-	    },	    
-	    
-	    items: [
-	        {
-	            fieldLabel: 'First Name',
+	    url: 'saveConfig',
+	    items: [{
+	            fieldLabel: 'ID',
+	            width: 350,
 	            msgTarget: 'under',
-	            name: 'firstName',
-	            invalidText: 'Hora Incorreta',
-	            regex: /^([1-9]|1[0-9]):([0-5][0-9])(\s[a|p]m)$/i,
-	            maskRe: /[\d\s:amp]/i,	            
+	            xtype : 'hidden',
+	            name: 'idConfig',
+	            readOnly: true,
+	            allowBlank : false,
+	            invalidText: 'Teste',
+	        },
+		    {
+	            fieldLabel: 'Servidor de Mapa',
+	            width: 350,
+	            msgTarget: 'under',
+	            name: 'geoserverUrl',
+	            allowBlank : false,
+	            invalidText: 'Teste',
 	        },
 	        {
-	            fieldLabel: 'Last Name',
+	            fieldLabel: 'Camada Base',
+	            width: 350,
 	            msgTarget: 'under',
-	            name: 'lastName',
-	            invalidText: ''
+	            name: 'baseLayer',
+	            allowBlank : false,
+	            invalidText: 'Teste'
 	        },
 	        {
-	            xtype: 'datefield',
-	            fieldLabel: 'Date of Birth',
+	            fieldLabel: 'Centro do Mapa',
+	            id : 'mapCenterConfigField',
+	            width: 350,
 	            msgTarget: 'under',
-	            name: 'birthDate',
-	            invalidText: 'Data Incorreta'
-	        }
-	    ],
+	            name: 'mapCenter',
+	            allowBlank : false,
+	            invalidText: 'Teste'
+	        },
+	        {
+	            fieldLabel: 'Nível de Zoom',
+	            id : 'mapZoomConfigField',
+	            width: 150,
+	            maskRe: /[0-9.]/, 
+	            msgTarget: 'under',
+	            name: 'mapZoom',
+	            allowBlank : false,
+	            invalidText: 'Apenas números'
+	        },
+	        {
+	            fieldLabel: 'Usuário do GeoServer',
+	            width: 350,
+	            msgTarget: 'under',
+	            name: 'geoserverUser',
+	            allowBlank : false,
+	            invalidText: 'Teste'
+	        },
+	        {
+	            fieldLabel: 'Senha do GeoServer',
+	            inputType: 'password', 
+	            width: 350,
+	            msgTarget: 'under',
+	            allowBlank : false,
+	            name: 'geoserverPassword',
+	            invalidText: 'Teste'
+	        },
+	        {
+	            fieldLabel: 'Fator de Busca da Interrogação',
+	            width: 150,
+	            maskRe: /[0-9.]/, 
+	            msgTarget: 'under',
+	            name: 'queryFactorRadius',
+	            allowBlank : false,
+	            invalidText: 'Apenas números'
+	        },
+	        {
+	            fieldLabel: 'Host do Proxy',
+	            width: 350,
+	            msgTarget: 'under',
+	            name: 'proxyHost',
+	            invalidText: 'Teste'
+	        },
+	        {
+	            fieldLabel: 'Usuário do Proxy',
+	            width: 350,
+	            msgTarget: 'under',
+	            name: 'proxyUser',
+	            invalidText: 'Teste'
+	        },
+	        {
+	            fieldLabel: 'Senha do Proxy',
+	            width: 350,
+	            inputType: 'password',
+	            msgTarget: 'under',
+	            name: 'proxyPassword',
+	            invalidText: 'Teste'
+	        },
+	        {
+	            fieldLabel: 'Porta do Proxy',
+	            width: 150,
+	            maskRe: /[0-9.]/, 
+	            msgTarget: 'under',
+	            name: 'proxyPort',
+	            invalidText: 'Apenas números'
+	        },
+	        {
+	            fieldLabel: 'Ignorar Proxy',
+	            width: 350,
+	            msgTarget: 'under',
+	            name: 'nonProxyHosts',
+	            invalidText: 'Teste'								
+	        },
+	        {
+	            fieldLabel: 'Usar Proxy',
+	            width: 350,
+	            inputType: 'checkbox',
+	            msgTarget: 'under',
+	            name: 'useProxy',
+	            invalidText: 'Teste'
+	        },{
+	            fieldLabel: 'Criar Camadas externas no servidor local',
+	            width: 350,
+	            inputType: 'checkbox',
+	            msgTarget: 'under',
+	            name: 'externalLayersToLocalServer',
+	            invalidText: 'Teste'
+	        }],
 	    buttons: [{
+            text: 'Fechar',
+	            handler: function() {
+	            	configWindow.close();
+	            }
+	    	},{
               text: 'Gravar',
               handler: function() {
-                  var form = this.up('form'), // get the form panel
-                      record = form.getRecord(); // get the underlying model instance
-                  if (form.isValid()) { // make sure the form contains valid data before submitting
-                      form.updateRecord(record); // update the record with the form data
-                      record.save({ // save the record to the server
-                          success: function(user) {
-                              Ext.Msg.alert('Success', 'User saved successfully.')
-                          },
-                          failure: function(user) {
-                              Ext.Msg.alert('Failure', 'Failed to save user.')
-                          }
-                      });
-                  } else { // display error alert if the data is invalid
-                      Ext.Msg.alert('Invalid Data', 'Please correct form errors.')
+                  var form = configForm.getForm();
+                  if ( form.isValid() ) {
+                	  form.submit({
+                          success: function(form, action) {
+                              Ext.Msg.alert('Sucesso', action.result.msg, onCloseMessage);
+                           },
+                           failure: function(form, action) {
+                               Ext.Msg.alert('Failed', action.result.msg, onCloseMessage);
+                           }                		  
+                	  });
+                  } else { 
+                      Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
                   }
+                  
+                  
               }
 	    }]
 	
 	});	
 	
 	
-	Ext.create('Ext.Window',{
+	configWindow = Ext.create('Ext.Window',{
 		title : "Configurações",
-		width : 450,
-		height: 400,
+		width : 377,
+		height: 450,
 	    scrollable: false,
 	    frame : false,
 		layout : 'fit',
 		constrain: true,
 		bodyStyle:"background:#FFFFFF;",
 		renderTo: Ext.getBody(),
-		items : [ configPanel ]
+		items : [ configForm ]
 	}).show();		
-	
-	
-	configModel.load(1, { // load user with ID of "1"
-	    success: function( user ) {
-	        userForm.loadRecord(user); // when user is loaded successfully, load the data into the form
-	    }
-	});
-	
+		
 }

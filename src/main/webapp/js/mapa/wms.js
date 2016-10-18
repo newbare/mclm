@@ -52,10 +52,15 @@ function updateMapCenter() {
 	mapCenterLong = center2[0];
 	mapCenterLat = center2[1];
 	mapZoom = map.getView().getZoom();
+
+	// Atualiza os atributos de mapa na tela de editar configuração
+	// para facilitar ao usuario editar estes valores.
+	// Precisa do try..catch para evitar erros quando a tela nao estiver sendo exibida.
+	try {
+		Ext.getCmp('mapCenterConfigField').setValue(mapCenterLong + "," + mapCenterLat);
+		Ext.getCmp('mapZoomConfigField').setValue(mapZoom);
+	} catch ( ignored ) { }
 	
-	// Atualiza sempre que arrasta ou muda o zoom, mas gasta muito acesso a rede e deixa mais lento.
-	// Optei por deixar o usuario atualizar pelo botao "atualizar" no painel de camadas ativas.
-	//mountImagePreview();
 }
 
 /* loadMap()

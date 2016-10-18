@@ -61,6 +61,34 @@ public class Config {
 	@Column(name = "map_center")
 	private String mapCenter;
 	
+	public Config() {
+		//
+	}
+	
+	
+	public Config(int idConfig, String geoserverUrl, String baseLayer, Boolean useProxy,
+			Boolean externalLayersToLocalServer, String externalWorkspaceName, String proxyHost, String nonProxyHosts,
+			String proxyUser, String proxyPassword, Integer proxyPort, String geoserverUser, String geoserverPassword,
+			Integer mapZoom, Integer queryFactorRadius, String mapCenter) {
+		super();
+		this.idConfig = idConfig;
+		this.geoserverUrl = geoserverUrl;
+		this.baseLayer = baseLayer;
+		this.useProxy = useProxy;
+		this.externalLayersToLocalServer = externalLayersToLocalServer;
+		this.externalWorkspaceName = externalWorkspaceName;
+		this.proxyHost = proxyHost;
+		this.nonProxyHosts = nonProxyHosts;
+		this.proxyUser = proxyUser;
+		this.proxyPassword = proxyPassword;
+		this.proxyPort = proxyPort;
+		this.geoserverUser = geoserverUser;
+		this.geoserverPassword = geoserverPassword;
+		this.mapZoom = mapZoom;
+		this.queryFactorRadius = queryFactorRadius;
+		this.mapCenter = mapCenter;
+	}
+
 	public Integer getIdConfig() {
 		return idConfig;
 	}

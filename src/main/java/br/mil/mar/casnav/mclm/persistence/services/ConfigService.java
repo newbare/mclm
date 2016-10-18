@@ -41,6 +41,9 @@ public class ConfigService {
 		oldConfig.setProxyPort( config.getProxyPort() );
 		oldConfig.setProxyUser( config.getProxyUser() );
 		oldConfig.setUseProxy( config.isUseProxy() );
+		oldConfig.setMapZoom( config.getMapZoom() );
+		oldConfig.setMapCenter( config.getMapCenter() );
+		oldConfig.setQueryFactorRadius( config.getQueryFactorRadius() );
 		oldConfig.setExternalWorkspaceName( config.getExternalWorkspaceName() );
 		oldConfig.setExternalLayersToLocalServer( config.isExternalLayersToLocalServer() );
 

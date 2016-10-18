@@ -15,6 +15,7 @@ import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
 import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
 import br.mil.mar.casnav.mclm.persistence.services.UserService;
 
+
 @WebListener
 public class Startup implements ServletContextListener {
 	private ScheduledExecutorService scheduler;
