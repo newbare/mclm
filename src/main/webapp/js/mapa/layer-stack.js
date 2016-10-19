@@ -255,6 +255,7 @@ function showLayerStack() {
 	            handler : mountImagePreview
 	        },{
 	            text: 'Ver Legenda',
+	            // "showLegend()" estah em "legenda.js"
 	            handler : showLegend
 	        }]
 	    }],	

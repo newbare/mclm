@@ -94,7 +94,7 @@ public class NodeService {
 	// Precisa ser em SQL para poder pegar tambem a quantidade de filhos do no.
 	// Esta informacao eh usada pela arvore para decidir se permite expandir
 	// o no ou nao e o tipo de icone a ser usado (pasta ou folha)
-	public String getNodesAsJSON( int idParent ) throws Exception {
+	public synchronized String getNodesAsJSON( int idParent ) throws Exception {
 		String sql = "SELECT nd.*, COUNT(t1.*) as children " +
 				"FROM node_data nd " +
 				"LEFT OUTER JOIN node_data t1 on t1.id_node_parent = nd.id_node_data " +

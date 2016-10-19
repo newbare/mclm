@@ -47,3 +47,13 @@
 	background-image: url('../img/add-folder.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.add-external-icon {
+	background-image: url('../img/add-external.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.remove-external-icon {
+	background-image: url('../img/remove-external.svg') !important;
+	background-repeat: no-repeat;
+}

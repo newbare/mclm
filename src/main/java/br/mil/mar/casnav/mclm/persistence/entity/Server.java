@@ -11,6 +11,16 @@ import javax.persistence.Table;
 @Table(name="servers") 
 public class Server {
 
+	public Server(String name, String url, String version) {
+		this.url = url;
+		this.name = name;
+		this.version = version;
+	}
+	
+	public Server() {
+		// Necessário para uso do Hibernate
+	}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id_server")
@@ -22,6 +32,9 @@ public class Server {
 	@Column(length=250)
 	private String name;
 
+	@Column(length=10)
+	private String version;	
+	
 	public String getName() {
 		return name;
 	}
@@ -46,6 +59,12 @@ public class Server {
 		this.url = url;
 	}	
 	
+	public void setVersion(String version) {
+		this.version = version;
+	}
 	
+	public String getVersion() {
+		return version;
+	}
 	
 }

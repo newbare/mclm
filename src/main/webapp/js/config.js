@@ -2,7 +2,6 @@ var configForm = null;
 var configWindow = null;
 
 function onCloseMessage() {
-	//configWindow.close();
 	location.reload(); 
 }
 
@@ -23,26 +22,7 @@ function showConfig() {
 }
 
 function showConfigForm() {
-	Ext.define('Config', {
-        extend: 'Ext.data.Model',
-	    fields: [{name:'geoserverUrl', type: 'string'},   
-	             {name:'baseLayer',type: 'string'},
-	             {name:'externalWorkspaceName',type: 'string'},
-	             {name:'proxyHost',type: 'string'},
-	             {name:'nonProxyHosts',type: 'string'},
-	             {name:'proxyUser',type: 'string'},
-	             {name:'proxyPassword',type: 'string'},
-	             {name:'proxyPort',type: 'int'},
-	             {name:'queryFactorRadius',type: 'int'},
-	             {name:'idConfig',type: 'int'},
-	             {name:'mapZoom',type: 'int'},
-	             {name:'useProxy',type: 'boolean'},
-	             {name:'externalLayersToLocalServer',type: 'boolean'},
-	             {name:'geoserverUser',type: 'string'},
-	             {name:'geoserverPassword',type: 'string'},
-	             {name:'mapCenter',type: 'string'}
-	]});	
-	
+
 	configForm = Ext.create('Ext.form.Panel', {
 	    bodyPadding: 5,
 	    defaultType: 'textfield',

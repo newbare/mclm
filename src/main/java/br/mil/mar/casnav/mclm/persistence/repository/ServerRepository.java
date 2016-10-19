@@ -1,8 +1,6 @@
 package br.mil.mar.casnav.mclm.persistence.repository;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import br.mil.mar.casnav.mclm.persistence.entity.Server;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -62,12 +60,12 @@ public class ServerRepository extends BasicRepository {
 		return server;
 	}
 
-	public Set<Server> getList() throws Exception {
+	public List<Server> getList() throws Exception {
 		DaoFactory<Server> df = new DaoFactory<Server>();
 		IDao<Server> fm = df.getDao(this.session, Server.class);
-		Set<Server> server = null;
+		List<Server> server = null;
 		try {
-			server = new HashSet<Server>( fm.getList("select * from servers") );
+			server = fm.getList("select * from servers");
 		} catch ( Exception e ) {
 			closeSession();
 			throw e;

@@ -1,5 +1,4 @@
 var queryToolEnabled = false;
-
  
 function bindMapToQueryTool() {
 	onClickBindKey = map.on('click', function(event) {
@@ -69,6 +68,7 @@ function addDataFrom( layerName, encodedUrl ) {
 	    		   rawData.push( jsonObj.features[x].properties );
 	    	   }
 	    	   if ( rawData.length > 0 ) {
+	    		   // "addGrid()" estah no arquivo "aba02.js"  
 	    		  addGrid( layerName, rawData );
 	    		  $('#waitForQueryResultIcon').css('display','none');
 	    	   }

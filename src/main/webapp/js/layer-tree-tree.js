@@ -22,7 +22,7 @@ Ext.define('TreeFilter', {
         , alias: 'plugin.treefilter'
 
         , collapseOnClear: true                                             // collapse all nodes when clearing/resetting the filter
-        , allowParentFolders: false                                         // allow nodes not designated as 'leaf' (and their child items) to  be matched by the filter
+        , allowParentFolders: true                                         // allow nodes not designated as 'leaf' (and their child items) to  be matched by the filter
 
         , init: function (tree) {
             var me = this;
@@ -51,7 +51,7 @@ Ext.define('TreeFilter', {
 
             // iterate over all nodes in the tree in order to evalute them against the search criteria
             root.cascadeBy(function (node) {
-                if (node.get(property).match(re)) {                         // if the node matches the search criteria and is a leaf (could be  modified to searh non-leaf nodes)
+                if (node.get(property).match(re) ) {                         // if the node matches the search criteria and is a leaf (could be  modified to searh non-leaf nodes)
                     matches.push(node)                                  // add the node to the matches array
                 }
             });
@@ -159,11 +159,11 @@ function contextMenu(tree, record, item, index, e, eOpts ) {
 	if ( !record.data.leaf ) {
 	    var menu_grid = new Ext.menu.Menu({ 
 	    	items: [
-	          { iconCls: 'forecast-icon', text: 'Adicionar Camada KML', handler: function() { addNewLayer(record.data); } },
-	          { iconCls: 'add-wms-icon', text: 'Adicionar Camada WMS', handler: function() { addNewLayer(record.data); } },
-	          { iconCls: 'grid-icon', text: 'Adicionar Camada SHP', handler: function() { addNewLayer(record.data); } },
+	          { iconCls: 'forecast-icon', text: 'Adicionar Camada KML', handler: function() { addNewLayer(record); } },
+	          { iconCls: 'add-wms-icon', text: 'Adicionar Camada WMS', handler: function() { addNewLayer(record); } },
+	          { iconCls: 'grid-icon', text: 'Adicionar Camada SHP', handler: function() { addNewLayer(record); } },
 	          { xtype: 'menuseparator' },
-	          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { addNewFolder(record.data); } },
+	          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { addNewFolder(record); } },
 	          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { deleteNodeAndChildren( record ); } }
 	        ]
 	    });
@@ -183,8 +183,10 @@ function addNewFolder( node ) {
 	Ext.Msg.alert( node.id + " " + node.layerAlias );
 }
 
-function addNewLayer( node ) {
-	Ext.Msg.alert( node.id + " " + node.layerAlias );
+function addNewLayer( record ) {
+	var node = record.data;
+	// "newLayerWms()" estah no arquivo "new-layer-wms.js" 
+	newLayerWms( record.getPath("text"), node.id, node.layerAlias );
 }
 
 function deleteNodeAndChildren( node ) {

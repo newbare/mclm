@@ -10,7 +10,7 @@
 
 var layerStore = Ext.create('Ext.data.TreeStore', {
 	autoSync:true,
-	lazyFill: true,
+	//lazyFill: true,
 	fields: [
 	            { name: 'index', type: 'int' },
 	            { name: 'text', type: 'string' },

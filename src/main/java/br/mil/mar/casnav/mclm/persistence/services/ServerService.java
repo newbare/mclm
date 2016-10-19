@@ -1,7 +1,10 @@
 package br.mil.mar.casnav.mclm.persistence.services;
 
-import java.util.Set;
+import java.util.List;
 
+import org.json.JSONObject;
+
+import br.mil.mar.casnav.mclm.misc.ExternalSourcesCollection;
 import br.mil.mar.casnav.mclm.persistence.entity.Server;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
@@ -46,16 +49,11 @@ public class ServerService {
 		}
 	}
 	
-	public Server insertServer( String name, String url ) throws InsertException {
-		
+	public Server insertServer( String name, String url, String version ) throws InsertException {
 		if ( !url.endsWith("/") ) {
 			url = url + "/";
 		}
-		
-		Server server = new Server();
-		server.setUrl(url);
-		server.setName( name );
-		
+		Server server = new Server( name, url, version );
 		Server expRet = rep.insertServer( server );
 		return expRet ;
 	}	
@@ -70,9 +68,15 @@ public class ServerService {
 		}
 	}
 
-	public Set<Server> getList( ) throws Exception {
+	public List<Server> getList( ) throws Exception {
 		return rep.getList( );
 	}
 
+	public String getAsJson() throws Exception {
+		List<Server> servers = getList();
+		ExternalSourcesCollection esc = new ExternalSourcesCollection( servers );
+		JSONObject itemObj = new JSONObject( esc );
+		return itemObj.toString();		
+	}	
 	
 }
