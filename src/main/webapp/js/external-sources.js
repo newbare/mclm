@@ -121,31 +121,31 @@ function addExternalSource() {
 	            invalidText: '',
 	    }],
 	    buttons: [{
-            text: 'Fechar',
-	            handler: function() {
-	            	newExternalWindow.close();
-	            }
-	    	},{
-              text: 'Gravar',
-              handler: function() {
-                  var form = externalForm.getForm();
-                  if ( form.isValid() ) {
-                	  form.submit({
-                          success: function(form, action) {
-                        	  newExternalWindow.close();
-                        	  externalStore.load();
-                              Ext.Msg.alert('Sucesso', action.result.msg);
-                           },
-                           failure: function(form, action) {
-                        	   newExternalWindow.close();
-                               Ext.Msg.alert('Falha', action.result.msg);
-                               
-                           }                		  
-                	  });
-                  } else { 
-                      Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
-                  }
+          text: 'Fechar',
+	          handler: function() {
+	          	newExternalWindow.close();
+	          }
+	      },{
+          text: 'Gravar',
+          handler: function() {
+              var form = externalForm.getForm();
+              if ( form.isValid() ) {
+            	  form.submit({
+                      success: function(form, action) {
+                    	  newExternalWindow.close();
+                    	  externalStore.load();
+                          Ext.Msg.alert('Sucesso', action.result.msg);
+                       },
+                       failure: function(form, action) {
+                    	   newExternalWindow.close();
+                           Ext.Msg.alert('Falha', action.result.msg);
+                           
+                       }                		  
+            	  });
+              } else { 
+                  Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
               }
+          }
 	    }]
 	
 	});		

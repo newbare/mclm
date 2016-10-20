@@ -62,3 +62,14 @@
 	background-image: url('../img/preview-layer.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.socket-icon {
+	background-image: url('../img/socket.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.add-icon {
+	background-image: url('../img/add.svg') !important;
+	background-repeat: no-repeat;
+}
+

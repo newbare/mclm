@@ -30,8 +30,6 @@ public class Startup implements ServletContextListener {
     	String path = context.getRealPath("/");
     	System.setProperty("rootPath", path );
 
-    	System.out.println( path );
-    	
     	UserService us;
     	try {
        

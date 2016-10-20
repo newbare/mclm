@@ -122,7 +122,17 @@ public class WebClient {
 		*/
 	}
 
-	
+	public boolean testInternetConnection() {
+		boolean testResult = false;
+		String testUrl = "http://www.google.com/";
+		try {
+			doGet( testUrl );
+			testResult = true;
+		} catch ( Exception e ) {
+			//
+		}
+		return testResult;
+	}
 
 	public String doGet(String url) throws Exception {
 		

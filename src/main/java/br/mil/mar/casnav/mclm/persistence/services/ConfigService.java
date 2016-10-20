@@ -48,10 +48,10 @@ public class ConfigService {
 		oldConfig.setExternalLayersToLocalServer( config.isExternalLayersToLocalServer() );
 
 		rep.newTransaction();
-		rep.updateConfig(oldConfig);
+		rep.updateConfig( oldConfig );
 		
 		Configurator cfg = Configurator.getInstance();
-		cfg.updateConfiguration(oldConfig);
+		cfg.updateConfiguration( oldConfig );
 
 	}	
 

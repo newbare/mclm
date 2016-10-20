@@ -2,6 +2,7 @@ var capabilitiesWindow = null;
 var capabilitiesStore = null;
 var capabilitiesGrid = null;
 var layerFolderID = null;
+var mapLayerPreview = null;
 
 function newLayerWms( path, idLayerFolder, layerAlias  ) {
 	layerFolderID = idLayerFolder;
@@ -50,6 +51,7 @@ function newLayerWms( path, idLayerFolder, layerAlias  ) {
         store : externalStore,
         listeners: {
         	select: function(combo, record, index) {
+        		removeLayerFromPreviewPanel();
         		requestCapabilities( record.data );
             }
         }        
@@ -92,102 +94,250 @@ function newLayerWms( path, idLayerFolder, layerAlias  ) {
 		store : capabilitiesStore,
 	    frame: false,
 	    margin: "0 0 0 0", 
-	    flex:1,
+        listeners: {
+        	// atualiza a janela de preview com a camada selecionada na lista
+            rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
+            	var layerName = record.get('layerName');
+            	var titulo = record.get('layerTitle');
+            	var serverUrl = record.get('serverUrl');
+            	addLayerToPreviewPanel( serverUrl + "wms/", layerName  );
+            	
+				var tituloForm = Ext.getCmp('tituloID');
+				tituloForm.setValue( titulo );            	
+
+				var descriptionForm = Ext.getCmp('descriptionID');
+				descriptionForm.setValue( layerName );
+				
+				var comboValue = combo.getRawValue();
+				var origemForm = Ext.getCmp('instituteID');
+				origemForm.setValue( comboValue ); 				
+				
+            }
+        },	    
+	    region:'center',
 	    loadMask: true,
 	    columns:[
 		     {text:'Título', dataIndex:'layerTitle', width:200},
 		     {text:'Camada', dataIndex:'layerName', width:200},
-		     {text:'URL', dataIndex:'serverUrl', width:200},
+		     {text:'URL', dataIndex:'serverUrl', width:200, xtype : 'hidden'},
 		     {text:'Consultável', dataIndex:'queryable', width:70, xtype: 'booleancolumn', falseText:'Não', trueText: 'Sim'}
 	    ]
-	});	    
+	});	  
+	
+	// Um form para cadastrar os detalhes da nova camada
+	var layerDetailForm = Ext.create('Ext.form.Panel', {
+	    bodyPadding: 5,
+	    region:'south',
+	    defaultType: 'textfield',
+	    url: 'newWMSLayer',
+	    items: [{
+            fieldLabel: 'Titulo',
+            width: 330,
+            id:'tituloID',
+            msgTarget: 'under',
+            name: 'layerAlias',
+            allowBlank : false,
+            invalidText: '',
+	    }, {
+            fieldLabel: 'Descrição',
+            width: 330,
+            msgTarget: 'under',
+            id:'descriptionID',
+            name: 'description',
+            allowBlank : false,
+            invalidText: '',
+	    }, {
+            fieldLabel: 'Origem',
+            width: 330,
+            msgTarget: 'under',
+            id:'instituteID',
+            name: 'institute',
+            allowBlank : false,
+            invalidText: '',
+	    },{
+            fieldLabel: 'Camada',
+            width: 350,
+            msgTarget: 'under',
+            xtype : 'hidden',
+            name: 'layerName',
+            id:'layerNameID',
+            readOnly: true,
+            allowBlank : false,
+            invalidText: '',
+        },{
+            fieldLabel: 'Servidor',
+            width: 350,
+            msgTarget: 'under',
+            xtype : 'hidden',
+            name: 'serverUrl',
+            id:'serverUrlID',
+            readOnly: true,
+            allowBlank : false,
+            invalidText: '',
+        },{
+            fieldLabel: 'Parend ID',
+            width: 350,
+            msgTarget: 'under',
+            xtype : 'hidden',
+            name: 'layerFolderID',
+            id:'parentFolderID',
+            readOnly: true,
+            allowBlank : false,
+            invalidText: '',
+        }],
+	    buttons: [{
+	          text: 'Fechar',
+		          handler: function() {
+		        	  capabilitiesWindow.close();
+		          }
+		      },{
+	          text: 'Gravar',
+	          handler: function() {
+              	  if ( capabilitiesGrid.getSelectionModel().hasSelection() ) {
+						var row = capabilitiesGrid.getSelectionModel().getSelection()[0];
+						var serverUrlGrid = row.get('serverUrl');
+						var layerNameGrid = row.get('layerName');
+
+						var serverUrlForm = Ext.getCmp('serverUrlID');
+						serverUrlForm.setValue( serverUrlGrid );
+
+						var layerNameForm = Ext.getCmp('layerNameID');
+						layerNameForm.setValue( layerNameGrid );
+						
+						var layerParentForm = Ext.getCmp('parentFolderID');
+						layerParentForm.setValue( layerFolderID );
+						
+						
+						var form = layerDetailForm.getForm();
+			            if ( form.isValid() ) {
+			              form.submit({
+			            	  	success: function(form, action) {
+			            	  		capabilitiesWindow.close();
+			            	  		
+			            	  		// layerStore estah em "layer-tree-store.js"
+			            	  		// layerTree estah em "layer-tree-tree.js"
+			            	  		var selectedTreeNode = layerTree.getSelectionModel().getSelection()[0];
+			            	  		layerStore.load({ node: selectedTreeNode});
+			            	  		
+			            	  		Ext.Msg.alert('Sucesso', action.result.msg);
+			                  	},
+			                  	failure: function(form, action) {
+			                  		capabilitiesWindow.close();
+			                  		Ext.Msg.alert('Falha', action.result.msg);
+			                           
+			                  	}                		  
+			              });
+		              } else { 
+		                  Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
+		              }
+			            
+              	  } else {     
+	                  Ext.Msg.alert('Nenhuma Camada selecionada', 'Por favor, selecione uma camada e tente novamente.')
+	              }
+			            
+	          }
+		    }]
+	
+	});
     
-	// A janela
+	// O mapa de preview de camadas, na lateral direita da janela
+	var layerPreviewMap = Ext.create('Ext.panel.Panel',{
+		width : 350,
+		region: 'center',
+		html: '<div style="width: 100%;height: 100%;" id="previewLayerMap"></div>'
+	});		
+
+	// Um painel na parte direita para comportar o mapa e o form
+	var layerPreviewMap = Ext.create('Ext.panel.Panel',{
+		width : 350,
+		region: 'east',
+		layout:'border',
+	    items:[layerPreviewMap,layerDetailForm ]
+	});		
+	
+	
+	// A janela container
 	capabilitiesWindow = Ext.create('Ext.Window',{
 		title : "Nova Camada WMS para " + path,
-		width : 710,
-		height: 400,
+		width : 900,
+		height: 500,
 	    scrollable: false,
 	    frame : false,
-		layout : 'fit',
+		layout : 'border',
 		constrain: true,
 		bodyStyle:"background:#FFFFFF;",
 		renderTo: Ext.getBody(),
 	    dockedItems: [{
 	        xtype: 'toolbar',
-	        items: [ combo, {
-	        	iconCls: 'add-external-icon',
-	        	id: 'id411',
-	            handler : addExternalLayer
-	        },{
-	        	iconCls: 'preview-layer-icon',
-	        	id: 'id412',
-	            handler : previewExternalLayer
-	        } ]
+	        items: [ combo ]
 	    }],		
-		items : [ capabilitiesGrid ]
+		items : [ capabilitiesGrid, layerPreviewMap ]
 	}).show();	
-	
-    Ext.tip.QuickTipManager.register({
-        target: 'id411',
-        title: 'Adicionar Camada',
-        text: 'Adiciona a camada selecionada.',
-        width: 150,
-        dismissDelay: 5000 
-    },{
-        target: 'id412',
-        title: 'Visualizar Camada',
-        text: 'Exibe a camada selecionada sem adicionar ao sistema.',
-        width: 150,
-        dismissDelay: 5000 
-    });	
-	
+    
+    var container = layerPreviewMap.body.dom.id;
+    createMap( container );
 }
 
-function previewExternalLayer() {
-	if ( capabilitiesGrid.getSelectionModel().hasSelection() ) {
-		var row = capabilitiesGrid.getSelectionModel().getSelection()[0];
-		var serverUrl = row.get('serverUrl');
-		var layerName = row.get('layerName');
-		var layerTitle = row.get('layerTitle');
-		addLayer( serverUrl + "wms/", layerName, layerTitle, 'preview_layer' );
-		// Remover depois né? 
-	}
-}
-
-function addExternalLayer() {
+// cria o mapa da tela de preview
+function createMap( container ) {
 	
-	if ( capabilitiesGrid.getSelectionModel().hasSelection() ) {
-		var row = capabilitiesGrid.getSelectionModel().getSelection()[0];
-		var serverUrl = row.get('serverUrl');
-		var layerName = row.get('layerName');
-		
-		Ext.Ajax.request({
-		       url: 'newWMSLayer',
-		       params: {
-		           'serverUrl': serverUrl,
-		           'layerName':layerName,
-		           'layerFolderID':layerFolderID
-		       },       
-		       success: function(response, opts) {
-		    	   var resp = JSON.parse( response.responseText );
-		    	   if ( resp.success ) {
-		    		   Ext.Msg.alert('Sucesso', resp.msg + " Não esquecer de atualizar o store da arvore!!!");
-		    	   } else {
-		    		   Ext.Msg.alert('Falha', resp.msg );
-		    	   }  
-		       },
-		       failure: function(response, opts) {
-		    	   Ext.Msg.alert('Falha','Erro ao excluir Fonte Externa.' );
-		       }
-	    });			
-				
-	} else {
-		Ext.Msg.alert('Camada não selecionada','Selecione uma Camada na lista e tente novamente.' );
-	}		
+	var previewView = new ol.View({
+        center: ol.proj.transform([-55.37109375,-17.39257927105777], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 3
+    })	
+	
+	var previewLandLayer = new ol.layer.Tile({
+	    source: new ol.source.TileWMS({
+	        url: geoserverUrl,
+	        params: {
+	            'LAYERS': baseLayer, 
+	            'FORMAT': 'image/png'
+	        }
+	    })
+	});			
+	
+	mapLayerPreview = new ol.Map({
+	    target: 'previewLayerMap',
+	    layers: [ previewLandLayer ],
+	    view: previewView
+	    
+	});	
 }
 
+// Adiciona a camada selecionada no mapa na tela de preview
+function addLayerToPreviewPanel( serverUrl, serverLayers ) {
+	removeLayerFromPreviewPanel();
+	
+	var newLayer = new ol.layer.Tile({
+	    source: new ol.source.TileWMS({
+	        url: serverUrl,
+	        isBaseLayer : false,
+	        params: {
+	        	tiled: true,
+	            'layers': serverLayers,
+	            'VERSION': '1.1.1', 
+	            'format': 'image/png'
+	        },
+	        projection: ol.proj.get('EPSG:4326')
+	    })
+	});	
+	newLayer.set('name', 'preview_layer');
+	
+	mapLayerPreview.addLayer( newLayer );
+}
 
+// remove a camada do mapa na tela de preview
+function removeLayerFromPreviewPanel() {
+	mapLayerPreview.getLayers().forEach(function (lyr) {
+		if( lyr.U.name ==  'preview_layer') {
+			mapLayerPreview.removeLayer( lyr );	
+			return;
+		}
+	});
+}
+
+// Solicita o getCapabilities ao sistema do servidor selecionado
+// e preenche a lista atraves do store.
 function requestCapabilities( node ) {
 	var version = node.version;
 	var url = node.url;

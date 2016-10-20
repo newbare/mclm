@@ -5,6 +5,28 @@ function onCloseMessage() {
 	location.reload(); 
 }
 
+function checkInternetConnection() {
+	var box = Ext.MessageBox.wait('Aguarde alguns instantes enquanto a conexão com a Internet é testada.', 'Verificando Conectividade');
+	
+	Ext.Ajax.request({
+		url: 'internetAccessTest',
+		
+		success: function(response, opts) {
+			box.hide();
+			var result = Ext.decode( response.responseText );
+			if( result.conectado ) {
+				Ext.Msg.alert('Conectado', 'O Sistema consegue acessar a Internet sem problemas.');
+			} else {
+				Ext.Msg.alert('Não Conectado', 'O Sistema não é capaz de acessar a Internet. Verifique as configurações de Proxy.');
+			}
+		},
+		failure: function(response, opts) {
+			box.hide();
+			Ext.Msg.alert('Erro ao tentar verificar a conexão com a Internet.' );
+		}
+	});			
+}
+
 function showConfig() {
 
 	Ext.Ajax.request({
@@ -138,14 +160,16 @@ function showConfigForm() {
 	        {
 	            fieldLabel: 'Usar Proxy',
 	            width: 350,
-	            inputType: 'checkbox',
+	            xtype: 'checkbox',
 	            msgTarget: 'under',
 	            name: 'useProxy',
-	            invalidText: 'Teste'
+	            inputValue: 'true',
+	            invalidText: 'Teste',
 	        },{
 	            fieldLabel: 'Criar Camadas externas no servidor local',
 	            width: 350,
-	            inputType: 'checkbox',
+	            xtype: 'checkbox',
+	            inputValue: 'true',
 	            msgTarget: 'under',
 	            name: 'externalLayersToLocalServer',
 	            invalidText: 'Teste'
@@ -158,6 +182,9 @@ function showConfigForm() {
 	    	},{
               text: 'Gravar',
               handler: function() {
+            	  //var checkbox = Ext.getCmp('cbUseProxy');
+                  //alert( checkbox.getValue() );
+            	  
                   var form = configForm.getForm();
                   if ( form.isValid() ) {
                 	  form.submit({
@@ -172,7 +199,6 @@ function showConfigForm() {
                       Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
                   }
                   
-                  
               }
 	    }]
 	
@@ -182,7 +208,7 @@ function showConfigForm() {
 	configWindow = Ext.create('Ext.Window',{
 		title : "Configurações",
 		width : 377,
-		height: 450,
+		height: 500,
 	    scrollable: false,
 	    frame : false,
 		layout : 'fit',

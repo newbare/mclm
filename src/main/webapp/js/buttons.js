@@ -5,7 +5,7 @@
  * 
  * as funcoes estao em wms.js
  * 
- * showConfig() estah em "config.js"
+ * showConfig() e checkInternetConnection() estao em "config.js"
  * 
  */
 
@@ -84,6 +84,16 @@ var buttons = [{
         handler: function() {
         	toggleQueryTool();
         }
+    }, 
+    {
+    	xtype: 'button',
+    	id: 'id118',
+	    width: btnWidth,
+	    height: btnHeight,
+	    iconCls: 'socket-icon',
+        handler: function() {
+        	checkInternetConnection();
+        }
     }
 ];
 
@@ -147,6 +157,12 @@ function initTips() {
         target: 'id117',
         title: 'Interrogar Camadas',
         text: 'Interroga as camadas ativas no mapa em determinada posição.',
+        width: 150,
+        dismissDelay: 5000 
+    }, {
+        target: 'id118',
+        title: 'Verificar Conectividade',
+        text: 'Verifica se o Sistema possui acesso externo à Ineternet (não o usuário).',
         width: 150,
         dismissDelay: 5000 
     });	

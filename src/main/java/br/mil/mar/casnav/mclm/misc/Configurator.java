@@ -3,6 +3,8 @@ package br.mil.mar.casnav.mclm.misc;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.Authenticator;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,9 +25,26 @@ public class Configurator {
 	private String password;
 	private String databaseName;
 	private Config config;
+	
+	public void setJavaProxy() throws Exception {
+		if ( !useProxy() ) return;		
+		String proxyHost = getProxyHost();
+		String proxyUser = getProxyUser();
+		String proxyPassword = getProxyPassword();
+		String nonProxyHosts = getNonProxyHosts();
+		String proxyPort = String.valueOf( getProxyPort() );
+		Authenticator.setDefault( new SimpleAuthenticator( proxyUser, proxyPassword ) );		
+		Properties systemProperties = System.getProperties();
+		systemProperties.setProperty("http.proxyHost", proxyHost);
+		systemProperties.setProperty("http.proxyPort", proxyPort);
+		systemProperties.setProperty("https.proxyHost", proxyHost);
+		systemProperties.setProperty("https.proxyPort", proxyPort);
+		systemProperties.setProperty("http.nonProxyHosts", nonProxyHosts);
+	}	
 
 	public void updateConfiguration( Config config ) throws Exception {
 		this.config = config;
+		setJavaProxy();
 	}
 	
 	public String getExternalWorkspaceName() {

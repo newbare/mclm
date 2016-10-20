@@ -5,17 +5,19 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.TreeNode;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.UpdateException;
 import br.mil.mar.casnav.mclm.persistence.repository.NodeRepository;
 
 public class NodeService {
 	private NodeRepository rep;
-
+	
 	public NodeService() throws DatabaseConnectException {
 		this.rep = new NodeRepository();
 	}
@@ -30,6 +32,34 @@ public class NodeService {
 		return rep.getNode( idNodeData );
 	}
 	
+	public void deleteNode( int idNode ) throws DeleteException {
+		try {
+			NodeData node = rep.getNode(idNode);
+			rep.newTransaction();
+			rep.deleteNode(node);
+		} catch (Exception e) {
+			throw new DeleteException( e.getMessage() );
+		}
+	}	
+	
+	public void addNode( NodeData node ) throws Exception {
+        Configurator cfg = Configurator.getInstance();
+        String originalServer = node.getOriginalServiceUrl(); 
+        
+        if ( !originalServer.contains("/wms") ) originalServer = originalServer + "/wms/";
+    	if ( !originalServer.endsWith("/") ) originalServer = originalServer + "/";
+    	node.setOriginalServiceUrl( originalServer );        
+        
+        if ( cfg.isExternalLayersToLocalServer() ) {
+        	// Transferir a camada para o servidor geoserver base
+        	// LayerService mostra como fazer.
+        	// Transfere para local. Seta a URL de servico como a mesma URL, mas trocando o servidor.
+        } else {
+        	// Nao transfere para local. Seta a URL de servico como a ariginal.
+        	node.setServiceUrl( node.getOriginalServiceUrl() );
+        }
+        rep.insertNode( node );
+	}
 	
 	public void updateNode( NodeData node ) throws UpdateException, NotFoundException {
 		NodeData oldNode = rep.getNode( node.getIdNodeData() );

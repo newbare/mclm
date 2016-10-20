@@ -1,7 +1,5 @@
 package br.mil.mar.casnav.mclm.action;
 
-import java.net.URLDecoder;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsStatics;
@@ -13,23 +11,21 @@ import com.opensymphony.xwork2.ActionContext;
 
 import br.mil.mar.casnav.mclm.misc.WebClient;
 
-@Action(value="proxyRequest", results= {  
+@Action(value="internetAccessTest", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) }
 )   
 
 @ParentPackage("default")
-public class ProxyRequestAction {
-	private String targetUrl;
+public class InternetAccessTestAction {
 	
 	public String execute(){
 
 		try { 
-			String result = "";
+			String result = "{ \"conectado\": true }";
 			
-			if ( targetUrl != null ) {
-				WebClient wc = new WebClient();
-				result = wc.doGet(  URLDecoder.decode( targetUrl, "UTF-8")   ); 
-				System.out.println("Resposta proxyRequest: " + result );
+			WebClient wc = new WebClient();
+			if ( !wc.testInternetConnection() ) {
+				result = "{ \"conectado\": false }";
 			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
@@ -42,7 +38,5 @@ public class ProxyRequestAction {
 		return "ok";
 	}
 
-	public void setTargetUrl(String targetUrl) {
-		this.targetUrl = targetUrl;
-	}
+
 }

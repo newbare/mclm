@@ -10,36 +10,26 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.services.NodeService;
 
-@Action(value="newWMSLayer", results= {  
+@Action(value="deleteLayer", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) }
 )   
 
 @ParentPackage("default")
-public class NewWMSLayerAction extends BasicActionClass {
+public class DeleteLayerAction extends BasicActionClass {
 	
 	public String execute(){
 
 		try { 
-			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
-			
-			//dumpParameters();			
-			
-			String serverUrl = request.getParameter("serverUrl");
-			String layerName = request.getParameter("layerName");
-			String layerAlias = request.getParameter("layerAlias");
-			String description = request.getParameter("description");
-			String institute = request.getParameter("institute");
-			int layerFolderID = Integer.valueOf( request.getParameter("layerFolderID") );
-			String result = "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
+			String result = "{ \"success\": true, \"msg\": \"Camada apagada com sucesso.\" }";
 			
 			try {
-
+				HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
+				int idNode = Integer.valueOf( request.getParameter("nodeId") );
+				
 				NodeService ns = new NodeService();
-				NodeData nd = new NodeData(layerFolderID, serverUrl, description, institute, layerName, layerAlias);
-				ns.addNode( nd );
+				ns.deleteNode( idNode );
 				
 			} catch ( Exception ex ) {
 				ex.printStackTrace();

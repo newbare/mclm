@@ -47,6 +47,15 @@ public class NodeData {
 	public NodeData() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public NodeData(int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, String layerAlias) {
+		this.idNodeParent = idNodeParent;
+		this.originalServiceUrl = originalServiceUrl;
+		this.description = description;
+		this.institute = institute;
+		this.layerName = layerName;
+		this.layerAlias = layerAlias;
+	}
 
 	public int getIdNodeData() {
 		return idNodeData;

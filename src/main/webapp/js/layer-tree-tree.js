@@ -170,7 +170,7 @@ function contextMenu(tree, record, item, index, e, eOpts ) {
 	} else {
 	    var menu_grid = new Ext.menu.Menu({ 
 	    	items: [
-	          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { deleteLayer( record ); } }
+	          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { askDeleteLayer( record ); } }
 	        ]
 	    });
 	}
@@ -183,14 +183,55 @@ function addNewFolder( node ) {
 	Ext.Msg.alert( node.id + " " + node.layerAlias );
 }
 
+// Pergunta se quer apagar a camada
+function askDeleteLayer( record ) {
+	var parentNode = record.parentNode;
+	var data = record.data;
+	var name = data.layerAlias;
+	var id = data.id;
+	
+	Ext.Msg.confirm('Apagar Camada', 'Deseja realmente apagar a Camada "' + name + '" ?', function( btn ){
+		   if( btn === 'yes' ){
+			   deleteLayer( id, parentNode );
+		   } else {
+		       return;
+		   }
+	 });	
+	
+}
+
+// Efetivamente apaga a camada
+function deleteLayer( nodeId, parentNode ) {
+
+	Ext.Ajax.request({
+	       url: 'deleteLayer',
+	       params: {
+	           'nodeId': nodeId 
+	       },       
+	       success: function(response, opts) {
+	    	   var result = JSON.parse( response.responseText );
+	    	   Ext.Msg.alert('Sucesso', result.msg );
+	    	   layerStore.load({ node: parentNode });
+	       },
+	       failure: function(response, opts) {
+	    	   var result = JSON.parse( response.responseText );
+	    	   Ext.Msg.alert('Falha', result.msg );
+	       }
+	    });				
+	
+	
+	
+}
+
+
 function addNewLayer( record ) {
-	var node = record.data;
+	var data = record.data;
 	// "newLayerWms()" estah no arquivo "new-layer-wms.js" 
-	newLayerWms( record.getPath("text"), node.id, node.layerAlias );
+	newLayerWms( record.getPath("text"), data.id, data.layerAlias );
 }
 
 function deleteNodeAndChildren( node ) {
-	Ext.Msg.alert( node.id + " " + node.layerAlias );
+  	//layerStore.load({ node: parentNode});
 }
 
 function layerTreeItemClick(view, record, item, index, e ) {

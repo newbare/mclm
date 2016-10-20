@@ -5,6 +5,8 @@ import java.util.Set;
 
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.InsertException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.UpdateException;
 import br.mil.mar.casnav.mclm.persistence.infra.DaoFactory;
@@ -60,5 +62,36 @@ public class NodeRepository extends BasicRepository {
 		return node;
 	}
 
+	public NodeData insertNode(NodeData node) throws InsertException {
+		DaoFactory<NodeData> df = new DaoFactory<NodeData>();
+		IDao<NodeData> fm = df.getDao(this.session, NodeData.class);
+		
+		try {
+			fm.insertDO(node);
+			commit();
+		} catch (InsertException e) {
+			rollBack();
+			closeSession();
+			throw e;
+		}
+		closeSession();
+		return node;
+	}
+
+	
+	public void deleteNode(NodeData node) throws DeleteException {
+		DaoFactory<NodeData> df = new DaoFactory<NodeData>();
+		IDao<NodeData> fm = df.getDao(this.session, NodeData.class);
+		try {
+			fm.deleteDO(node);
+			commit();
+		} catch (DeleteException e) {
+			rollBack();
+			closeSession();
+
+			throw e;			
+		}
+		closeSession();
+	}		
 	
 }

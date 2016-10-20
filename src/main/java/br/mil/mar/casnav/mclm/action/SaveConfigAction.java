@@ -44,14 +44,16 @@ public class SaveConfigAction extends BasicActionClass {
 				int proxyPort = Integer.valueOf( request.getParameter("proxyPort") );
 				int idConfig = Integer.valueOf( request.getParameter("idConfig") );
 				
-				ConfigService cs = new ConfigService();
 				Config config = new Config(idConfig, geoserverUrl, baseLayer, useProxy, externalLayersToLocalServer, "", 
 							proxyHost, nonProxyHosts, proxyUser, proxyPassword, proxyPort, geoserverUser, 
 							geoserverPassword, mapZoom, queryFactorRadius, mapCenter);	
 				
+				
+				ConfigService cs = new ConfigService();
 				cs.updateConfig(config);
+				
 			} catch ( Exception e ) {
-				result = "{ \"error\": true, \"msg\": \""+e.getMessage()+".\" }";	
+				result = "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
 			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
