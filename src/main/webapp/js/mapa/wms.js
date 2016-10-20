@@ -216,7 +216,7 @@ function addLayer( serverUrl, serverLayers, layerName, serialId ) {
 	        params: {
 	        	tiled: true,
 	            'layers': serverLayers,
-	            'VERSION': '1.3.0',
+	            'VERSION': '1.1.1', // Que tal passar a versão por configuração?
 	            'format': 'image/png'
 	        },
 	        projection: ol.proj.get('EPSG:4326')

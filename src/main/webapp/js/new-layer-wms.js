@@ -119,6 +119,10 @@ function newLayerWms( path, idLayerFolder, layerAlias  ) {
 	        	iconCls: 'add-external-icon',
 	        	id: 'id411',
 	            handler : addExternalLayer
+	        },{
+	        	iconCls: 'preview-layer-icon',
+	        	id: 'id412',
+	            handler : previewExternalLayer
 	        } ]
 	    }],		
 		items : [ capabilitiesGrid ]
@@ -130,8 +134,25 @@ function newLayerWms( path, idLayerFolder, layerAlias  ) {
         text: 'Adiciona a camada selecionada.',
         width: 150,
         dismissDelay: 5000 
+    },{
+        target: 'id412',
+        title: 'Visualizar Camada',
+        text: 'Exibe a camada selecionada sem adicionar ao sistema.',
+        width: 150,
+        dismissDelay: 5000 
     });	
 	
+}
+
+function previewExternalLayer() {
+	if ( capabilitiesGrid.getSelectionModel().hasSelection() ) {
+		var row = capabilitiesGrid.getSelectionModel().getSelection()[0];
+		var serverUrl = row.get('serverUrl');
+		var layerName = row.get('layerName');
+		var layerTitle = row.get('layerTitle');
+		addLayer( serverUrl + "wms/", layerName, layerTitle, 'preview_layer' );
+		// Remover depois né? 
+	}
 }
 
 function addExternalLayer() {
