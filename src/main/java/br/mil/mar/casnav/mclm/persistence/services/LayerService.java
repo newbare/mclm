@@ -1,5 +1,6 @@
 package br.mil.mar.casnav.mclm.persistence.services;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -8,8 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.WebClient;
+import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 
 public class LayerService {
 	
@@ -226,6 +230,55 @@ public class LayerService {
             query_pairs.get(key).add(value);
         }
         return query_pairs;
-    }	
+    }
+
+	public String createWMSLayer(int layerFolderID, String serverUrl, String description, String institute,
+			String layerName, String layerAlias) {
+		
+		String result = "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
+		try {
+			NodeService ns = new NodeService();
+			NodeData node = new NodeData(layerFolderID, serverUrl, description, institute, layerName, layerAlias);
+			
+	        Configurator cfg = Configurator.getInstance();
+	        String originalServer = node.getOriginalServiceUrl(); 
+	        
+	        if ( !originalServer.contains("/wms") ) originalServer = originalServer + "/wms/";
+	    	if ( !originalServer.endsWith("/") ) originalServer = originalServer + "/";
+	    	
+	    	node.setOriginalServiceUrl( originalServer );        
+	        if ( cfg.isExternalLayersToLocalServer() ) {
+	        	// Transferir a camada para o servidor geoserver base
+	        	// Transfere para local. Seta a URL de servico como a mesma URL, mas trocando o servidor.
+	        } else {
+	        	// Nao transfere para local. Seta a URL de servico como a ariginal.
+	        	node.setServiceUrl( node.getOriginalServiceUrl() );
+	        }
+			
+			
+			ns.addNode( node );	
+		} catch ( Exception ex ) {
+			result = "{ \"error\": true, \"msg\": \""+ex.getMessage()+".\" }";	
+		}
+		return result;
+	}
+
+	public String createSHPLayer(String shpFileContentType, File shpFile, String shpFileFileName, String layerName, String layerAlias,
+			String description, String institute, int layerFolderID) {
+
+		String result = "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
+		try {
+			String saveDirectory = Configurator.getInstance().getShapeFileTargetPath();
+			File destFile = new File( saveDirectory + File.separator + shpFileFileName );
+			FileUtils.copyFile(shpFile, destFile);
+			
+			
+			
+			
+		} catch ( Exception e ) {
+			result = "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
+		}
+		return result;
+	}	
 	
 }

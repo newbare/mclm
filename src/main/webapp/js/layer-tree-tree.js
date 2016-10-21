@@ -159,9 +159,9 @@ function contextMenu(tree, record, item, index, e, eOpts ) {
 	if ( !record.data.leaf ) {
 	    var menu_grid = new Ext.menu.Menu({ 
 	    	items: [
-	          { iconCls: 'forecast-icon', text: 'Adicionar Camada KML', handler: function() { addNewLayer(record); } },
-	          { iconCls: 'add-wms-icon', text: 'Adicionar Camada WMS', handler: function() { addNewLayer(record); } },
-	          { iconCls: 'grid-icon', text: 'Adicionar Camada SHP', handler: function() { addNewLayer(record); } },
+	          { iconCls: 'forecast-icon', text: 'Adicionar Camada KML', handler: function() { addNewLayerKML(record); } },
+	          { iconCls: 'add-wms-icon', text: 'Adicionar Camada WMS', handler: function() { addNewLayerWMS(record); } },
+	          { iconCls: 'grid-icon', text: 'Adicionar Camada SHP', handler: function() { addNewLayerSHP(record); } },
 	          { xtype: 'menuseparator' },
 	          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { addNewFolder(record); } },
 	          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { deleteNodeAndChildren( record ); } }
@@ -224,11 +224,18 @@ function deleteLayer( nodeId, parentNode ) {
 }
 
 
-function addNewLayer( record ) {
+function addNewLayerWMS( record ) {
 	var data = record.data;
 	// "newLayerWms()" estah no arquivo "new-layer-wms.js" 
 	newLayerWms( record.getPath("text"), data.id, data.layerAlias );
 }
+
+function addNewLayerSHP( record ) {
+	var data = record.data;
+	// "newLayerShp()" estah no arquivo "new-layer-shp.js" 
+	newLayerShp( record.getPath("text"), data.id, data.layerAlias );
+}
+
 
 function deleteNodeAndChildren( node ) {
   	//layerStore.load({ node: parentNode});

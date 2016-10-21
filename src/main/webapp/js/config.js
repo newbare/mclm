@@ -48,11 +48,15 @@ function showConfigForm() {
 	configForm = Ext.create('Ext.form.Panel', {
 	    bodyPadding: 5,
 	    defaultType: 'textfield',
+        defaults: {
+            anchor: '100%',
+            msgTarget: 'under',
+            labelWidth: 150
+        },	    
 	    url: 'saveConfig',
 	    items: [{
 	            fieldLabel: 'ID',
 	            width: 350,
-	            msgTarget: 'under',
 	            xtype : 'hidden',
 	            name: 'idConfig',
 	            readOnly: true,
@@ -62,7 +66,6 @@ function showConfigForm() {
 		    {
 	            fieldLabel: 'Servidor de Mapa',
 	            width: 350,
-	            msgTarget: 'under',
 	            name: 'geoserverUrl',
 	            allowBlank : false,
 	            invalidText: 'Teste',
@@ -70,7 +73,6 @@ function showConfigForm() {
 	        {
 	            fieldLabel: 'Camada Base',
 	            width: 350,
-	            msgTarget: 'under',
 	            name: 'baseLayer',
 	            allowBlank : false,
 	            invalidText: 'Teste'
@@ -79,7 +81,6 @@ function showConfigForm() {
 	            fieldLabel: 'Centro do Mapa',
 	            id : 'mapCenterConfigField',
 	            width: 350,
-	            msgTarget: 'under',
 	            name: 'mapCenter',
 	            allowBlank : false,
 	            invalidText: 'Teste'
@@ -89,7 +90,6 @@ function showConfigForm() {
 	            id : 'mapZoomConfigField',
 	            width: 150,
 	            maskRe: /[0-9.]/, 
-	            msgTarget: 'under',
 	            name: 'mapZoom',
 	            allowBlank : false,
 	            invalidText: 'Apenas números'
@@ -97,7 +97,6 @@ function showConfigForm() {
 	        {
 	            fieldLabel: 'Usuário do GeoServer',
 	            width: 350,
-	            msgTarget: 'under',
 	            name: 'geoserverUser',
 	            allowBlank : false,
 	            invalidText: 'Teste'
@@ -106,7 +105,6 @@ function showConfigForm() {
 	            fieldLabel: 'Senha do GeoServer',
 	            inputType: 'password', 
 	            width: 350,
-	            msgTarget: 'under',
 	            allowBlank : false,
 	            name: 'geoserverPassword',
 	            invalidText: 'Teste'
@@ -115,7 +113,6 @@ function showConfigForm() {
 	            fieldLabel: 'Fator de Busca da Interrogação',
 	            width: 150,
 	            maskRe: /[0-9.]/, 
-	            msgTarget: 'under',
 	            name: 'queryFactorRadius',
 	            allowBlank : false,
 	            invalidText: 'Apenas números'
@@ -123,14 +120,12 @@ function showConfigForm() {
 	        {
 	            fieldLabel: 'Host do Proxy',
 	            width: 350,
-	            msgTarget: 'under',
 	            name: 'proxyHost',
 	            invalidText: 'Teste'
 	        },
 	        {
 	            fieldLabel: 'Usuário do Proxy',
 	            width: 350,
-	            msgTarget: 'under',
 	            name: 'proxyUser',
 	            invalidText: 'Teste'
 	        },
@@ -138,7 +133,6 @@ function showConfigForm() {
 	            fieldLabel: 'Senha do Proxy',
 	            width: 350,
 	            inputType: 'password',
-	            msgTarget: 'under',
 	            name: 'proxyPassword',
 	            invalidText: 'Teste'
 	        },
@@ -146,14 +140,12 @@ function showConfigForm() {
 	            fieldLabel: 'Porta do Proxy',
 	            width: 150,
 	            maskRe: /[0-9.]/, 
-	            msgTarget: 'under',
 	            name: 'proxyPort',
 	            invalidText: 'Apenas números'
 	        },
 	        {
 	            fieldLabel: 'Ignorar Proxy',
 	            width: 350,
-	            msgTarget: 'under',
 	            name: 'nonProxyHosts',
 	            invalidText: 'Teste'								
 	        },
@@ -161,7 +153,6 @@ function showConfigForm() {
 	            fieldLabel: 'Usar Proxy',
 	            width: 350,
 	            xtype: 'checkbox',
-	            msgTarget: 'under',
 	            name: 'useProxy',
 	            inputValue: 'true',
 	            invalidText: 'Teste',
@@ -170,8 +161,13 @@ function showConfigForm() {
 	            width: 350,
 	            xtype: 'checkbox',
 	            inputValue: 'true',
-	            msgTarget: 'under',
 	            name: 'externalLayersToLocalServer',
+	            invalidText: 'Teste'
+	        },{
+	            fieldLabel: 'Pasta para arquivos SHP',
+	            width: 350,
+	            allowBlank : false,
+	            name: 'shapeFileTargetPath',
 	            invalidText: 'Teste'
 	        }],
 	    buttons: [{
@@ -207,7 +203,7 @@ function showConfigForm() {
 	
 	configWindow = Ext.create('Ext.Window',{
 		title : "Configurações",
-		width : 377,
+		width : 450,
 		height: 500,
 	    scrollable: false,
 	    frame : false,

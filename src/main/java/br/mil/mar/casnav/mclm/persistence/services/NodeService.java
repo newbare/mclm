@@ -43,21 +43,6 @@ public class NodeService {
 	}	
 	
 	public void addNode( NodeData node ) throws Exception {
-        Configurator cfg = Configurator.getInstance();
-        String originalServer = node.getOriginalServiceUrl(); 
-        
-        if ( !originalServer.contains("/wms") ) originalServer = originalServer + "/wms/";
-    	if ( !originalServer.endsWith("/") ) originalServer = originalServer + "/";
-    	node.setOriginalServiceUrl( originalServer );        
-        
-        if ( cfg.isExternalLayersToLocalServer() ) {
-        	// Transferir a camada para o servidor geoserver base
-        	// LayerService mostra como fazer.
-        	// Transfere para local. Seta a URL de servico como a mesma URL, mas trocando o servidor.
-        } else {
-        	// Nao transfere para local. Seta a URL de servico como a ariginal.
-        	node.setServiceUrl( node.getOriginalServiceUrl() );
-        }
         rep.insertNode( node );
 	}
 	

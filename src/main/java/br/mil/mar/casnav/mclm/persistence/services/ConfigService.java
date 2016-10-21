@@ -1,5 +1,7 @@
 package br.mil.mar.casnav.mclm.persistence.services;
 
+import java.io.File;
+
 import org.json.JSONObject;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
@@ -24,6 +26,9 @@ public class ConfigService {
 
 	public void updateConfig(Config config) throws Exception {
 		Config oldConfig;
+		
+		File fil = new File( config.getShapeFileTargetPath() );
+		fil.mkdirs();
 
 		try {
 			oldConfig = rep.getConfig();
@@ -46,6 +51,7 @@ public class ConfigService {
 		oldConfig.setQueryFactorRadius( config.getQueryFactorRadius() );
 		oldConfig.setExternalWorkspaceName( config.getExternalWorkspaceName() );
 		oldConfig.setExternalLayersToLocalServer( config.isExternalLayersToLocalServer() );
+		oldConfig.setShapeFileTargetPath( config.getShapeFileTargetPath() );
 
 		rep.newTransaction();
 		rep.updateConfig( oldConfig );

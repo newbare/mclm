@@ -50,6 +50,10 @@ public class Configurator {
 	public String getExternalWorkspaceName() {
 		return config.getExternalWorkspaceName();
 	}
+	
+	public String getShapeFileTargetPath() {
+		return config.getShapeFileTargetPath();
+	}	
 
 	public String getGeoserverUser() {
 		return config.getGeoserverUser();

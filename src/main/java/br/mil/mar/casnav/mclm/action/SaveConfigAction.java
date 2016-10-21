@@ -38,6 +38,7 @@ public class SaveConfigAction extends BasicActionClass {
 				String geoserverUser = request.getParameter("geoserverUser");
 				String mapCenter = request.getParameter("mapCenter");
 				String baseLayer = request.getParameter("baseLayer");
+				String shapeFileTargetPath = request.getParameter("shapeFileTargetPath");
 				String geoserverUrl = request.getParameter("geoserverUrl");
 				int mapZoom = Integer.valueOf( request.getParameter("mapZoom") );
 				int queryFactorRadius = Integer.valueOf( request.getParameter("queryFactorRadius") );
@@ -46,7 +47,7 @@ public class SaveConfigAction extends BasicActionClass {
 				
 				Config config = new Config(idConfig, geoserverUrl, baseLayer, useProxy, externalLayersToLocalServer, "", 
 							proxyHost, nonProxyHosts, proxyUser, proxyPassword, proxyPort, geoserverUser, 
-							geoserverPassword, mapZoom, queryFactorRadius, mapCenter);	
+							geoserverPassword, mapZoom, queryFactorRadius, mapCenter, shapeFileTargetPath);	
 				
 				
 				ConfigService cs = new ConfigService();

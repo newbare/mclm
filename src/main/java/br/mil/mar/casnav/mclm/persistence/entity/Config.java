@@ -36,6 +36,9 @@ public class Config {
 	
 	@Column(length=100, name = "non_proxy_hosts")
 	private String nonProxyHosts;
+	
+	@Column(length=100, name = "shape_file_target_path")
+	private String shapeFileTargetPath;
 
 	@Column(length=50, name = "proxy_user")
 	private String proxyUser;
@@ -69,7 +72,7 @@ public class Config {
 	public Config(int idConfig, String geoserverUrl, String baseLayer, Boolean useProxy,
 			Boolean externalLayersToLocalServer, String externalWorkspaceName, String proxyHost, String nonProxyHosts,
 			String proxyUser, String proxyPassword, Integer proxyPort, String geoserverUser, String geoserverPassword,
-			Integer mapZoom, Integer queryFactorRadius, String mapCenter) {
+			Integer mapZoom, Integer queryFactorRadius, String mapCenter, String shapeFileTargetPath ) {
 		super();
 		this.idConfig = idConfig;
 		this.geoserverUrl = geoserverUrl;
@@ -87,6 +90,7 @@ public class Config {
 		this.mapZoom = mapZoom;
 		this.queryFactorRadius = queryFactorRadius;
 		this.mapCenter = mapCenter;
+		this.shapeFileTargetPath = shapeFileTargetPath;
 	}
 
 	public Integer getIdConfig() {
@@ -215,5 +219,15 @@ public class Config {
 	
 	public void setQueryFactorRadius(Integer queryFactorRadius) {
 		this.queryFactorRadius = queryFactorRadius;
+	}
+
+
+	public String getShapeFileTargetPath() {
+		return this.shapeFileTargetPath;
+
+	}
+
+	public void setShapeFileTargetPath(String shapeFileTargetPath) {
+		this.shapeFileTargetPath = shapeFileTargetPath;
 	}
 }
