@@ -31,6 +31,7 @@ public class SaveConfigAction extends BasicActionClass {
 				boolean useProxy = Boolean.valueOf( request.getParameter("useProxy") );
 				boolean externalLayersToLocalServer = Boolean.valueOf( request.getParameter("externalLayersToLocalServer") );
 				String nonProxyHosts = request.getParameter("nonProxyHosts");
+				String externalWorkspaceName = request.getParameter("externalWorkspaceName");
 				String proxyPassword = request.getParameter("proxyPassword");
 				String proxyUser = request.getParameter("proxyUser");
 				String proxyHost = request.getParameter("proxyHost");
@@ -45,7 +46,7 @@ public class SaveConfigAction extends BasicActionClass {
 				int proxyPort = Integer.valueOf( request.getParameter("proxyPort") );
 				int idConfig = Integer.valueOf( request.getParameter("idConfig") );
 				
-				Config config = new Config(idConfig, geoserverUrl, baseLayer, useProxy, externalLayersToLocalServer, "", 
+				Config config = new Config(idConfig, geoserverUrl, baseLayer, useProxy, externalLayersToLocalServer, externalWorkspaceName, 
 							proxyHost, nonProxyHosts, proxyUser, proxyPassword, proxyPort, geoserverUser, 
 							geoserverPassword, mapZoom, queryFactorRadius, mapCenter, shapeFileTargetPath);	
 				

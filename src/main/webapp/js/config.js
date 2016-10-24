@@ -169,6 +169,12 @@ function showConfigForm() {
 	            allowBlank : false,
 	            name: 'shapeFileTargetPath',
 	            invalidText: 'Teste'
+	        },{
+	            fieldLabel: 'Workspace Externo',
+	            width: 350,
+	            allowBlank : false,
+	            name: 'externalWorkspaceName',
+	            invalidText: 'Teste'
 	        }],
 	    buttons: [{
             text: 'Fechar',
@@ -204,7 +210,7 @@ function showConfigForm() {
 	configWindow = Ext.create('Ext.Window',{
 		title : "Configurações",
 		width : 450,
-		height: 500,
+		height: 550,
 	    scrollable: false,
 	    frame : false,
 		layout : 'fit',

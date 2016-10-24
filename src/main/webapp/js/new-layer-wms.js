@@ -206,7 +206,7 @@ function newLayerWms( path, idLayerFolder, layerAlias  ) {
 			            	  		// layerStore estah em "layer-tree-store.js"
 			            	  		// layerTree estah em "layer-tree-tree.js"
 			            	  		var selectedTreeNode = layerTree.getSelectionModel().getSelection()[0];
-			            	  		layerStore.load({ node: selectedTreeNode});
+			            	  		layerStore.load( { node: selectedTreeNode } );
 			            	  		
 			            	  		Ext.Msg.alert('Sucesso', action.result.msg);
 			                  	},

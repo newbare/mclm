@@ -39,13 +39,13 @@ public class WebClient {
 	private final String USER_AGENT = "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.10 (maverick) Firefox/3.6.13";
 
 	
-	public int doPostStream( String url, String content, String geoUser, String geoPassword ) throws Exception {
+	public int doRESTRequest( String requestMethod, String url, String content, String geoUser, String geoPassword ) throws Exception {
 		int code = 0;
 		
 		String geoCreds = geoUser + ":" + geoPassword;
 		String encodedAuth = new String( Base64.encodeBase64( geoCreds.getBytes() ) );
 		HttpURLConnection con = (HttpURLConnection) new URL( url ).openConnection();
-		con.setRequestMethod("POST");
+		con.setRequestMethod( requestMethod );
 		con.setRequestProperty("Authorization", "Basic " + encodedAuth );
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Content-type", "text/xml");
@@ -55,13 +55,16 @@ public class WebClient {
 		code = con.getResponseCode();
 	
 		// To use with GET method
-		InputStream inputStream = con.getInputStream();
-		StringWriter writer = new StringWriter();
-		IOUtils.copy(inputStream, writer, "UTF-8");
-		String theString = writer.toString();
-		inputStream.close();
-		
-		System.out.println( "WebClient:doPostStream >>> " + theString );
+		try {
+			InputStream inputStream = con.getInputStream();
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(inputStream, writer, "UTF-8");
+			String theString = writer.toString();
+			inputStream.close();
+			//System.out.println( "WebClient:doPostStream >>> " + theString );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
 		
 		con.disconnect();
 		return code;
@@ -69,6 +72,7 @@ public class WebClient {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	public void doPost( String url, String parameter, String content) throws Exception {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpPost httppost;

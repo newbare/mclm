@@ -5,7 +5,6 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.TreeNode;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
@@ -35,6 +34,11 @@ public class NodeService {
 	public void deleteNode( int idNode ) throws DeleteException {
 		try {
 			NodeData node = rep.getNode(idNode);
+			
+			String layerName = node.getLayerName();
+			LayerService ls = new LayerService();
+			ls.deleteLayer( layerName );
+			
 			rep.newTransaction();
 			rep.deleteNode(node);
 		} catch (Exception e) {
