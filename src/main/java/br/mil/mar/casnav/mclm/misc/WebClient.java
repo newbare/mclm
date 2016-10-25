@@ -1,7 +1,11 @@
 package br.mil.mar.casnav.mclm.misc;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,7 +42,49 @@ import org.apache.http.protocol.HttpContext;
 public class WebClient {
 	private final String USER_AGENT = "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.10 (maverick) Firefox/3.6.13";
 
+	public int doPutFile( File file, String contentType, String url, String content, String geoUser, String geoPassword ) throws Exception {
+		int code = 0;
+		
+		String geoCreds = geoUser + ":" + geoPassword;
+		String encodedAuth = new String( Base64.encodeBase64( geoCreds.getBytes() ) );
+		HttpURLConnection con = (HttpURLConnection) new URL( url ).openConnection();
+		con.setRequestMethod( "PUT" );
+		con.setRequestProperty("Authorization", "Basic " + encodedAuth );
+		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty("Content-type", contentType);
+		
+		con.setDoOutput(true);
+		OutputStream outputStream = con.getOutputStream();
+		FileInputStream streamFileInputStream = new FileInputStream( file );
+		BufferedInputStream streamFileBufferedInputStream = new BufferedInputStream(streamFileInputStream);		
+		
+		byte[] streamFileBytes = new byte[ 512 ];
+		int bytesRead = 0;
+
+		while ((bytesRead = streamFileBufferedInputStream.read(streamFileBytes)) > 0) {
+			outputStream.write(streamFileBytes, 0, bytesRead);
+		}		
+		outputStream.flush();
+		
+		code = con.getResponseCode();
+		
+		try {
+			InputStream inputStream = con.getInputStream();
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(inputStream, writer, "UTF-8");
+			String theString = writer.toString();
+			inputStream.close();
+			
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}		
+		
+		con.disconnect();
+		streamFileBufferedInputStream.close();
+		return code;		
+	}
 	
+
 	public int doRESTRequest( String requestMethod, String url, String content, String geoUser, String geoPassword ) throws Exception {
 		int code = 0;
 		
@@ -63,7 +109,7 @@ public class WebClient {
 			inputStream.close();
 			//System.out.println( "WebClient:doPostStream >>> " + theString );
 		} catch ( Exception e ) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		con.disconnect();

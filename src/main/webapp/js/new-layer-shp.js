@@ -39,22 +39,33 @@ function newLayerShp( path, idLayerFolder, layerAlias  ) {
             name: 'institute',
             allowBlank : false,
 	    },{
-            fieldLabel: 'Camada',
-            width: 350,
-            name: 'layerName',
-            allowBlank : false,
-        },{
             xtype: 'filefield',
             id: 'shpFile',
             emptyText: 'Selecione um arquivo',
             fieldLabel: 'Arquivo',
             name: 'shpFile',
             buttonText: 'Selecionar',
+        },{
+            fieldLabel: 'Parend ID',
+            width: 350,
+            xtype : 'hidden',
+            name: 'layerFolderID',
+            id:'parentFolderID',
+            readOnly: true,
         }],
 
         buttons: [{
+	          text: 'Fechar',
+	          handler: function() {
+	        	  shapeWindow.close();
+	          }
+	      },{
             text: 'Enviar',
             handler: function(){
+            	
+				var layerParentForm = Ext.getCmp('parentFolderID');
+				layerParentForm.setValue( idLayerFolder );      
+            	
                 var form = this.up('form').getForm();
                 if( form.isValid() ){
                     

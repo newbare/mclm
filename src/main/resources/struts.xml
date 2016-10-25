@@ -5,7 +5,7 @@
 
 <struts>
 	<constant name="struts.devMode" value="false" />
-	<constant name="struts.multipart.maxSize" value="20971520" />
+	<constant name="struts.multipart.maxSize" value="734003200" />
 	
 
 	<package name="default" extends="struts-default">

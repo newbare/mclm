@@ -30,14 +30,13 @@ public class NewSHPLayerAction extends BasicActionClass {
 		try { 
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
 
-			String layerName = request.getParameter("layerName");
 			String layerAlias = request.getParameter("layerAlias");
 			String description = request.getParameter("description");
 			String institute = request.getParameter("institute");
 			int layerFolderID = Integer.valueOf( request.getParameter("layerFolderID") );
 			
 			LayerService ls = new LayerService();
-			String result = ls.createSHPLayer( shpFileContentType, shpFile, shpFileFileName, layerName, layerAlias, description, institute, layerFolderID );
+			String result = ls.createSHPLayer( shpFileContentType, shpFile, shpFileFileName, layerAlias, description, institute, layerFolderID );
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

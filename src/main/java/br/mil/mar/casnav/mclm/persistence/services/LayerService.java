@@ -6,6 +6,8 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
+import br.mil.mar.casnav.mclm.misc.LayerType;
+import br.mil.mar.casnav.mclm.misc.RESTResponse;
 import br.mil.mar.casnav.mclm.misc.WebClient;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 
@@ -87,6 +89,33 @@ public class LayerService {
 		return result;		
 		
 	}
+
+	
+	public int createSHPStore( File file, String storeName, String workspaceName ) throws Exception {
+		Configurator cfg = Configurator.getInstance();
+		String geoUser = cfg.getGeoserverUser();
+		String geoPassword = cfg.getGeoserverPassword();
+		String geoserverURL = cfg.getGeoserverUrl().replace("wms/", "");
+		String serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/datastores/" + storeName + "/file.shp";
+		
+        // Tenta criar o Workspace padrao para camadas externas. Ignora se jah existir.
+        int resp = createWorkspace( workspaceName );
+        
+        if ( resp == RESTResponse.CREATED ) {
+        	System.out.println("Workspace Externo " + workspaceName + " criado com sucesso.");
+        } else {
+        	System.out.println("Erro '"+resp+"' ao criar o Workspace Externo " + workspaceName );
+        }		
+		
+		
+		System.out.println( serverRESTAPI );
+		
+		WebClient wc = new WebClient();
+		int result = wc.doPutFile( file, "application/zip", serverRESTAPI, "", geoUser, geoPassword );
+		return result;		
+		
+	}
+	
 	
 	public int createStoreFromWMSService( String storeName, String targetWorkspace, String capabilitiesURL ) throws Exception {
 		Configurator cfg = Configurator.getInstance();
@@ -124,24 +153,24 @@ public class LayerService {
         
         // Tenta criar o Workspace padrao para camadas externas. Ignora se jah existir.
         int resp = createWorkspace( externalWorkspaceName );
-        /*
+        
         if ( resp == RESTResponse.CREATED ) {
         	System.out.println("Workspace Externo " + externalWorkspaceName + " criado com sucesso.");
         } else {
         	System.out.println("Erro '"+resp+"' ao criar o Workspace Externo " + externalWorkspaceName );
         }
-        */
+        
         
         // Tenta criar o WMS Store ...
 		int res = createStoreFromWMSService( newStoreName, externalWorkspaceName, serverUrl );
-		/*
+		
 		if ( res != RESTResponse.CREATED ) {
 			System.out.println( "Erro " + res + " recebido pelo GeoServer ao criar novo Store '"+newStoreName+"' para o serviço externo WMS." );
 			//throw new Exception( "Erro " + res + " recebido pelo GeoServer ao criar novo Store '"+newStoreName+"' para o serviço externo WMS." );
 		} else {
 			System.out.println( "Store '"+newStoreName+"' criado no Workspace " + externalWorkspaceName );
 		}
-		*/
+		
 		
 		// Tenta criar a camada WMS...
 		String sourceLayer = layerName;
@@ -152,13 +181,13 @@ public class LayerService {
         }
 
 		res = addLayerFromWMSStore( externalWorkspaceName, newStoreName, layerName, sourceLayer );		
-		/*
+		
 		if ( res != RESTResponse.CREATED ) {
 			System.out.println("Erro ao criar camada " + layerName + " no store/workspace " + newStoreName + "/" + externalWorkspaceName + " a partir da camada externa " + sourceLayer);
 		} else {
 			System.out.println("Sucesso ao criar camada " + layerName + " no store/workspace " + newStoreName + "/" + externalWorkspaceName + " a partir da camada externa " + sourceLayer);
 		}
-		*/
+		
 		String result = externalWorkspaceName + ":" + layerName;
         return result;
 	}
@@ -174,7 +203,7 @@ public class LayerService {
 		String result = "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
 		try {
 			NodeService ns = new NodeService();
-			NodeData node = new NodeData(layerFolderID, serverUrl, description, institute, layerName, layerAlias);
+			NodeData node = new NodeData(layerFolderID, serverUrl, description, institute, layerName, layerAlias, LayerType.WMS);
 			
 	        Configurator cfg = Configurator.getInstance();
 	        String originalServer = node.getOriginalServiceUrl(); 
@@ -198,22 +227,40 @@ public class LayerService {
 		return result;
 	}
 
-	public String createSHPLayer(String shpFileContentType, File shpFile, String shpFileFileName, String layerName, String layerAlias,
+	public String createSHPLayer(String shpFileContentType, File shpFile, String shpFileFileName, String layerAlias,
 			String description, String institute, int layerFolderID) {
 
-		String result = "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
 		try {
+			
+			Configurator cfg = Configurator.getInstance();
+			String serverUrl = cfg.getGeoserverUrl();
+			String externalWorkspaceName = cfg.getExternalWorkspaceName();
+			String storeName = shpFileFileName.replace(".zip", "");
+			String layerName = cfg.getExternalWorkspaceName() + ":" + storeName; 
+			
+			System.out.println("Receiving file...");
 			String saveDirectory = Configurator.getInstance().getShapeFileTargetPath();
 			File destFile = new File( saveDirectory + File.separator + shpFileFileName );
 			FileUtils.copyFile(shpFile, destFile);
+			System.out.println("Done.");
 			
+			// Copy SHP to GeoServer and create store.
+			// Layer Name is SHP file name.
 			
+			System.out.println("Will create store " + storeName + " from file " );
+			createSHPStore(destFile, storeName, externalWorkspaceName);
+			System.out.println("Done.");
 			
+			NodeService ns = new NodeService();
+			NodeData node = new NodeData(layerFolderID, "", description, institute, layerName, layerAlias, LayerType.SHP);
+			node.setServiceUrl( serverUrl );
+			ns.addNode( node );
 			
+			return "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
 		} catch ( Exception e ) {
-			result = "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
+			return "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
 		}
-		return result;
+		 
 	}	
 	
 }

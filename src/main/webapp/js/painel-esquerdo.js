@@ -7,7 +7,13 @@
 
 var layerDetailStore = Ext.create('Ext.data.Store', {
     requires: ['Ext.data.proxy.Memory'],
-    fields: [{name: 'layerAlias'},{name: 'description'},{name: 'layerName'},{name: 'serviceUrl'},{name: 'institute'} ], 
+    fields: [{name: 'layerAlias'},
+             {name: 'description'},
+             {name: 'layerName'},
+             {name: 'originalServiceUrl'},
+             {name: 'serviceUrl'},
+             {name: 'institute'},
+             {name: 'childrenCount'} ], 
     proxy: { type: 'memory' }
 });
 
@@ -15,8 +21,7 @@ var layerGridDetails = Ext.create('Ext.grid.Panel',{
 	border:false,
 	store:layerDetailStore,
     region:'south',
-    
-    height: 150,
+    height: 160,
     columns: [{
     	cellWrap: true,
     	header:'Detalhes da Camada',
@@ -27,11 +32,13 @@ var layerGridDetails = Ext.create('Ext.grid.Panel',{
         tpl: [
             '<tpl for=".">',
                     '<div style="float: left; width: 95%; padding:0px;">',
-                        '<div style="font-weight:bold;padding: 0px 0px 5px 0px;">{layerAlias}</div>',
+                        '<div style="font-weight:bold;padding: 0px 0px 2px 0px;">{layerAlias}</div>',
                         '<div style="font-weight:bold;padding: 0px;">{institute}</div>',
-                        '<div style=" padding: 0px;">{layerName}</div>',
+                        '<div style="width:100%;border-top:1px dotted black; padding: 0px;">{layerName}</div>',
                         '<div style=" padding: 0px;">{serviceUrl}</div>',
-                        '<div style=" padding: 0px;">{description}</div>',
+                        '<div style=" padding: 0px;">{originalServiceUrl}</div>',
+                        '<div style=" padding: 0px;">{childrenCount} subconjuntos.</div>',
+                        '<div style="font-style: italic;width:100%;border-top:1px dotted black; padding: 0px;">{description}</div>',
                     '</div>',
              '</tpl>'
             ]

@@ -2,11 +2,16 @@ package br.mil.mar.casnav.mclm.persistence.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import br.mil.mar.casnav.mclm.misc.LayerType;
+
 
 @Entity
 @Table(name="node_data") 
@@ -22,6 +27,10 @@ public class NodeData {
 
 	@Column(name="index_order")
 	private int indexOrder;	
+	
+	@Column(length=5)
+	@Enumerated(EnumType.STRING)
+	private LayerType layerType;
 	
 	@Transient
 	private int children;
@@ -48,13 +57,15 @@ public class NodeData {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public NodeData(int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, String layerAlias) {
+	public NodeData(int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, 
+			String layerAlias, LayerType layerType ) {
 		this.idNodeParent = idNodeParent;
 		this.originalServiceUrl = originalServiceUrl;
 		this.description = description;
 		this.institute = institute;
 		this.layerName = layerName;
 		this.layerAlias = layerAlias;
+		this.layerType = layerType;
 	}
 
 	public int getIdNodeData() {
@@ -135,6 +146,14 @@ public class NodeData {
 
 	public void setInstitute(String institute) {
 		this.institute = institute;
+	}
+	
+	public LayerType getLayerType() {
+		return layerType;
+	}
+	
+	public void setLayerType(LayerType layerType) {
+		this.layerType = layerType;
 	}
 	
 }

@@ -17,9 +17,11 @@ public class TreeNode {
 	private int index;
 	private int idNodeParent;
 	private String serialId;
+	private String layerType;
+	private int childrenCount;
 	
 	public TreeNode( UserTableEntity ute ) {
-		int children = Integer.valueOf( ute.getData("children") );
+		this.childrenCount = Integer.valueOf( ute.getData("children") );
 
 		this.idNodeParent = Integer.valueOf( ute.getData("id_node_parent") );
 		this.index = Integer.valueOf( ute.getData("index_order") );
@@ -29,10 +31,12 @@ public class TreeNode {
 		this.description = ute.getData("description");		
 		this.institute = ute.getData("institute");		
 		this.layerAlias = ute.getData("layeralias");
+		this.layerType = ute.getData("layertype");
+		
 		this.serialId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
 		
 		this.id = ute.getData("id_node_data");
-		this.leaf = ( children == 0 );
+		this.leaf = ( this.childrenCount == 0 );
 		
 		if ( this.layerName == null || this.layerName.equals("") ) {
 			this.leaf = false;
@@ -156,5 +160,23 @@ public class TreeNode {
 	public void setSerialId(String serialId) {
 		this.serialId = serialId;
 	}
+	
+	public int getChildrenCount() {
+		return childrenCount;
+	}
+	
+	public void setChildrenCount(int childrenCount) {
+		this.childrenCount = childrenCount;
+	}
+
+	public String getLayerType() {
+		return layerType;
+	}
+
+	public void setLayerType(String layerType) {
+		this.layerType = layerType;
+	}
+	
+	
 	
 }

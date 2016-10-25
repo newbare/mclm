@@ -73,3 +73,12 @@
 	background-repeat: no-repeat;
 }
 
+.plus-icon {
+	background-image: url('../img/plus.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.minus-icon {
+	background-image: url('../img/minus.svg') !important;
+	background-repeat: no-repeat;
+}

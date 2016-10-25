@@ -10,13 +10,13 @@
 
 var layerStore = Ext.create('Ext.data.TreeStore', {
 	autoSync:true,
-	//lazyFill: true,
 	fields: [
 	            { name: 'index', type: 'int' },
 	            { name: 'text', type: 'string' },
 	            { name: 'serviceUrl', type: 'string' },
 	            { name: 'layerName', type: 'string' },
 	            { name: 'originalServiceUrl', type: 'string' },
+	            { name: 'layerType', type: 'string' },
 	            { name: 'serialId', type: 'string' }
 	         ],
 	proxy: {

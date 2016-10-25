@@ -108,13 +108,19 @@ var layerTree = Ext.create('Ext.tree.Panel', {
         xtype: 'treecolumn', 
         text: 'Nome',
         dataIndex: 'text',
-        flex: 2,
+        width : 260,
         sortable: true
-    }, {
+    },{
         text: 'Origem',
         dataIndex: 'institute',
-        flex: 1,
+        width : 170,
         sortable: true,
+        align: 'left'
+    },{
+        text: 'Tipo',
+        dataIndex: 'layerType',
+        sortable: true,
+        width : 50,
         align: 'left'
     }],     
     rootVisible: false,
@@ -137,11 +143,11 @@ var layerTree = Ext.create('Ext.tree.Panel', {
     dockedItems: [{
         xtype: 'toolbar',
         items: [{
-        	iconCls: 'forecast-icon',
+        	iconCls: 'plus-icon',
         	id: 'id011',
             handler : layerTreeExpandir
         }, {
-        	iconCls: 'forecast-icon',
+        	iconCls: 'minus-icon',
         	id: 'id012',
             handler : layerTreeRecolher
         }, searchBar]
@@ -188,11 +194,11 @@ function askDeleteLayer( record ) {
 	var parentNode = record.parentNode;
 	var data = record.data;
 	var name = data.layerAlias;
-	var id = data.id;
+	
 	
 	Ext.Msg.confirm('Apagar Camada', 'Deseja realmente apagar a Camada "' + name + '" ?', function( btn ){
 		   if( btn === 'yes' ){
-			   deleteLayer( id, parentNode );
+			   deleteLayer( parentNode, data );
 		   } else {
 		       return;
 		   }
@@ -200,9 +206,11 @@ function askDeleteLayer( record ) {
 	
 }
 
-// Efetivamente apaga a camada
-function deleteLayer( nodeId, parentNode ) {
-
+// Efetivamente apaga a camada no GeoServer em no Banco
+function deleteLayer( parentNode, data ) {
+	var nodeId = data.id;
+	var layerAlias = data.layerAlias;
+	
 	Ext.Ajax.request({
 	       url: 'deleteLayer',
 	       params: {
@@ -212,14 +220,16 @@ function deleteLayer( nodeId, parentNode ) {
 	    	   var result = JSON.parse( response.responseText );
 	    	   Ext.Msg.alert('Sucesso', result.msg );
 	    	   layerStore.load({ node: parentNode });
+	    	   // removeLayer() estah em "wms.js"
+	    	   removeLayer( layerAlias );
+	    	   // removeFromLayerStack() estah em "layer-stack.js"
+	    	   removeFromLayerStack( layerAlias );
 	       },
 	       failure: function(response, opts) {
 	    	   var result = JSON.parse( response.responseText );
 	    	   Ext.Msg.alert('Falha', result.msg );
 	       }
-	    });				
-	
-	
+	 });				
 	
 }
 
@@ -241,9 +251,11 @@ function deleteNodeAndChildren( node ) {
   	//layerStore.load({ node: parentNode});
 }
 
+// Mostra os detalhes do do/camada que foi selecionado (clicado)
 function layerTreeItemClick(view, record, item, index, e ) {
 	var tempData = [];
 	tempData.push( record.data );
+	// "layerDetailStore" estah em "painel-esquerdo.js"
 	layerDetailStore.loadData( tempData );
 }
 
@@ -279,18 +291,19 @@ function toggleNode( node ) {
 		addToLayerStack( node.data );
 	} else {
 		removeLayer( layerAlias );
-		removeFromLayerStack( layerAlias )
+		removeFromLayerStack( layerAlias );
 	}	
 }
 
 function layerTreeCheckChange( node, checked, eOpts ) {
-	
+	/*
     node.eachChild(function(n) {
         node.cascadeBy(function(pp){
             pp.set('checked', checked);
         });
         toggleNode( n );        
     });
+    */
    
     p = node.parentNode;
     var pChildCheckedCount = 0;
