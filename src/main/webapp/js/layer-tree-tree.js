@@ -126,13 +126,13 @@ var layerTree = Ext.create('Ext.tree.Panel', {
     rootVisible: false,
     
     plugins: [{  ptype: 'treefilter', allowParentFolders: true }],
-    /*
+    
     viewConfig: {
         plugins: {
             ptype: 'treeviewdragdrop',
         }
     },
-    */
+    
     scrollable: true,
     scroll: 'both',
 
@@ -186,7 +186,7 @@ function contextMenu(tree, record, item, index, e, eOpts ) {
 }
 
 function addNewFolder( node ) {
-	Ext.Msg.alert( node.id + " " + node.layerAlias );
+	Ext.Msg.version( node.id + " " + node.layerAlias );
 }
 
 // Pergunta se quer apagar a camada
@@ -283,6 +283,7 @@ function toggleNode( node ) {
 	var layerAlias = node.get('layerAlias');
 	var checked = node.get('checked');
 	var serialId = node.get('serialId');
+	var version = node.get('version');
 
 	if ( layerName == "" ) return;
 	
@@ -296,15 +297,7 @@ function toggleNode( node ) {
 }
 
 function layerTreeCheckChange( node, checked, eOpts ) {
-	/*
-    node.eachChild(function(n) {
-        node.cascadeBy(function(pp){
-            pp.set('checked', checked);
-        });
-        toggleNode( n );        
-    });
-    */
-   
+  
     p = node.parentNode;
     var pChildCheckedCount = 0;
     p.suspendEvents();

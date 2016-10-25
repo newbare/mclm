@@ -17,7 +17,8 @@ var layerStore = Ext.create('Ext.data.TreeStore', {
 	            { name: 'layerName', type: 'string' },
 	            { name: 'originalServiceUrl', type: 'string' },
 	            { name: 'layerType', type: 'string' },
-	            { name: 'serialId', type: 'string' }
+	            { name: 'serialId', type: 'string' },
+	            { name: 'version', type: 'string' }
 	         ],
 	proxy: {
         type: 'ajax',
