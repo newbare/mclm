@@ -8,12 +8,12 @@ Ext.define('MCLM.view.main.Main', {
         'Ext.window.MessageBox',
 
         'MCLM.view.main.MainController',
-        'MCLM.view.main.MapaPrincipal',
+        'MCLM.view.main.TelaPrincipal',
     ],
 
     controller: 'main',
-	
 	plugins: 'viewport',
+	
 	renderTo : Ext.getBody(),
 	listeners:{
 		afterrender:function(){
@@ -21,7 +21,7 @@ Ext.define('MCLM.view.main.Main', {
 		}
 	}, 			   
 	items: [{
-		xtype: 'mapaPrincipal'
+		xtype: 'telaPrincipal'
 	}]
 
 });

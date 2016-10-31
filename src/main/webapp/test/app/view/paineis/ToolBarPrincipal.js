@@ -1,21 +1,19 @@
-Ext.define('MCLM.view.main.ToolBarPrincipal', {
+Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	extend: 'Ext.toolbar.Toolbar',
 	xtype: 'toolBarPrincipal',
     dock: 'right',
     overflowHandler: 'scroller',
+    border : false,
+    style: {
+        background: '#FFFFFF'
+    },    
     items: [{
 		xtype: 'button',
 		id: 'id111',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'setting-icon',
-	    handler : 'testeFunction',
-	    myVar : 'carlos magno abreu'
-        /*
-	    handler: function() {
-        	//showConfig();
-        } 
-        */      
+	    handler : 'showConfig',
     }, 
     {
     	xtype: 'button',
@@ -44,9 +42,7 @@ Ext.define('MCLM.view.main.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'buoy-icon',
 	    enableToggle: true,
-        handler: function() {
-        	//toggleSeaMapLayer();
-        }
+        handler: 'toggleSeaMapLayer',
     }, 
     {
     	xtype: 'button',
@@ -55,9 +51,7 @@ Ext.define('MCLM.view.main.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'grid-icon',
 	    enableToggle: true,
-        handler: function() {
-        	//toggleMapGrid();
-        }
+        handler: 'toggleMapGrid'
     }, 
     {
     	xtype: 'button',
@@ -76,9 +70,7 @@ Ext.define('MCLM.view.main.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    enableToggle: true,
 	    iconCls: 'query-icon',
-        handler: function() {
-        	//toggleQueryTool();
-        }
+        handler: 'toggleQueryTool'
     }, 
     {
     	xtype: 'button',
@@ -86,8 +78,6 @@ Ext.define('MCLM.view.main.ToolBarPrincipal', {
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'socket-icon',
-        handler: function() {
-        	//checkInternetConnection();
-        }
+        handler: 'checkInternetConnection'
     }]
 });

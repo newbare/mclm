@@ -1,6 +1,7 @@
-Ext.define('MCLM.view.main.PainelInferior', {
+Ext.define('MCLM.view.paineis.PainelInferior', {
 	extend: 'Ext.Panel',
 	xtype: 'painelInferior',
+	id: 'painelInferior',
 	title: 'Painel Vazio',
     region: 'south',
     height: 250,

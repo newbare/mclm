@@ -23,19 +23,11 @@ Ext.define('MCLM.Application', {
 			url: 'getConfig',
 			success: function(response, opts) {
 				var config = Ext.decode(response.responseText);
-				//runSystem( config );
 				
 				MCLM.Globals.config = config;
-		        Ext.create({
-		            xtype: 'app-main'
-		        });
+		        Ext.create({ xtype: 'app-main' });
 
-		        var painelCentral = Ext.ComponentQuery.query('painelCentral')[0];
-		        
-		        painelCentral.body.update( JSON.stringify( MCLM.Globals.config ) );
-		        
 		        MCLM.Functions.inicializaDicas();
-		        
 		        
 			},
 			failure: function(response, opts) {
@@ -43,17 +35,7 @@ Ext.define('MCLM.Application', {
 			}
 		});
 
-       
-        
     },
 
-    onAppUpdate: function () {
-        Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
-            function (choice) {
-                if (choice === 'yes') {
-                    window.location.reload();
-                }
-            }
-        );
-    }
+
 });

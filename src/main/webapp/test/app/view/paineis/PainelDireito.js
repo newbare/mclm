@@ -1,4 +1,4 @@
-Ext.define('MCLM.view.main.PainelDireito', {
+Ext.define('MCLM.view.paineis.PainelDireito', {
 	extend: 'Ext.Panel',
 	xtype: 'painelDireito',
     region:'east',
@@ -9,7 +9,7 @@ Ext.define('MCLM.view.main.PainelDireito', {
     maxWidth: 50,
     
 	requires: [
-	   'MCLM.view.main.ToolBarPrincipal'
+	   'MCLM.view.paineis.ToolBarPrincipal'
 	],    
     
     collapsed: false,

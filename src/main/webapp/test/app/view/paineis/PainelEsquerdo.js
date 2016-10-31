@@ -1,9 +1,9 @@
-Ext.define('MCLM.view.main.PainelEsquerdo', {
+Ext.define('MCLM.view.paineis.PainelEsquerdo', {
 	extend: 'Ext.Panel',
 	xtype: 'painelEsquerdo',
 	
 	requires: [
-        'MCLM.view.main.LayerDetail'
+        'MCLM.view.paineis.LayerDetail'
 	],
 	
 	

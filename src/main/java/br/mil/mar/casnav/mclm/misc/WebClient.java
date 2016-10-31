@@ -186,7 +186,7 @@ public class WebClient {
 
 	public String doGet(String url) throws Exception {
 		
-		System.out.println( url );
+		System.out.println( "doGet:  " + url );
 		
 		String result = "NO_ANSWER";
 		CloseableHttpClient httpClient;

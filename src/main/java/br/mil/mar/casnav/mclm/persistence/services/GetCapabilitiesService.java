@@ -21,7 +21,8 @@ public class GetCapabilitiesService {
 		String cgUrl = "wms?request=GetCapabilities&version=" + version;
 		
 		List<GeoServerCapability> capabilities = new ArrayList<GeoServerCapability>();
-		URL sourceServer = new URL( URLDecoder.decode( url, "UTF-8" ) + cgUrl );
+		String fullTarget = URLDecoder.decode( url, "UTF-8" ) + cgUrl;
+		URL sourceServer = new URL( fullTarget );
 
 		//URL sourceServer = new URL( url + cgUrl );
 		

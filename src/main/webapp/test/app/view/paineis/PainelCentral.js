@@ -1,4 +1,4 @@
-Ext.define('MCLM.view.main.PainelCentral', {
+Ext.define('MCLM.view.paineis.PainelCentral', {
 	extend: 'Ext.Panel',
 	xtype: 'painelCentral',
 	collapsible: false,
@@ -6,15 +6,22 @@ Ext.define('MCLM.view.main.PainelCentral', {
 	margin: '0 0 0 0',
 	layout:'fit',
 	id: 'painelCentral',
+	
+	requires: [
+	  'MCLM.Map'
+	],
+	
 	listeners:{
     	resize: function () {
-            //map.updateSize();
+    		MCLM.Map.map.updateSize();
         },
+        
         afterrender:function(){
-        	//
+			var container = this.body.dom.id;
+			MCLM.Map.loadMap( container ); 
 		}
-	}, 
+	} 
    
-	html : 'Central'
+	
 });
 

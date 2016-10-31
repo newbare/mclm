@@ -1,4 +1,4 @@
-Ext.define('MCLM.view.main.LayerDetail', {
+Ext.define('MCLM.view.paineis.LayerDetail', {
 	extend: 'Ext.grid.Panel',
 	xtype: 'view.layerDetail',
 	
