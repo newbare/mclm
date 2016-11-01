@@ -21,9 +21,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'server-icon',
-        handler: function() {
-        	//manageServers();
-        }       
+        handler: 'getAsFeatures'
     }, 
     {
     	xtype: 'button',

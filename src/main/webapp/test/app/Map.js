@@ -20,6 +20,7 @@ Ext.define('MCLM.Map', {
 		queryFactorRadius: 4,
 		graticule: null,
 		geoserverUrl: '',
+		
 		// --------------------------------------------------------------------------------------------
 		// Cria o Mapa Principal e Camadas auxiliares
 		loadMap : function( container ) {
@@ -418,7 +419,7 @@ Ext.define('MCLM.Map', {
 			var encodedUrl = encodeURIComponent( urlFeatureInfo );
 			var me = this;
 			Ext.Ajax.request({
-		       url: 'proxyRequest',
+		       url: 'queryLayer',
 		       params: {
 		           'targetUrl': encodedUrl,
 		           'layerName' : layerName 
@@ -431,10 +432,16 @@ Ext.define('MCLM.Map', {
 			    		   rawData.push( jsonObj.features[x].properties );
 			    	   }
 			    	   if ( rawData.length > 0 ) {
+			    		   
+			    		   
+			    		   
 			    		   var painelInferior = Ext.getCmp('painelInferior');
 			    		   painelInferior.update( JSON.stringify( rawData ) );
 			    		  //addGrid( layerName, rawData );
 			    		  //$('#waitForQueryResultIcon').css('display','none');
+			    		   
+			    		   
+			    		   
 			    	   }
 		    	   } catch ( err ) {
 		    		   me.queryLayerError( response, layerName );
@@ -446,12 +453,73 @@ Ext.define('MCLM.Map', {
 			});				
 		},
 		// --------------------------------------------------------------------------------------------
+		// Exibe uma mensagem de erro da rotina "queryLayer"
 		queryLayerError : function( response, layerName ) {
 			//Ext.Msg.alert('Não é possível interrogar a camada de base','Não existem camadas a serem interrogadas.' );
 			console.log( "queryLayerError Error: " + response + " " + layerName );
 		},
-		
-		
+		// --------------------------------------------------------------------------------------------
+		// Solicita um conjunto de Features a partir de uma tabela do banco de dados
+		getAsFeatures : function( tableName, queryParameter ) {
+
+			var me = this;
+			Ext.Ajax.request({
+			       url: 'getAsFeatures',
+			       params: {
+			           'tableName': tableName,
+			           'queryParameter' : queryParameter 
+			       },       
+			       success: function(response, opts) {
+			    	   try {
+				    	   	var jsonObj = JSON.parse(response.responseText);
+				    	   	var features = response.responseText;//JSON.stringify( jsonObj );
+
+				    	   	var defaultStyle = new ol.style.Style({
+				    	        fill: new ol.style.Fill({
+				    	          color: [250,250,250,1]
+				    	        }),
+				    	        stroke: new ol.style.Stroke({
+				    	          color: [220,220,220,1],
+				    	          width: 1
+				    	        })
+				    	    });
+				    	   	
+				    	   	var formatJSON = new ol.format.GeoJSON(); 
+							var vectorSource = new ol.source.Vector({
+								format: formatJSON 
+							});
+							
+							//http://openlayersbook.github.io/ch06-styling-vector-layers/example-07.html
+							var vectorLayer = new ol.layer.Vector({
+						         source: vectorSource,
+						         style: function(feature, resolution) {
+						        	 
+						        	 //var textLabel = feature.get('nome');
+						        	 //console.log( textLabel );
+						        	 
+						        	 return [defaultStyle];
+						         }
+							});			
+
+							vectorLayer.set('alias', tableName);
+							vectorLayer.set('name', tableName);
+							vectorLayer.set('serialId', tableName);
+							vectorLayer.set('ready', false);
+							vectorLayer.set('baseLayer', false);							
+							
+							var featuresOl = formatJSON.readFeatures( jsonObj, {featureProjection: 'EPSG:4326'} );
+							vectorSource.addFeatures( featuresOl ) ;
+							me.map.addLayer( vectorLayer );				    	   
+				    	   
+				    	   
+			    	   } catch ( err ) {
+			    		   me.queryLayerError( response, layerName );
+			    	   }
+			       }
+			});
+			
+		},
+		// --------------------------------------------------------------------------------------------
 		
 		
 		// --------------------------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 package br.mil.mar.casnav.mclm.persistence.services;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -16,11 +16,11 @@ public class GenericService {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public Set<UserTableEntity> genericFetchList(String query) throws Exception {
+	public List<UserTableEntity> genericFetchList(String query) throws Exception {
 		if ( !rep.isOpen() ) {
 			rep.newTransaction();
 		}
-		Set<UserTableEntity> result = new LinkedHashSet<UserTableEntity>();
+		List<UserTableEntity> result = new ArrayList<UserTableEntity>();
 		for ( Object obj : rep.genericFetchList(query) ) {
 			UserTableEntity ut = new UserTableEntity( (Map)obj );
 			result.add(ut);

@@ -24,8 +24,6 @@ public class GetCapabilitiesService {
 		String fullTarget = URLDecoder.decode( url, "UTF-8" ) + cgUrl;
 		URL sourceServer = new URL( fullTarget );
 
-		//URL sourceServer = new URL( url + cgUrl );
-		
 		WMSCapabilities caps = null;
 		WebMapServer wms = new WebMapServer( sourceServer, Integer.MAX_VALUE );
 		caps = wms.getCapabilities();

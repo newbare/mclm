@@ -2,16 +2,51 @@ package br.mil.mar.casnav.mclm.persistence.services;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.misc.RESTResponse;
+import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.misc.WebClient;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 
+// http://10.5.115.122/geoserver/rest/workspaces/osm/datastores.json
+
+
 public class LayerService {
+
+	public String getAsFeatureLayer( String tableName, String queryParameter ) throws Exception {
+		String sql = "SELECT row_to_json(fc)\\:\\:text As featurecollection " +  
+			"FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features " + 
+			     "FROM (SELECT 'Feature' As type, " + 
+			     "ST_AsGeoJSON( geom )\\:\\:json As geometry, " +  
+			     "row_to_json((SELECT l FROM (SELECT \"name\" as nome, adm0_name as pais) As l)) As properties " +  
+			     "FROM \"admin1\" As l where adm0_name like '%Brazil%') As f) as fc; ";
+		
+		String result = "";
+		GenericService gs = new GenericService();
+		List<UserTableEntity> utes = gs.genericFetchList( sql );
+		if ( utes.size() > 0 ) {
+			UserTableEntity ute = utes.get(0);
+			result = ute.getData("featurecollection");
+		}
+		
+		System.out.println( result );
+		
+		//result = "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[-5696622.36,-3508506.55],[-5696631.28,-3508504.96],[-5696649.14,-3508501.8],[-5696658.06,-3508500.2]]},\"properties\":{\"highway\":\"platform\",\"aeroway\":null,\"railway\":null,\"tunnel\":null}}]}";
+		return result;
+	}
+	
+	public String queryLayer( String targetUrl, String layerName ) throws Exception {
+		String result = "";
+		WebClient wc = new WebClient();
+		result = wc.doGet(  URLDecoder.decode( targetUrl, "UTF-8")   ); 
+		return result;
+	}
 	
 	public int createWorkspace( String workspaceName ) throws Exception {
 		Configurator cfg = Configurator.getInstance();
@@ -20,7 +55,6 @@ public class LayerService {
 		String geoserverURL = cfg.getGeoserverUrl().replace("wms/", "");
 		String serverRESTAPI = geoserverURL + "rest/workspaces/";
 	
-		
 		StringBuilder postData = new StringBuilder();
 		postData.append("<workspace>");
 		postData.append("<name>" + workspaceName + "</name>");

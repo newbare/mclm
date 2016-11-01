@@ -45,11 +45,13 @@ Ext.define('MCLM.view.main.MainController', {
     	});			
     },    
 	// --------------------------------------------------------------------------------------------
-	// invocado pelo botao da barra de ferramentas lateral.
-	// "unbindMapClick()" estah no arquivo "wms.js"
     toggleQueryTool : function () {
     	MCLM.Map.toggleQueryTool();
-	}    
+	},
+	// --------------------------------------------------------------------------------------------
+	getAsFeatures : function() {
+		MCLM.Map.getAsFeatures('aaaaaa','bbbbbb');
+	}
     
     
 });

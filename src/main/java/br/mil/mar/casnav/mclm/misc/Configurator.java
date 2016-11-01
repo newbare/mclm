@@ -24,6 +24,7 @@ public class Configurator {
 	private String userName;
 	private String password;
 	private String databaseName;
+	private String databasePort;
 	private Config config;
 	
 	public void setJavaProxy() throws Exception {
@@ -102,6 +103,10 @@ public class Configurator {
 	public String getDatabaseName() {
 		return databaseName;
 	}
+	
+	public String getDatabasePort() {
+		return databasePort;
+	}	
 	
 	public String getPassword() {
 		return password;
@@ -190,9 +195,12 @@ public class Configurator {
 			userName = getTagValue("userName", mpElement);
 			password = getTagValue("password", mpElement);
 			databaseName = getTagValue("databaseName", mpElement);
+			databasePort = getTagValue("databasePort", mpElement);
 		} catch ( Exception e ) {
 			System.out.println( e.getMessage() );
 		}
 	}
+
+
 
 }

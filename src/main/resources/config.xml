@@ -6,6 +6,7 @@
 		<databaseName>mclm</databaseName>
 		<userName>postgres</userName>
 		<password>admin</password>
+		<databasePort>5433</databasePort>
 	</mclm>
 	
 </configuration>

@@ -1,5 +1,6 @@
 package br.mil.mar.casnav.mclm.persistence.services;
 
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -121,7 +122,7 @@ public class NodeService {
 				"GROUP BY nd.id_node_data ORDER BY nd.index_order";
 		
 		GenericService gs = new GenericService();
-		Set<UserTableEntity> utes = gs.genericFetchList( sql );
+		List<UserTableEntity> utes = gs.genericFetchList( sql );
 		
 		JSONArray arrayObj = new JSONArray();
 		for ( UserTableEntity ute : utes ) {

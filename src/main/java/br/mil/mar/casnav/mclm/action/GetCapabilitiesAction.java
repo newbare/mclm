@@ -31,8 +31,6 @@ public class GetCapabilitiesAction {
 				capabilities = "{ \"error\": true, \"msg\": \""+ex.getMessage()+".\" }";	
 			}
 	
-			System.out.println( capabilities );
-			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.getWriter().write( capabilities );
