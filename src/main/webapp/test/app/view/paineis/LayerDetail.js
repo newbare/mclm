@@ -8,7 +8,7 @@ Ext.define('MCLM.view.paineis.LayerDetail', {
 	
 	border:false,
 	
-    store: Ext.data.StoreManager.lookup('store.LayerDetail'),
+    store: 'store.LayerDetail',
     
     region:'south',
     height: 160,

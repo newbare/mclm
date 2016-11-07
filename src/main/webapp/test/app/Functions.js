@@ -6,7 +6,7 @@ Ext.define('MCLM.Functions', {
 		    Ext.tip.QuickTipManager.init();
 		    
 		    Ext.tip.QuickTipManager.register(
-		    /*
+		    
 			{
 			  target: 'id011',
 			  title: 'Expandir Tudo',
@@ -22,7 +22,7 @@ Ext.define('MCLM.Functions', {
 		      width: 150,
 		      dismissDelay: 5000 
 		    	      
-		    },*/{
+		    },{
 		      target: 'id111',
 		      title: 'Configurações',
 		      text: 'Configura aspectos gerais do sistema.',

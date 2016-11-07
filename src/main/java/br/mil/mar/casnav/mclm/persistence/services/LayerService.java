@@ -14,9 +14,6 @@ import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.misc.WebClient;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 
-// http://10.5.115.122/geoserver/rest/workspaces/osm/datastores.json
-
-
 public class LayerService {
 
 	public String getAsFeatureLayer( String tableName, String queryParameter ) throws Exception {

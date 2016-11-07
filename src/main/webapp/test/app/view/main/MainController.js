@@ -51,7 +51,14 @@ Ext.define('MCLM.view.main.MainController', {
 	// --------------------------------------------------------------------------------------------
 	getAsFeatures : function() {
 		MCLM.Map.getAsFeatures('aaaaaa','bbbbbb');
-	}
-    
+	},
+	// --------------------------------------------------------------------------------------------
+	showLayerStack : function() {
+    	var stackWindow = Ext.getCmp('layerStack');
+    	if ( stackWindow ) return;
+    	stackWindow = Ext.create('MCLM.view.stack.LayerStack');
+    	stackWindow.show();			
+	},
+	// --------------------------------------------------------------------------------------------
     
 });

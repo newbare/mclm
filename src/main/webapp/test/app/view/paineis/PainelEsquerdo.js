@@ -3,7 +3,8 @@ Ext.define('MCLM.view.paineis.PainelEsquerdo', {
 	xtype: 'painelEsquerdo',
 	
 	requires: [
-        'MCLM.view.paineis.LayerDetail'
+        'MCLM.view.paineis.LayerDetail',
+        'MCLM.view.paineis.LayerTree'
 	],
 	
 	
@@ -19,5 +20,7 @@ Ext.define('MCLM.view.paineis.PainelEsquerdo', {
     animCollapse: false,   
 	items: [{
 		xtype: 'view.layerDetail'
+	},{
+		xtype: 'view.layerTree'
 	}]
 });

@@ -8,7 +8,8 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
         background: '#FFFFFF'
     },    
     items: [{
-		xtype: 'button',
+    	// Config
+    	xtype: 'button',
 		id: 'id111',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
@@ -16,6 +17,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    handler : 'showConfig',
     }, 
     {
+    	// Fontes Externas
     	xtype: 'button',
     	id: 'id112',
 	    width: MCLM.Globals.btnWidth,
@@ -24,6 +26,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
         handler: 'getAsFeatures'
     }, 
     {
+    	// Clima
     	xtype: 'button',
     	id: 'id113',
 	    width: MCLM.Globals.btnWidth,
@@ -34,6 +37,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
         }
     }, 
     {
+    	// OpenSeaMap
     	xtype: 'button',
     	id: 'id114',
 	    width: MCLM.Globals.btnWidth,
@@ -43,6 +47,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
         handler: 'toggleSeaMapLayer',
     }, 
     {
+    	// Grade de coordenadas
     	xtype: 'button',
     	id: 'id115',
 	    width: MCLM.Globals.btnWidth,
@@ -52,14 +57,13 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
         handler: 'toggleMapGrid'
     }, 
     {
+    	// Lista de Camadas
     	xtype: 'button',
     	id: 'id116',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'layers-icon',
-        handler: function() {
-        	//showLayerStack();
-        }
+        handler: 'showLayerStack'
     }, 
     {
     	xtype: 'button',

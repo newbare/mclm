@@ -1,25 +1,14 @@
-/*
- * Responsavel por solicitar os dados da arvore 
- * ao servidor por meio da URL "getLayersTreeNode", que deve retornar o JSON de
- * determinado nivel da arvore, controlado pelo atributo do pai "ID".
- * Ex: Inicialmente, pega todos que possuem ID = 0.
- * 		Ao clicar em un n� para expandir, pede todos que possuem o ID 
- * 		do no que esta sendo aberto como pai ( parent_id ).
- */
 Ext.define('MCLM.store.LayerTree', {
-    extend: 'Ext.data.Store',
-    alias: 'store.layerTree',
+    extend: 'Ext.data.TreeStore',
+    storeId:'store.layerTree',
+    autoLoad : true,
     
-	fields: [
-	            { name: 'index', type: 'int' },
-	            { name: 'text', type: 'string' },
-	            { name: 'serviceUrl', type: 'string' },
-	            { name: 'layerName', type: 'string' },
-	            { name: 'originalServiceUrl', type: 'string' },
-	            { name: 'layerType', type: 'string' },
-	            { name: 'serialId', type: 'string' },
-	            { name: 'version', type: 'string' }
-	         ],
+    requires: [
+       'MCLM.model.LayerTreeModel'
+    ],	    
+           
+	model:  'MCLM.model.LayerTreeModel',    
+    
 	proxy: {
         type: 'ajax',
         reader: {
@@ -41,11 +30,16 @@ Ext.define('MCLM.store.LayerTree', {
     },
    
     root: {
-        text: 'Camadas',
+        text: 'APOLO',
         id: 0,
         index:0,
         expanded: true
-    }   
-  
+    },
+    
+	listeners: {
+        load: function(store, records){
+        	//
+    	}			
+	} 
     
 });
