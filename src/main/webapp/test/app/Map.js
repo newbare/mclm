@@ -145,7 +145,7 @@ Ext.define('MCLM.Map', {
 			if ( serialId ) {
 				
 				layer.getSource().on('tileloadstart', function(event) {
-					console.log("tile '"+serialId+"' load start");
+					//console.log("tile '"+serialId+"' load start");
 					$("#alert_" + serialId).css("display","block");
 					$("#error_" + serialId).css("display","none");
 					layer.set('ready', false);
@@ -155,7 +155,7 @@ Ext.define('MCLM.Map', {
 				// Tile Carregado. Temos ao menos alguma coisa da camada.
 				// Oculta os icones de alerta e loading. 
 				layer.getSource().on('tileloadend', function(event) {
-					console.log("tile '"+serialId+"' load end");
+					//console.log("tile '"+serialId+"' load end");
 					$("#alert_" + serialId).css("display","none");
 					$("#error_" + serialId).css("display","none");
 					layer.set('ready', true);
@@ -163,7 +163,7 @@ Ext.define('MCLM.Map', {
 				});
 				
 				layer.getSource().on('tileloaderror', function(event) {
-					console.log("tile '"+serialId+"' load error");
+					//console.log("tile '"+serialId+"' load error");
 					$("#alert_" + serialId).css("display","none");
 					$("#error_" + serialId).css("display","block");
 					layer.set('ready', false);
@@ -241,10 +241,10 @@ Ext.define('MCLM.Map', {
 		},		
 		// --------------------------------------------------------------------------------------------
 		// Remove uma camada do mapa
-		removeLayer : function ( layerAlias ) {
+		removeLayer : function ( layerName ) {
 			var me = this;
 			this.map.getLayers().forEach( function ( layer ) {
-				if( layer.U.alias == layerAlias ) {
+				if( layer.U.name == layerName ) {
 					me.map.removeLayer( layer );	
 					return;
 				}
@@ -299,7 +299,7 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Marca uma camada como selecionada.
 		selectLayer : function ( layerName ) {
-			this.selectedLayer = findByName( layerName );
+			this.selectedLayer = this.findByName( layerName );
 		},
 		// --------------------------------------------------------------------------------------------
 		// Pega a opacidade da camada selecionada
@@ -314,8 +314,11 @@ Ext.define('MCLM.Map', {
 		// Ajusta a opacidade da camada selecionada
 		setSelectedLayerOpacity : function ( opacity ) {
 			if ( this.selectedLayer ) {
+				console.log( opacity );
 				this.selectedLayer.setOpacity( opacity );
-			} 
+			} else {
+				Ext.Msg.alert('Nenhuma Camada Selecionada','Selecione uma camada para alterar sua opacidade.' );
+			}
 		},
 		// --------------------------------------------------------------------------------------------
 		// Modifica o indice de uma camada no mapa (nivel)
@@ -323,7 +326,7 @@ Ext.define('MCLM.Map', {
 			var layer = this.findByName( layerName );
 			var layers = this.map.getLayers();
 			var length = layers.getLength();
-			var index = indexOf(layers, layer);
+			var index = this.indexOf(layers, layer);
 		    var layer = this.map.getLayers().removeAt( index );
 		    this.map.getLayers().insertAt( newIndex, layer );	
 		},		

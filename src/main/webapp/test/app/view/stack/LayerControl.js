@@ -1,7 +1,7 @@
 Ext.define('MCLM.view.stack.LayerControl', {
 	extend: 'Ext.Panel',
 	region : 'east',
-	xtype: 'view.layerControl',
+	xtype: 'layerControl',
     requires: [
        'MCLM.view.stack.MiniImage',
        'MCLM.view.stack.Slider'
@@ -14,5 +14,4 @@ Ext.define('MCLM.view.stack.LayerControl', {
 	},{
 		xtype: 'slider'
 	}]  	
-	
 });

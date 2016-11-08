@@ -19,6 +19,7 @@ public class TreeNode {
 	private String serialId;
 	private String layerType;
 	private int childrenCount;
+	private String iconCls;
 	
 	public TreeNode( UserTableEntity ute ) {
 		this.childrenCount = Integer.valueOf( ute.getData("children") );
@@ -32,14 +33,19 @@ public class TreeNode {
 		this.institute = ute.getData("institute");		
 		this.layerAlias = ute.getData("layeralias");
 		this.layerType = ute.getData("layertype");
+		this.iconCls = "";
 		
-		this.serialId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+		this.serialId = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
 		
 		this.id = ute.getData("id_node_data");
 		this.leaf = ( this.childrenCount == 0 );
 		
 		if ( this.layerName == null || this.layerName.equals("") ) {
 			this.leaf = false;
+		} else {
+			if ( this.layerType.equals("KML") ) this.iconCls = "kml-icon";
+			if ( this.layerType.equals("WMS") ) this.iconCls = "wms-icon";
+			if ( this.layerType.equals("SHP") ) this.iconCls = "shp-icon";
 		}
 		
 		this.checked = false;
@@ -177,6 +183,8 @@ public class TreeNode {
 		this.layerType = layerType;
 	}
 	
-	
+	public String getIconCls() {
+		return iconCls;
+	}
 	
 }

@@ -82,3 +82,18 @@
 	background-image: url('../img/minus.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.kml-icon {
+	background-image: url('../img/fogg.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.wms-icon {
+	background-image: url('../img/add_layer_wms.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.shp-icon {
+	background-image: url('../img/grid.svg') !important;
+	background-repeat: no-repeat;
+}

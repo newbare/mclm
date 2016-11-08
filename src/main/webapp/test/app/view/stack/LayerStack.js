@@ -32,6 +32,6 @@ Ext.define('MCLM.view.stack.LayerStack', {
 		xtype: 'detailPanel'
 	},{
 		xtype: 'layerControl'
-	}]    
-   
+	}]
+	
 });

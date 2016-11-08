@@ -3,94 +3,136 @@ Ext.define('MCLM.view.stack.LayerStackController', {
     alias: 'controller.stack',
     listen : {
         controller : {
-            '*' : {
-            	removeFromLayerStack : 'removeFromLayerStack',
-            	addToLayerStack : 'addToLayerStack',
-            	mountImagePreview : 'mountImagePreview'
-            }
+            '*' : { mountImagePreview : 'mountImagePreview' }
         }
     },    
     
-    mountImagePreview : function( button ) {
-    	alert("aaa");
+    init : function(app) {
+        this.control({
+        	// Intercepta o metodo 'dragend' do slider 
+            '#stackSlider' : {
+            	dragend: this.sliderDragEnd 
+            },
+            // Intercepta metodos da grid (lista de camadas)
+            '#stackGridPanel' : {
+            	drop : this.gridDrop,
+            	rowclick : this.gridRowClick
+            }
+        	
+        });
     },
     
-    showLegend : function( button ) {
-    	alert("bbb");
+    // --------------------------------------------------------------------------------------------------------
+    // Metodos interceptados de controles da view 
+    sliderDragEnd : function( slider, thumb, value ) {
+    	var opacity = slider.getValue(0) / 10;
+    	this.setSelectedLayerOpacity( opacity );
     },
     
-    addToLayerStack : function( data ) {
-    	var layerStackStore = Ext.data.StoreManager.lookup('store.layerStack');
-    	var layerStack = layerStackStore.getRange();
-    	
-    	layerStack.push( data );
-		
-		layerStackStore.loadData( layerStack );    	
-		this.mountImagePreview();
-    },
-    
-    removeFromLayerStack : function( layerAlias ) {
-    	var layerStackStore = Ext.data.StoreManager.lookup('store.layerStack');
-    	var layerStack = layerStackStore.getRange();
-    	
-    	layerStack = layerStack.filter(function(el) {
-    	    return el.layerAlias !== layerAlias;
-    	});	
-		
-		layerStackStore.loadData( layerStack );  
-    	
+    gridDrop: function (node, data, dropRec, dropPosition) {
+    	var layerStackStore = Ext.getStore('store.layerStack');
+    	var totalLayerCount = layerStackStore.getCount();
+    	var indx = totalLayerCount;
+    	layerStackStore.each( function( rec ){
+    		var layerName = rec.get('layerName');
+    		var newIndex = ( totalLayerCount - indx ) + 1;
+    	    MCLM.Map.setNewIndex( layerName , newIndex );
+    	    indx--;
+    	});            	
     	this.mountImagePreview();
-    },
+    },    
     
+    gridRowClick: function(grid, record, tr, rowIndex, e, eOpts) {
+    	var layerName = record.get('layerName');
+    	MCLM.Map.selectLayer( layerName );
+		var opacity = MCLM.Map.getSelectedLayerOpacity();
+		var newOpacity = opacity * 10;
+		var stackSlider = Ext.getCmp('stackSlider');
+		stackSlider.setValue( 0, newOpacity );
+    },    
+    // Fim dos metodos interceptados
+    // --------------------------------------------------------------------------------------------------------
+    
+    setSelectedLayerOpacity : function( value ) {
+    	MCLM.Map.setSelectedLayerOpacity( value );
+    },
+    // --------------------------------------------------------------------------------------------------------
+    showLegend : function( button ) {
+    	var stackGridPanel = Ext.getCmp('stackGridPanel');
+    	
+		if (stackGridPanel.getSelectionModel().hasSelection()) {
+		   var row = stackGridPanel.getSelectionModel().getSelection()[0];
+		   var layerName = row.get('layerName');
+		   var serviceUrl = row.get('serviceUrl' );
+		   var serialId = row.get('serialId' );
+		   this.showLegendScreen( layerName, serviceUrl, serialId );
+		} else {
+			Ext.Msg.alert('Camada não selecionada','Selecione uma camada da lista antes de solicitar a legenda.' );
+		}	    
+    	
+    },
+    // --------------------------------------------------------------------------------------------------------
+    showLegendScreen : function( layerName, serviceUrl, serialId ) {
+    	var legendImageUrl = MCLM.Map.getLayerLegendImage( layerName, serviceUrl );
+    	
+    	var legendWindow = Ext.getCmp('legendWindow');
+    	if ( legendWindow ) return;
+    	legendWindow = Ext.create('MCLM.view.legend.LegendWindow',{title:"Legenda da Camada " + layerName});
+    	legendWindow.show();
+
+    	$("#legend_image").attr('src', legendImageUrl );
+    	
+    	$("#legend_image").one("load", function() {
+    		$("#legend_image").css("display","block");
+    		$("#legend_loading").css("display","none");
+    	}).each(function() {
+    		if(this.complete) $(this).load();
+    	});    	
+    	    	
+    },
+    // --------------------------------------------------------------------------------------------------------
     mountImagePreview : function() {
-    	alert("LayerStackController: moutImagePreview");
-    	/*
+    	var baseLayerUrlPreview = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl );
+
+    	var layerMiniImage = Ext.getCmp('layerMiniImage');
+    	layerMiniImage.body.update( "" );
     	
-	
-	// Se a tela nao esta visivel, nao atualiza nada.
-	if ( !layerStackWindow ) return;
-	
-	// apaga todas as imagens do painel maior lateral direito.
-	layerMiniImage.body.update("");
-	var content = "";
-	var zindex = 0;
-	
-	// Atualiza a imagem da camada base. "getLayerImagePreview()" estah em "wms.js"
-	var baseLayerUrlPreview = getLayerImagePreview( baseLayer, geoserverUrl);
-	var imgElement = Ext.get( 'mclm_landlayer_cmoa' );
-	if( imgElement ) {
-		// Imagem pequena da lista de camadas
-		imgElement.dom.src = baseLayerUrlPreview;
-		// Imagem do painel grande
-		content = content + "<img class='minithumb mergeable' id='big_mclm_landlayer_cmoa' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+baseLayerUrlPreview+"' />";
-		zindex++;
-		
-	}	
-	
-	// Atualiza as imagens de preview das camadas na lista de camadas
-	// "getLayerImagePreview()" estah em "wms.js" e fornece a URL da imagem
-	// de uma camada do geoserver dado o seu nome e a URL do servidor.
-	storeDos.each( function( record ){
-		var layerName = record.get('layerName');
-		var serviceUrl = record.get('serviceUrl');
-		var serialId = record.get('serialId');
-		var thumImg = getLayerImagePreview ( layerName, serviceUrl );
-		var imgElement = Ext.get( serialId );
-		if( imgElement ) {
-			// Imagem pequena da lista de camadas 
-			imgElement.dom.src = thumImg;
-			// Imagem do painel grande
-			content = content + "<img class='minithumb mergeable' id='big_"+serialId+"' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+thumImg+"' />";
-		}
-		
-		zindex++;
-	});
-	layerMiniImage.body.update( content );
-	checkPreviewImages();
+    	var content = "";
+    	var zindex = 0;
     	
-    	*/
+    	var imgElement = Ext.get( 'mclm_landlayer_cmoa' );
+    	if( imgElement ) {
+    		// Imagem pequena da lista de camadas
+    		imgElement.dom.src = baseLayerUrlPreview;
+    		// Imagem do painel grande
+    		content = content + "<img class='minithumb mergeable' id='big_mclm_landlayer_cmoa' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+baseLayerUrlPreview+"' />";
+    		zindex++;
+    	}
+    	
+    	var layerStackStore = Ext.getStore('store.layerStack');
+    	
+    	layerStackStore.each( function( record ){
+			var layerName = record.get('layerName');
+			var serviceUrl = record.get('serviceUrl');
+			var serialId = record.get('serialId');
+			var thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl );
+			var imgElement = Ext.get( serialId );
+			
+			if( imgElement ) {
+				// Imagem pequena da lista de camadas 
+				imgElement.dom.src = thumImg;
+				// Imagem do painel grande
+				content = content + "<img class='minithumb mergeable' id='big_"+serialId+"' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+thumImg+"' />";
+			}
+			zindex++;
+		});
+		
+    	
+    	layerMiniImage.body.update( content );
+    	this.checkPreviewImages();    	
+    	
     },
-    
+    // --------------------------------------------------------------------------------------------------------
     checkPreviewImages : function() {
     	$('.minithumb').each(function(){
     		var me = $( this );

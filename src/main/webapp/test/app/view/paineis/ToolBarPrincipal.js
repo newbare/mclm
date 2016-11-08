@@ -23,7 +23,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'server-icon',
-        handler: 'getAsFeatures'
+        handler: 'manageServers'
     }, 
     {
     	// Clima

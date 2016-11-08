@@ -21,7 +21,7 @@ Ext.define('MCLM.store.ExternalSource', {
 	autoLoad: true,
 	listeners: {
         load: function(store, records){
-        	// Quando o store carrega os dados
+        	//
     	}			
 	}
 }); 

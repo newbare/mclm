@@ -33,7 +33,8 @@ Ext.define('MCLM.store.LayerTree', {
         text: 'APOLO',
         id: 0,
         index:0,
-        expanded: true
+        expanded: true,
+        description : 'Raiz'
     },
     
 	listeners: {

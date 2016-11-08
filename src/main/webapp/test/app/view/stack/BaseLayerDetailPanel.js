@@ -1,5 +1,5 @@
 Ext.define('MCLM.view.stack.BaseLayerDetailPanel', {
-	xtype : 'view.baseLayerDetailPanel',
+	xtype : 'baseLayerDetailPanel',
 	extend: 'Ext.Panel',
 	height : 60,
 	border: false,

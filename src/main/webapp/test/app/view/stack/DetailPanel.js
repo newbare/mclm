@@ -1,13 +1,12 @@
 Ext.define('MCLM.view.stack.DetailPanel', {
 	extend: 'Ext.Panel',
-	xtype: 'view.detailPanel',
+	xtype: 'detailPanel',
 	region: 'center',
 	requires: [
            'Ext.layout.container.VBox',
            'MCLM.view.stack.BaseLayerDetailPanel',
            'MCLM.view.stack.GridPanel',
     ],
-    xtype: 'layout-vertical-box',
     layout: {
        type: 'vbox',
        pack: 'start',

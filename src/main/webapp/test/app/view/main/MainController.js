@@ -11,6 +11,15 @@ Ext.define('MCLM.view.main.MainController', {
 		MCLM.Map.toggleMapGrid();
 	},
 	// --------------------------------------------------------------------------------------------
+	manageServers : function( button ) {
+	
+    	var serversWindow = Ext.getCmp('serversWindow');
+    	if ( serversWindow ) return;
+    	serversWindow = Ext.create('MCLM.view.servers.ServersWindow');
+    	serversWindow.show();
+    	
+	},
+	// --------------------------------------------------------------------------------------------
 	toggleSeaMapLayer : function( button ) {
 		MCLM.Map.toggleSeaMapLayer();
 	},
@@ -50,14 +59,18 @@ Ext.define('MCLM.view.main.MainController', {
 	},
 	// --------------------------------------------------------------------------------------------
 	getAsFeatures : function() {
-		MCLM.Map.getAsFeatures('aaaaaa','bbbbbb');
+		Ext.Msg.alert('Não implementado ainda.' );
+		//MCLM.Map.getAsFeatures('aaaaaa','bbbbbb');
 	},
 	// --------------------------------------------------------------------------------------------
 	showLayerStack : function() {
     	var stackWindow = Ext.getCmp('layerStack');
     	if ( stackWindow ) return;
     	stackWindow = Ext.create('MCLM.view.stack.LayerStack');
-    	stackWindow.show();			
+    	stackWindow.show();	
+    	// Dispara um evento de atualizacao das mini imagens
+    	// quem vai interceptar eh o controller 'LayerStackController' 
+    	this.fireEvent('mountImagePreview');
 	},
 	// --------------------------------------------------------------------------------------------
     

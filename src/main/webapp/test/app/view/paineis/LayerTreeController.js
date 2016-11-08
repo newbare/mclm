@@ -22,22 +22,33 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var layerDetailStore = Ext.data.StoreManager.lookup('store.LayerDetail');
 		layerDetailStore.loadData( tempData );
     },
-    
+    // Recursivamente marca/desmarca pais dos nos até o root
+    recursiveCheckParent : function( node, pChildCheckedCount ) {
+	    var parent = node.parentNode;
+	    if( parent ) {
+	    	parent.set('checked', !!pChildCheckedCount);
+	    	this.recursiveCheckParent( parent, pChildCheckedCount );
+	    }
+    },
     // Quando o estado do no muda (selecionado/nao selecionado)
     // Adiciona ou remove uma camada na lista de camadas e no mapa
     onLayerTreeCheckChange : function( node, checked, eOpts ) {
+    	if ( !node.isLeaf() ) {
+			Ext.Msg.alert('Operação Inválida', ' Não é permitido marcar um grupo de camadas. Você deve marcar as camadas individualmente.' );
+			node.set('checked',false);
+			return;
+    	}
+    	var me = this;
 	    p = node.parentNode;
 	    var pChildCheckedCount = 0;
 	    p.suspendEvents();
 	    p.eachChild(function(c) { 
 	        if (c.get('checked')) pChildCheckedCount++; 
-	       	p.parentNode.set('checked', !!pChildCheckedCount);
-	        p.set('checked', !!pChildCheckedCount);
+
 	    });
+       	me.recursiveCheckParent( node, pChildCheckedCount );	    
 	    p.resumeEvents();
-	    
 	    this.toggleNode( node );
-	  
     },
 
     // Mosta o menu de contexto quando clica com botao direito do mouse em um no da arvore
@@ -46,9 +57,9 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	if ( !record.data.leaf ) {
 		    var menu_grid = new Ext.menu.Menu({ 
 		    	items: [
-		          { iconCls: 'forecast-icon', text: 'Adicionar Camada KML', handler: function() { me.addNewLayerKML(record); } },
-		          { iconCls: 'add-wms-icon', text: 'Adicionar Camada WMS', handler: function() { me.addNewLayerWMS(record); } },
-		          { iconCls: 'grid-icon', text: 'Adicionar Camada SHP', handler: function() { me.addNewLayerSHP(record); } },
+		          { iconCls: 'kml-icon', text: 'Adicionar Camada KML', handler: function() { me.addNewLayerKML(record); } },
+		          { iconCls: 'wms-icon', text: 'Adicionar Camada WMS', handler: function() { me.addNewLayerWMS(record); } },
+		          { iconCls: 'shp-icon', text: 'Adicionar Camada SHP', handler: function() { me.addNewLayerSHP(record); } },
 		          { xtype: 'menuseparator' },
 		          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { me.addNewFolder(record); } },
 		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.deleteNodeAndChildren( record ); } }
@@ -146,14 +157,34 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		if( checked == true ) {
 			// adiciona a camada no mapa
 			MCLM.Map.addLayer( serviceUrl, layerName, layerAlias, serialId );
+
 			// Adiciona a camada na lista de camadas 
-			this.fireEvent('addToLayerStack',  node.data);
-			
+	    	var layerStackStore = Ext.getStore('store.layerStack');
+			var stackGridPanel = Ext.getCmp('stackGridPanel');
+	    	var layerStack = layerStackStore.getRange();
+	    	layerStack.push( node.data );
+			layerStackStore.loadData( layerStack );    				
+	    	if ( stackGridPanel ) {
+	    		stackGridPanel.getView().refresh();
+	    		this.fireEvent('mountImagePreview');
+	    	}
 		} else {
 			// Remove a camada do mapa
-			MCLM.Map.removeLayer( layerAlias );
-			// Remove a camada de lista de camadas (caso esteja visivel)
-			this.fireEvent('removeFromLayerStack', layerAlias);
+			MCLM.Map.removeLayer( layerName );
+
+			// Remove a camada de lista de camadas 
+	    	var layerStackStore = Ext.getStore('store.layerStack');
+	    	var stackGridPanel = Ext.getCmp('stackGridPanel');
+	    	layerStackStore.each( function(rec) {
+	    	    if (rec.data.layerName == layerName) {
+	    	    	layerStackStore.remove(rec);
+	    	        return false;
+	    	    }
+	    	});    	
+	    	if ( stackGridPanel ) {
+	    		stackGridPanel.getView().refresh();
+	    		this.fireEvent('mountImagePreview');
+	    	}
 		}	
 	},
 	

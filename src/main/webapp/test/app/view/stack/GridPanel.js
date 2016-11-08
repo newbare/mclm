@@ -1,7 +1,7 @@
 Ext.define('MCLM.view.stack.GridPanel', {
 	extend: 'Ext.grid.Panel',
-	xtype: 'view.gridPanel',
-
+	xtype: 'gridPanel',
+	id: 'stackGridPanel',
     store : 'store.layerStack',
     border:false,
     frame: false,
@@ -38,22 +38,10 @@ Ext.define('MCLM.view.stack.GridPanel', {
 
     listeners: {
         drop: function (node, data, dropRec, dropPosition) {
-        	var totalLayerCount = storeDos.getCount();
-        	var indx = totalLayerCount;
-        	storeDos.each( function( rec ){
-        		var layerName = rec.get('layerName');
-        		var newIndex = ( totalLayerCount - indx ) + 1;
-        	    setNewIndex( layerName , newIndex );
-        	    indx--;
-        	});            	
-        	mountImagePreview();
+        	// Interceptado pelo controller 'LayerStackController'
         },
         rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
-        	var layerName = record.get('layerName');
-        	selectLayer( layerName );
-    		var opacity = getSelectedLayerOpacity();
-    		var newOpacity = opacity * 10;
-    		slider.setValue( 0, newOpacity );
+        	// Interceptado pelo controller 'LayerStackController'
         }
     }            
     
