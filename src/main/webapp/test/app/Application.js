@@ -1,15 +1,11 @@
-/**
- * The main application class. An instance of this class is created by app.js when it
- * calls Ext.application(). This is the ideal place to handle application launch and
- * initialization details.
- */
+
 Ext.define('MCLM.Application', {
     extend: 'Ext.app.Application',
     
     name: 'MCLM',
 
     requires: [
-       'MCLM.view.main.Main',
+       'MCLM.view.main.TelaPrincipal',
        'MCLM.Globals',
        'MCLM.Functions'
     ],
@@ -19,6 +15,7 @@ Ext.define('MCLM.Application', {
        'MCLM.store.LayerDetail',
        'MCLM.store.ExternalSource',
        'MCLM.store.LayerStack',
+       'MCLM.store.Capabilities',
     ],
     
     launch: function () {
@@ -31,7 +28,7 @@ Ext.define('MCLM.Application', {
 				// Nao modifique a ordem das chamadas abaixo
 				
 				/* 1. */ MCLM.Globals.config = config;			// A aplicacao precida das configuracoes
-				/* 2. */ Ext.create({ xtype: 'app-main' });		// 
+				/* 2. */ Ext.create({ xtype: 'telaPrincipal' });		// 
 				/* 3. */ MCLM.Functions.inicializaDicas();		// As dicas dos botoes precisam dos botoes instanciados
 				
 		        // ---------------------------------------------

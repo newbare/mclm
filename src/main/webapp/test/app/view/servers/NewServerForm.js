@@ -4,11 +4,12 @@ Ext.define('MCLM.view.servers.NewServerForm', {
 	id : 'newServerForm',
 	bodyPadding: 5,
     defaultType: 'textfield',
-    url: 'newExternalSource',
+    url: '../newExternalSource',
     items: [{
             fieldLabel: 'Nome',
             width: 350,
             msgTarget: 'under',
+            id:'newServerName',
             name: 'name',
             allowBlank : false,
             invalidText: '',
@@ -26,18 +27,18 @@ Ext.define('MCLM.view.servers.NewServerForm', {
             width: 350,
             msgTarget: 'under',
             name: 'version',
+            value:'1.1.1',
             allowBlank : false,
             invalidText: '',
     }],
     buttons: [{
-      text: 'Fechar',
-          handler: function() {
-          	//newExternalWindow.close();
-          }
+    	text: 'Fechar',
+    	handler: 'closeWindow'
       },{
-      text: 'Gravar',
-      handler: 'commitForm'
-    }]
+    	text: 'Gravar',
+    	handler: 'commitForm'
+    }],
+
 
 });		
 

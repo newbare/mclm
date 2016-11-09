@@ -1,16 +1,21 @@
 Ext.define('MCLM.view.main.TelaPrincipal', {
 	extend: 'Ext.Panel',
 	xtype: 'telaPrincipal',
+	plugins: 'viewport',
     requires: [
        'MCLM.view.paineis.PainelInferior',
        'MCLM.view.paineis.PainelCentral',
        'MCLM.view.paineis.PainelEsquerdo',
        'MCLM.view.paineis.PainelDireito',
+       'Ext.plugin.Viewport',
+       'MCLM.view.main.MainController',
     ],
     layout: 'border',
-    title: 'Mapa',
+    margin: '0 0 0 0',
+    controller: 'main',
     id:'telaPrincipal',
     bodyBorder: false,
+    border:false,
     defaults: {
         collapsible: true,
         split: false,
@@ -23,7 +28,7 @@ Ext.define('MCLM.view.main.TelaPrincipal', {
     },{
         xtype: 'painelDireito', collapsible: false
     },{
-        xtype: 'painelInferior'
+        xtype: 'painelInferior', collapsible: false
     }]
 });
 

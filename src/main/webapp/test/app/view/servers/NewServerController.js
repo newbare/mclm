@@ -1,29 +1,36 @@
 Ext.define('MCLM.view.servers.NewServerController', {
     extend: 'Ext.app.ViewController',
-    alias: 'newServerController',
-    	
-    commitForm : function() {
-    	/*
+    alias: 'controller.newServerController',
     
-          var form = externalForm.getForm();
-          if ( form.isValid() ) {
-        	  form.submit({
-                  success: function(form, action) {
-                	  //newExternalWindow.close();
-                	  externalStore.load();
-                      Ext.Msg.alert('Sucesso', action.result.msg);
-                   },
-                   failure: function(form, action) {
-                	  // newExternalWindow.close();
-                       Ext.Msg.alert('Falha', action.result.msg);
-                       
-                   }                		  
-        	  });
-          } else { 
-              Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
-          }
+    closeWindow : function( button ) {
+    	var newServerWindow = Ext.getCmp('newServerWindow');
+    	newServerWindow.close();
+    },
     
-    	*/
+    commitForm : function( button ) {
+    	var me = this;
+        var win = button.up('window');
+        var formPanel = win.down('form');
+        var form = formPanel.getForm();
+        
+		if ( formPanel.isValid() ) {
+			formPanel.submit({
+                method: 'POST',
+			    success: function(form, action) {
+			        Ext.Msg.alert('Sucesso', action.result.msg);
+			    	var externalsource = Ext.getStore('store.externalsource');
+			    	externalsource.load();
+			        me.closeWindow();
+			    },
+			    failure: function(form, action) {
+			        Ext.Msg.alert('Falha', action.result.msg);
+			        me.closeWindow();
+			    }                		  
+			});
+		  } else { 
+		      Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
+		  }
+		
     },    	
     	
     

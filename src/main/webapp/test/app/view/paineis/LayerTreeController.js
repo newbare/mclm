@@ -129,6 +129,19 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	// Abre o dialogo para adicionar uma nova camada WMS 
 	addNewLayerWMS : function ( record ) {
 		var data = record.data;
+		
+    	var capabilitiesWindow = Ext.getCmp('capabilitiesWindow');
+    	if ( capabilitiesWindow ) return;
+    	
+    	var path = record.getPath("text");
+    	var title = "Nova Camada WMS para " + path;
+    	
+    	capabilitiesWindow = Ext.create('MCLM.view.addlayer.wms.CapabilitiesWindow');
+    	capabilitiesWindow.setTitle( title );
+    	//capabilitiesWindow.parameters = { 'record':record };
+    	capabilitiesWindow.show();		
+		
+    	this.fireEvent('createMap', record);
 		//newLayerWms( record.getPath("text"), data.id, data.layerAlias );
 	},
 	

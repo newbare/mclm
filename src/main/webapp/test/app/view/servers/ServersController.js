@@ -1,17 +1,19 @@
 Ext.define('MCLM.view.servers.ServersController', {
     extend: 'Ext.app.ViewController',
-    alias: 'serversController',
+    alias: 'controller.serversController',
     	
     addExternalSource : function() {
-    	var newServerWindow = Ext.getCmp('serversWindow');
+    	var newServerWindow = Ext.getCmp('newServerWindow');
     	if ( newServerWindow ) return;
     	newServerWindow = Ext.create('MCLM.view.servers.NewServerWindow');
     	newServerWindow.show();
+    	Ext.getCmp('newServerName').focus(true, 100);
     },    	
-    	
+    // ----------------------------------------------------------------------------------------------	
     askDeleteExternalSource : function() {
-		/*
-	
+    	var externalGrid = Ext.getCmp('serversGrid');
+    	var me = this;
+    	
 		if ( externalGrid.getSelectionModel().hasSelection() ) {
 			var row = externalGrid.getSelectionModel().getSelection()[0];
 			var id = row.get('idServer');
@@ -21,7 +23,7 @@ Ext.define('MCLM.view.servers.ServersController', {
 	
 			Ext.Msg.confirm('Remover Fonte Externa', 'Deseja realmente remover a Fonte Externa "' + name + '" ?', function(btn){
 				   if( btn === 'yes' ){
-					   deleteExternalSource( id, name, url, version );
+					   me.deleteExternalSource( id, name, url, version );
 				   } else {
 				      return;
 				   }
@@ -30,12 +32,10 @@ Ext.define('MCLM.view.servers.ServersController', {
 		} else {
 			Ext.Msg.alert('Fonte não selecionada','Selecione uma Fonte Externa na lista e tente novamente.' );
 		}	
-	    	
-	    */	
 	},   
-
-    deleteExternalSource : function() {
-    	/*
+    // ----------------------------------------------------------------------------------------------	
+    deleteExternalSource : function( id, name, url, version ) {
+    	
     	Ext.Ajax.request({
  	       url: 'deleteExternalSource',
  	       params: {
@@ -44,8 +44,9 @@ Ext.define('MCLM.view.servers.ServersController', {
  	       success: function(response, opts) {
  	    	   var resp = JSON.parse( response.responseText );
  	    	   if ( resp.success ) {
- 	    		   externalStore.load();
- 	    		   Ext.Msg.alert('Sucesso','Fonte Externa ' + name + ' removida com sucesso.' );
+			    	var externalsource = Ext.getStore('store.externalsource');
+			    	externalsource.load();
+			    	Ext.Msg.alert('Sucesso','Fonte Externa ' + name + ' removida com sucesso.' );
  	    	   } else {
  	    		   Ext.Msg.alert('Falha', resp.msg );
  	    	   }  
@@ -54,7 +55,7 @@ Ext.define('MCLM.view.servers.ServersController', {
  	    	   Ext.Msg.alert('Falha','Erro ao excluir Fonte Externa.' );
  	       }
      	});	
-    	*/		
+    			
 	}      
     
 });

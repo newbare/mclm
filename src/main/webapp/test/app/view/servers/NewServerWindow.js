@@ -6,7 +6,7 @@ Ext.define('MCLM.view.servers.NewServerWindow', {
 	width : 380,
 	height: 220,
     scrollable: false,
-    
+    modal:true,
 	requires: [
 	    'MCLM.view.servers.NewServerForm',
 	    'MCLM.view.servers.NewServerController',

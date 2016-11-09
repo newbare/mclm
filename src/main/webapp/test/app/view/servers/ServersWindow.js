@@ -8,9 +8,9 @@ Ext.define('MCLM.view.servers.ServersWindow', {
 	
 	requires: [
 	   'MCLM.view.servers.ServersGrid',
-	   //'MCLM.view.servers.ServersController'
+	   'MCLM.view.servers.ServersController'
 	],  
-	//controller: 'serversController',
+	controller: 'serversController',
 	
     scrollable: false,
     frame : false,

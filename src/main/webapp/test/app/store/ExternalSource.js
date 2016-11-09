@@ -2,6 +2,7 @@ Ext.define('MCLM.store.ExternalSource', {
     extend: 'Ext.data.Store',
 
     alias: 'store.externalsource',
+    storeId:'store.externalsource',
     
 	proxy: {
         type: 'ajax',
@@ -18,7 +19,7 @@ Ext.define('MCLM.store.ExternalSource', {
          {name:'url', type:'string'},
          {name:'version', type:'string'}
     ],
-	autoLoad: true,
+	
 	listeners: {
         load: function(store, records){
         	//
