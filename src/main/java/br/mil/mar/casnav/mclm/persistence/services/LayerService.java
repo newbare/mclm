@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.LayerType;
+import br.mil.mar.casnav.mclm.misc.PathFinder;
 import br.mil.mar.casnav.mclm.misc.RESTResponse;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.misc.WebClient;
@@ -292,6 +293,38 @@ public class LayerService {
 			return "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
 		}
 		 
+	}
+
+	public String createKMLLayer(String kmlFileContentType, File kmlFile, String kmlFileFileName, String layerAlias,
+			String description, String institute, int layerFolderID) {
+
+		try {
+			
+			Configurator cfg = Configurator.getInstance();
+			String serverUrl = cfg.getGeoserverUrl();
+			String externalWorkspaceName = cfg.getExternalWorkspaceName();
+			String storeName = kmlFileFileName.replace(".zip", "");
+			String layerName = cfg.getExternalWorkspaceName() + ":" + storeName; 
+			
+			System.out.println("Receiving file...");
+			
+			String saveDirectory = PathFinder.getInstance().getPath() + "/kmlFolderStorage"; 
+			System.out.println("Target : " + saveDirectory );
+			
+			File destFile = new File( saveDirectory + File.separator + kmlFileFileName );
+			FileUtils.copyFile(kmlFile, destFile);
+			System.out.println("Done.");		
+		
+			NodeService ns = new NodeService();
+			NodeData node = new NodeData(layerFolderID, "" , description, institute, layerName, layerAlias, LayerType.KML);
+			node.setServiceUrl( "kmlFolderStorage/" + kmlFileFileName );
+			ns.addNode( node );			
+			
+			return "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
+		} catch ( Exception e ) {
+			return "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
+		}
+		
 	}	
 	
 }

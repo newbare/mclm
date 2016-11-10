@@ -52,56 +52,14 @@ Ext.define('MCLM.view.addlayer.wms.LayerDetailForm', {
         readOnly: true,
     }],
     buttons: [{
-          text: 'Fechar',
-	          handler: function() {
-	        	  capabilitiesWindow.close();
-	          }
+    		  // Interceptado pelo controller 'MCLM.view.addlayer.wms.CapabilitiesController'	
+	          text: 'Fechar',
+	          id : 'closeCapabilitiesWindow'
 	      },{
-          text: 'Gravar',
-          handler: function() {
-          	  if ( capabilitiesGrid.getSelectionModel().hasSelection() ) {
-					var row = capabilitiesGrid.getSelectionModel().getSelection()[0];
-					var serverUrlGrid = row.get('serverUrl');
-					var layerNameGrid = row.get('layerName');
-
-					var serverUrlForm = Ext.getCmp('serverUrlID');
-					serverUrlForm.setValue( serverUrlGrid );
-
-					var layerNameForm = Ext.getCmp('layerNameID');
-					layerNameForm.setValue( layerNameGrid );
-					
-					var layerParentForm = Ext.getCmp('parentFolderID');
-					layerParentForm.setValue( layerFolderID );
-					
-					
-					var form = layerDetailForm.getForm();
-		            if ( form.isValid() ) {
-		              form.submit({
-		            	  	success: function(form, action) {
-		            	  		capabilitiesWindow.close();
-		            	  		
-		            	  		// layerStore estah em "layer-tree-store.js"
-		            	  		// layerTree estah em "layer-tree-tree.js"
-		            	  		var selectedTreeNode = layerTree.getSelectionModel().getSelection()[0];
-		            	  		layerStore.load( { node: selectedTreeNode } );
-		            	  		
-		            	  		Ext.Msg.alert('Sucesso', action.result.msg);
-		                  	},
-		                  	failure: function(form, action) {
-		                  		capabilitiesWindow.close();
-		                  		Ext.Msg.alert('Falha', action.result.msg);
-		                           
-		                  	}                		  
-		              });
-	              } else { 
-	                  Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
-	              }
-		            
-          	  } else {     
-                  Ext.Msg.alert('Nenhuma Camada selecionada', 'Por favor, selecione uma camada e tente novamente.')
-              }
-		            
+    		  // Interceptado pelo controller 'MCLM.view.addlayer.wms.CapabilitiesController'	
+	          text: 'Gravar',
+	          id : 'submitNewLayerForm'
           }
-	    }]
+	]
 
 });

@@ -35,7 +35,11 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesWindow', {
 	}],
 	
 	listeners:{
-        afterrender:'afterrenderWindow'
+        afterrender:'afterrenderWindow',
+        close : function() {
+        	MCLM.Globals.mapLayerPreview = null;
+        }
+        
 	} 	
 	
 });

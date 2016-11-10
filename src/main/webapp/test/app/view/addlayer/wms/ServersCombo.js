@@ -10,8 +10,8 @@ Ext.define('MCLM.view.addlayer.wms.ServersCombo', {
     store : 'store.externalsource',
     listeners: {
     	select: function(combo, record, index) {
-    		//removeLayerFromPreviewPanel();
-    		//requestCapabilities( record.data );
+    		// este evento esta sendo interceptado pelo controller 
+    		// MCLM.view.addlayer.wms.CapabilitiesController
         }
     }        
 });

@@ -10,22 +10,7 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesGrid', {
     listeners: {
     	// atualiza a janela de preview com a camada selecionada na lista
         rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
-        	var layerName = record.get('layerName');
-        	var titulo = record.get('layerTitle');
-        	var serverUrl = record.get('serverUrl');
-        	
-        	//addLayerToPreviewPanel( serverUrl + "wms/", layerName  );
-        	
-			var tituloForm = Ext.getCmp('tituloID');
-			tituloForm.setValue( titulo );            	
-
-			var descriptionForm = Ext.getCmp('descriptionID');
-			descriptionForm.setValue( layerName );
-			
-			var comboValue = combo.getRawValue();
-			var origemForm = Ext.getCmp('instituteID');
-			origemForm.setValue( comboValue ); 				
-			
+        	// Interceptado pelo controller 'MCLM.view.addlayer.wms.CapabilitiesController'
         }
     },	    
     region:'center',

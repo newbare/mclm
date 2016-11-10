@@ -102,7 +102,8 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	// Efetivamente apaga uma camada
 	deleteLayer : function ( parentNode, data ) {
 		var nodeId = data.id;
-		var layerAlias = data.layerAlias;
+		var layerName = data.layerName;
+		var me = this;
 		
 		Ext.Ajax.request({
 		       url: 'deleteLayer',
@@ -111,12 +112,16 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		       },       
 		       success: function(response, opts) {
 		    	   var result = JSON.parse( response.responseText );
-		    	   Ext.Msg.alert('Sucesso', result.msg );
-		    	   layerStore.load({ node: parentNode });
-		    	   MCLM.Map.removeLayer( layerAlias );
+		    	   
+		    	   var layerTreeStore = Ext.getStore('store.layerTree');
+		    	   layerTreeStore.load({ node: parentNode });
+		    	   MCLM.Map.removeLayer( layerName );
 		    	   
 		    	   // Se a tela de lista de camadas estiver visivel entao precisa ser atualizada
-		    	   this.fireEvent('removeFromLayerStack', layerAlias);
+		    	   me.fireEvent('removeFromLayerStack', layerName);
+		    	   
+		    	   Ext.Msg.alert('Sucesso', result.msg );
+
 		       },
 		       failure: function(response, opts) {
 		    	   var result = JSON.parse( response.responseText );
@@ -129,6 +134,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	// Abre o dialogo para adicionar uma nova camada WMS 
 	addNewLayerWMS : function ( record ) {
 		var data = record.data;
+		record.expand();
 		
     	var capabilitiesWindow = Ext.getCmp('capabilitiesWindow');
     	if ( capabilitiesWindow ) return;
@@ -138,19 +144,59 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	
     	capabilitiesWindow = Ext.create('MCLM.view.addlayer.wms.CapabilitiesWindow');
     	capabilitiesWindow.setTitle( title );
-    	//capabilitiesWindow.parameters = { 'record':record };
     	capabilitiesWindow.show();		
-		
-    	this.fireEvent('createMap', record);
-		//newLayerWms( record.getPath("text"), data.id, data.layerAlias );
+    	Ext.getCmp('tituloID').focus(true, 100);
+    	
+    	// Interceptado pelo controller 'MCLM.view.addlayer.wms.CapabilitiesController'
+    	this.fireEvent('createMapPreview', record);
 	},
 	
 	// Abre o dialogo para adicionar uma camada SHP
 	addNewLayerSHP : function ( record ) {
 		var data = record.data;
-		//newLayerShp( record.getPath("text"), data.id, data.layerAlias );
+		record.expand();
+		
+    	var uploadShpWindow = Ext.getCmp('uploadShpWindow');
+    	if ( uploadShpWindow ) return;
+    	
+    	var path = record.getPath("text");
+    	var title = "Nova Camada ShapeFile para " + path,
+    	
+    	uploadShpWindow = Ext.create('MCLM.view.addlayer.shp.UploadShpWindow');
+    	uploadShpWindow.setTitle( title );
+
+    	uploadShpWindow.show();	
+
+		var layerFolderID = Ext.getCmp('layerFolderID');
+		layerFolderID.setValue( data.id );      
+    	
+    	Ext.getCmp('newLayerShpAlias').focus(true, 100);
+    	
 	},
 	
+	// Abre o dialogo para adicionar uma camada KML
+	addNewLayerKML : function ( record ) {
+		var data = record.data;
+		record.expand();
+		
+    	var uploadKmlWindow = Ext.getCmp('uploadKmlWindow');
+    	if ( uploadKmlWindow ) return;
+    	
+    	var path = record.getPath("text");
+    	var title = "Nova Camada KML para " + path,
+    	
+    	uploadKmlWindow = Ext.create('MCLM.view.addlayer.kml.UploadKmlWindow');
+    	uploadKmlWindow.setTitle( title );
+
+    	uploadKmlWindow.show();	
+
+		var layerFolderID = Ext.getCmp('layerFolderID');
+		layerFolderID.setValue( data.id );      
+    	
+    	Ext.getCmp('newLayerKmlAlias').focus(true, 100);
+    	
+	},
+
 	// Apaga uma pasta e tudo abaixo dela
 	deleteNodeAndChildren : function( node ) {
 		Ext.Msg.alert('Erro', 'Não implementado ainda' );
@@ -164,40 +210,19 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var checked = node.get('checked');
 		var serialId = node.get('serialId');
 		var version = node.get('version');
+		var layerType = node.get('layerType');
 	
 		if ( layerName == "" ) return;
 		
 		if( checked == true ) {
 			// adiciona a camada no mapa
-			MCLM.Map.addLayer( serviceUrl, layerName, layerAlias, serialId );
+			MCLM.Map.addLayer( serviceUrl, layerName, layerAlias, serialId, layerType );
+			this.fireEvent('addToLayerStack', node.data );
 
-			// Adiciona a camada na lista de camadas 
-	    	var layerStackStore = Ext.getStore('store.layerStack');
-			var stackGridPanel = Ext.getCmp('stackGridPanel');
-	    	var layerStack = layerStackStore.getRange();
-	    	layerStack.push( node.data );
-			layerStackStore.loadData( layerStack );    				
-	    	if ( stackGridPanel ) {
-	    		stackGridPanel.getView().refresh();
-	    		this.fireEvent('mountImagePreview');
-	    	}
 		} else {
 			// Remove a camada do mapa
 			MCLM.Map.removeLayer( layerName );
-
-			// Remove a camada de lista de camadas 
-	    	var layerStackStore = Ext.getStore('store.layerStack');
-	    	var stackGridPanel = Ext.getCmp('stackGridPanel');
-	    	layerStackStore.each( function(rec) {
-	    	    if (rec.data.layerName == layerName) {
-	    	    	layerStackStore.remove(rec);
-	    	        return false;
-	    	    }
-	    	});    	
-	    	if ( stackGridPanel ) {
-	    		stackGridPanel.getView().refresh();
-	    		this.fireEvent('mountImagePreview');
-	    	}
+			this.fireEvent('removeFromLayerStack', layerName);
 		}	
 	},
 	

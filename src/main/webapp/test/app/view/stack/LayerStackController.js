@@ -3,7 +3,11 @@ Ext.define('MCLM.view.stack.LayerStackController', {
     alias: 'controller.stack',
     listen : {
         controller : {
-            '*' : { mountImagePreview : 'mountImagePreview' }
+            '*' : { 
+            	mountImagePreview : 'mountImagePreview',
+            	removeFromLayerStack : 'removeFromLayerStack',
+            	addToLayerStack : 'addToLayerStack'
+            }
         }
     },    
     
@@ -52,7 +56,37 @@ Ext.define('MCLM.view.stack.LayerStackController', {
     },    
     // Fim dos metodos interceptados
     // --------------------------------------------------------------------------------------------------------
-    
+    addToLayerStack : function( data ) {
+		// Adiciona a camada na lista de camadas 
+    	var layerStackStore = Ext.getStore('store.layerStack');
+		var stackGridPanel = Ext.getCmp('stackGridPanel');
+    	var layerStack = layerStackStore.getRange();
+    	layerStack.push( data );
+		layerStackStore.loadData( layerStack );    				
+    	if ( stackGridPanel ) {
+    		stackGridPanel.getView().refresh();
+    		this.fireEvent('mountImagePreview');
+    	}
+    },
+    // --------------------------------------------------------------------------------------------------------
+    removeFromLayerStack : function( layerName ) {
+    	
+		// Remove a camada de lista de camadas 
+    	var layerStackStore = Ext.getStore('store.layerStack');
+    	var stackGridPanel = Ext.getCmp('stackGridPanel');
+    	layerStackStore.each( function(rec) {
+    	    if (rec.data.layerName == layerName) {
+    	    	layerStackStore.remove(rec);
+    	        return false;
+    	    }
+    	});    	
+    	if ( stackGridPanel ) {
+    		stackGridPanel.getView().refresh();
+    		this.fireEvent('mountImagePreview');
+    	}    	
+    	
+    },
+    // --------------------------------------------------------------------------------------------------------
     setSelectedLayerOpacity : function( value ) {
     	MCLM.Map.setSelectedLayerOpacity( value );
     },

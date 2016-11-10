@@ -14,15 +14,15 @@ import com.opensymphony.xwork2.ActionContext;
 
 import br.mil.mar.casnav.mclm.persistence.services.LayerService;
 
-@Action(value="newSHPLayer", results= {  
+@Action(value="newKmlLayer", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) }
 )   
 
 @ParentPackage("default")
-public class NewSHPLayerAction extends BasicActionClass {
-	private String shpFileFileName;
-	private String shpFileContentType;
-	private File shpFile;
+public class NewKMLLayerAction extends BasicActionClass {
+	private String kmlFileFileName;
+	private String kmlFileContentType;
+	private File kmlFile;
 	
 	public String execute(){
 		
@@ -39,9 +39,9 @@ public class NewSHPLayerAction extends BasicActionClass {
 			int layerFolderID = Integer.valueOf( layerFolderIDS );
 			
 			LayerService ls = new LayerService();
-			String result = ls.createSHPLayer( shpFileContentType, shpFile, shpFileFileName, layerAlias, description, institute, layerFolderID );
+			String result = ls.createKMLLayer( kmlFileContentType, kmlFile, kmlFileFileName, layerAlias, description, institute, layerFolderID );
 			
-			System.out.println("Resposta de newSHPLayer: " + result );
+			System.out.println("Resposta de newKMLLayer: " + result );
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
@@ -52,17 +52,19 @@ public class NewSHPLayerAction extends BasicActionClass {
 		}
 		return "ok";
 	}
-	
-	public void setShpFileFileName(String shpFileFileName) {
-		this.shpFileFileName = shpFileFileName;
+
+	public void setKmlFileFileName(String kmlFileFileName) {
+		this.kmlFileFileName = kmlFileFileName;
+	}
+
+	public void setKmlFileContentType(String kmlFileContentType) {
+		this.kmlFileContentType = kmlFileContentType;
+	}
+
+	public void setKmlFile(File kmlFile) {
+		this.kmlFile = kmlFile;
 	}
 	
-	public void setShpFile(File shpFile) {
-		this.shpFile = shpFile;
-	}
-	
-	public void setShpFileContentType(String shpFileContentType) {
-		this.shpFileContentType = shpFileContentType;
-	}
+
 
 }

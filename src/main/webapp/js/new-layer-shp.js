@@ -62,34 +62,6 @@ function newLayerShp( path, idLayerFolder, layerAlias  ) {
 	      },{
             text: 'Enviar',
             handler: function(){
-            	
-				var layerParentForm = Ext.getCmp('parentFolderID');
-				layerParentForm.setValue( idLayerFolder );      
-            	
-                var form = this.up('form').getForm();
-                if( form.isValid() ){
-                    
-                	form.submit({
-                        url: 'newSHPLayer',
-                        waitMsg: 'Enviando arquivo...',
-                        success: function( form, action ) {
-                        	shapeWindow.close();
-                        	
-	            	  		// layerStore estah em "layer-tree-store.js"
-	            	  		// layerTree estah em "layer-tree-tree.js"
-	            	  		var selectedTreeNode = layerTree.getSelectionModel().getSelection()[0];
-	            	  		layerStore.load({ node: selectedTreeNode});                        	
-                        	
-                        	Ext.Msg.alert('Sucesso', action.result.msg);
-                        },
-	                  	failure: function(form, action) {
-	                  		shapeWindow.close();
-	                  		Ext.Msg.alert('Falha', action.result.msg);
-	                           
-	                  	} 
-                    });
-                	
-                }
             }
         }]
     });
