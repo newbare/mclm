@@ -84,16 +84,16 @@
 }
 
 .kml-icon {
-	background-image: url('../img/fogg.svg') !important;
+	background-image: url('../img/kml.svg') !important;
 	background-repeat: no-repeat;
 }
 
 .wms-icon {
-	background-image: url('../img/add_layer_wms.svg') !important;
+	background-image: url('../img/wms.svg') !important;
 	background-repeat: no-repeat;
 }
 
 .shp-icon {
-	background-image: url('../img/grid.svg') !important;
+	background-image: url('../img/shp.svg') !important;
 	background-repeat: no-repeat;
 }
