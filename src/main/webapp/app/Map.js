@@ -90,9 +90,6 @@ Ext.define('MCLM.Map', {
 			this.openSeaMapLayer = this.createOpenSeaMapLayer();
 			this.baseLayer = this.createBaseLayer();
 			
-			var me = this;
-			setInterval( function(){ me.checkLayerIsReady(); }, 5000);
-			
 		},
 		// --------------------------------------------------------------------------------------------
 		// Gera a Camada do OpenSeaMap
@@ -191,15 +188,24 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Adiciona uma nova camada ao mapa
-		addLayer : function( serverUrl, serverLayers, layerName, serialId, layerType ) {
+		addLayer : function( node ) {
+			// passado: serviceUrl, layerName, layerAlias, serialId, layerType,
+			// recebido: serverUrl, serverLayers, layerName, serialId, layerType, 
+			var serverUrl = node.get('serviceUrl');
+			var layerName = node.get('layerName');
+			var layerAlias = node.get('layerAlias');
+			var data = node.data;
+			var serialId = node.get('serialId');
+			var version = node.get('version');
+			var layerType = node.get('layerType');			
 			
 			if( layerType == 'KML' ) {
-				alert( window.location + "/" + serverUrl );
-				urlKml = "http://localhost:8080/mclm/kmlFolderStorage/map.kml";
 				
+				var kmlFileUrl = window.location + "/" + serverUrl; 
+				//urlKml = "http://localhost:8080/mclm/kmlFolderStorage/map.kml";
 				var newLayer = new ol.layer.Vector({
 					  source: new ol.source.Vector({
-						    url: urlKml,
+						    url: kmlFileUrl,
 						    isBaseLayer : false,
 						    projection: ol.proj.get('EPSG:4326'),
 						    format: new ol.format.KML()
@@ -213,7 +219,7 @@ Ext.define('MCLM.Map', {
 				        isBaseLayer : false,
 				        params: {
 				        	tiled: true,
-				            'layers': serverLayers,
+				            'layers': layerName,
 				            'VERSION': '1.1.1', 
 				            'format': 'image/png'
 				        },
@@ -222,16 +228,27 @@ Ext.define('MCLM.Map', {
 				});
 			}
 			
-			newLayer.set('alias', layerName);
-			newLayer.set('name', serverLayers);
+			newLayer.set('name', layerName);
+			newLayer.set('alias', layerAlias);
 			newLayer.set('serverUrl', serverUrl);
 			newLayer.set('serialId', serialId);
+			newLayer.set('layerType', layerType);
 			newLayer.set('ready', false);
 			newLayer.set('baseLayer', false);
 			
 			this.bindTileEvent( newLayer );
 			this.map.addLayer( newLayer );
 
+			// Adiciona na lista do gerenciador de camadas.
+	    	var layerStackStore = Ext.getStore('store.layerStack');
+			var stackGridPanel = Ext.getCmp('stackGridPanel');
+	    	var layerStack = layerStackStore.getRange();
+	    	layerStack.push( data );
+			layerStackStore.loadData( layerStack );    				
+	    	if ( stackGridPanel ) {
+	    		stackGridPanel.getView().refresh();
+	    	}			
+			// ----------------------------------------------
 			return newLayer;			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -266,18 +283,21 @@ Ext.define('MCLM.Map', {
 					return;
 				}
 			});
-		},
-		// --------------------------------------------------------------------------------------------
-		// De tempo em tempo verifica se as camadas estao prontas e remove o icone de loading.
-		// Provavel bug no evento "tileLoadEnd" da camada. 
-		checkLayerIsReady : function () {
-			this.map.getLayers().forEach( function ( layer ) {
-				var ready = layer.get('ready');
-				if ( ready ) {
-					var serialId = layer.get('serialId');
-					$("#alert_" + serialId).css("display","none");
-				}
-			});
+			
+			// Remove da lista de camadas do gerenciador de camadas
+	    	var layerStackStore = Ext.getStore('store.layerStack');
+	    	var stackGridPanel = Ext.getCmp('stackGridPanel');
+	    	layerStackStore.each( function(rec) {
+	    	    if (rec.data.layerName == layerName) {
+	    	    	layerStackStore.remove(rec);
+	    	        return false;
+	    	    }
+	    	});    	
+	    	if ( stackGridPanel ) {
+	    		stackGridPanel.getView().refresh();
+	    	}   			
+			
+			
 		},
 		// --------------------------------------------------------------------------------------------
 		// Liga/ Desliga o mapa do OpenSeaMap
@@ -540,8 +560,9 @@ Ext.define('MCLM.Map', {
 			
 		},
 		// --------------------------------------------------------------------------------------------
-		
-		
+		getLayers : function() {
+			return this.map.getLayers();
+		},
 		// --------------------------------------------------------------------------------------------
 		// Apenas para debug. Apagar assim que possível.
 		listLayers : function () {

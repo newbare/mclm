@@ -204,26 +204,21 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	
 	// Responde a mudanca de estado de um no ( selecionado/nao selecionado )
 	toggleNode: function( node ) {
-		var serviceUrl = node.get('serviceUrl');
-		var layerName = node.get('layerName');
-		var layerAlias = node.get('layerAlias');
 		var checked = node.get('checked');
-		var serialId = node.get('serialId');
-		var version = node.get('version');
-		var layerType = node.get('layerType');
-	
+		var layerName = node.get('layerName');
+		
 		if ( layerName == "" ) return;
 		
 		if( checked == true ) {
 			// adiciona a camada no mapa
-			var layer = MCLM.Map.addLayer( serviceUrl, layerName, layerAlias, serialId, layerType );
-			this.fireEvent('addToLayerStack', node.data );
-			console.log( layer );
+			var layer = MCLM.Map.addLayer( node );
+			this.fireEvent('mountImagePreview');
 		} else {
 			// Remove a camada do mapa
 			MCLM.Map.removeLayer( layerName );
-			this.fireEvent('removeFromLayerStack', layerName);
+			this.fireEvent('mountImagePreview');
 		}	
 	},
+	
 	
 });

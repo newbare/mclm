@@ -26,7 +26,7 @@ Ext.define('MCLM.view.stack.GridPanel', {
                         '<div style="margin-right:5px;border:1px solid black;float:left;width:102px;height:52px">', 
                         '<img class="minithumb" style="display:none;width:100px;height:50px" id="{serialId}" src=""></div>',
                         '<div style="float: left;margin-left:5px;width:75%">',
-                            '<div style=" padding: 0px;"><b>{layerAlias}</b></div>',
+                            '<div style=" padding: 0px;"><b>({layerType}) {layerAlias}</b></div>',
                             '<div style=" padding: 2px 5px 2px 5px;">{description}</div>',
                         '</div>',    
                     '</div>',
@@ -42,7 +42,10 @@ Ext.define('MCLM.view.stack.GridPanel', {
         },
         rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
         	// Interceptado pelo controller 'LayerStackController'
-        }
+        },
+        afterrender: function (cmp) {
+        	// Interceptado pelo controller 'LayerStackController'
+        }        
     }            
     
 });

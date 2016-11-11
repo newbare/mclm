@@ -97,3 +97,8 @@
 	background-image: url('../img/shp.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.tif-icon {
+	background-image: url('../img/tif.svg') !important;
+	background-repeat: no-repeat;
+}

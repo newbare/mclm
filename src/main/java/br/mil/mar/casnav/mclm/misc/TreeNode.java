@@ -46,6 +46,7 @@ public class TreeNode {
 			if ( this.layerType.equals("KML") ) this.iconCls = "kml-icon";
 			if ( this.layerType.equals("WMS") ) this.iconCls = "wms-icon";
 			if ( this.layerType.equals("SHP") ) this.iconCls = "shp-icon";
+			if ( this.layerType.equals("TIF") ) this.iconCls = "tif-icon";
 		}
 		
 		this.checked = false;

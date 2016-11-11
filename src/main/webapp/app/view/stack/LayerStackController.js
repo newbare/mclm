@@ -6,7 +6,8 @@ Ext.define('MCLM.view.stack.LayerStackController', {
             '*' : { 
             	mountImagePreview : 'mountImagePreview',
             	removeFromLayerStack : 'removeFromLayerStack',
-            	addToLayerStack : 'addToLayerStack'
+            	addToLayerStack : 'addToLayerStack',
+            	
             }
         }
     },    
@@ -20,7 +21,8 @@ Ext.define('MCLM.view.stack.LayerStackController', {
             // Intercepta metodos da grid (lista de camadas)
             '#stackGridPanel' : {
             	drop : this.gridDrop,
-            	rowclick : this.gridRowClick
+            	rowclick : this.gridRowClick,
+            	afterrender : this.afterRenderGrid
             }
         	
         });
@@ -57,34 +59,15 @@ Ext.define('MCLM.view.stack.LayerStackController', {
     // Fim dos metodos interceptados
     // --------------------------------------------------------------------------------------------------------
     addToLayerStack : function( data ) {
+    	// remover este metodo
 		// Adiciona a camada na lista de camadas 
-    	var layerStackStore = Ext.getStore('store.layerStack');
-		var stackGridPanel = Ext.getCmp('stackGridPanel');
-    	var layerStack = layerStackStore.getRange();
-    	layerStack.push( data );
-		layerStackStore.loadData( layerStack );    				
-    	if ( stackGridPanel ) {
-    		stackGridPanel.getView().refresh();
-    		this.fireEvent('mountImagePreview');
-    	}
+    	alert("oops. nao esta mais aqui.");
     },
     // --------------------------------------------------------------------------------------------------------
     removeFromLayerStack : function( layerName ) {
-    	
+    	// remover este metodo
 		// Remove a camada de lista de camadas 
-    	var layerStackStore = Ext.getStore('store.layerStack');
-    	var stackGridPanel = Ext.getCmp('stackGridPanel');
-    	layerStackStore.each( function(rec) {
-    	    if (rec.data.layerName == layerName) {
-    	    	layerStackStore.remove(rec);
-    	        return false;
-    	    }
-    	});    	
-    	if ( stackGridPanel ) {
-    		stackGridPanel.getView().refresh();
-    		this.fireEvent('mountImagePreview');
-    	}    	
-    	
+    	alert("oops. nao esta mais aqui.")
     },
     // --------------------------------------------------------------------------------------------------------
     setSelectedLayerOpacity : function( value ) {
@@ -97,21 +80,22 @@ Ext.define('MCLM.view.stack.LayerStackController', {
 		if (stackGridPanel.getSelectionModel().hasSelection()) {
 		   var row = stackGridPanel.getSelectionModel().getSelection()[0];
 		   var layerName = row.get('layerName');
+		   var layerAlias = row.get('layerAlias');
 		   var serviceUrl = row.get('serviceUrl' );
 		   var serialId = row.get('serialId' );
-		   this.showLegendScreen( layerName, serviceUrl, serialId );
+		   this.showLegendScreen( layerName, serviceUrl, serialId, layerAlias );
 		} else {
 			Ext.Msg.alert('Camada não selecionada','Selecione uma camada da lista antes de solicitar a legenda.' );
 		}	    
     	
     },
     // --------------------------------------------------------------------------------------------------------
-    showLegendScreen : function( layerName, serviceUrl, serialId ) {
+    showLegendScreen : function( layerName, serviceUrl, serialId, layerAlias ) {
     	var legendImageUrl = MCLM.Map.getLayerLegendImage( layerName, serviceUrl );
     	
     	var legendWindow = Ext.getCmp('legendWindow');
     	if ( legendWindow ) return;
-    	legendWindow = Ext.create('MCLM.view.legend.LegendWindow',{title:"Legenda da Camada " + layerName});
+    	legendWindow = Ext.create('MCLM.view.legend.LegendWindow',{title:"Legenda da Camada '" + layerAlias + "'"});
     	legendWindow.show();
 
     	$("#legend_image").attr('src', legendImageUrl );
@@ -139,7 +123,8 @@ Ext.define('MCLM.view.stack.LayerStackController', {
     		// Imagem pequena da lista de camadas
     		imgElement.dom.src = baseLayerUrlPreview;
     		// Imagem do painel grande
-    		content = content + "<img class='minithumb mergeable' id='big_mclm_landlayer_cmoa' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+baseLayerUrlPreview+"' />";
+    		content = content + "<img class='minithumb mergeable' id='big_mclm_landlayer_cmoa' style='display:none;z-index:"+ 
+    			zindex +";position: absolute;width:238px;height:150px' src='"+baseLayerUrlPreview+"' />";
     		zindex++;
     	}
     	
@@ -156,7 +141,8 @@ Ext.define('MCLM.view.stack.LayerStackController', {
 				// Imagem pequena da lista de camadas 
 				imgElement.dom.src = thumImg;
 				// Imagem do painel grande
-				content = content + "<img class='minithumb mergeable' id='big_"+serialId+"' style='display:none;z-index:"+ zindex +";position: absolute;width:238px;height:150px' src='"+thumImg+"' />";
+				content = content + "<img class='minithumb mergeable' id='big_"+serialId+"' style='display:none;z-index:"+ 
+					zindex +";position: absolute;width:238px;height:150px' src='"+thumImg+"' />";
 			}
 			zindex++;
 		});
@@ -176,6 +162,26 @@ Ext.define('MCLM.view.stack.LayerStackController', {
     	    }
     	    img.src = $(this).attr('src');
     	});	
-    }    
+    },
+    afterRenderGrid : function() {
+		var me = this;
+		setInterval( function(){ me.checkLayerIsReady(); }, 5000);
+    },
+	// --------------------------------------------------------------------------------------------
+	// De tempo em tempo verifica se as camadas estao prontas e remove o icone de loading.
+	// Provavel bug no evento "tileLoadEnd" da camada. 
+	checkLayerIsReady : function () {
+		MCLM.Map.getLayers().forEach( function ( layer ) {
+			var ready = layer.get('ready');
+			var layerName = layer.get('name');
+			var layerType = layer.get('layerType');
+			
+			if ( ready || layerType == 'KML' ) {
+				var serialId = layer.get('serialId');
+				$("#alert_" + serialId).css("display","none");
+			}
+		});
+	},
+    
     
 });
