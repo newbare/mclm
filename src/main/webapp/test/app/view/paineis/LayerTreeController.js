@@ -216,9 +216,9 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		
 		if( checked == true ) {
 			// adiciona a camada no mapa
-			MCLM.Map.addLayer( serviceUrl, layerName, layerAlias, serialId, layerType );
+			var layer = MCLM.Map.addLayer( serviceUrl, layerName, layerAlias, serialId, layerType );
 			this.fireEvent('addToLayerStack', node.data );
-
+			console.log( layer );
 		} else {
 			// Remove a camada do mapa
 			MCLM.Map.removeLayer( layerName );

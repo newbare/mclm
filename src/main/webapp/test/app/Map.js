@@ -194,7 +194,18 @@ Ext.define('MCLM.Map', {
 		addLayer : function( serverUrl, serverLayers, layerName, serialId, layerType ) {
 			
 			if( layerType == 'KML' ) {
-				var newLayer = this.generateKMLVector( serverUrl );
+				alert( window.location + "/" + serverUrl );
+				urlKml = "http://localhost:8080/mclm/kmlFolderStorage/map.kml";
+				
+				var newLayer = new ol.layer.Vector({
+					  source: new ol.source.Vector({
+						    url: urlKml,
+						    isBaseLayer : false,
+						    projection: ol.proj.get('EPSG:4326'),
+						    format: new ol.format.KML()
+					  })
+				});				
+				
 			} else {
 				var newLayer = new ol.layer.Tile({
 				    source: new ol.source.TileWMS({
@@ -222,47 +233,6 @@ Ext.define('MCLM.Map', {
 			this.map.addLayer( newLayer );
 
 			return newLayer;			
-		},
-		// --------------------------------------------------------------------------------------------
-		generateKMLVector : function( urlKml ) {
-			
-			urlKml = "localhost:8080/mclm/kmlFolderStorage/Estado-tst.kml";
-			/*
-			var vector = new ol.layer.Vector({
-			    source: new ol.source.Vector({
-			        url: urlKml,
-			        format: new ol.format.KML()
-			    })
-			});
-			*/
-			
-			var sourceVector = new ol.source.Vector();
-			
-			var layerVector = new ol.layer.Vector({
-				source: sourceVector
-			});
-			
-			var formatKML = new ol.format.KML( {extractStyles: false} );
-			
-			$.ajax(urlKml,{
-				  type: 'GET',
-				  contentType: 'application/vnd.google-earth.kml+xml', 
-				  success : function(response) {
-				  		features = formatKML.readFeatures(response,{
-				  			dataProjection: 'EPSG:4326',
-				  			featureProjection: 'EPSG:3857'
-				  		});
-				  		console.log( features );
-				  		sourceVector.addFeatures( features );
-				  },
-				  error: function( response ) {
-					  console.log( response );
-				  }
-			});			
-			
-			
-			console.log( layerVector );
-			return layerVector;
 		},
 		// --------------------------------------------------------------------------------------------
 		// Checa se uma camada estah sendo exibida no mapa ou nao
