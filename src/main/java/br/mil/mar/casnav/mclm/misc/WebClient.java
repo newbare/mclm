@@ -75,9 +75,11 @@ public class WebClient {
 			String theString = writer.toString();
 			inputStream.close();
 			
+			System.out.println( theString );
+			
 		} catch ( Exception e ) {
 			e.printStackTrace();
-		}		
+		} 		
 		
 		con.disconnect();
 		streamFileBufferedInputStream.close();

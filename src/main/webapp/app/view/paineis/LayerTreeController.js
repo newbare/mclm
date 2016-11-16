@@ -60,6 +60,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		          { iconCls: 'kml-icon', text: 'Adicionar Camada KML', handler: function() { me.addNewLayerKML(record); } },
 		          { iconCls: 'wms-icon', text: 'Adicionar Camada WMS', handler: function() { me.addNewLayerWMS(record); } },
 		          { iconCls: 'shp-icon', text: 'Adicionar Camada SHP', handler: function() { me.addNewLayerSHP(record); } },
+		          { iconCls: 'tif-icon', text: 'Adicionar Camada TIF', handler: function() { me.addNewLayerTIF(record); } },
 		          { xtype: 'menuseparator' },
 		          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { me.addNewFolder(record); } },
 		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.deleteNodeAndChildren( record ); } }
@@ -173,6 +174,29 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	Ext.getCmp('newLayerShpAlias').focus(true, 100);
     	
 	},
+	// Abre o dialogo para adicionar uma camada GeoTIFF
+	addNewLayerTIF : function ( record ) {
+		var data = record.data;
+		record.expand();
+		
+    	var uploadTifWindow = Ext.getCmp('uploadTifWindow');
+    	if ( uploadTifWindow ) return;
+    	
+    	var path = record.getPath("text");
+    	var title = "Nova Camada GeoTIFF para " + path,
+    	
+    	uploadTifWindow = Ext.create('MCLM.view.addlayer.tif.UploadTifWindow');
+    	uploadTifWindow.setTitle( title );
+
+    	uploadTifWindow.show();	
+
+		var layerFolderID = Ext.getCmp('layerFolderID');
+		layerFolderID.setValue( data.id );      
+    	
+    	Ext.getCmp('newLayerTifAlias').focus(true, 100);
+    	
+	},
+	
 	
 	// Abre o dialogo para adicionar uma camada KML
 	addNewLayerKML : function ( record ) {

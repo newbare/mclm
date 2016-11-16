@@ -43,8 +43,6 @@ public class Startup implements ServletContextListener {
 			String database = config.getDatabaseName();
 			String port = config.getDatabasePort();
     		
-			System.out.println( user + " " + database + " " + passwd + " " + port );
-			
     		ConnFactory.setCredentials(user, passwd, database, port);
 
 			us = new UserService();
