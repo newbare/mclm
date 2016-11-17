@@ -79,8 +79,25 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     },
     
     // Adiciona uma nova pasta na arvore 
-    addNewFolder : function( node ) {
-    	Ext.Msg.alert( node.id + " " + node.layerAlias );
+    addNewFolder : function( record ) {
+		var data = record.data;
+		record.expand();
+		
+    	var newFolderWindow = Ext.getCmp('newFolderWindow');
+    	if ( newFolderWindow ) return;
+    	
+    	var path = record.getPath("text");
+    	var title = "Nova pasta em " + path,
+    	
+    	newFolderWindow = Ext.create('MCLM.view.addfolder.NewFolderWindow');
+    	newFolderWindow.setTitle( title );
+
+    	newFolderWindow.show();	
+
+		var layerFolderID = Ext.getCmp('layerFolderID');
+		layerFolderID.setValue( data.id );      
+    	
+    	Ext.getCmp('newFolderName').focus(true, 100);    	
     },
     
     // Pergunta se quer deletar uma camada / no da arvore
@@ -117,9 +134,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		    	   var layerTreeStore = Ext.getStore('store.layerTree');
 		    	   layerTreeStore.load({ node: parentNode });
 		    	   MCLM.Map.removeLayer( layerName );
-		    	   
-		    	   // Se a tela de lista de camadas estiver visivel entao precisa ser atualizada
-		    	   me.fireEvent('removeFromLayerStack', layerName);
 		    	   
 		    	   Ext.Msg.alert('Sucesso', result.msg );
 

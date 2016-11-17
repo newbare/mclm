@@ -5,8 +5,9 @@ package br.mil.mar.casnav.mclm.misc;
 // KML : KML File
 // FTR : Feature / Feição / Custom
 // TIF : GeoTIFF
+// FDR : Pasta na árvore
 
 public enum LayerType {
-	SHP, WMS, KML, FTR, TIF
+	SHP, WMS, KML, FTR, TIF, FDR
 
 }

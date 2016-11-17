@@ -1,7 +1,5 @@
 package br.mil.mar.casnav.mclm.action;
 
-import java.io.File;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,17 +10,14 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import br.mil.mar.casnav.mclm.persistence.services.LayerService;
+import br.mil.mar.casnav.mclm.persistence.services.NodeService;
 
-@Action(value="newTIFLayer", results= {  
+@Action(value="newFolder", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) }
 )   
 
 @ParentPackage("default")
-public class NewTIFLayerAction extends BasicActionClass {
-	private String tifFileFileName;
-	private String tifFileContentType;
-	private File tifFile;
+public class NewFolderAction extends BasicActionClass {
 	
 	public String execute(){
 		
@@ -30,18 +25,13 @@ public class NewTIFLayerAction extends BasicActionClass {
 		try { 
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
 
-			String layerAlias = request.getParameter("layerAlias");
-			String description = request.getParameter("description");
-			String institute = request.getParameter("institute");
-			
+			String newFolderName = request.getParameter("newFolderName");
 			String layerFolderIDS = request.getParameter("layerFolderID");
-			
 			int layerFolderID = Integer.valueOf( layerFolderIDS );
 			
-			LayerService ls = new LayerService();
-			String result = ls.createTIFLayer( tifFileContentType, tifFile, tifFileFileName, layerAlias, description, institute, layerFolderID );
+			NodeService ns = new NodeService();
+			String result = ns.createFolder( newFolderName , layerFolderID );
 			
-			System.out.println("Resposta de newTIFLayer: " + result );
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
@@ -52,18 +42,6 @@ public class NewTIFLayerAction extends BasicActionClass {
 		}
 		return "ok";
 	}
-
-	public void setTifFileFileName(String tifFileFileName) {
-		this.tifFileFileName = tifFileFileName;
-	}
-
-	public void setTifFileContentType(String tifFileContentType) {
-		this.tifFileContentType = tifFileContentType;
-	}
-
-	public void setTifFile(File tifFile) {
-		this.tifFile = tifFile;
-	}
 	
-	
+
 }

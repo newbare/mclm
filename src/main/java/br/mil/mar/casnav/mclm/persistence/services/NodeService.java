@@ -6,6 +6,7 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.misc.TreeNode;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
@@ -132,6 +133,21 @@ public class NodeService {
 		}
 		
 		return arrayObj.toString();
+		
+	}
+
+	public String createFolder(String newFolderName, int layerFolderID) {
+		
+		try {
+			NodeService ns = new NodeService();
+			NodeData node = new NodeData(layerFolderID, "", "", "", "", newFolderName, LayerType.FDR);
+			
+			ns.addNode( node );			
+			return "{ \"success\": true, \"msg\": \"Pasta " + newFolderName + " criada com sucesso.\" }";
+		} catch ( Exception e ) {
+			return "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
+		}
+		
 		
 	}
 	

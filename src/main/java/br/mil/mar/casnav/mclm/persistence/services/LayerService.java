@@ -130,7 +130,6 @@ public class LayerService {
 		String geoserverURL = cfg.getGeoserverUrl().replace("wms/", "");
 		String serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/datastores/" + storeName + "/file.shp";
 		
-        // Tenta criar o Workspace padrao para camadas externas. Ignora se jah existir.
         int resp = createWorkspace( workspaceName );
         
         if ( resp == RESTResponse.CREATED ) {
@@ -138,9 +137,6 @@ public class LayerService {
         } else {
         	System.out.println("Erro '"+resp+"' ao criar o Workspace Externo " + workspaceName );
         }		
-		
-		
-		System.out.println( serverRESTAPI );
 		
 		WebClient wc = new WebClient();
 		int result = wc.doPutFile( file, "application/zip", serverRESTAPI, "", geoUser, geoPassword );
@@ -150,25 +146,12 @@ public class LayerService {
 	
 
 	public int createTIFStore( File file, String storeName, String workspaceName ) throws Exception {
-		/*
-		
-		$ curl -u admin:geoserver -v -XPOST -H 'Content-Type: application/xml' -d '<coverageStore><name>my_geotiff</name><workspace>public</workspace><enabled>true</enabled></coverageStore>' http://localhost:8080/geoserver/rest/workspaces/public/coveragestores
- 		
-		
-		
-		$ curl -v -u admin:geoserver -XPUT -H "Content-type: text/plain"
-		       -d "file:///path_to_directory/int_dec.tif"
-		       http://localhost:8080/geoserver/rest/workspaces/restProba/coveragestores/int_dec/external.geotiff			
-		
-		*/
 		
 		Configurator cfg = Configurator.getInstance();
 		String geoUser = cfg.getGeoserverUser();
 		String geoPassword = cfg.getGeoserverPassword();
 		String geoserverURL = cfg.getGeoserverUrl().replace("wms/", "");
 		
-		
-        // Tenta criar o Workspace padrao para camadas externas. Ignora se jah existir.
         int resp = createWorkspace( workspaceName );
 
         if ( resp == RESTResponse.CREATED ) {
@@ -176,36 +159,16 @@ public class LayerService {
         } else {
         	System.out.println("Erro '"+resp+"' ao criar o Workspace Externo " + workspaceName );
         }		
-        
-        
-        // Cria o CoverageStore
-		StringBuilder postData = new StringBuilder();
-		postData.append("<coverageStore>");
-		postData.append("<name>" + storeName + "</name>");
-		postData.append("<workspace>" + workspaceName + "</workspace>");
-		postData.append("<enabled>true</enabled>");
-		postData.append("<description>Criado pelo MCLM</description>");
-		postData.append("<type>GeoTIFF</type>");
-		postData.append("<srs>EPSG:4326</srs><projectionPolicy>REPROJECT_TO_DECLARED</projectionPolicy>");
-		postData.append("</coverageStore>");
+
+		String serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/coveragestores/" + storeName + 
+				"/file.geotiff"; // + file.getName();
 		
-		String serverRESTAPIStore = geoserverURL + "rest/workspaces/" + workspaceName + "/coveragestores";
 		WebClient wc = new WebClient();
-		resp = wc.doRESTRequest( "POST", serverRESTAPIStore, postData.toString(), geoUser, geoPassword );			
-		
-        if ( resp == RESTResponse.CREATED ) {
-        	System.out.println("Coverage Store " + storeName + " criado com sucesso.");
-        } else {
-        	System.out.println("Erro '"+resp+"' ao criar o Coverage Store " + storeName );
-        }		
-		
-		String serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/coveragestores/" + storeName + "/external.geotiff?configure=first&coverageName=" + storeName;
-		int result = wc.doPutFile( file, "geotif/geotiff", serverRESTAPI, "", geoUser, geoPassword );
+		int result = wc.doPutFile( file, "image/tiff", serverRESTAPI, "", geoUser, geoPassword );
 
 		System.out.println( serverRESTAPI );
 
 		return result;		
-		
 	}
 		
 	
@@ -323,25 +286,17 @@ public class LayerService {
 			String description, String institute, int layerFolderID) {
 
 		try {
-			
 			Configurator cfg = Configurator.getInstance();
 			String serverUrl = cfg.getGeoserverUrl();
 			String externalWorkspaceName = cfg.getExternalWorkspaceName();
 			String storeName = shpFileFileName.replace(".zip", "");
 			String layerName = cfg.getExternalWorkspaceName() + ":" + storeName; 
 			
-			System.out.println("Receiving file...");
 			String saveDirectory = Configurator.getInstance().getShapeFileTargetPath();
 			File destFile = new File( saveDirectory + File.separator + shpFileFileName );
 			FileUtils.copyFile(shpFile, destFile);
-			System.out.println("Done.");
-			
-			// Copy SHP to GeoServer and create store.
-			// Layer Name is SHP file name.
-			
-			System.out.println("Will create store " + storeName + " from file " );
+
 			createSHPStore(destFile, storeName, externalWorkspaceName);
-			System.out.println("Done.");
 			
 			NodeService ns = new NodeService();
 			NodeData node = new NodeData(layerFolderID, "", description, institute, layerName, layerAlias, LayerType.SHP);
@@ -361,24 +316,19 @@ public class LayerService {
 		try {
 			
 			Configurator cfg = Configurator.getInstance();
-			//String serverUrl = cfg.getGeoserverUrl();
-			//String externalWorkspaceName = cfg.getExternalWorkspaceName();
 			String storeName = kmlFileFileName.replace(".zip", "");
 			String layerName = cfg.getExternalWorkspaceName() + ":" + storeName; 
 			
-			System.out.println("Receiving file...");
-			
 			String saveDirectory = PathFinder.getInstance().getPath() + "/kmlFolderStorage"; 
-			System.out.println("Target : " + saveDirectory );
 			
 			File destFile = new File( saveDirectory + File.separator + kmlFileFileName );
 			FileUtils.copyFile(kmlFile, destFile);
-			System.out.println("Done.");		
 		
 			NodeService ns = new NodeService();
 			NodeData node = new NodeData(layerFolderID, "" , description, institute, layerName, layerAlias, LayerType.KML);
 			node.setServiceUrl( "kmlFolderStorage/" + kmlFileFileName );
-			ns.addNode( node );			
+			ns.addNode( node );		
+			
 			
 			return "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
 		} catch ( Exception e ) {
@@ -398,30 +348,26 @@ public class LayerService {
 			String externalWorkspaceName = cfg.getExternalWorkspaceName();
 			String layerName = externalWorkspaceName + ":" + storeName; 
 			
-			System.out.println("Receiving file...");
 			String saveDirectory = Configurator.getInstance().getShapeFileTargetPath();
+			//String saveDirectory = PathFinder.getInstance().getPath() + "/kmlFolderStorage";
+
 			File destFile = new File( saveDirectory + File.separator + tifFileFileName );
 			FileUtils.copyFile(tifFile, destFile);
-			System.out.println("Done.");
 
-			System.out.println("Will create store " + storeName + " from file " );
 			createTIFStore(destFile, storeName, externalWorkspaceName);
-			System.out.println("Done.");
 			
 			NodeService ns = new NodeService();
-			NodeData node = new NodeData(layerFolderID, "", description, institute, layerName, layerAlias, LayerType.SHP);
+			NodeData node = new NodeData(layerFolderID, "", description, institute, layerName, layerAlias, LayerType.TIF);
 			node.setServiceUrl( serverUrl );
 			ns.addNode( node );			
 			
+			destFile.delete();
 			
 			return "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
 		} catch ( Exception e ) {
 			return "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
 		}
 
-			
-
-		
 		
 	}	
 	

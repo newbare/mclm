@@ -52,6 +52,7 @@ public class WebClient {
 		con.setRequestProperty("Authorization", "Basic " + encodedAuth );
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Content-type", contentType);
+		con.setConnectTimeout( 120000 );
 		
 		con.setDoOutput(true);
 		OutputStream outputStream = con.getOutputStream();
@@ -109,7 +110,7 @@ public class WebClient {
 			IOUtils.copy(inputStream, writer, "UTF-8");
 			String theString = writer.toString();
 			inputStream.close();
-			//System.out.println( "WebClient:doPostStream >>> " + theString );
+			System.out.println( "WebClient:doPostStream >>> " + theString );
 		} catch ( Exception e ) {
 			//e.printStackTrace();
 		}
