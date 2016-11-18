@@ -64,10 +64,28 @@ Ext.define('MCLM.Functions', {
 		        text: 'Interroga as camadas ativas no mapa em determinada posição.',
 		        width: 150,
 		        dismissDelay: 5000 
-		    }, {
+		    },{
 		        target: 'id118',
 		        title: 'Verificar Conectividade',
 		        text: 'Verifica se o Sistema possui acesso externo à Ineternet (não o usuário).',
+		        width: 150,
+		        dismissDelay: 5000 
+		    }, {
+		        target: 'id119',
+		        title: 'Ocultar/Exibir Base',
+		        text: 'Oculta e exibe a camada de base do mapa.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    }, {
+		        target: 'id120',
+		        title: 'Gerenciar Cenários',
+		        text: 'Gerenciar cenários do usuário.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    }, {
+		        target: 'id911',
+		        title: 'Gerenciar Cenários',
+		        text: 'Gerenciar cenários do usuário.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }); 	

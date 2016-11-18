@@ -20,6 +20,7 @@ public class TreeNode {
 	private String layerType;
 	private int childrenCount;
 	private String iconCls;
+	private boolean readOnly = false;
 	
 	public TreeNode( UserTableEntity ute ) {
 		this.childrenCount = Integer.valueOf( ute.getData("children") );
@@ -33,7 +34,9 @@ public class TreeNode {
 		this.institute = ute.getData("institute");		
 		this.layerAlias = ute.getData("layeralias");
 		this.layerType = ute.getData("layertype");
+		this.readOnly = Boolean.valueOf( ute.getData("read_only") );
 		this.iconCls = "";
+		
 		
 		this.serialId = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
 		
@@ -91,6 +94,10 @@ public class TreeNode {
 		return checked;
 	}
 
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+	
 	public void setChecked(boolean checked) {
 		this.checked = checked;
 	}

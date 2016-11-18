@@ -33,15 +33,9 @@ public class NodeService {
 		return rep.getNode( idNodeData );
 	}
 	
-	public void deleteNode( int idNode ) throws DeleteException {
+	
+	public void deleteNode( NodeData node ) throws DeleteException {
 		try {
-			NodeData node = rep.getNode(idNode);
-			
-			String layerName = node.getLayerName();
-			LayerService ls = new LayerService();
-			ls.deleteLayer( layerName );
-			
-			rep.newTransaction();
 			rep.deleteNode(node);
 		} catch (Exception e) {
 			throw new DeleteException( e.getMessage() );

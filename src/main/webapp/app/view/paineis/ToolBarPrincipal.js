@@ -7,7 +7,18 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
     style: {
         background: '#FFFFFF'
     },    
-    items: [{
+    items: [
+    {
+    	// Cenários
+    	xtype: 'button',
+		id: 'id120',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    iconCls: 'scenery-icon',
+	    handler : 'showSceneries',
+    }, 
+    { xtype: 'menuseparator' },
+    {
     	// Config
     	xtype: 'button',
 		id: 'id111',
@@ -15,6 +26,17 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'setting-icon',
 	    handler : 'showConfig',
+    }, 
+    {
+    	// Exibe / Oculta Mapa de Base
+    	xtype: 'button',
+    	id: 'id119',
+    	enableToggle: true,
+    	pressed: true,
+    	width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    iconCls: 'base-icon',
+        handler: 'toggleBaseLayer'
     }, 
     {
     	// Fontes Externas

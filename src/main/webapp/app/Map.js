@@ -309,6 +309,15 @@ Ext.define('MCLM.Map', {
 			}
 		},		
 		// --------------------------------------------------------------------------------------------
+		// Liga/ Desliga o mapa do OpenSeaMap
+		toggleBaseLayer : function() {
+			if ( this.baseLayer.getVisible() ) {
+				this.baseLayer.setVisible(false);
+			} else {
+				this.baseLayer.setVisible(true);
+			}
+		},		
+		// --------------------------------------------------------------------------------------------
 		// Busca o indice de uma camada no mapa dado o seu nome
 		indexOf : function (layers, layer) {
 			var length = layers.getLength();

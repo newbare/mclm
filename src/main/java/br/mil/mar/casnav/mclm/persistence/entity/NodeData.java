@@ -52,6 +52,9 @@ public class NodeData {
 	
 	@Column(length=150)
 	private String layerAlias;
+	
+	@Column(name = "read_only")
+	private boolean readOnly;
 
 	public NodeData() {
 		// TODO Auto-generated constructor stub
@@ -66,6 +69,7 @@ public class NodeData {
 		this.layerName = layerName;
 		this.layerAlias = layerAlias;
 		this.layerType = layerType;
+		this.readOnly = false;
 	}
 
 	public int getIdNodeData() {
@@ -154,6 +158,14 @@ public class NodeData {
 	
 	public void setLayerType(LayerType layerType) {
 		this.layerType = layerType;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+	
+	public boolean isReadOnly() {
+		return readOnly;
 	}
 	
 }

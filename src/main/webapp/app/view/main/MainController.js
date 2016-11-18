@@ -23,6 +23,16 @@ Ext.define('MCLM.view.main.MainController', {
 	toggleSeaMapLayer : function( button ) {
 		MCLM.Map.toggleSeaMapLayer();
 	},
+	toggleBaseLayer : function( button ) {
+		MCLM.Map.toggleBaseLayer();
+	},
+	// --------------------------------------------------------------------------------------------
+	showSceneries : function ( button ) {
+    	var cenarioWindow = Ext.getCmp('cenarioWindow');
+    	if ( cenarioWindow ) return;
+    	cenarioWindow = Ext.create('MCLM.view.cenarios.CenarioWindow');
+    	cenarioWindow.show();
+	},
 	// --------------------------------------------------------------------------------------------
     showConfig : function ( button ) {
     	var configWindow = Ext.getCmp('configWindow');

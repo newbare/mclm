@@ -8,7 +8,8 @@ Ext.define('MCLM.model.LayerTreeModel', {
         { name: 'originalServiceUrl', type: 'string' },
         { name: 'layerType', type: 'string' },
         { name: 'serialId', type: 'string' },
-        { name: 'version', type: 'string' }
+        { name: 'version', type: 'string' },
+        { name: 'readOnly', type: 'boolean' }
 	],
 
 });

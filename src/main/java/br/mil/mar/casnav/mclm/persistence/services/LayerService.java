@@ -35,7 +35,6 @@ public class LayerService {
 		
 		System.out.println( result );
 		
-		//result = "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[-5696622.36,-3508506.55],[-5696631.28,-3508504.96],[-5696649.14,-3508501.8],[-5696658.06,-3508500.2]]},\"properties\":{\"highway\":\"platform\",\"aeroway\":null,\"railway\":null,\"tunnel\":null}}]}";
 		return result;
 	}
 	
@@ -71,25 +70,6 @@ public class LayerService {
 		String geoserverURL = cfg.getGeoserverUrl().replace("wms/", "");
 		String serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/wmsstores/" + storeName + "/wmslayers/";
 		
-		/*
-			POST /rest/workspaces/<ws>/wmsstores/wms/wmslayers/
-			
-	        String xml = 
-	          "<wmsLayer>"+
-	            "<name>bugsites</name>"+
-	            "<nativeName>og:bugsites</nativeName>"+
-	            "<srs>EPSG:4326</srs>" + 
-	            "<nativeCRS>EPSG:4326</nativeCRS>" + 
-	            "<store>demo</store>" + 
-	            
-                <nativeCRS>EPSG:4326</nativeCRS>	
-                <srs>EPSG:4326</srs>
-                <projectionPolicy>FORCE_DECLARED</projectionPolicy>	            
-	            
-	          "</wmsLayer>";			
-			
-		 */
-		
 		StringBuilder postData = new StringBuilder();
 		postData.append("<wmsLayer>");
 		postData.append("<name>" + layerName + "</name>");
@@ -103,21 +83,102 @@ public class LayerService {
 		
 	}
 	
-	public int deleteLayer( String layerName ) throws Exception {
+	public String deleteLayer( int idNode ) throws Exception {
+		
+		String result = "{ \"success\": true, \"msg\": \"Operação efetuada com sucesso.\" }";
+		
+		try {
+			NodeService ns = new NodeService();
+			NodeData node = ns.getNode(idNode);
+			
+			if ( node.getLayerType() == LayerType.FDR ) {
+				// É uma pasta. Apaga somente o nó SE ESTIVER VAZIO.
+				if ( node.getChildren() > 0 ) {
+					throw new Exception("A pasta não está vazia.");
+				} else {
+					ns.newTransaction();
+					ns.deleteNode(node);
+				}
+				return result;
+			}
+			
+			
+			String layerName = node.getLayerName();
+			String workspaceName = "";
+			
+			if ( layerName.contains(":") ) {
+				String[] workspaceAndLayer = layerName.split(":");
+				workspaceName = workspaceAndLayer[0];
+				layerName = workspaceAndLayer[1];
+			} else {
+				throw new Exception("Nome da camada malformado. Deve ser no padrão 'workspace:layer' e está '" + layerName + "'");
+			}
+			
+			Configurator cfg = Configurator.getInstance();
+			String geoUser = cfg.getGeoserverUser();
+			String geoPassword = cfg.getGeoserverPassword();
+			String geoserverURL = cfg.getGeoserverUrl().replace("wms/", "");
+			
+			if ( node.getLayerType() == LayerType.KML ) {
+				String filePath = node.getServiceUrl();
+				String saveDirectory = PathFinder.getInstance().getPath() + "/" + filePath;
+				File fil = new File( saveDirectory );
+				
+				System.out.println( saveDirectory );
+				
+				fil.delete();
+			}
+				
+			// Que tal um bloco SWITCH aqui?
+			String serverRESTAPI = "";
+			String serverRESTAPILayerGroup = "";
+			
+			if ( node.getLayerType() == LayerType.FTR ) {
+				// Uma feature.... 
+			}
+				
+			if ( node.getLayerType() == LayerType.WMS ) { 
+				// http://localhost:8080/geoserver/rest/layers/<layer>
+				serverRESTAPI = geoserverURL + "rest/layers/" + layerName;
+				serverRESTAPILayerGroup = geoserverURL + "rest/layergroups/" + layerName;
+				
+			}
 
-		if ( layerName.contains(":") ) {
-			String[] workspaceAndLayer = layerName.split(":");
-			layerName = workspaceAndLayer[1];
-        }				
+			if ( node.getLayerType() == LayerType.SHP ) {
+				// http://localhost:8080/geoserver/rest/workspaces/<ws>/datastores/<ds>?recurse=true
+				serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/datastores/" + layerName + "?recurse=true";
+			}
+				
+			if ( node.getLayerType() == LayerType.TIF ) { 
+				// http://localhost:8080/geoserver/rest/workspaces/my_ws/coveragestores/my_cover?recurse=true
+				serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/coveragestores/" + layerName + "?recurse=true";
+			}
 		
-		Configurator cfg = Configurator.getInstance();
-		String geoUser = cfg.getGeoserverUser();
-		String geoPassword = cfg.getGeoserverPassword();
-		String geoserverURL = cfg.getGeoserverUrl().replace("wms/", "");
-		String serverRESTAPI = geoserverURL + "rest/layers/" + layerName + ".xml";
+			if ( !serverRESTAPI.equals("") ) {
+				System.out.println("DELETE " + serverRESTAPI );
+				WebClient wc = new WebClient();
+				
+				int res = 0;
+				if ( !serverRESTAPILayerGroup.equals("") ) {
+					res = wc.doRESTRequest( "DELETE", serverRESTAPI, "", geoUser, geoPassword );
+				} else {
+					// É um grupo de camadas...
+					res = wc.doRESTRequest( "DELETE", serverRESTAPILayerGroup, "", geoUser, geoPassword );
+				}
+				
+				
+				
+				if ( res != 0 ) {
+					throw new Exception("Erro ao remover camada '" + layerName + "': Código " + res );
+				}
+			}
+
+			ns.newTransaction();
+			ns.deleteNode(node);
+		} catch (Exception e) {
+			result = "{ \"error\": true, \"msg\": \"" + e.getMessage()+ ".\" }";
+		}
 		
-		WebClient wc = new WebClient();
-		int result = wc.doRESTRequest( "DELETE", serverRESTAPI, "", geoUser, geoPassword );		
 		return result;		
 		
 	}
@@ -252,8 +313,8 @@ public class LayerService {
 	public String createWMSLayer(int layerFolderID, String serverUrl, String description, String institute,
 			String layerName, String layerAlias) {
 
-        if ( !serverUrl.contains("/wms") ) serverUrl = serverUrl + "/wms/";
-    	if ( !serverUrl.endsWith("/") ) serverUrl = serverUrl + "/";
+		if ( !serverUrl.endsWith("/") ) serverUrl = serverUrl + "/";
+		if ( !serverUrl.contains("/wms") ) serverUrl = serverUrl + "wms/";
 		
 		String result = "{ \"success\": true, \"msg\": \"Camada " + layerName + " criada com sucesso.\" }";
 		try {

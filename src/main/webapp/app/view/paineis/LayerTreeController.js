@@ -21,14 +21,34 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 
 		var layerDetailStore = Ext.data.StoreManager.lookup('store.LayerDetail');
 		layerDetailStore.loadData( tempData );
+		
+		if( record.data.readOnly ) {
+			$("#id_lock_icon").css("display","block");
+		}
+		
     },
     // Recursivamente marca/desmarca pais dos nos até o root
     recursiveCheckParent : function( node, pChildCheckedCount ) {
+    	
+    	console.log( node.data.layerAlias + " " + pChildCheckedCount );
+    	
 	    var parent = node.parentNode;
 	    if( parent ) {
 	    	parent.set('checked', !!pChildCheckedCount);
 	    	this.recursiveCheckParent( parent, pChildCheckedCount );
 	    }
+    },
+    clearCheckToTheRoot : function ( parentNode ) {
+    	var me = this;
+	    
+	    var pChildCheckedCount = 0;
+	    parentNode.suspendEvents();
+	    parentNode.eachChild(function(c) { 
+	        if (c.get('checked')) pChildCheckedCount++; 
+
+	    });
+	    
+       	me.recursiveCheckParent( parentNode, pChildCheckedCount );	    	
     },
     // Quando o estado do no muda (selecionado/nao selecionado)
     // Adiciona ou remove uma camada na lista de camadas e no mapa
@@ -63,12 +83,14 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		          { iconCls: 'tif-icon', text: 'Adicionar Camada TIF', handler: function() { me.addNewLayerTIF(record); } },
 		          { xtype: 'menuseparator' },
 		          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { me.addNewFolder(record); } },
-		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.deleteNodeAndChildren( record ); } }
+		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteFolder( record ); } },
 		        ]
 		    });
 		} else {
 		    var menu_grid = new Ext.menu.Menu({ 
 		    	items: [
+				  { iconCls: 'add-scenery-icon', text: 'Adicionar para Cenário', handler: function() { me.addToScenery(record); } },
+				  { xtype: 'menuseparator' },
 		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
 		        ]
 		    });
@@ -77,7 +99,12 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	    menu_grid.showAt( position );
 		e.stopEvent();    	
     },
-    
+    // Adiciona para o cenario atual
+    addToScenery : function( record ) {
+    	
+    	Ext.Msg.alert('Nao implementado ainda', 'Não implementado ainda' );
+    	
+    },
     // Adiciona uma nova pasta na arvore 
     addNewFolder : function( record ) {
 		var data = record.data;
@@ -106,9 +133,22 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var data = record.data;
 		var name = data.layerAlias;
 		var me = this;
+
+		if ( record.data.readOnly ) {
+			Ext.MessageBox.show({
+				title: 'Camada Bloqueada',
+				msg: 'Não é possível apagar esta camada.',
+				buttons: Ext.MessageBox.OK,
+				icon: 'lock-icon'
+			});			
+			return true;
+		}
+		
 		
 		Ext.Msg.confirm('Apagar Camada', 'Deseja realmente apagar a Camada "' + name + '" ?', function( btn ){
 			   if( btn === 'yes' ){
+				   record.set("checked",false);
+				   me.clearCheckToTheRoot( record );
 				   me.deleteLayer( parentNode, data );
 			   } else {
 			       return;
@@ -117,6 +157,41 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		
 	},
 	
+    // Pergunta se quer deletar uma camada / no da arvore
+	askDeleteFolder: function( record ) {
+		var parentNode = record.parentNode;
+		var data = record.data;
+		var name = data.layerAlias;
+		var me = this;
+		
+		if ( record.data.readOnly ) {
+			
+			Ext.MessageBox.show({
+				title: 'Pasta Bloqueada',
+				msg: 'Não é possível apagar esta pasta.',
+				buttons: Ext.MessageBox.OK,
+				icon: 'lock-icon'
+			});			
+			
+			return true;
+		}
+		
+		if ( record.data.childrenCount > 0 ) {
+			Ext.Msg.alert('Apagar Pasta', 'Não é possível apagar pastas com camadas ou outras pastas. Remova todas as camadas e pastas desta pasta antes.');
+			return true;
+		}
+		
+		Ext.Msg.confirm('Apagar Pasta', 'Deseja realmente apagar a pasta "' + name + '" ?', function( btn ){
+			   if( btn === 'yes' ){
+				   me.clearCheckToTheRoot( record );
+				   me.deleteLayer( parentNode, data );
+			   } else {
+			       return;
+			   }
+		});	
+		
+	},
+
 	// Efetivamente apaga uma camada
 	deleteLayer : function ( parentNode, data ) {
 		var nodeId = data.id;
@@ -160,7 +235,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	capabilitiesWindow = Ext.create('MCLM.view.addlayer.wms.CapabilitiesWindow');
     	capabilitiesWindow.setTitle( title );
     	capabilitiesWindow.show();		
-    	Ext.getCmp('tituloID').focus(true, 100);
     	
     	// Interceptado pelo controller 'MCLM.view.addlayer.wms.CapabilitiesController'
     	this.fireEvent('createMapPreview', record);
@@ -235,11 +309,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	
 	},
 
-	// Apaga uma pasta e tudo abaixo dela
-	deleteNodeAndChildren : function( node ) {
-		Ext.Msg.alert('Erro', 'Não implementado ainda' );
-	},
-	
 	// Responde a mudanca de estado de um no ( selecionado/nao selecionado )
 	toggleNode: function( node ) {
 		var checked = node.get('checked');
@@ -258,5 +327,14 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		}	
 	},
 	
+    viewready: function (tree) {
+        var view = tree.getView();
+        var dd = view.findPlugin('treeviewdragdrop');
+        
+        dd.dragZone.onBeforeDrag = function (data, e) {
+            var rec = view.getRecord(e.getTarget(view.itemSelector));
+            return !rec.data.readOnly;
+        };
+    }	
 	
 });

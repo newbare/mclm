@@ -110,6 +110,7 @@ public class WebClient {
 			IOUtils.copy(inputStream, writer, "UTF-8");
 			String theString = writer.toString();
 			inputStream.close();
+			
 			System.out.println( "WebClient:doPostStream >>> " + theString );
 		} catch ( Exception e ) {
 			//e.printStackTrace();

@@ -102,3 +102,23 @@
 	background-image: url('../img/tif.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.lock-icon {
+	background-image: url('../img/lock.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.base-icon {
+	background-image: url('../img/basemap.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.add-scenery-icon {
+	background-image: url('../img/add-scenery.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.scenery-icon {
+	background-image: url('../img/scenery.svg') !important;
+	background-repeat: no-repeat;
+}

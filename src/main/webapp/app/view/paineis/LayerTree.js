@@ -8,6 +8,12 @@ Ext.define('MCLM.view.paineis.LayerTree', {
        'MCLM.TreeFilter'
     ],	
     
+    viewConfig: {
+        plugins: {
+            ptype: 'treeviewdragdrop'
+        }
+    },    
+    
     plugins: [{  ptype: 'treefilter', allowParentFolders: true }],
     
     store: 'store.layerTree',
@@ -78,7 +84,8 @@ Ext.define('MCLM.view.paineis.LayerTree', {
     listeners: {
     	itemclick: 'onLayerTreeItemClick',
         checkchange: 'onLayerTreeCheckChange',
-        itemcontextmenu: 'onContextMenu'
+        itemcontextmenu: 'onContextMenu',
+        viewready: 'viewready'
        
     }    
     
