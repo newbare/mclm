@@ -86,7 +86,6 @@ Ext.define('MCLM.view.paineis.LayerTree', {
         checkchange: 'onLayerTreeCheckChange',
         itemcontextmenu: 'onContextMenu',
         viewready: 'viewready'
-       
     }    
     
 });

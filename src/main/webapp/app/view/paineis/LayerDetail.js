@@ -11,7 +11,7 @@ Ext.define('MCLM.view.paineis.LayerDetail', {
     store: 'store.LayerDetail',
     
     region:'south',
-    height: 160,
+  
     columns: [{
     	cellWrap: true,
     	header:'Detalhes da Camada',

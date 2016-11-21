@@ -118,7 +118,17 @@
 	background-repeat: no-repeat;
 }
 
+.save-icon {
+	background-image: url('../img/save.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .scenery-icon {
 	background-image: url('../img/scenery.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.reload-icon {
+	background-image: url('../img/reload.svg') !important;
 	background-repeat: no-repeat;
 }

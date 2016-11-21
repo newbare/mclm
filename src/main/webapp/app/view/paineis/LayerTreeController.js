@@ -29,9 +29,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     },
     // Recursivamente marca/desmarca pais dos nos até o root
     recursiveCheckParent : function( node, pChildCheckedCount ) {
-    	
-    	console.log( node.data.layerAlias + " " + pChildCheckedCount );
-    	
 	    var parent = node.parentNode;
 	    if( parent ) {
 	    	parent.set('checked', !!pChildCheckedCount);
@@ -89,7 +86,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		} else {
 		    var menu_grid = new Ext.menu.Menu({ 
 		    	items: [
-				  { iconCls: 'add-scenery-icon', text: 'Adicionar para Cenário', handler: function() { me.addToScenery(record); } },
+				  { iconCls: 'add-scenery-icon', text: 'Copiar para Área de Trabalho', handler: function() { me.addToScenery(record); } },
 				  { xtype: 'menuseparator' },
 		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
 		        ]
@@ -99,11 +96,20 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	    menu_grid.showAt( position );
 		e.stopEvent();    	
     },
-    // Adiciona para o cenario atual
+    // Adiciona para o cenario atual / area de trabalho
     addToScenery : function( record ) {
+    	var trabalhoTree = Ext.getCmp('trabalhoTree');
+    	var root = trabalhoTree.getRootNode();
+    	var copy = record.copy();    
+    	var x = 0;
     	
-    	Ext.Msg.alert('Nao implementado ainda', 'Não implementado ainda' );
+    	root.cascadeBy( function(n) { 
+    		n.set('id', x);
+    		x++;
+    	});
     	
+    	copy.set('id', x);
+    	root.appendChild( copy );
     },
     // Adiciona uma nova pasta na arvore 
     addNewFolder : function( record ) {
@@ -123,7 +129,10 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 
 		var layerFolderID = Ext.getCmp('layerFolderID');
 		layerFolderID.setValue( data.id );      
-    	
+
+		var trabalhoAddFolder = Ext.getCmp('trabalhoAddFolder');
+		trabalhoAddFolder.setValue( 'false' );      
+		
     	Ext.getCmp('newFolderName').focus(true, 100);    	
     },
     

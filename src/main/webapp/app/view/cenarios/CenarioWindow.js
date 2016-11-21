@@ -5,7 +5,8 @@ Ext.define('MCLM.view.cenarios.CenarioWindow', {
 
     requires: [
         'MCLM.view.cenarios.CenarioController',
-        'MCLM.view.cenarios.CenarioTree',
+        'MCLM.view.cenarios.PainelEsquerdo',
+        'MCLM.view.cenarios.PainelCentral',
 	],	    
     controller : 'cenario',	
 	
@@ -14,24 +15,16 @@ Ext.define('MCLM.view.cenarios.CenarioWindow', {
     scrollable: false,
     frame : false,
 	layout : 'border',
-	title : "Gerenciar Cenários",
+	title : "Carregar Cenário",
 	constrain: true,
 	
 	renderTo: Ext.getBody(),
 	
 	items: [{
-		xtype: 'view.cenarioTree'
+		xtype: 'cenariosPainelEsquerdo'
+	},{
+		xtype: 'cenariosPainelCentral'
 	}],	
 	  
-    dockedItems: [{
-    	xtype: 'toolbar',
-        items: [{
-        	iconCls: 'plus-icon',
-        	id: 'id911',
-            handler : function() {
-            	alert("ok");
-            }
-        }]
-    }]  
-	
+
 });

@@ -1,4 +1,3 @@
-
 Ext.define('MCLM.Application', {
     extend: 'Ext.app.Application',
     
@@ -10,14 +9,16 @@ Ext.define('MCLM.Application', {
        'MCLM.Functions'
     ],
     
+    
     stores: [
        'MCLM.store.LayerTree',
        'MCLM.store.LayerDetail',
        'MCLM.store.ExternalSource',
        'MCLM.store.LayerStack',
        'MCLM.store.Capabilities',
+       'MCLM.store.TrabalhoTree',
     ],
-    
+   
     launch: function () {
         
 		Ext.Ajax.request({

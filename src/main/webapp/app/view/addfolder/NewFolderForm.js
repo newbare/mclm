@@ -23,6 +23,14 @@ Ext.define('MCLM.view.addfolder.NewFolderForm', {
         id: 'newFolderName',
         allowBlank : false,
     },{
+        fieldLabel: 'HIDDEN',
+        width: 350,
+        xtype : 'hidden',
+        name: 'trabalhoAddFolder',
+        inputValue: 'true',
+        id:'trabalhoAddFolder',
+        readOnly: true,
+    },{
         fieldLabel: 'Parend ID',
         width: 350,
         xtype : 'hidden',
@@ -37,7 +45,7 @@ Ext.define('MCLM.view.addfolder.NewFolderForm', {
         id : 'closeNewFolderWindow'
       },{
     	// Interceptado pelo controller 'MCLM.view.addlayer.Tif.UploadTifController'	
-        text: 'Enviar',
+        text: 'Gravar',
         id : 'newFolderFormSubmit'
     }]
 });

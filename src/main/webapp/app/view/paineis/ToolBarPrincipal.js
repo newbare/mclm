@@ -9,16 +9,6 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
     },    
     items: [
     {
-    	// Cenários
-    	xtype: 'button',
-		id: 'id120',
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    iconCls: 'scenery-icon',
-	    handler : 'showSceneries',
-    }, 
-    { xtype: 'menuseparator' },
-    {
     	// Config
     	xtype: 'button',
 		id: 'id111',

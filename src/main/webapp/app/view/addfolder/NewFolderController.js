@@ -24,6 +24,28 @@ Ext.define('MCLM.view.addfolder.NewFolderController', {
     submitForm : function( ) {
     	var me = this;
     	
+    	// Se criar pasta na aba trabalho...
+		var trabalhoAddFolder = Ext.getCmp('trabalhoAddFolder');
+		var trabalhoAddFolderValue = trabalhoAddFolder.getValue( );      	
+    	if ( trabalhoAddFolderValue == 'true' ) {
+    		var trabalhoTree = Ext.getCmp('trabalhoTree');
+    		var newFolderName = Ext.getCmp('newFolderName');
+    		var newFolderNameValue = newFolderName.getValue();
+    		
+    		var selectedTreeNode = trabalhoTree.getSelectionModel().getSelection()[0];
+    		
+            var n = selectedTreeNode.appendChild({
+                text:newFolderNameValue,
+                leaf: false,
+                checked: false
+            });     		
+    		
+            me.closeWindow();
+    		return true;
+    	}
+
+    	
+    	// Daqui para baixo esta criando pasta na aba Catalogo
 		var uploadTifForm = Ext.getCmp('newFolderForm');
 		var form = uploadTifForm.getForm();        
         

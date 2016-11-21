@@ -76,18 +76,6 @@ Ext.define('MCLM.Functions', {
 		        text: 'Oculta e exibe a camada de base do mapa.',
 		        width: 150,
 		        dismissDelay: 5000 
-		    }, {
-		        target: 'id120',
-		        title: 'Gerenciar Cenários',
-		        text: 'Gerenciar cenários do usuário.',
-		        width: 150,
-		        dismissDelay: 5000 
-		    }, {
-		        target: 'id911',
-		        title: 'Gerenciar Cenários',
-		        text: 'Gerenciar cenários do usuário.',
-		        width: 150,
-		        dismissDelay: 5000 
 		    }); 	
 		}
 		

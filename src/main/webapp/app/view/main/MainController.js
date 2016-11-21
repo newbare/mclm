@@ -27,13 +27,6 @@ Ext.define('MCLM.view.main.MainController', {
 		MCLM.Map.toggleBaseLayer();
 	},
 	// --------------------------------------------------------------------------------------------
-	showSceneries : function ( button ) {
-    	var cenarioWindow = Ext.getCmp('cenarioWindow');
-    	if ( cenarioWindow ) return;
-    	cenarioWindow = Ext.create('MCLM.view.cenarios.CenarioWindow');
-    	cenarioWindow.show();
-	},
-	// --------------------------------------------------------------------------------------------
     showConfig : function ( button ) {
     	var configWindow = Ext.getCmp('configWindow');
     	if ( configWindow ) return;

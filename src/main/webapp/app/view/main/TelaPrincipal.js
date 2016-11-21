@@ -2,14 +2,17 @@ Ext.define('MCLM.view.main.TelaPrincipal', {
 	extend: 'Ext.Panel',
 	xtype: 'telaPrincipal',
 	plugins: 'viewport',
+	
     requires: [
        'MCLM.view.paineis.PainelInferior',
        'MCLM.view.paineis.PainelCentral',
-       'MCLM.view.paineis.PainelEsquerdo',
+       'MCLM.view.paineis.AbaTrabalho',
+       'MCLM.view.paineis.AbaCatalogo',
        'MCLM.view.paineis.PainelDireito',
        'Ext.plugin.Viewport',
        'MCLM.view.main.MainController',
     ],
+    
     layout: 'border',
     margin: '0 0 0 0',
     controller: 'main',
@@ -22,7 +25,26 @@ Ext.define('MCLM.view.main.TelaPrincipal', {
         bodyPadding: 0
     },
     items: [{
-        xtype: 'painelEsquerdo'
+        
+    	xtype: 'tabpanel',
+
+        region:'west',
+        layout: 'border',
+        floatable: true,
+
+        width: 300,
+        minWidth: 100,
+        maxWidth: 300,
+        collapsed: false,
+        animCollapse: false,   
+
+        items: [{
+        	xtype: 'abaCatalogo'
+        }, {
+            xtype: 'abaTrabalho'
+        }],
+    	
+    	
     },{
         xtype: 'painelCentral', collapsible: false
     },{
