@@ -1,16 +1,34 @@
 Ext.define('MCLM.store.TrabalhoTree', {
     extend: 'Ext.data.TreeStore',
     storeId:'store.trabalhoTree',
+    autoLoad : false,
+    
     
     requires: [
-       'MCLM.model.LayerTreeModel',
-       'Ext.data.proxy.Memory',
+       'MCLM.model.TrabalhoTreeModel',
     ],	    
            
-	model:  'MCLM.model.LayerTreeModel',    
+	model:  'MCLM.model.TrabalhoTreeModel',    
     
-    proxy: { 
-    	type: 'memory' 
+	proxy: {
+        type: 'ajax',
+        reader: {
+            type: 'json'
+        },
+
+        api: {
+            read: 'getCenarioTreeNode',
+            create: 'createCenarioTreeNode',
+            update: 'updateCenarioTreeNode',
+            destroy: 'destroyCenarioTreeNode'
+        },
+               
+        writer: {
+            type:'json',
+            encode:true,
+            rootProperty:'data',
+            writeAllFields: true
+        }        
     },	
 	
     plugins: [{  ptype: 'treefilter', allowParentFolders: true }],
@@ -21,6 +39,6 @@ Ext.define('MCLM.store.TrabalhoTree', {
         index:0,
         expanded: true,
         description : 'Raiz'
-    }
+    },
     
 });

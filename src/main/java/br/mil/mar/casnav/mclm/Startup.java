@@ -60,6 +60,19 @@ public class Startup implements ServletContextListener {
 				loggerDebug("System Administrator created");
 			}
 			
+			/*
+			NodeService ns = new NodeService();
+			List<NodeData> nodes =  new ArrayList<NodeData>( ns.getList() );
+			for ( NodeData node : nodes ) {
+				String uuid = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
+				node.setSerialId( uuid );
+				ns.newTransaction();
+				ns.updateNode(node);
+				System.out.println("Camada " + node.getLayerAlias() + " atualizada.");
+			}
+			*/
+			
+			
 			Config cfg = new ConfigService().getConfig();
 			Configurator.getInstance().updateConfiguration( cfg );
 			

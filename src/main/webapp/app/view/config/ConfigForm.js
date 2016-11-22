@@ -133,8 +133,8 @@ Ext.define('MCLM.view.config.ConfigForm', {
             invalidText: 'Teste'
         }],
     buttons: [{
-        text: 'Fechar',
-            handler: 'onCloseConfigForm'
+          text: 'Fechar',
+          handler: 'onCloseConfigForm'
     	},{
           text: 'Gravar',
           handler : 'onSubmitConfigForm'

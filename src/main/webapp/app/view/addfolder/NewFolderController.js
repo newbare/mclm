@@ -34,10 +34,22 @@ Ext.define('MCLM.view.addfolder.NewFolderController', {
     		
     		var selectedTreeNode = trabalhoTree.getSelectionModel().getSelection()[0];
     		
+    		// Procura o maior ID disponivel.
+        	var trabalhoTree = Ext.getCmp('trabalhoTree');
+        	var root = trabalhoTree.getRootNode();
+        	var y = 0;
+        	root.cascadeBy( function(n) { 
+        		var temp = n.get('id');
+        		if ( temp > y ) y = temp;
+        	});
+        	y++;
+    		
+        	// Cria a nova pasta
             var n = selectedTreeNode.appendChild({
                 text:newFolderNameValue,
                 leaf: false,
-                checked: false
+                checked: false,
+                id : y
             });     		
     		
             me.closeWindow();

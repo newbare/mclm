@@ -21,6 +21,16 @@ Ext.define('MCLM.Map', {
 		graticule: null,
 		geoserverUrl: '',
 		
+		getBaseMapName : function() {
+			return this.baseLayerName;
+		},
+		getBaseServerURL : function() {
+			return this.geoserverUrl;
+		},
+		isBaseMapActive : function() {
+			return this.baseLayer.getVisible();
+		},
+		
 		// --------------------------------------------------------------------------------------------
 		// Cria o Mapa Principal e Camadas auxiliares
 		loadMap : function( container ) {
@@ -185,6 +195,20 @@ Ext.define('MCLM.Map', {
 				Ext.getCmp('mapCenterConfigField').setValue(mapCenterLong + "," + mapCenterLat);
 				Ext.getCmp('mapZoomConfigField').setValue(mapZoom);
 			} catch ( ignored ) { }			
+		},
+		// --------------------------------------------------------------------------------------------
+		// Retorna o centro do mapa
+		getMapCenter : function() {
+			var center = this.map.getView().getCenter();
+			var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
+			mapCenterLong = center2[0];
+			mapCenterLat = center2[1];
+			return mapCenterLong + "," + mapCenterLat;
+		},
+		// --------------------------------------------------------------------------------------------
+		// Retorna o zoom atual do mapa
+		getMapZoom : function() {
+			return this.map.getView().getZoom();
 		},
 		// --------------------------------------------------------------------------------------------
 		// Adiciona uma nova camada ao mapa
@@ -574,15 +598,31 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Apenas para debug. Apagar assim que possível.
-		listLayers : function () {
+		getLayersDetails : function () {
 			var layers = this.map.getLayers();
 			var length = layers.getLength();
+			
+			var result = [];
+			
+			
 			console.log("CAMADAS EXISTENTES NO MAPA: -----------------------");
 			for (var i = 0; i < length; i++) {
 				var layerName = layers.item(i).get('name');
 				var serverUrl = layers.item(i).get('serverUrl');
 				var serialId = layers.item(i).get('serialId');
-				console.log("   > [" + i + "] " + layerName + "   " + serverUrl + "   " + serialId);
+				var alias = layers.item(i).get('alias');
+				var layerOpacity = layers.item(i).getOpacity();
+				
+				var layerDetail = {
+					layerName:layerName, 
+					serverUrl:serverUrl, 
+					serialId:serialId, 
+					alias:alias,
+					layerOpacity: layerOpacity
+				};
+				
+				result.push( layerDetail );
+				console.log( layerDetail );
 			}
 			console.log("---------------------------------------------------");
 		},

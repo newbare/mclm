@@ -101,14 +101,13 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	var trabalhoTree = Ext.getCmp('trabalhoTree');
     	var root = trabalhoTree.getRootNode();
     	var copy = record.copy();    
-    	var x = 0;
-    	
+    	var y = 0;
     	root.cascadeBy( function(n) { 
-    		n.set('id', x);
-    		x++;
+    		var temp = n.get('id');
+    		if ( temp > y ) y = temp;
     	});
-    	
-    	copy.set('id', x);
+    	y++;
+    	copy.set('id', y);
     	root.appendChild( copy );
     },
     // Adiciona uma nova pasta na arvore 

@@ -29,8 +29,6 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
             '#submitNewLayerForm' : {
             	click: this.submitForm 
             },
-            
-            
         });
     },  
     submitForm : function() {

@@ -30,7 +30,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
         items: [{
         	iconCls: 'save-icon',
         	id: 'id800',
-            handler : 'onTreeExpandAll'
+            handler : 'saveScenery'
         },{
         	iconCls: 'reload-icon',
         	id: 'id801',

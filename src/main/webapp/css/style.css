@@ -132,3 +132,8 @@
 	background-image: url('../img/reload.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.filter-icon {
+	background-image: url('../img/filter.svg') !important;
+	background-repeat: no-repeat;
+}

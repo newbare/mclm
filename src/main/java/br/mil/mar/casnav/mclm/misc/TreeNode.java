@@ -1,7 +1,5 @@
 package br.mil.mar.casnav.mclm.misc;
 
-import java.util.UUID;
-
 public class TreeNode {
 	private String id;
 	private boolean leaf;
@@ -38,7 +36,7 @@ public class TreeNode {
 		this.iconCls = "";
 		
 		
-		this.serialId = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+		this.serialId = ute.getData("serialid");
 		
 		this.id = ute.getData("id_node_data");
 		this.leaf = ( this.childrenCount == 0 );

@@ -3,8 +3,8 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
     alias: 'controller.cenario',
 
     closeWindow : function() {
-    	var uploadTifWindow = Ext.getCmp('cenarioWindow');
-    	uploadTifWindow.close();
+    	var cenarioWindow = Ext.getCmp('cenarioWindow');
+    	cenarioWindow.close();
     },
     
     

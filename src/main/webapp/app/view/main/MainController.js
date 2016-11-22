@@ -72,7 +72,7 @@ Ext.define('MCLM.view.main.MainController', {
     	stackWindow = Ext.create('MCLM.view.stack.LayerStack');
     	stackWindow.show();	
     	// Dispara um evento de atualizacao das mini imagens
-    	// quem vai interceptar eh o controller 'LayerStackController' 
+    	// quem vai interceptar eh o controller 'MCLM.view.stack.LayerStackController' 
     	this.fireEvent('mountImagePreview');
 	},
 	// --------------------------------------------------------------------------------------------

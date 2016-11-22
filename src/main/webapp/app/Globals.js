@@ -3,5 +3,6 @@ Ext.define("MCLM.Globals", {
          config : null,
          mapLayerPreview : null,
          btnHeight : 32,
-         btnWidth : 32,   
+         btnWidth : 32,  
+         currentScenery : -1
  });

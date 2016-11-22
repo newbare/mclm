@@ -51,6 +51,9 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	}
     	var me = this;
 	    p = node.parentNode;
+	    
+	    if ( !p ) return true;
+	    
 	    var pChildCheckedCount = 0;
 	    p.suspendEvents();
 	    p.eachChild(function(c) { 
@@ -102,12 +105,54 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	Ext.getCmp('newFolderName').focus(true, 100);    	
     },
     
+    // Carrega um cenario para a area de trabalho. Apaga a area de trabalho atual
     loadScenery : function() {
+    	
+    	MCLM.Globals.currentScenery = 565;
+    	
+    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
+		trabalhoTreeStore.load({
+			params:{cenario: MCLM.Globals.currentScenery}
+		});    	
+    	
+    	/*
     	var cenarioWindow = Ext.getCmp('cenarioWindow');
     	if ( cenarioWindow ) return;
     	cenarioWindow = Ext.create('MCLM.view.cenarios.CenarioWindow');
     	cenarioWindow.show();
+    	*/
     },
+
+    // Salva a area de trabalho atual como um cenario
+    saveScenery : function() {
+    	
+    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
+    	trabalhoTreeStore.sync({
+			 params:{cenario: MCLM.Globals.currentScenery}
+		 });
+    	
+    	/*
+    	var saveCenarioWindow = Ext.getCmp('saveCenarioWindow');
+    	if ( saveCenarioWindow ) return;
+    	saveCenarioWindow = Ext.create('MCLM.view.cenarios.SaveCenarioWindow');
+    	saveCenarioWindow.show();
+    	Ext.getCmp('nomeCenarioID').focus(true, 100);
+    	*/
+
+    	/*
+    	var trabalhoTree = Ext.getCmp('trabalhoTree');
+    	var root = trabalhoTree.getRootNode();
+    	root.cascadeBy( function(n) { 
+    		n.set( 'cenario', MCLM.Globals.currentScenery );
+    	});    	
+    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
+    	MCLM.Globals.currentScenery = 234;
+    	trabalhoTreeStore.save({
+    		params:{cenario: MCLM.Globals.currentScenery}
+    	});
+    	*/    	
+    	
+    },    
     
 	askDeleteLayer: function( record ) {
 		var parentNode = record.parentNode;

@@ -55,6 +55,7 @@ public class NodeService {
 		oldNode.setLayerName( node.getLayerName() );
 		oldNode.setOriginalServiceUrl( node.getOriginalServiceUrl() );
 		oldNode.setServiceUrl( node.getServiceUrl() );
+		oldNode.setSerialId( node.getSerialId() );
 		
 		rep.newTransaction();
 		rep.updateNode( oldNode );

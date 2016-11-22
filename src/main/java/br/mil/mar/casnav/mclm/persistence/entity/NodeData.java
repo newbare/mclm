@@ -1,5 +1,7 @@
 package br.mil.mar.casnav.mclm.persistence.entity;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -52,6 +54,9 @@ public class NodeData {
 	
 	@Column(length=150)
 	private String layerAlias;
+
+	@Column(length=10, name = "serialid")
+	private String serialId;	
 	
 	@Column(name = "read_only")
 	private boolean readOnly;
@@ -70,6 +75,7 @@ public class NodeData {
 		this.layerAlias = layerAlias;
 		this.layerType = layerType;
 		this.readOnly = false;
+		this.serialId = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
 	}
 
 	public int getIdNodeData() {
@@ -167,5 +173,14 @@ public class NodeData {
 	public boolean isReadOnly() {
 		return readOnly;
 	}
+	
+	public String getSerialId() {
+		return serialId;
+	}
+	
+	public void setSerialId(String serialId) {
+		this.serialId = serialId;
+	}
+	
 	
 }

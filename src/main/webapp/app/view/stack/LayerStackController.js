@@ -61,13 +61,13 @@ Ext.define('MCLM.view.stack.LayerStackController', {
     addToLayerStack : function( data ) {
     	// remover este metodo
 		// Adiciona a camada na lista de camadas 
-    	alert("oops. nao esta mais aqui.");
+    	alert("Remover LayerStackController:addToLayerStack");
     },
     // --------------------------------------------------------------------------------------------------------
     removeFromLayerStack : function( layerName ) {
     	// remover este metodo
 		// Remove a camada de lista de camadas 
-    	alert("oops. nao esta mais aqui.")
+    	alert("Remover LayerStackController:removeFromLayerStack");
     },
     // --------------------------------------------------------------------------------------------------------
     setSelectedLayerOpacity : function( value ) {
