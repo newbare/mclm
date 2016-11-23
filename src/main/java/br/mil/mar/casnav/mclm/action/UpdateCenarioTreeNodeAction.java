@@ -5,13 +5,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.opensymphony.xwork2.ActionContext;
 
 @Action (value = "updateCenarioTreeNode", results = {  
-	    @Result(name="ok", type="httpheader", params={"status", "200"}) } ) 
+	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
+		interceptorRefs= { @InterceptorRef("seguranca")	 }
+) 
 
 @ParentPackage("default")
 public class UpdateCenarioTreeNodeAction extends BasicActionClass {
@@ -24,9 +29,19 @@ public class UpdateCenarioTreeNodeAction extends BasicActionClass {
 		try {
 			
 			try {
-				System.out.println("AAAAAAA Update Cenario Node:" + data + " Cenario:" + cenario );
+				System.out.println("UPDATE UPDATE UPDATE UPDATE Cenario Node:" + data + " Cenario:" + cenario );
+				
+				if( !data.startsWith("[") ) data = "["+data+"]";
+				
+				JSONArray array = new JSONArray( data );
+				JSONObject obj = (JSONObject)array.get(0);
+				String text = (String)obj.get("text");
+				System.out.println("------------------------ " + text );				
+				
+				
+				
 			} catch ( Exception e ) {
-				//
+				e.printStackTrace();
 			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);

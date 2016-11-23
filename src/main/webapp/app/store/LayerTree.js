@@ -1,7 +1,7 @@
 Ext.define('MCLM.store.LayerTree', {
     extend: 'Ext.data.TreeStore',
     storeId:'store.layerTree',
-    autoLoad : true,
+    //autoLoad : true,
     autoSync: true,
     requires: [
        'MCLM.model.LayerTreeModel'
@@ -33,7 +33,7 @@ Ext.define('MCLM.store.LayerTree', {
         text: 'APOLO',
         id: 0,
         index:0,
-        expanded: true,
+        //expanded: true,
         description : 'Raiz'
     },
     

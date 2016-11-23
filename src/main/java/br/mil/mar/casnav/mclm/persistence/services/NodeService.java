@@ -124,7 +124,7 @@ public class NodeService {
 		for ( UserTableEntity ute : utes ) {
 			TreeNode tn = new TreeNode( ute );
 			JSONObject itemObj = new JSONObject( tn );
-            arrayObj.put( itemObj );				
+            arrayObj.put( itemObj );		
 		}
 		
 		return arrayObj.toString();

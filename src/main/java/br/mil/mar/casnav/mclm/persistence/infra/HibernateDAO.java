@@ -123,6 +123,7 @@ public class HibernateDAO<T> implements IDao<T>  {
 			estimatedTime = System.nanoTime() - startTime;
 			return retorno;
 		} catch (HibernateException e) {
+			e.printStackTrace();
 			throw new NotFoundException( e.getMessage() );
 		} 		
 	}

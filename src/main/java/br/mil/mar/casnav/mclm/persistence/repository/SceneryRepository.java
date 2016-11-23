@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
-import br.mil.mar.casnav.mclm.persistence.entity.SceneryLayer;
+import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.InsertException;
@@ -37,13 +37,13 @@ public class SceneryRepository extends BasicRepository {
 		DaoFactory<Scenery> df = new DaoFactory<Scenery>();
 		IDao<Scenery> fm = df.getDao(this.session, Scenery.class);
 
-		Set<SceneryLayer> layers = scenery.getLayers();
-		scenery.setLayers( new HashSet<SceneryLayer>() );
+		Set<SceneryNode> layers = scenery.getNodes();
+		scenery.setNodes( new HashSet<SceneryNode>() );
 		
 		try {
 			fm.insertDO(scenery);
 			
-			scenery.setLayers(layers);
+			scenery.setNodes(layers);
 			fm.updateDO( scenery );
 			
 			commit();
@@ -83,6 +83,20 @@ public class SceneryRepository extends BasicRepository {
 		closeSession();
 		return scenery;
 	}
+
+	public Set<Scenery> getList( int idUser ) throws Exception {
+		DaoFactory<Scenery> df = new DaoFactory<Scenery>();
+		IDao<Scenery> fm = df.getDao(this.session, Scenery.class);
+		Set<Scenery> scenery = null;
+		try {
+			scenery = new HashSet<Scenery>( fm.getList("select * from sceneries where id_user=" + idUser) );
+		} catch ( Exception e ) {
+			closeSession();
+			throw e;
+		}
+		closeSession();
+		return scenery;
+	}	
 	
 	public Scenery getScenery( String name ) throws Exception {
 		DaoFactory<Scenery> df = new DaoFactory<Scenery>();

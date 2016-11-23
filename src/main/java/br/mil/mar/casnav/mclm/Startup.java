@@ -9,11 +9,8 @@ import javax.servlet.annotation.WebListener;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
-import br.mil.mar.casnav.mclm.persistence.entity.User;
-import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
 import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
-import br.mil.mar.casnav.mclm.persistence.services.UserService;
 
 
 @WebListener
@@ -30,7 +27,6 @@ public class Startup implements ServletContextListener {
     	String path = context.getRealPath("/");
     	System.setProperty("rootPath", path );
 
-    	UserService us;
     	try {
        
     		
@@ -45,34 +41,7 @@ public class Startup implements ServletContextListener {
     		
     		ConnFactory.setCredentials(user, passwd, database, port);
 
-			us = new UserService();
-			try {
-				us.getList().size();
-			} catch (NotFoundException ignored ) {
-				// No users found. We need an Admin!
-				User usr = new User();
-				usr.setFullName("System Administrator");
-				usr.setLoginName("admin");
-				usr.setPassword("admin");
-				usr.setUserMail("no.mail@localhost");
-				us.newTransaction();
-				us.insertUser(usr);
-				loggerDebug("System Administrator created");
-			}
-			
-			/*
-			NodeService ns = new NodeService();
-			List<NodeData> nodes =  new ArrayList<NodeData>( ns.getList() );
-			for ( NodeData node : nodes ) {
-				String uuid = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
-				node.setSerialId( uuid );
-				ns.newTransaction();
-				ns.updateNode(node);
-				System.out.println("Camada " + node.getLayerAlias() + " atualizada.");
-			}
-			*/
-			
-			
+		
 			Config cfg = new ConfigService().getConfig();
 			Configurator.getInstance().updateConfiguration( cfg );
 			

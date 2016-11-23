@@ -5,13 +5,15 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import br.mil.mar.casnav.mclm.persistence.entity.User;
+import br.mil.mar.casnav.mclm.misc.User;
+
 
 public class BasicActionClass {
 	private User loggedUser;
@@ -42,7 +44,10 @@ public class BasicActionClass {
 	}
 	
 	public User getLoggedUser() {
-		loggedUser = (User)ActionContext.getContext().getSession().get("loggedUser");
+		HttpServletRequest request = ServletActionContext.getRequest();
+		HttpSession session = request.getSession();		
+		
+		loggedUser = (User)session.getAttribute("loggedUser");
 		return loggedUser;
 	}
 	

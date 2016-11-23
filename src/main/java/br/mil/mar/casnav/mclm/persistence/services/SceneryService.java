@@ -2,8 +2,8 @@ package br.mil.mar.casnav.mclm.persistence.services;
 
 import java.util.Set;
 
+import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
-import br.mil.mar.casnav.mclm.persistence.entity.User;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.UpdateException;
@@ -16,28 +16,6 @@ public class SceneryService {
 		this.rep = new SceneryRepository();
 	}
 
-	public void setActive( int idScenery, User loggedUser ) throws Exception {
-		Scenery currentActive = loggedUser.getActiveScenery();
-		Scenery toActivate = getScenery( idScenery );
-		
-		currentActive.setActive( false );
-		toActivate.setActive( true );
-
-		newTransaction();
-		updateScenery( currentActive );
-		
-		newTransaction();
-		updateScenery( toActivate );
-		
-		// Change in scenery user list
-		for ( Scenery userScenery : loggedUser.getSceneries()  ) {
-			userScenery.setActive( false );
-			if ( userScenery.getIdScenery() == idScenery ) {
-				userScenery.setActive( true );
-			}
-		}
-		
-	}
 	
 	public void clone( int idScenery, String sceneryName, String mapCenter, String zoomLevel, User user ) throws Exception {
 		/*
@@ -122,8 +100,11 @@ public class SceneryService {
 	}
 
 	public Set<Scenery> getList( ) throws Exception {
-		return rep.getList( );
+		return rep.getList();
 	}
 
+	public Set<Scenery> getList( int idUser ) throws Exception {
+		return rep.getList( idUser );
+	}
 	
 }

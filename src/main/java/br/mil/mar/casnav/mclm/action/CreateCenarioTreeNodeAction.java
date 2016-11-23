@@ -5,13 +5,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.json.JSONObject;
 
 import com.opensymphony.xwork2.ActionContext;
 
 @Action (value = "createCenarioTreeNode", results = {  
-	    @Result(name="ok", type="httpheader", params={"status", "200"}) } ) 
+	    @Result(name="ok", type="httpheader", params={"status", "200"})},
+		interceptorRefs= { @InterceptorRef("seguranca")	 }
+) 
 
 @ParentPackage("default")
 public class CreateCenarioTreeNodeAction extends BasicActionClass {
@@ -25,9 +29,17 @@ public class CreateCenarioTreeNodeAction extends BasicActionClass {
 		try {
 			
 			try {
+				// {"text":"Teste123","leaf":false,"id":1,"index":0,"serviceUrl":"","layerName":"","originalServiceUrl":"","layerType":"","serialId":"","version":"","readOnly":false,"parentId":0} Cenario:-1
+
 				System.out.println("AAAAAAA Create Cenario Node:" + data + " Cenario:" + cenario );
+				
+				JSONObject obj = new JSONObject( data );
+				String text = (String)obj.get("text");
+				System.out.println("------------------------ " + text );
+				
+				
 			} catch ( Exception e ) {
-				//
+				e.printStackTrace();
 			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);

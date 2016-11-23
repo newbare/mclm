@@ -25,11 +25,10 @@
 		<property name="hibernate.c3p0.debugUnreturnedConnectionStackTraces">false</property> 
 		<property name="hibernate.c3p0.unreturnedConnectionTimeout">40</property>
 		                                
-		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.User"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Config"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.NodeData"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Scenery"/>
-		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.SceneryLayer"/>
+		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.SceneryNode"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Server"/>		
 		
 	</session-factory> 

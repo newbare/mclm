@@ -37,7 +37,7 @@ Ext.define('MCLM.store.TrabalhoTree', {
         text: 'Área de Trabalho',
         id: 0,
         index:0,
-        expanded: true,
+        //expanded: true,
         description : 'Raiz'
     },
     

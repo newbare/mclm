@@ -8,13 +8,10 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -32,9 +29,6 @@ public class Scenery {
 	@Column(name="id_scenery")
 	private int idScenery;
 	
-	@Column
-	private boolean active;
-	
 	@Column(name="creation_date")
 	@Type(type="timestamp")
 	private Date creationDate;
@@ -47,22 +41,36 @@ public class Scenery {
 
 	@Column(name="map_center", length=100)
 	private String mapCenter = "-48.12,-15.8";	
+
 	
-	@ManyToOne()
-	@Cascade(org.hibernate.annotations.CascadeType.ALL)
-	@JoinColumn(name="id_user", foreignKey = @ForeignKey(name = "fk_user_scenery"))
-	private User user;	
+	@Column(name="base_map", length=100)
+	private String baseMap;	
+	
+	@Column(name="base_server_url", length=100)
+	private String baseServerURL;	
+	
+    @Column
+	private Boolean baseMapActive;	
+
+    @Column(name="is_public")
+	private Boolean isPublic;	    
+    
+	@Column(name="id_user")
+	private Integer idUser;	
 	
     @OneToMany(orphanRemoval=true,  mappedBy="scenery", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Set<SceneryLayer> layers;
+    private Set<SceneryNode> nodes;
 
-    @Column(length=10)
-	private String graticule = "false";
+    @Column
+	private Boolean graticule;
 
     public Scenery() {
-		creationDate = Calendar.getInstance().getTime();
-		layers = new HashSet<SceneryLayer>();
+    	this.creationDate = Calendar.getInstance().getTime();
+		this.nodes = new HashSet<SceneryNode>();
+		this.graticule = false;
+		this.baseMapActive = true;
+		this.isPublic = false;
 	}
     
     public boolean isNodeInThisScenery( int nodeId ) {
@@ -92,13 +100,6 @@ public class Scenery {
     	}
     }
     */
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
 
 	public Date getCreationDate() {
 		return creationDate;
@@ -112,22 +113,14 @@ public class Scenery {
 		this.idScenery = idScenery;
 	}
 
-	public Set<SceneryLayer> getLayers() {
-		return layers;
-	}
-	
-	public void setLayers(Set<SceneryLayer> layers) {
-		this.layers = layers;
-	}
-	
-	public User getUser() {
-		return user;
+	public Set<SceneryNode> getNodes() {
+		return nodes;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}	
-	
+	public void setNodes(Set<SceneryNode> nodes) {
+		this.nodes = nodes;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 	    if (this == obj) return true;
@@ -161,12 +154,52 @@ public class Scenery {
 		this.mapCenter = mapCenter;
 	}
 
-	public void setGraticule(String graticule) {
-		this.graticule = graticule;
-		
+	public String getBaseMap() {
+		return baseMap;
 	}
 
-	public String getGraticule() {
+	public void setBaseMap(String baseMap) {
+		this.baseMap = baseMap;
+	}
+
+	public String getBaseServerURL() {
+		return baseServerURL;
+	}
+
+	public void setBaseServerURL(String baseServerURL) {
+		this.baseServerURL = baseServerURL;
+	}
+
+	public Boolean getBaseMapActive() {
+		return baseMapActive;
+	}
+
+	public void setBaseMapActive(Boolean baseMapActive) {
+		this.baseMapActive = baseMapActive;
+	}
+
+	public Boolean getGraticule() {
 		return graticule;
 	}
+
+	public void setGraticule(Boolean graticule) {
+		this.graticule = graticule;
+	}
+
+	public Boolean getIsPublic() {
+		return isPublic;
+	}
+
+	public void setIsPublic(Boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	public void setIdUser(Integer idUser) {
+		this.idUser = idUser;
+	}
+	
+	public Integer getIdUser() {
+		return idUser;
+	}
+
 }
