@@ -6,6 +6,7 @@ import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.UpdateException;
 import br.mil.mar.casnav.mclm.persistence.repository.SceneryRepository;
 
@@ -70,7 +71,7 @@ public class SceneryService {
 	*/
 	}	
 
-	public Scenery getScenery(int idScenery) throws Exception{
+	public Scenery getScenery(int idScenery) throws NotFoundException  {
 		return rep.getScenery(idScenery);
 	}
 
@@ -106,5 +107,34 @@ public class SceneryService {
 	public Set<Scenery> getList( int idUser ) throws Exception {
 		return rep.getList( idUser );
 	}
-	
+
+
+	public String createScenery(Boolean isPublic, Boolean graticule, String nomeCenario, String mapCenter, String description, String mapaBase,
+			String servidorBase, Integer mapZoom, Boolean mapaBaseAtivo, User user) {
+		
+		Scenery scenery = new Scenery();
+		scenery.setBaseMap(mapaBase);
+		scenery.setBaseMapActive(mapaBaseAtivo);
+		scenery.setBaseServerURL( servidorBase );
+		scenery.setGraticule( graticule );
+		scenery.setIdUser( user.getIdUser() );
+		scenery.setIsPublic( false );
+		scenery.setMapCenter( mapCenter );
+		scenery.setSceneryName( nomeCenario );
+		scenery.setZoomLevel( mapZoom );
+		scenery.setDescription( description );
+		
+		String result;
+		try {
+			SceneryService ss = new SceneryService();
+			ss.insertScenery( scenery );
+			result = "{\"success\": true, \"msg\": \"Cenário criado com sucesso.\", \"idScenery\":" + scenery.getIdScenery() + "}";
+		} catch ( Exception e ) {
+			result = "{\"error\": true, \"msg\": \"" + e.getMessage() + "\"}";
+		}
+		
+		return result;
+	}
+
+
 }

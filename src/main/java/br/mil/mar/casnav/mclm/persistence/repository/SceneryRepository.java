@@ -9,6 +9,7 @@ import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.InsertException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.UpdateException;
 import br.mil.mar.casnav.mclm.persistence.infra.DaoFactory;
 import br.mil.mar.casnav.mclm.persistence.infra.IDao;
@@ -56,13 +57,13 @@ public class SceneryRepository extends BasicRepository {
 		return scenery;
 	}
 	
-	public Scenery getScenery( int sceneryId ) throws Exception {
+	public Scenery getScenery( int sceneryId ) throws NotFoundException {
 		DaoFactory<Scenery> df = new DaoFactory<Scenery>();
 		IDao<Scenery> fm = df.getDao(this.session, Scenery.class);
 		Scenery scenery = null;
 		try {
 			scenery = fm.getDO(sceneryId);
-		} catch ( Exception e ) {
+		} catch ( NotFoundException e ) {
 			closeSession();		
 			throw e;
 		} 

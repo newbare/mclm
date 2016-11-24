@@ -22,7 +22,9 @@ import br.mil.mar.casnav.mclm.persistence.services.ServerService;
 public class NewExternalSourceAction extends BasicActionClass {
 	
 	public String execute(){
-
+		
+		// TODO: Passar todo esse codigo para o serviço.
+		
 		try { 
 			String result = "{ \"success\": true, \"msg\": \"Fonte de Dados criada com sucesso.\" }";
 			

@@ -1,5 +1,5 @@
 Ext.define('MCLM.view.paineis.LayerTree', {
-	extend: 'Ext.tree.Panel',
+	extend: 'Ext.tree.TreePanel',
 	xtype: 'view.layerTree',
 	id: 'layerTree',
 	

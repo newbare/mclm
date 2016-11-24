@@ -46,12 +46,15 @@ Ext.define('MCLM.view.addfolder.NewFolderController', {
     		
         	// Cria a nova pasta
             var n = selectedTreeNode.appendChild({
-                text:newFolderNameValue,
-                leaf: false,
-                checked: false,
-                id : y
+                text		: newFolderNameValue,
+                layerAlias 	: newFolderNameValue,
+                leaf		: false,
+                checked		: false,
+                id 			: y,
+                idNodeParent: selectedTreeNode.get('id'),
+                layerType	: 'FDR'
             });     		
-    		
+    		// Não ha necessidade de enviar ao servidor agora. O usuario vai salvar tudo junto.
             me.closeWindow();
     		return true;
     	}

@@ -13,7 +13,7 @@ Ext.define('MCLM.view.cenarios.SaveCenarioForm', {
         labelWidth: 150
     },
     
-    url: 'saveCenario',
+    url: 'createCenario',
     
     items: [{
         fieldLabel: 'Nome do Cenário',
@@ -61,7 +61,24 @@ Ext.define('MCLM.view.cenarios.SaveCenarioForm', {
         id:'mapaBaseAtivoID',
         name: 'mapaBaseAtivo',
         allowBlank : false,
+        xtype : 'hidden',
         readOnly: true,
+    },{
+        fieldLabel: 'Grade Ativa?',
+        width: 330,
+        id:'gradeAtivaID',
+        name: 'gradeAtiva',
+        xtype : 'hidden',
+        allowBlank : false,
+        readOnly: true,
+    },{
+        fieldLabel: 'Público?',
+        width: 330,
+        id:'isPublicID',
+        name: 'isPublic',
+        allowBlank : false,
+        xtype : 'hidden',
+        value : 'false'
     }],
     
     buttons: [{

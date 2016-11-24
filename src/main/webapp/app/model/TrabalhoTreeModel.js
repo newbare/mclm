@@ -9,6 +9,10 @@ Ext.define('MCLM.model.TrabalhoTreeModel', {
         { name: 'layerType', type: 'string' },
         { name: 'serialId', type: 'string' },
         { name: 'version', type: 'string' },
+        { name: 'layerAlias', type: 'string' },
+        { name: 'description', type: 'string' },
+        { name: 'institute', type: 'string' },
+        { name: 'idNodeParent', type: 'int' },
         { name: 'readOnly', type: 'boolean' }
 	],
 

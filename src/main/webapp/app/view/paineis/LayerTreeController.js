@@ -108,6 +108,8 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	});
     	y++;
     	copy.set('id', y);
+    	copy.set('idNodeParent', 0);
+    	copy.set('readOnly', false);
     	root.appendChild( copy );
     },
     // Adiciona uma nova pasta na arvore 

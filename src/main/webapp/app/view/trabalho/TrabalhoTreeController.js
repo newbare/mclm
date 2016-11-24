@@ -70,9 +70,9 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	var me = this;
 	    var menu_grid = new Ext.menu.Menu({ 
 	    	items: [
-	          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } },
+  	          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { me.addNewFolder(record); } },
 	          { xtype: 'menuseparator' },
-	          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { me.addNewFolder(record); } },
+	          { iconCls: 'delete-icon', text: 'Remover', handler: function() { me.askDeleteLayer( record ); } },
 	        ]
 	    });
 	    var position = [e.getX()-10, e.getY()-10];
@@ -104,16 +104,34 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	
     	Ext.getCmp('newFolderName').focus(true, 100);    	
     },
-    
+    reloadScenery : function() {
+    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
+		trabalhoTreeStore.load({
+			params:{cenario: MCLM.Globals.currentScenery}
+		});      	
+    },    
     // Carrega um cenario para a area de trabalho. Apaga a area de trabalho atual
     loadScenery : function() {
+
+    	/****
+    	 * 
+    	 * Parei quando ia carregar o cenario na Action
+    	 * Load Cenario Tree: Node:0 Cenario:14
+    	 * 
+    	 * em resposta ao reloadScenery().
+    	 * Preciso enviar o cenario inteiro e suas pastas.
+    	 * 
+    	 */
     	
-    	MCLM.Globals.currentScenery = 565;
     	
+    	
+    	// Precisa perguntar ao usuario ....................
+    	MCLM.Globals.currentScenery = 13;
     	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
 		trabalhoTreeStore.load({
 			params:{cenario: MCLM.Globals.currentScenery}
 		});    	
+		// --------------------------------------------------
     	
     	/*
     	var cenarioWindow = Ext.getCmp('cenarioWindow');
@@ -125,39 +143,50 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 
     // Salva a area de trabalho atual como um cenario
     saveScenery : function() {
-    	
-    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
-    	trabalhoTreeStore.sync({
-			 params:{cenario: MCLM.Globals.currentScenery}
-		 });
-    	
-    	/*
-    	var saveCenarioWindow = Ext.getCmp('saveCenarioWindow');
-    	if ( saveCenarioWindow ) return;
-    	saveCenarioWindow = Ext.create('MCLM.view.cenarios.SaveCenarioWindow');
-    	saveCenarioWindow.show();
-    	Ext.getCmp('nomeCenarioID').focus(true, 100);
-    	*/
+    	var me = this;
+    	if ( MCLM.Globals.currentScenery == -1 ) {
+    		// Nao temos cenario. Abre a janela para o usuario criar um.
+    		// Apos o submit do form do cenario novo eh necessario enviar os dados
+    		// da arvore. Isso esta sendo feito pelo evento do submit do form em
+    		// MCLM.view.cenarios.SaveCenarioController
+	    	var saveCenarioWindow = Ext.getCmp('saveCenarioWindow');
+	    	if ( saveCenarioWindow ) return;
+	    	saveCenarioWindow = Ext.create('MCLM.view.cenarios.SaveCenarioWindow');
+	    	saveCenarioWindow.show();
+	    	
+			Ext.getCmp('mapCenterConfigField').setValue( MCLM.Map.getMapCenter() );
+			Ext.getCmp('mapZoomConfigField').setValue( MCLM.Map.getMapZoom() );	    	
+			Ext.getCmp('mapaBaseID').setValue( MCLM.Map.getBaseMapName() );
+			Ext.getCmp('servidorBaseID').setValue( MCLM.Map.getBaseServerURL() );
+			Ext.getCmp('mapaBaseAtivoID').setValue( MCLM.Map.isBaseMapActive() );
+			Ext.getCmp('gradeAtivaID').setValue( MCLM.Map.isGraticuleActive() );
+			
+			Ext.getCmp('nomeCenarioID').focus(true, 100);
+	    	
+    	} else {
+    		// Salva o cenario atual.
+	    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
+	    	trabalhoTreeStore.sync({
+				 params: {
+				 	cenario: MCLM.Globals.currentScenery
+				 },
+			     success: function (batch, options) {
+				    Ext.Msg.alert('Sucesso', action.result.msg);
+				    me.reloadScenery();
+				 },
+				 failure: function (batch, options){
+				    Ext.Msg.alert('Falha ao gravar camadas do Cenário', action.result.msg);
+				 }	
+	    	});
+	    	
+    	}
 
-    	/*
-    	var trabalhoTree = Ext.getCmp('trabalhoTree');
-    	var root = trabalhoTree.getRootNode();
-    	root.cascadeBy( function(n) { 
-    		n.set( 'cenario', MCLM.Globals.currentScenery );
-    	});    	
-    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
-    	MCLM.Globals.currentScenery = 234;
-    	trabalhoTreeStore.save({
-    		params:{cenario: MCLM.Globals.currentScenery}
-    	});
-    	*/    	
-    	
+   	
     },    
     
 	askDeleteLayer: function( record ) {
-		var parentNode = record.parentNode;
-		var data = record.data;
-		var name = data.layerAlias;
+		
+		var name = record.data.layerAlias;
 		var me = this;
 
 		// nao pode apagar o root
@@ -166,11 +195,11 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 			return true;
 		}
 		
-		Ext.Msg.confirm('Apagar Camada', 'Deseja realmente apagar a Camada "' + name + '" ?', function( btn ){
+		Ext.Msg.confirm('Apagar Camada', 'Deseja realmente remover a Camada/Pasta "' + name + '"  do cenário atual?', function( btn ){
 			   if( btn === 'yes' ){
 				   record.set("checked",false);
 				   me.clearCheckToTheRoot( record );
-				   me.deleteLayer( parentNode, data );
+				   me.deleteLayer( record );
 			   } else {
 			       return;
 			   }
@@ -178,19 +207,14 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		
 	},
 	
-	// Efetivamente apaga uma camada
-	deleteLayer : function ( parentNode, data ) {
-		var nodeId = data.id;
-		var layerName = data.layerName;
-		var me = this;
-		
- 	   var layerTreeStore = Ext.getStore('store.trabalhoTree');
-	   layerTreeStore.load({ node: parentNode });
-	   MCLM.Map.removeLayer( layerName );
-		
+	// Efetivamente apaga um no da arvore
+	deleteLayer : function ( record ) {
+		var layerName = record.data.layerName;
+ 	   	MCLM.Map.removeLayer( layerName );		
+		record.parentNode.removeChild(record);
 	},
-	
 
+    
 	// Responde a mudanca de estado de um no ( selecionado/nao selecionado )
 	toggleNode: function( node ) {
 		var checked = node.get('checked');

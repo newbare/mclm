@@ -1,8 +1,10 @@
 package br.mil.mar.casnav.mclm.persistence.repository;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
@@ -33,27 +35,25 @@ public class SceneryNodeRepository extends BasicRepository {
 	}
 
 	
-	public void insertSceneryNodeList(Set<SceneryNode> SceneryNodeList) throws Exception {
-		/*
+	public void insertSceneryNodeList(List<SceneryNode> sceneryNodeList) throws Exception {
+		
 		DaoFactory<SceneryNode> df = new DaoFactory<SceneryNode>();
 		IDao<SceneryNode> fm = df.getDao(this.session, SceneryNode.class);
 
-		DaoFactory<Node> nf = new DaoFactory<Node>();
-		IDao<Node> nd = nf.getDao(this.session, Node.class);
+		DaoFactory<Scenery> nf = new DaoFactory<Scenery>();
+		IDao<Scenery> nd = nf.getDao(this.session, Scenery.class);
 		
 		
 		try {
-			for( SceneryNode sl : SceneryNodeList ) {
+			for( SceneryNode sl : sceneryNodeList ) {
 				
 				try {
-					Node node = nd.getDO( sl.getNode().getIdNode() );
-					sl.setNode(node);
-					System.out.println(">>> " + node.getIdNode() );
+					Scenery scenery = nd.getDO( sl.getScenery().getIdScenery() );
+					sl.setScenery(scenery);
 				} catch ( Exception nfe ) { 
 					//
 				}
 				fm.insertDO( sl );
-				
 			}
 			commit();
 		} catch (InsertException e) {
@@ -62,7 +62,7 @@ public class SceneryNodeRepository extends BasicRepository {
 			throw e;
 		}
 		closeSession();
-		*/
+		
 	}
 	
 	

@@ -1,5 +1,5 @@
 Ext.define('MCLM.view.trabalho.TrabalhoTree', {
-	extend: 'Ext.tree.Panel',
+	extend: 'Ext.tree.TreePanel',
 	xtype: 'view.trabalhoTree',
 	id: 'trabalhoTree',
     
@@ -18,9 +18,17 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
     viewConfig: {
         plugins: {
             ptype: 'treeviewdragdrop'
-        }
+        },
+        listeners: {       
+        	// Evento apos o usuario arrastar um no da arvore para baixo de outro no.
+        	// Nao deu certo colocar no Controller.
+        	drop: function (node, data, overModel, dropPosition) {
+        		var theNode = data.records[0];
+        		theNode.data.idNodeParent = overModel.data.id;
+        	},  
+       	
+        } 
     },        
-    
     useArrows: true,
     border:false,
     frame : false,
@@ -40,6 +48,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
         
     
     listeners: {
+    
     	itemclick: 'onLayerTreeItemClick',
         checkchange: 'onLayerTreeCheckChange',
         itemcontextmenu: 'onContextMenu',

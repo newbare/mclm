@@ -49,6 +49,9 @@ public class Scenery {
 	@Column(name="base_server_url", length=100)
 	private String baseServerURL;	
 	
+	@Column(columnDefinition = "TEXT")
+	private String description;		
+	
     @Column
 	private Boolean baseMapActive;	
 
@@ -73,12 +76,10 @@ public class Scenery {
 		this.isPublic = false;
 	}
     
-    public boolean isNodeInThisScenery( int nodeId ) {
-    	/*
-    	for ( SceneryLayer layer : layers ) {
-    		if ( layer.getNode().getIdNode() == nodeId ) return true;
+    public boolean isNodeInThisScenery( int idSceneryNode ) {
+    	for ( SceneryNode node : nodes ) {
+    		if ( node.getIdSceneryNode() == idSceneryNode ) return true;
     	}
-    	*/
     	return false;
     }
     
@@ -200,6 +201,14 @@ public class Scenery {
 	
 	public Integer getIdUser() {
 		return idUser;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

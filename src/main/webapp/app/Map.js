@@ -297,6 +297,9 @@ Ext.define('MCLM.Map', {
 				this.graticuleEnabled = true;
 			}	
 		},		
+		isGraticuleActive : function() {
+			return this.graticuleEnabled;
+		},
 		// --------------------------------------------------------------------------------------------
 		// Remove uma camada do mapa
 		removeLayer : function ( layerName ) {

@@ -8,10 +8,10 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.opensymphony.xwork2.ActionContext;
+
+import br.mil.mar.casnav.mclm.persistence.services.SceneryNodeService;
 
 @Action (value = "updateCenarioTreeNode", results = {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
@@ -24,24 +24,14 @@ public class UpdateCenarioTreeNodeAction extends BasicActionClass {
 	private Integer cenario;
 	
 	public String execute () {
-		String resp = "";
+		String resp;
 		
 		try {
-			
 			try {
-				System.out.println("UPDATE UPDATE UPDATE UPDATE Cenario Node:" + data + " Cenario:" + cenario );
-				
-				if( !data.startsWith("[") ) data = "["+data+"]";
-				
-				JSONArray array = new JSONArray( data );
-				JSONObject obj = (JSONObject)array.get(0);
-				String text = (String)obj.get("text");
-				System.out.println("------------------------ " + text );				
-				
-				
-				
+				SceneryNodeService sns = new SceneryNodeService();
+				resp = sns.updateOrCreateNodes(data, cenario);
 			} catch ( Exception e ) {
-				e.printStackTrace();
+				resp = "{ \"error\": true, \"msg\": \"" + e.getMessage() + "\" }";
 			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
