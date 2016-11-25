@@ -15,7 +15,9 @@ Ext.define('MCLM.store.TrabalhoTree', {
         reader: {
             type: 'json'
         },
-
+		extraParams: {
+			cenario: MCLM.Globals.currentScenery
+		},
         api: {
             read: 'getCenarioTreeNode',
             create: 'createCenarioTreeNode',
@@ -37,8 +39,15 @@ Ext.define('MCLM.store.TrabalhoTree', {
         text: 'Área de Trabalho',
         id: 0,
         index:0,
-        //expanded: true,
         description : 'Raiz'
     },
     
+	listeners: {
+		beforeload : function( store, operation, options ) {
+			store.proxy.extraParams.cenario = MCLM.Globals.currentScenery;
+		}, 
+        load: function(store, records){
+        	//console.log( records );
+    	}			
+	}     
 });

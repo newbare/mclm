@@ -20,11 +20,11 @@ public class ClientAccessInterceptor implements Interceptor {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		
 		HttpSession session = request.getSession();
-		System.out.println( "[" + session.getId() +  "] [" + invocation.getAction().getClass().getSimpleName() + "] [" + request.getRequestURI() + "]");
+		//System.out.println( "[" + session.getId() +  "] [" + invocation.getAction().getClass().getSimpleName() + "] [" + request.getRequestURI() + "]");
 
 		User loggedUser = (User)session.getAttribute("loggedUser");
 		if (loggedUser == null) {
-			System.out.println(" > Asking user to APOLO...");
+			//System.out.println(" > Asking user to APOLO...");
 			
 			User user = new User();
 			user.setIdUser(8658);
@@ -40,7 +40,7 @@ public class ClientAccessInterceptor implements Interceptor {
 			}
 
 			session.setAttribute("loggedUser", user);	
-			System.out.println(" > Found User: " + user.getIdUser() );
+			//System.out.println(" > Found User: " + user.getIdUser() );
 			
 			// Quando nao encontrar usuario logado no APOLO...
 			// HttpServletResponse response = ServletActionContext.getResponse();
@@ -48,7 +48,7 @@ public class ClientAccessInterceptor implements Interceptor {
 			// response.setStatus( HttpServletResponse.SC_FORBIDDEN );
 			//return "notLogged";
 		} else {
-			System.out.println(" > Logged User: " + loggedUser.getIdUser() );
+			//System.out.println(" > Logged User: " + loggedUser.getIdUser() );
 		}
 		
 		

@@ -1,5 +1,5 @@
 Ext.define('MCLM.model.LayerTreeModel', {
-    extend: 'Ext.data.Model',
+    extend: 'Ext.data.TreeModel',
 	fields: [
          { name: 'index', type: 'int' },
          { name: 'text', type: 'string' },

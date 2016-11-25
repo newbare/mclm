@@ -4,7 +4,7 @@ Ext.define('MCLM.view.servers.ServersGrid', {
 	id: 'serversGrid',
 	border: true,
 	title : '',
-	store : 'store.externalsource', // <<<<< Problema com o STORE
+	store : 'store.externalsource', 
     frame: false,
     margin: "0 0 0 0", 
     flex:1,

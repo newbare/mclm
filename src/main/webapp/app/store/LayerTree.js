@@ -39,7 +39,7 @@ Ext.define('MCLM.store.LayerTree', {
     
 	listeners: {
         load: function(store, records){
-        	//
+        	//console.log( records );
     	}			
 	} 
     

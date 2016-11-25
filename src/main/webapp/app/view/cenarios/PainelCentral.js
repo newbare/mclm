@@ -6,5 +6,15 @@ Ext.define('MCLM.view.cenarios.PainelCentral', {
 	margin: '0 0 0 0',
 	layout:'fit',
 	id: 'cenariosPainelCentral',
-	html : 'Teste1'
+	html : '',
+    buttons: [{
+			  // Interceptado pelo controller 'MCLM.view.cenarios.CenarioController'	
+	        text: 'Cancelar',
+	        id : 'closeLoadSceneryWindow'
+	    },{
+			  // Interceptado pelo controller 'MCLM.view.cenarios.CenarioController'	
+	        text: 'Carregar',
+	        id : 'loadSceneryToWork'
+	    }
+    ]	
 });

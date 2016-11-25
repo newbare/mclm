@@ -30,6 +30,9 @@ public class SceneryNode {
 	@Column(name="id_node_parent")
 	private int idNodeParent;
 
+	@Column(name="id_node")
+	private int id;
+
 	@Column(name="index_order")
 	private int indexOrder;	
 	
@@ -61,12 +64,12 @@ public class SceneryNode {
 	@Column(length=10, name = "serialid")
 	private String serialId;	
 	
-	@Column(length=10, name = "reference_layer_serial")
-	private String referenceLayerSerial;
-	
 	@Column(name = "read_only")
 	private boolean readOnly;
 
+	@Column
+	private boolean selected;	
+	
 	@Column
 	private int layerStackIndex = 0;
 
@@ -82,7 +85,7 @@ public class SceneryNode {
 	private Scenery scenery;		
 	
 	public SceneryNode( int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, 
-			String layerAlias, LayerType layerType, String referenceLayerSerial ) {
+			String layerAlias, LayerType layerType ) {
 		this.idNodeParent = idNodeParent;
 		this.originalServiceUrl = originalServiceUrl;
 		this.description = description;
@@ -91,7 +94,6 @@ public class SceneryNode {
 		this.layerAlias = layerAlias;
 		this.layerType = layerType;
 		this.readOnly = false;
-		this.referenceLayerSerial = referenceLayerSerial;
 		this.serialId = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
 	}
 
@@ -215,14 +217,6 @@ public class SceneryNode {
 		this.serialId = serialId;
 	}
 
-	public String getReferenceLayerSerial() {
-		return referenceLayerSerial;
-	}
-
-	public void setReferenceLayerSerial(String referenceLayerSerial) {
-		this.referenceLayerSerial = referenceLayerSerial;
-	}
-
 	public Scenery getScenery() {
 		return scenery;
 	}
@@ -230,6 +224,21 @@ public class SceneryNode {
 	public void setScenery(Scenery scenery) {
 		this.scenery = scenery;
 	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 }

@@ -126,7 +126,6 @@ public class NodeService {
 			JSONObject itemObj = new JSONObject( tn );
             arrayObj.put( itemObj );		
 		}
-		
 		return arrayObj.toString();
 		
 	}

@@ -13,29 +13,23 @@ import com.opensymphony.xwork2.ActionContext;
 
 import br.mil.mar.casnav.mclm.persistence.services.SceneryService;
 
-@Action (value = "getCenarioTreeNode", results = {  
+@Action (value = "getCenarios", results = {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
 		interceptorRefs= { @InterceptorRef("seguranca")	 }
 ) 
 
 @ParentPackage("default")
-public class GetCenarioTreeNodeAction extends BasicActionClass {
-	private Integer cenario;
-	private Integer node;
+public class GetCenariosAction extends BasicActionClass {
 	
 	public String execute () {
-		
 		String resp = "";
-		if ( cenario == null || cenario == -1 ) return "ok";
 		
 		try {
 			
 			try {
 				
 				SceneryService ss = new SceneryService();
-				resp = ss.getSceneryTreeAsJSON( cenario, node );
-				
-				//System.out.println("Resposta getCenarioTreeNode: " + resp );
+				resp = ss.getSceneriesAsJSON( getLoggedUser() );
 				
 			} catch ( Exception e ) {
 				
@@ -50,14 +44,6 @@ public class GetCenarioTreeNodeAction extends BasicActionClass {
 		}	
 	
 		return "ok";
-	}
-	
-	public void setCenario(Integer cenario) {
-		this.cenario = cenario;
-	}
-
-	public void setNode(Integer node) {
-		this.node = node;
 	}
 	
 	

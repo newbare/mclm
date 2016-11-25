@@ -7,10 +7,14 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
     	saveCenarioWindow.close();
     },
     reloadScenery : function() {
+    	
+    	
     	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
 		trabalhoTreeStore.load({
 			params:{cenario: MCLM.Globals.currentScenery}
-		});      	
+		});
+		
+		
     },
     onSubmitForm : function( button ) {
 		var form = button.up('form').getForm();

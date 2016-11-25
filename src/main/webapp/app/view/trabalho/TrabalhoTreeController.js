@@ -113,32 +113,14 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     // Carrega um cenario para a area de trabalho. Apaga a area de trabalho atual
     loadScenery : function() {
 
-    	/****
-    	 * 
-    	 * Parei quando ia carregar o cenario na Action
-    	 * Load Cenario Tree: Node:0 Cenario:14
-    	 * 
-    	 * em resposta ao reloadScenery().
-    	 * Preciso enviar o cenario inteiro e suas pastas.
-    	 * 
-    	 */
-    	
-    	
-    	
-    	// Precisa perguntar ao usuario ....................
-    	MCLM.Globals.currentScenery = 13;
-    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
-		trabalhoTreeStore.load({
-			params:{cenario: MCLM.Globals.currentScenery}
-		});    	
-		// --------------------------------------------------
-    	
-    	/*
+    	var sceneryStore = Ext.getStore('store.Scenery');
+    	sceneryStore.load();
+		
     	var cenarioWindow = Ext.getCmp('cenarioWindow');
     	if ( cenarioWindow ) return;
     	cenarioWindow = Ext.create('MCLM.view.cenarios.CenarioWindow');
     	cenarioWindow.show();
-    	*/
+    	
     },
 
     // Salva a area de trabalho atual como um cenario

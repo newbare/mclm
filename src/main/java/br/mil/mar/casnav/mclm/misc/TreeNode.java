@@ -1,11 +1,15 @@
 package br.mil.mar.casnav.mclm.misc;
 
 public class TreeNode {
+	// Especifico do TreePanel
 	private String id;
 	private boolean leaf;
 	private String Cls;
 	private boolean checked;
 	private String text;
+	private String iconCls;
+	// -----------------------
+	
 	private String serviceUrl;
 	private String originalServiceUrl;
 	private String layerName;
@@ -17,7 +21,6 @@ public class TreeNode {
 	private String serialId;
 	private String layerType;
 	private int childrenCount;
-	private String iconCls;
 	private boolean readOnly = false;
 	
 	public TreeNode( UserTableEntity ute ) {

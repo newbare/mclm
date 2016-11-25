@@ -1,7 +1,12 @@
 package br.mil.mar.casnav.mclm.persistence.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import org.json.JSONArray;
+
+import br.mil.mar.casnav.mclm.misc.SceneryTree;
 import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -71,8 +76,8 @@ public class SceneryService {
 	*/
 	}	
 
-	public Scenery getScenery(int idScenery) throws NotFoundException  {
-		return rep.getScenery(idScenery);
+	public Scenery getScenery( int idScenery ) throws NotFoundException  {
+		return rep.getScenery( idScenery );
 	}
 
 	public Scenery getScenery(String name) throws Exception{
@@ -134,6 +139,25 @@ public class SceneryService {
 		}
 		
 		return result;
+	}
+
+
+	public String getSceneryTreeAsJSON( int idScenery, int idNodeParent ) throws Exception {
+		SceneryTree scenery = new SceneryTree( getScenery( idScenery ) );
+		JSONArray sceneryJSON = new JSONArray( scenery.getNodes( idNodeParent ) );
+		return sceneryJSON.toString();
+	}
+
+
+	public String getSceneriesAsJSON(User loggedUser) throws Exception {
+		List<SceneryTree> lst = new ArrayList<SceneryTree>();
+		List<Scenery> ls = new ArrayList<Scenery>( getList( loggedUser.getIdUser() ) );
+		for ( Scenery scenery : ls ) {
+			SceneryTree sceneryTree = new SceneryTree( scenery );
+			lst.add( sceneryTree );
+		}
+		JSONArray sceneryJSON = new JSONArray( lst );
+		return "{sceneries:" + sceneryJSON.toString() + "}";
 	}
 
 

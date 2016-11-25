@@ -17,6 +17,7 @@ Ext.define('MCLM.Application', {
        'MCLM.store.LayerStack',
        'MCLM.store.Capabilities',
        'MCLM.store.TrabalhoTree',
+       'MCLM.store.Scenery',
     ],
    
     launch: function () {
@@ -64,7 +65,7 @@ Ext.define('MCLM.Application', {
 		        // ---------------------------------------------
 			},
 			failure: function(response, opts) {
-				//Ext.Msg.alert('Erro ao receber a configuração do servidor' );
+				Ext.Msg.alert('Erro ao receber a configuração do servidor' );
 			}
 			
 		});

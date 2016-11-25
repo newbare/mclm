@@ -33,7 +33,7 @@ public class GetLayersTreeNodeAction extends BasicActionClass {
 				NodeService ns = new NodeService();
 				resp = ns.getNodesAsJSON( idParent );
 				
-				System.out.println( "Resposta getLayersTreeNode: " + resp );
+				//System.out.println( "Resposta getLayersTreeNode: " + resp );
 				
 			} catch ( Exception e ) {
 				//

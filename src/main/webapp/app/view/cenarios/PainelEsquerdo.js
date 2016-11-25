@@ -3,8 +3,15 @@ Ext.define('MCLM.view.cenarios.PainelEsquerdo', {
 	xtype: 'cenariosPainelEsquerdo',
 	region: 'west',
 	margin: '0 0 0 0',
-	width:300,
+	width:400,
 	layout:'fit',
 	id: 'cenariosPainelEsquerdo',
-	html : 'Teste2'
+	
+    requires: [
+        'MCLM.view.cenarios.CenarioGrid',
+    ],		
+	
+	items : [{
+		xtype: 'cenarioGrid'
+	}]
 });
