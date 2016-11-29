@@ -18,6 +18,42 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     onLayerTreeItemClick : function( view, record, item, index, e ) {
     	//
     },
+    // Limpa a área de trabalho
+    clearWorkspace : function() {
+    	
+		Ext.Msg.confirm('Limpar Área de Trabalho', 'Deseja realmente limpar a Área de trabalho? As alterações não gravadas serão perdidas.', function( btn ){
+			   if( btn === 'yes' ){
+
+		    		var tree = Ext.getCmp('trabalhoTree');
+		    		var root = tree.getRootNode();
+		    		root.set("text","Área de Trabalho");
+		    		root.set("checked",false);
+		    		root.dirty = false;
+		    		root.removeAll();
+		    		MCLM.Globals.currentScenery = -1;
+		    	
+			   } else {
+			       return;
+			   }
+		 });
+		
+    },
+    //
+    onLoadNode : function(loader, nodes, response){
+    	var me = this;
+    	for (x=0; x< nodes.length; x++  ) {
+    		var node = nodes[x];
+            var chk = node.get('checked');
+            var layerName = node.get('layerName');
+            
+            if ( layerName && chk ) {
+				var layer = MCLM.Map.addLayer( node );
+				me.clearCheckToTheRoot( node.parentNode );
+            }
+            
+    	}
+		this.fireEvent('mountImagePreview');		                    	
+	},
     
     // Recursivamente marca/desmarca pais dos nos até o root
     recursiveCheckParent : function( node, pChildCheckedCount ) {
@@ -34,11 +70,11 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 	    var pChildCheckedCount = 0;
 	    parentNode.suspendEvents();
 	    parentNode.eachChild(function(c) { 
-	        if (c.get('checked')) pChildCheckedCount++; 
-
+	        if ( c.get('checked') ) pChildCheckedCount++; 
 	    });
 	    
-       	me.recursiveCheckParent( parentNode, pChildCheckedCount );	    	
+	    parentNode.set('checked', !!pChildCheckedCount);
+	    me.recursiveCheckParent( parentNode, pChildCheckedCount );	    	
     },
     
     // Quando o estado do no muda (selecionado/nao selecionado)
@@ -62,7 +98,10 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 	    });
        	me.recursiveCheckParent( node, pChildCheckedCount );	    
 	    p.resumeEvents();
+	    
 	    this.toggleNode( node );
+	    node.dirty = true;
+	    node.set("selected", node.get("checked") );
     },
 
     // Mosta o menu de contexto quando clica com botao direito do mouse em um no da arvore
@@ -107,7 +146,17 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     reloadScenery : function() {
     	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
 		trabalhoTreeStore.load({
-			params:{cenario: MCLM.Globals.currentScenery}
+			params:{cenario: MCLM.Globals.currentScenery},
+		    callback: function(records, operation, success) {
+		    	if ( success ) {
+		    		var tree = Ext.getCmp('trabalhoTree');
+		    		var root = tree.getRootNode();
+		    		if( root ) {
+		    			root.collapse();
+		    			tree.expandAll();
+		    		}	
+		    	}
+		    }
 		});      	
     },    
     // Carrega um cenario para a area de trabalho. Apaga a area de trabalho atual
@@ -142,6 +191,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 			Ext.getCmp('servidorBaseID').setValue( MCLM.Map.getBaseServerURL() );
 			Ext.getCmp('mapaBaseAtivoID').setValue( MCLM.Map.isBaseMapActive() );
 			Ext.getCmp('gradeAtivaID').setValue( MCLM.Map.isGraticuleActive() );
+			Ext.getCmp('mapBbox').setValue( MCLM.Map.getMapCurrentBbox() );			
 			
 			Ext.getCmp('nomeCenarioID').focus(true, 100);
 	    	
@@ -152,12 +202,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 				 params: {
 				 	cenario: MCLM.Globals.currentScenery
 				 },
-			     success: function (batch, options) {
-				    Ext.Msg.alert('Sucesso', action.result.msg);
+			     success: function (action, options) {
+				    Ext.Msg.alert('Sucesso', 'Cenário gravado.');
 				    me.reloadScenery();
 				 },
-				 failure: function (batch, options){
-				    Ext.Msg.alert('Falha ao gravar camadas do Cenário', action.result.msg);
+				 failure: function (action, options){
+				    Ext.Msg.alert('Falha ao gravar camadas do Cenário', 'Não foi possível gravar o cenário atual.');
 				 }	
 	    	});
 	    	

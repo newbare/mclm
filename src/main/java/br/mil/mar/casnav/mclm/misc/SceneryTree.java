@@ -16,6 +16,7 @@ public class SceneryTree {
 	private String baseMap;	
 	private String baseServerURL;	
 	private String description;		
+	private String bbox;		
 	private Boolean baseMapActive;	
 	private Boolean isPublic;	    
 	private Integer idUser;	
@@ -35,6 +36,7 @@ public class SceneryTree {
 		this.isPublic = scenery.getIsPublic();
 		this.idUser = scenery.getIdUser();
 		this.graticule = scenery.getGraticule();
+		this.bbox = scenery.getMapBbox();
 		
 		this.nodes = new ArrayList<SceneryTreeNode>();
 		for ( SceneryNode sn : scenery.getNodes() ) {
@@ -104,6 +106,9 @@ public class SceneryTree {
 		return graticule;
 	}
 	
+	public String getBbox() {
+		return bbox;
+	}
 	
 	
 }

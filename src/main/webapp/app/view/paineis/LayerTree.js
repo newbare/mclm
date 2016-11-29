@@ -7,7 +7,7 @@ Ext.define('MCLM.view.paineis.LayerTree', {
        'MCLM.view.paineis.LayerTreeController',
        'MCLM.TreeFilter'
     ],	
-    
+    animate : false,
     viewConfig: {
         plugins: {
             ptype: 'treeviewdragdrop'

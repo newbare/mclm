@@ -36,7 +36,14 @@ Ext.define('MCLM.view.cenarios.SaveCenarioForm', {
         allowBlank : false,
         readOnly: true,
     },{
-        fieldLabel: 'Descrição',
+        fieldLabel: 'Bounding Box',
+        id : 'mapBbox',
+        width: 150,
+        name: 'mapBbox',
+        allowBlank : false,
+        readOnly: true,
+    },{
+    	fieldLabel: 'Descrição',
         width: 330,
         xtype:'textareafield',
         id:'descriptionID',

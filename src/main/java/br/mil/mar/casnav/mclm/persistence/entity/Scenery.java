@@ -40,9 +40,11 @@ public class Scenery {
 	private int zoomLevel = 4;	
 
 	@Column(name="map_center", length=100)
-	private String mapCenter = "-48.12,-15.8";	
-
+	private String mapCenter = "-48.12,-15.8";
 	
+	@Column(name="map_bbox", length=200)
+	private String mapBbox;	
+
 	@Column(name="base_map", length=100)
 	private String baseMap;	
 	
@@ -211,4 +213,12 @@ public class Scenery {
 		this.description = description;
 	}
 
+	public String getMapBbox() {
+		return mapBbox;
+	}
+	
+	public void setMapBbox(String mapBbox) {
+		this.mapBbox = mapBbox;
+	}
+	
 }

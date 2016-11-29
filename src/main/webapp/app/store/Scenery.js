@@ -13,6 +13,7 @@ Ext.define('MCLM.store.Scenery', {
          {name: 'isPublic'},
          {name: 'graticule'},
          {name: 'nodes'},
+         {name: 'mapBbox'},
          {name: 'baseServerURL'} 
     ],
              

@@ -35,8 +35,6 @@ public class GetCenarioTreeNodeAction extends BasicActionClass {
 				SceneryService ss = new SceneryService();
 				resp = ss.getSceneryTreeAsJSON( cenario, node );
 				
-				//System.out.println("Resposta getCenarioTreeNode: " + resp );
-				
 			} catch ( Exception e ) {
 				
 			}

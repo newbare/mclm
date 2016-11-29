@@ -115,7 +115,7 @@ public class SceneryService {
 
 
 	public String createScenery(Boolean isPublic, Boolean graticule, String nomeCenario, String mapCenter, String description, String mapaBase,
-			String servidorBase, Integer mapZoom, Boolean mapaBaseAtivo, User user) {
+			String servidorBase, Integer mapZoom, Boolean mapaBaseAtivo, User user, String mapBbox) {
 		
 		Scenery scenery = new Scenery();
 		scenery.setBaseMap(mapaBase);
@@ -128,6 +128,7 @@ public class SceneryService {
 		scenery.setSceneryName( nomeCenario );
 		scenery.setZoomLevel( mapZoom );
 		scenery.setDescription( description );
+		scenery.setMapBbox(mapBbox);
 		
 		String result;
 		try {

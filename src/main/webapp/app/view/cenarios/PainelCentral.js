@@ -4,17 +4,18 @@ Ext.define('MCLM.view.cenarios.PainelCentral', {
 	
 	region: 'center',
 	margin: '0 0 0 0',
-	layout:'fit',
+	layout:'border',
 	id: 'cenariosPainelCentral',
-	html : '',
-    buttons: [{
-			  // Interceptado pelo controller 'MCLM.view.cenarios.CenarioController'	
-	        text: 'Cancelar',
-	        id : 'closeLoadSceneryWindow'
-	    },{
-			  // Interceptado pelo controller 'MCLM.view.cenarios.CenarioController'	
-	        text: 'Carregar',
-	        id : 'loadSceneryToWork'
-	    }
-    ]	
+	
+    requires: [
+       'MCLM.view.cenarios.MiniImage',
+       'MCLM.view.cenarios.PainelInferiorDireito'
+     ],	  	
+	
+	items: [{
+		xtype: 'cenarioMiniImage'
+	},{
+		xtype: 'inferiorDireito'
+	}]
+
 });

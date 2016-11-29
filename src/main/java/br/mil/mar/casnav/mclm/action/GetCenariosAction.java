@@ -35,6 +35,8 @@ public class GetCenariosAction extends BasicActionClass {
 				
 			}
 			
+			//System.out.println("Resposta de getCenarios: " + resp );
+			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.setContentType("application/json");

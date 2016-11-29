@@ -5,7 +5,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
     
     store: 'store.trabalhoTree',
     rootVisible: true,
-
+    animate : false,
 	requires: [
 	   'MCLM.view.trabalho.TrabalhoTreeController'
 	],     
@@ -25,8 +25,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
         	drop: function (node, data, overModel, dropPosition) {
         		var theNode = data.records[0];
         		theNode.data.idNodeParent = overModel.data.id;
-        	},  
-       	
+        	},
         } 
     },        
     useArrows: true,
@@ -40,9 +39,13 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
         	id: 'id800',
             handler : 'saveScenery'
         },{
-        	iconCls: 'reload-icon',
+        	iconCls: 'loadscenery-icon',
         	id: 'id801',
             handler : 'loadScenery'
+        },{
+        	iconCls: 'reload-icon',
+        	id: 'id802',
+            handler : 'clearWorkspace'
         }]
     }],
         
@@ -67,9 +70,16 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		        text: 'Recupera um cenário para a área de trabalho. O conteúdo atual será apagado.',
 		        width: 150,
 		        dismissDelay: 5000 
+		    }, {
+		        target: 'id802',
+		        title: 'Limpar Área de trabalho',
+		        text: 'Limpa a Área de Trabalho. As modificações não gravadas no cenário atual serão perdidas.',
+		        width: 150,
+		        dismissDelay: 5000 
 		    });			
 			
-		}
+		},
+    	load:'onLoadNode'
         
     }      
     

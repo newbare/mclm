@@ -7,9 +7,8 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
     	saveCenarioWindow.close();
     },
     reloadScenery : function() {
-    	
-    	
     	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
+    	
 		trabalhoTreeStore.load({
 			params:{cenario: MCLM.Globals.currentScenery}
 		});
@@ -26,7 +25,8 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 		Ext.getCmp('servidorBaseID').setValue( MCLM.Map.getBaseServerURL() );
 		Ext.getCmp('mapaBaseAtivoID').setValue( MCLM.Map.isBaseMapActive() );
 		Ext.getCmp('gradeAtivaID').setValue( MCLM.Map.isGraticuleActive() );
-
+		Ext.getCmp('mapBbox').setValue( MCLM.Map.getMapCurrentBbox() );
+		
         if ( form.isValid() ) {
       	  form.submit({
               success: function(form, action) {
@@ -46,18 +46,23 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 					// Depois de criar o cenario, precisamos salvar a arvore de trabalho. 
 					// O ID do cenario recem-criado precisa ja ter retornado.
 					var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
-					trabalhoTreeStore.sync({
-						 params: {
-						 	cenario: MCLM.Globals.currentScenery
-						 },
-					     success: function (batch, options) {
-						    Ext.Msg.alert('Sucesso', action.result.msg, me.onCloseWindow);
-						    me.reloadScenery();
-						 },
-						 failure: function (batch, options){
-						    Ext.Msg.alert('Falha ao gravar camadas do Cenário', action.result.msg, me.onCloseWindow);
-						 }						 
-					});
+					
+					if ( trabalhoTreeStore.getCount() > 1 ) { // 1 = Root node (default )
+					
+						trabalhoTreeStore.sync({
+							 params: {
+							 	cenario: MCLM.Globals.currentScenery
+							 },
+						     success: function (batch, options) {
+							    me.reloadScenery();
+							 },
+							 failure: function (batch, options){
+							    Ext.Msg.alert('Falha ao gravar camadas do Cenário', 'Erro desconhecido ao gravar camadas do cenário', me.onCloseWindow);
+							 }						 
+						});
+					} else {
+						Ext.Msg.alert('Sucesso', 'Cenário gravado, porém não possui camadas.', me.onCloseWindow);
+					}
             	  
                  
               },

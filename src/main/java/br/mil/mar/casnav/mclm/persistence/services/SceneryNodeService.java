@@ -25,10 +25,6 @@ public class SceneryNodeService {
 
 	
 	public String updateOrCreateNodes(String data, Integer idScenery) {
-		// [{"text":"PASTA01","leaf":false,"id":1,"index":0,"serviceUrl":"","layerName":"","originalServiceUrl":"","layerType":"","serialId":"","version":"","readOnly":false,"parentId":0},{"text":"PASTA02","leaf":false,"id":2,"index":1,"serviceUrl":"","layerName":"","originalServiceUrl":"","layerType":"","serialId":"","version":"","readOnly":false,"parentId":0},{"layerType":"WMS","layerAlias":"Brasil (com Regi\u00f5es)","serviceUrl":"http://172.21.81.43/geoserver/wms/","index":0,"description":"Mapas obtidos do IBGE","readOnly":true,"leaf":true,"serialId":"LRb668ab51","institute":"MD / EMCFA / CHELOG","id":3,"text":"Brasil (com Regi\u00f5es)","layerName":"view_regioes_br","idNodeParent":60210,"originalServiceUrl":"","childrenCount":0,"version":"","parentId":1}]
-
-		System.out.println( data );
-		
 		String result = "{ \"success\": true, \"msg\": \"Cenário atualizado com sucesso.\" }";
 		
 		try {

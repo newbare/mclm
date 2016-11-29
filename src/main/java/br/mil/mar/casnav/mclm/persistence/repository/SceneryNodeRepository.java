@@ -9,6 +9,7 @@ import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.InsertException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.infra.DaoFactory;
 import br.mil.mar.casnav.mclm.persistence.infra.IDao;
 
@@ -48,12 +49,31 @@ public class SceneryNodeRepository extends BasicRepository {
 			for( SceneryNode sl : sceneryNodeList ) {
 				
 				try {
-					Scenery scenery = nd.getDO( sl.getScenery().getIdScenery() );
-					sl.setScenery(scenery);
-				} catch ( Exception nfe ) { 
-					//
+					// Tenta encontrar a camada para atualizar.
+					SceneryNode oldSn = fm.getDO( sl.getIdSceneryNode() );
+					oldSn.setDescription( sl.getDescription() );
+					oldSn.setIdNodeParent( sl.getIdNodeParent() );
+					oldSn.setIndexOrder( sl.getIndexOrder() );
+					oldSn.setLayerStackIndex( sl.getLayerStackIndex() );
+					oldSn.setReadOnly( sl.isReadOnly() );
+					oldSn.setSelected( sl.isSelected() );
+					fm.updateDO( oldSn );
+					
+					System.out.println("Atualizou " + oldSn.getLayerAlias() );
+					
+				} catch ( NotFoundException e ) {
+					// Nao achou esta camada do cenario. Criar nova.
+					try {
+						Scenery scenery = nd.getDO( sl.getScenery().getIdScenery() );
+						sl.setScenery(scenery);
+					} catch ( Exception nfe ) { 
+						//
+					}
+					fm.insertDO( sl );
+					System.out.println("Inseriu " + sl.getLayerAlias() );
 				}
-				fm.insertDO( sl );
+				
+				
 			}
 			commit();
 		} catch (InsertException e) {
@@ -97,14 +117,14 @@ public class SceneryNodeRepository extends BasicRepository {
 	public SceneryNode getSceneryNode(int idSceneryNode) throws Exception {
 		DaoFactory<SceneryNode> df = new DaoFactory<SceneryNode>();
 		IDao<SceneryNode> fm = df.getDao(this.session, SceneryNode.class);
-		SceneryNode SceneryNode = null;
+		SceneryNode sceneryNode = null;
 		try {
-			SceneryNode = fm.getDO(idSceneryNode);
+			sceneryNode = fm.getDO(idSceneryNode);
 		} catch ( Exception e ) {
 			closeSession();		
 			throw e;
 		} 
 		closeSession();		
-		return SceneryNode;
+		return sceneryNode;
 	}		
 }

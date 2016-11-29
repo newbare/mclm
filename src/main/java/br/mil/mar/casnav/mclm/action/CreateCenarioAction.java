@@ -25,6 +25,8 @@ public class CreateCenarioAction extends BasicActionClass {
 	private String description;
 	private String mapaBase;
 	private String servidorBase;
+	private String mapBbox;
+	
 	private Integer mapZoom;
 	private Boolean mapaBaseAtivo;
 	private Boolean gradeAtiva;
@@ -36,7 +38,7 @@ public class CreateCenarioAction extends BasicActionClass {
 
 			SceneryService sc = new SceneryService();
 			String resp = sc.createScenery( isPublic, gradeAtiva, nomeCenario, mapCenter, description, mapaBase, 
-					servidorBase, mapZoom, mapaBaseAtivo, getLoggedUser() );
+					servidorBase, mapZoom, mapaBaseAtivo, getLoggedUser(), mapBbox );
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
@@ -85,4 +87,7 @@ public class CreateCenarioAction extends BasicActionClass {
 		this.gradeAtiva = gradeAtiva;
 	}
 	
+	public void setMapBbox(String mapBbox) {
+		this.mapBbox = mapBbox;
+	}
 }

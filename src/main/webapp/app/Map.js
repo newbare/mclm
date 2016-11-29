@@ -213,8 +213,6 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Adiciona uma nova camada ao mapa
 		addLayer : function( node ) {
-			// passado: serviceUrl, layerName, layerAlias, serialId, layerType,
-			// recebido: serverUrl, serverLayers, layerName, serialId, layerType, 
 			var serverUrl = node.get('serviceUrl');
 			var layerName = node.get('layerName');
 			var layerAlias = node.get('layerAlias');
@@ -416,6 +414,13 @@ Ext.define('MCLM.Map', {
 		// Usa o BBOX atual da viewport do mapa
 		getLayerImagePreview : function ( layerName, serviceUrl) {
 			var	bbox = this.getMapCurrentBbox();
+			var thumImg = serviceUrl + "/?service=WMS&srs=EPSG:4326&width=238&height=150&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&bbox="+bbox;
+			return thumImg;
+		},		
+		// --------------------------------------------------------------------------------------------
+		// Retorna a URL para pegar a imagem PNG de uma camada 'layerName' do servidor 'serviceUrl'
+		// Usa o BBOX atual da viewport do mapa
+		getSceneryImagePreview : function ( layerName, serviceUrl, bbox) {
 			var thumImg = serviceUrl + "/?service=WMS&srs=EPSG:4326&width=238&height=150&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&bbox="+bbox;
 			return thumImg;
 		},		

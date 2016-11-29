@@ -45,6 +45,7 @@ public class SceneryTreeNode {
 		this.readOnly = sn.isReadOnly();
 		this.layerStackIndex = sn.getLayerStackIndex();
 		this.transparency = sn.getTransparency();
+		this.checked = sn.isSelected();
 		this.selected = sn.isSelected();
 		
 		// Precisa para ser compativel com o TreeNode do ExtJS
@@ -129,11 +130,6 @@ public class SceneryTreeNode {
 	}
 
 
-	public boolean isSelected() {
-		return selected;
-	}
-
-
 	public int getLayerStackIndex() {
 		return layerStackIndex;
 	}
@@ -173,5 +169,7 @@ public class SceneryTreeNode {
 		return iconCls;
 	}
 
-	
+	public boolean isSelected() {
+		return selected;
+	}
 }
