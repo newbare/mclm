@@ -16,15 +16,14 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
     scroll: 'both',
 
     viewConfig: {
+    	markDirty:false,
+    	id:'trabalhoTreeView',
         plugins: {
             ptype: 'treeviewdragdrop'
         },
         listeners: {       
-        	// Evento apos o usuario arrastar um no da arvore para baixo de outro no.
-        	// Nao deu certo colocar no Controller.
         	drop: function (node, data, overModel, dropPosition) {
-        		var theNode = data.records[0];
-        		theNode.data.idNodeParent = overModel.data.id;
+        		// interceptado pelo controller 'MCLM.view.trabalho.TrabalhoTreeController'
         	},
         } 
     },        
@@ -35,17 +34,19 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
     dockedItems: [{
         xtype: 'toolbar',
         items: [{
+        	iconCls: 'reload-icon',
+        	id: 'id802',
+            handler : 'clearWorkspace'
+        },{
+        	xtype: 'tbseparator'
+        },{
         	iconCls: 'save-icon',
         	id: 'id800',
             handler : 'saveScenery'
         },{
-        	iconCls: 'loadscenery-icon',
+        	iconCls: 'scenery-icon',
         	id: 'id801',
             handler : 'loadScenery'
-        },{
-        	iconCls: 'reload-icon',
-        	id: 'id802',
-            handler : 'clearWorkspace'
         }]
     }],
         
@@ -66,8 +67,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		        dismissDelay: 5000 
 		    }, {
 		        target: 'id801',
-		        title: 'Carregar Cenário',
-		        text: 'Recupera um cenário para a área de trabalho. O conteúdo atual será apagado.',
+		        title: 'Gerenciar Cenários',
+		        text: 'Gerencia os Cenários (carregar, apagar, tornar público ou privado).',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }, {

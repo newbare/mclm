@@ -58,9 +58,6 @@ public class SceneryNodeRepository extends BasicRepository {
 					oldSn.setReadOnly( sl.isReadOnly() );
 					oldSn.setSelected( sl.isSelected() );
 					fm.updateDO( oldSn );
-					
-					System.out.println("Atualizou " + oldSn.getLayerAlias() );
-					
 				} catch ( NotFoundException e ) {
 					// Nao achou esta camada do cenario. Criar nova.
 					try {
@@ -70,7 +67,6 @@ public class SceneryNodeRepository extends BasicRepository {
 						//
 					}
 					fm.insertDO( sl );
-					System.out.println("Inseriu " + sl.getLayerAlias() );
 				}
 				
 				

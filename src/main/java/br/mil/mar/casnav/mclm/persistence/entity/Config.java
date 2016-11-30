@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import br.mil.mar.casnav.mclm.misc.User;
 
 @Entity
 @Table(name="config") 
@@ -68,6 +71,8 @@ public class Config {
 		//
 	}
 	
+	@Transient
+	private User user;
 	
 	public Config(int idConfig, String geoserverUrl, String baseLayer, Boolean useProxy,
 			Boolean externalLayersToLocalServer, String externalWorkspaceName, String proxyHost, String nonProxyHosts,
@@ -230,4 +235,13 @@ public class Config {
 	public void setShapeFileTargetPath(String shapeFileTargetPath) {
 		this.shapeFileTargetPath = shapeFileTargetPath;
 	}
+	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+	
 }

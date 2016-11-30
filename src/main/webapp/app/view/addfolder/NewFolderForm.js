@@ -45,7 +45,7 @@ Ext.define('MCLM.view.addfolder.NewFolderForm', {
         id : 'closeNewFolderWindow'
       },{
     	// Interceptado pelo controller 'MCLM.view.addlayer.Tif.UploadTifController'	
-        text: 'Gravar',
+        text: 'Criar',
         id : 'newFolderFormSubmit'
     }]
 });

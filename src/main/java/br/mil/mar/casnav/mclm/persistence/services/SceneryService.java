@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import br.mil.mar.casnav.mclm.misc.SceneryTree;
 import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
+import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
@@ -51,7 +52,6 @@ public class SceneryService {
 	}
 	
 	public void updateScenery(Scenery scenery) throws UpdateException {
-		/*
 		Scenery oldScenery;
 
 		try {
@@ -60,20 +60,20 @@ public class SceneryService {
 			throw new UpdateException( e.getMessage() );
 		}		
 		
-		oldScenery.setActive( scenery.isActive() );
+		oldScenery.setBaseMap( scenery.getBaseMap() );
 		oldScenery.setSceneryName( scenery.getSceneryName() );
 		oldScenery.setZoomLevel( scenery.getZoomLevel() );
 		oldScenery.setMapCenter( scenery.getMapCenter() );
 		oldScenery.setGraticule( scenery.getGraticule() );
+		oldScenery.setIsPublic( scenery.getIsPublic() );
 		
-		oldScenery.getLayers().clear();
-		for ( SceneryLayer sl : scenery.getLayers() ) {
-			oldScenery.addNode( sl.getNode() );
+		oldScenery.getNodes().clear();
+		for ( SceneryNode sl : scenery.getNodes() ) {
+			oldScenery.addNode( sl );
 		}		
 
 		rep.newTransaction();
 		rep.updateScenery(oldScenery);
-	*/
 	}	
 
 	public Scenery getScenery( int idScenery ) throws NotFoundException  {
@@ -95,14 +95,18 @@ public class SceneryService {
 		return expRet ;
 	}	
 
-	public void deleteScenery( int idScenery ) throws DeleteException {
+	public String deleteScenery( int idScenery ) throws DeleteException {
+		String result = "{ \"success\": true, \"msg\": \"Operação efetuada com sucesso.\" }";
+
 		try {
 			Scenery scenery = rep.getScenery(idScenery);
 			rep.newTransaction();
 			rep.deleteScenery(scenery);
 		} catch (Exception e) {
-			throw new DeleteException( e.getMessage() );
+			result = "{ \"error\": true, \"msg\": \"" + e.getMessage()+ ".\" }";
 		}
+		
+		return result;
 	}
 
 	public Set<Scenery> getList( ) throws Exception {
@@ -132,8 +136,7 @@ public class SceneryService {
 		
 		String result;
 		try {
-			SceneryService ss = new SceneryService();
-			ss.insertScenery( scenery );
+			insertScenery( scenery );
 			result = "{\"success\": true, \"msg\": \"Cenário criado com sucesso.\", \"idScenery\":" + scenery.getIdScenery() + "}";
 		} catch ( Exception e ) {
 			result = "{\"error\": true, \"msg\": \"" + e.getMessage() + "\"}";
@@ -159,6 +162,23 @@ public class SceneryService {
 		}
 		JSONArray sceneryJSON = new JSONArray( lst );
 		return "{sceneries:" + sceneryJSON.toString() + "}";
+	}
+
+
+	public String changeVisibility(int idScenery, String operation) {
+		String result;
+		
+		try {
+			Scenery scenery = rep.getScenery( idScenery );
+			scenery.setIsPublic( operation.equals("PUB") ); 
+			rep.newTransaction();
+			updateScenery(scenery);
+			result = "{\"success\": true, \"msg\": \"Visibilidade alterada com sucesso.\", \"idScenery\":" + scenery.getIdScenery() + "}";
+		} catch ( Exception e ) {
+			result = "{\"error\": true, \"msg\": \"" + e.getMessage() + "\"}";
+		}
+		
+		return result;
 	}
 
 

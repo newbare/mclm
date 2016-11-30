@@ -5,6 +5,7 @@ import java.io.File;
 import org.json.JSONObject;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
+import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.InsertException;
@@ -18,8 +19,9 @@ public class ConfigService {
 		this.rep = new ConfigRepository();
 	}
 	
-	public String getAsJson() throws Exception {
+	public String getAsJson( User user ) throws Exception {
 		Config cfg = getConfig();
+		cfg.setUser( user );
 		JSONObject itemObj = new JSONObject( cfg );
 		return itemObj.toString();
 	}

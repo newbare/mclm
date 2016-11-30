@@ -1,9 +1,9 @@
 Ext.define('MCLM.view.cenarios.PainelEsquerdo', {
 	extend: 'Ext.Panel',
 	xtype: 'cenariosPainelEsquerdo',
-	region: 'west',
+	region: 'center',
 	margin: '0 0 0 0',
-	width:400,
+	
 	layout:'fit',
 	id: 'cenariosPainelEsquerdo',
 	

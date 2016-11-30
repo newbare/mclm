@@ -9,8 +9,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 import br.mil.mar.casnav.mclm.misc.User;
-import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
-import br.mil.mar.casnav.mclm.persistence.services.SceneryService;
 
 public class ClientAccessInterceptor implements Interceptor {
 	private static final long serialVersionUID = -2344136157076941239L;
@@ -30,15 +28,6 @@ public class ClientAccessInterceptor implements Interceptor {
 			user.setIdUser(8658);
 			
 			// Simula um usuário logado do APOLO. Retirar isso.
-			try {
-				SceneryService ss = new SceneryService();
-				user.setSceneries( ss.getList( user.getIdUser() ) );
-			} catch ( NotFoundException e ) {
-				// ignore
-			} catch ( Exception e ) {
-				e.printStackTrace();
-			}
-
 			session.setAttribute("loggedUser", user);	
 			//System.out.println(" > Found User: " + user.getIdUser() );
 			

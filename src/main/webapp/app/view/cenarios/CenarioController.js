@@ -14,9 +14,6 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
             },
             '#closeLoadSceneryWindow' : {
             	click : this.closeWindow
-            },
-            '#loadSceneryToWork' : {
-            	click : this.loadScenery
             }
             
         });
@@ -31,12 +28,20 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
     	
     	for (x = 0; x < nodes.length; x++ ) {
     		if ( nodes[x].leaf ) {
-    			nodesHtml = nodesHtml + "<b>["+nodes[x].layerType+"]</b> " + nodes[x].layerAlias + "<br>";
+    			var serialId =  nodes[x].serialId;
+    			
+    			var html = "<div style='float:left;width:100%;height:52px'>" +
+    				"<div style='width:100px;height:50px;border:1px solid black;float:left;margin-right: 5px;'> <img style='display:none;width:98px;height:48px;' src='' id='MIN_"+serialId+"'>  </div>" +
+    				"<div style='font-family:Courier;float:left;'>"+
+    				"<b>["+nodes[x].layerType+"]</b><br>" + nodes[x].layerAlias + "<br></div>" +
+    				"</div>";
+    			
+    			nodesHtml = nodesHtml + html; //"<b>["+nodes[x].layerType+"]</b> " + nodes[x].layerAlias + "<br>";
     		}
     	}
     	
     	var painel = Ext.getCmp('inferiorDireito');
-    	painel.update("<b>" + scenery + "</b><br><i>" + description + "</i><br><p style='font-family:Courier'>" + nodesHtml + "</p>");
+    	painel.update("<div style='width:100%;margin-bottom: 10px;'><b>" + scenery + "</b><br><i>" + description + "</i></div>" + nodesHtml );
     	
     	this.mountImagePreview( record );
     	
@@ -69,7 +74,7 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
 			var layerImage = MCLM.Map.getSceneryImagePreview( layerName, serviceUrl, bbox );
         	
 			if ( (layerType == "WMS") && checked ) {
-	    		content = content + "<img class='minithumb' id='" + serialId + "' style='z-index:"+ 
+	    		content = content + "<img class='minithumb' serial="+ serialId +" id='IMG_" + serialId + "' style='z-index:"+ 
 	    		indexOrder +";display:none;position: absolute;width:100%;height:100%' src='"+layerImage+"' />";
         	}
         	
@@ -80,6 +85,12 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
     	// (evita o simbolo de imagem quebrada enquanto o geoserver cria a miniatura)
     	$(".minithumb").one("load", function() {
     		$(this).css("display","block");
+    		var serial = $(this).attr("serial");
+    		var src = $(this).attr("src");
+    		console.log( serial + " " + src );
+    		$("#MIN_" + serial).attr('src', src );
+    		$("#MIN_" + serial).css("display","block");
+    		
     	}).each(function() {
     		if(this.complete) $(this).load();
     	});    	
@@ -94,12 +105,155 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
     	cenarioWindow.close();
     },    
     
+    makeSceneryPrivate : function() {
+    	var cenarioGrid = Ext.getCmp('cenarioGrid');
+		var row = cenarioGrid.getSelectionModel().getSelection()[0];
+    	if ( !row ) {
+    		Ext.Msg.alert('Selecione um Cenário', 'Selecione um Cenário da lista antes de prosseguir com esta operação.' );
+    		return true;
+    	}
+
+    	var sceneryName = row.get("sceneryName");
+    	var idScenery = row.get("idScenery");
+    	var idUser = row.get("idUser");
+
+    	if ( idUser != MCLM.Globals.config.user.idUser ) {
+    		Ext.Msg.alert('Operação não permitida', 'É permitido tornar privado somente Cenários criados por você.' );
+    		return true;
+    	}
+    	
+		Ext.Msg.confirm('Alterar Visibilidade', 'Deseja realmente tornar privado o Cenário "' + sceneryName + '"?', function( btn ){
+			   if( btn === 'yes' ){
+
+					Ext.Ajax.request({
+						url: 'changeSceneryVisibility',
+					    params: {
+					        'idScenery' : idScenery,
+					        'operation' : 'PVT'
+					    },						
+						success: function(response, opts) {				   
+						   var sceneryStore = Ext.getStore('store.Scenery');
+						   sceneryStore.load();
+							Ext.Msg.alert('Concluído','Operação efetuada com sucesso.' );
+						},
+						failure: function(response, opts) {
+							Ext.Msg.alert('Erro','Erro ao tentar modificar a visibilidade do Cenário.' );
+						}
+					});				   
+			   } else {
+			       return;
+			   }
+		 });	
+    },
+    
+    makeSceneryPublic : function() {
+    	var cenarioGrid = Ext.getCmp('cenarioGrid');
+		var row = cenarioGrid.getSelectionModel().getSelection()[0];
+    	if ( !row ) {
+    		Ext.Msg.alert('Selecione um Cenário', 'Selecione um Cenário da lista antes de prosseguir com esta operação.' );
+    		return true;
+    	}
+    	
+    	var sceneryName = row.get("sceneryName");
+    	var idScenery = row.get("idScenery");
+    	var idUser = row.get("idUser");
+
+    	if ( idUser != MCLM.Globals.config.user.idUser ) {
+    		Ext.Msg.alert('Operação não permitida', 'É permitido tornar público somente Cenários criados por você.' );
+    		return true;
+    	}
+    	
+		Ext.Msg.confirm('Alterar Visibilidade', 'Deseja realmente tornar público o Cenário "' + sceneryName + '"?', function( btn ){
+			   if( btn === 'yes' ){
+
+					Ext.Ajax.request({
+						url: 'changeSceneryVisibility',
+					    params: {
+					        'idScenery' : idScenery,
+					        'operation' : 'PUB'
+					    },						
+						success: function(response, opts) {				   
+						   var sceneryStore = Ext.getStore('store.Scenery');
+						   sceneryStore.load();
+						   sceneryStore.sort('sceneryName','ASC');
+						   Ext.Msg.alert('Concluído','Operação efetuada com sucesso.' );
+						},
+						failure: function(response, opts) {
+							Ext.Msg.alert('Erro','Erro ao tentar modificar a visibilidade do Cenário.' );
+						}
+					});				   
+			   } else {
+			       return;
+			   }
+		 });	
+    },
+    
+    deleteScenery : function() {
+    	var me = this;
+    	var cenarioGrid = Ext.getCmp('cenarioGrid');
+		var row = cenarioGrid.getSelectionModel().getSelection()[0];
+    	if ( !row ) {
+    		Ext.Msg.alert('Selecione um Cenário', 'Selecione um Cenário da lista antes de prosseguir com esta operação.' );
+    		return true;
+    	}
+    	
+    	var sceneryName = row.get("sceneryName");
+    	var idScenery = row.get("idScenery");
+    	var idUser = row.get("idUser");
+
+    	if ( idUser != MCLM.Globals.config.user.idUser ) {
+    		Ext.Msg.alert('Operação não permitida', 'É permitido apagar somente Cenários criados por você.' );
+    		return true;
+    	}
+    	
+		Ext.Msg.confirm('Apagar Cenário', 'Deseja realmente remover o Cenário "' + sceneryName + '"?', function( btn ){
+			   if( btn === 'yes' ){
+
+					Ext.Ajax.request({
+						url: 'deleteCenario',
+					    params: {
+					        'idScenery' : idScenery
+					    },						
+						success: function(response, opts) {				   
+						   var sceneryStore = Ext.getStore('store.Scenery');
+						   sceneryStore.load();
+						   sceneryStore.sort('sceneryName','ASC');
+						   Ext.Msg.alert('Concluído','Cenário apagado com sucesso.' );
+						   
+						   // Interceptado por 'MCLM.view.trabalho.TrabalhoTreeController'
+						   me.fireEvent('doClearWorkspace');
+						   
+						},
+						failure: function(response, opts) {
+							Ext.Msg.alert('Erro','Erro ao tentar apagar o Cenário' );
+						}
+						
+					});				   
+				   
+			   } else {
+			       return;
+			   }
+		 });	
+    	
+    },
+    
+    
     loadScenery : function() {
     	var cenarioGrid = Ext.getCmp('cenarioGrid');
 		var row = cenarioGrid.getSelectionModel().getSelection()[0];
+
+		if ( !row ) {
+    		Ext.Msg.alert('Selecione um Cenário', 'Selecione um Cenário da lista antes de prosseguir com esta operação.' );
+    		return true;
+    	}
 		
 		var sceneryId = row.get('idScenery');
 		var sceneryName = row.get('sceneryName');
+		var zoomLevel = row.get('zoomLevel');
+		var mapCenter = row.get('mapCenter');
+		
+		this.fireEvent('doClearWorkspace');
+		this.fireEvent( "clearMainTree");	
     	
 		// Carrega as camadas do cenario na arvore de trabalho
     	MCLM.Globals.currentScenery = sceneryId;
@@ -112,11 +266,15 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
 		    		var tree = Ext.getCmp('trabalhoTree');
 		    		var root = tree.getRootNode();
 		    		
+			    	var painelEsquerdo = Ext.getCmp('painelesquerdo');
+			    	painelEsquerdo.setTitle(sceneryName);		    		
+		    		
 		    		if( root ) {
 		    			root.data.text = sceneryName;
 		    			root.collapse();
 		    			tree.expandAll();
 		    		}
+		    		MCLM.Map.panTo( mapCenter, zoomLevel );
 		    	}
 		    }
 		});  

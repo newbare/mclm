@@ -9,14 +9,5 @@ Ext.define('MCLM.view.cenarios.PainelInferiorDireito', {
 	
 	html: '',
 	autoScroll:true,
-	buttons: [{
-			  // Interceptado pelo controller 'MCLM.view.cenarios.CenarioController'	
-	        text: 'Cancelar',
-	        id : 'closeLoadSceneryWindow'
-	    },{
-			  // Interceptado pelo controller 'MCLM.view.cenarios.CenarioController'	
-	        text: 'Carregar',
-	        id : 'loadSceneryToWork'
-	    }
-    ]	
+
 });

@@ -14,6 +14,7 @@ Ext.define('MCLM.store.Scenery', {
          {name: 'graticule'},
          {name: 'nodes'},
          {name: 'mapBbox'},
+         {name: 'idUser'},
          {name: 'baseServerURL'} 
     ],
              
@@ -30,7 +31,11 @@ Ext.define('MCLM.store.Scenery', {
         load: function(store, records){
         	//console.log( records );
     	}			
-	}
-             
+	},
+ 
+	sortInfo:{
+	    field: 'sceneryName',
+	    direction: 'ASC'
+	}	
              
 });

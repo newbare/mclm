@@ -636,7 +636,26 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		
-		
+		panTo : function( center, zoom ) {
+			var coord = center.split(",");
+			var lat = Number( coord[0].trim() );
+			var lon = Number( coord[1].trim() );
+			var coordinate = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');
+			
+			var pan = ol.animation.pan({
+				duration: 2000,
+				source: ( this.theView.getCenter() )
+			});
+			
+			var aZoom = ol.animation.zoom({
+		        resolution: this.theView.getResolution()
+		    });			
+			
+			this.map.beforeRender( pan );
+			this.map.beforeRender( aZoom );
+			this.theView.setCenter( coordinate );	
+			this.theView.setZoom( zoom );
+		}
 		
 	}
 

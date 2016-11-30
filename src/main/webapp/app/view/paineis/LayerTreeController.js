@@ -2,10 +2,42 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.tree',
     
+    listen : {
+        controller : {
+            '*' : { 
+            	// Disparado por MCLM.view.trabalho.TrabalhoTreeController APÓS carregar um cenário.
+            	syncLayerNodeInMainTree : 'syncLayerNodeInMainTree',
+            	// disparado por MCLM.view.cenarios.CenarioController ANTES de carregar um cenário
+           		clearMainTree : 'clearMainTree'
+            }
+        }
+    },     
+    
     // Expande toda a arvore
     onTreeExpandAll : function( button ) {
     	var tree = Ext.getCmp('layerTree');
     	tree.expandAll();
+    },
+    // Desmarca todas as camadas e limpa o stack.
+    // Disparado por MCLM.view.cenarios.CenarioController ao carregar um cenário.
+    clearMainTree : function() {
+    	var me = this;
+    	var layerTree = Ext.getCmp("layerTree");
+    	layerTree.getRootNode().cascade( function(node) { 
+    		node.set('checked', false );
+    		me.toggleNode( node );
+		});    	
+    },
+    // Marca/desmarca camadas de acordo com o cenário carregado.
+    // Disparado por MCLM.view.trabalho.TrabalhoTreeController ao carregar um cenário.
+    syncLayerNodeInMainTree : function( serialId, status ) {
+    	var layerTree = Ext.getCmp("layerTree");
+    	var node = layerTree.getRootNode().findChild('serialId',serialId,true);
+    	if ( node ) {
+	    	node.set('checked', status );
+	    	this.clearCheckToTheRoot ( node.parentNode );
+    	}
+    	return true;
     },
     
     // Recolhe toda a arvore
@@ -29,22 +61,20 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     },
     // Recursivamente marca/desmarca pais dos nos até o root
     recursiveCheckParent : function( node, pChildCheckedCount ) {
-	    var parent = node.parentNode;
-	    if( parent ) {
-	    	parent.set('checked', !!pChildCheckedCount);
+	    if( node ) {
+	    	node.set('checked', !!pChildCheckedCount);
+	    	var parent = node.parentNode;
 	    	this.recursiveCheckParent( parent, pChildCheckedCount );
 	    }
     },
     clearCheckToTheRoot : function ( parentNode ) {
     	var me = this;
-	    
 	    var pChildCheckedCount = 0;
 	    parentNode.suspendEvents();
 	    parentNode.eachChild(function(c) { 
 	        if (c.get('checked')) pChildCheckedCount++; 
 
 	    });
-	    
        	me.recursiveCheckParent( parentNode, pChildCheckedCount );	    	
     },
     // Quando o estado do no muda (selecionado/nao selecionado)
@@ -56,16 +86,14 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			return;
     	}
     	var me = this;
-	    p = node.parentNode;
-	    var pChildCheckedCount = 0;
-	    p.suspendEvents();
-	    p.eachChild(function(c) { 
-	        if (c.get('checked')) pChildCheckedCount++; 
-
-	    });
-       	me.recursiveCheckParent( node, pChildCheckedCount );	    
-	    p.resumeEvents();
+	    var serialId = node.get('serialId');
+	    this.fireEvent( "syncLayerNodeInTrabalhoTree", serialId, checked );	    
+	    
 	    this.toggleNode( node );
+
+	    var p = node.parentNode;
+	    if( !p ) return true;
+	    me.clearCheckToTheRoot( p );
     },
 
     // Mosta o menu de contexto quando clica com botao direito do mouse em um no da arvore
@@ -111,6 +139,12 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	copy.set('idNodeParent', 0);
     	copy.set('readOnly', false);
     	root.appendChild( copy );
+    	
+    	if ( copy.get('checked') ) {
+    		root.set('checked', true);
+    	}
+    	
+    	
     },
     // Adiciona uma nova pasta na arvore 
     addNewFolder : function( record ) {
@@ -345,6 +379,23 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
             var rec = view.getRecord(e.getTarget(view.itemSelector));
             return !rec.data.readOnly;
         };
-    }	
+    },
+    
+    onLoadNode : function (loader, nodes, response) {
+    	var me = this;
+    	var trabalhoTree = Ext.getCmp("trabalhoTree");
+    	for ( x=0; x< nodes.length; x++ ) {
+    		var node = nodes[x];
+            var layerName = node.get('layerName');
+            var serialId = node.get('serialId');
+
+        	var nodeTrabalho = trabalhoTree.getRootNode().findChild('serialId',serialId,true);
+        	if( nodeTrabalho ) {
+        		node.set('checked', nodeTrabalho.get('checked') );
+        		me.clearCheckToTheRoot( node.parentNode );
+        	} 
+            
+    	}
+    }
 	
 });

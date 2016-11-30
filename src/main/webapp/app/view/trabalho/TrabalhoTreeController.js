@@ -2,6 +2,45 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.trabalho',
     
+    init : function(app) {
+        this.control({
+            '#trabalhoTreeView' : {
+            	drop: this.afterDropNode 
+            }
+            
+        });
+    },     
+    
+    listen : {
+        controller : {
+            '*' : { 
+            	// Disparado por MCLM.view.paineis.LayerTreeController ao mudar o estado de uma camada.
+            	syncLayerNodeInTrabalhoTree : 'syncLayerNodeInTrabalhoTree',
+            	afterDropNode : 'afterDropNode',
+            	doClearWorkspace : 'doClearWorkspace'
+            }
+        }
+    },     
+    // Disparado apos um no ser movido para outra pasta
+    afterDropNode : function  (node, data, overModel, dropPosition) {
+		var theNode = data.records[0];
+		theNode.data.idNodeParent = overModel.data.id;
+    },
+    
+    // Marca/desmarca camadas de acordo com a arvore principal.
+    // Disparado por MCLM.view.paineis.LayerTreeController ao mudar o estado de uma camada.
+    syncLayerNodeInTrabalhoTree : function( serialId, status ) {
+    	var trabalhoTree = Ext.getCmp("trabalhoTree");
+    	var node = trabalhoTree.getRootNode().findChild('serialId',serialId,true);
+    	if ( node ) {
+	    	node.set('checked', status );
+	    	node.dirty = true;
+	    	this.clearCheckToTheRoot ( node.parentNode );
+    	}
+    	return true;
+    },
+        
+    
     // Expande toda a arvore
     onTreeExpandAll : function( button ) {
     	var tree = Ext.getCmp('trabalhoTree');
@@ -19,19 +58,40 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	//
     },
     // Limpa a área de trabalho
-    clearWorkspace : function() {
+    doClearWorkspace : function() {
+    	var me = this;
+		var tree = Ext.getCmp('trabalhoTree');
+		var root = tree.getRootNode();
+		root.set("text","Área de Trabalho");
+		root.set("checked",false);
+		
+    	var painelEsquerdo = Ext.getCmp('painelesquerdo');
+    	painelEsquerdo.setTitle("");		    		
+		
+    	// Limpa a arvore principal
+    	var layerTree = Ext.getCmp("layerTree");
+    	layerTree.getRootNode().cascade( function(node) { 
+    		node.set('checked', false );
+		});   
     	
+    	
+    	// Apaga do layer stack
+    	var trabalhoTree = Ext.getCmp("trabalhoTree");
+    	trabalhoTree.getRootNode().cascade( function(node) { 
+    		node.set('checked', false );
+    		me.toggleNode( node );
+		});			    	
+    	
+    	// Limpa a arvore do cenario (trabalho)
+		root.removeAll();
+		MCLM.Globals.currentScenery = -1;
+    },
+    // Pergunta se deseja limpar a área de trabalho
+    clearWorkspace : function() {
+    	var me = this;
 		Ext.Msg.confirm('Limpar Área de Trabalho', 'Deseja realmente limpar a Área de trabalho? As alterações não gravadas serão perdidas.', function( btn ){
 			   if( btn === 'yes' ){
-
-		    		var tree = Ext.getCmp('trabalhoTree');
-		    		var root = tree.getRootNode();
-		    		root.set("text","Área de Trabalho");
-		    		root.set("checked",false);
-		    		root.dirty = false;
-		    		root.removeAll();
-		    		MCLM.Globals.currentScenery = -1;
-		    	
+				   me.doClearWorkspace();
 			   } else {
 			       return;
 			   }
@@ -39,16 +99,22 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		
     },
     //
-    onLoadNode : function(loader, nodes, response){
+    onLoadNode : function(loader, nodes, response) {
     	var me = this;
     	for (x=0; x< nodes.length; x++  ) {
     		var node = nodes[x];
             var chk = node.get('checked');
             var layerName = node.get('layerName');
+            var serialId = node.get('serialId');
             
-            if ( layerName && chk ) {
-				var layer = MCLM.Map.addLayer( node );
-				me.clearCheckToTheRoot( node.parentNode );
+            if ( layerName ) {
+            	// Evento interceptado pelo controller da árvore principal. 
+            	// 'MCLM.view.main.MainController'. Marca/desmarca camada de acordo o status da mesma camada do cenário.
+    			this.fireEvent( "syncLayerNodeInMainTree", serialId, chk );
+            	if ( chk ) {
+					var layer = MCLM.Map.addLayer( node );
+					me.clearCheckToTheRoot( node.parentNode );
+            	}
             }
             
     	}
@@ -57,9 +123,9 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     
     // Recursivamente marca/desmarca pais dos nos até o root
     recursiveCheckParent : function( node, pChildCheckedCount ) {
-	    var parent = node.parentNode;
-	    if( parent ) {
-	    	parent.set('checked', !!pChildCheckedCount);
+	    if( node ) {
+	    	node.set('checked', !!pChildCheckedCount);
+	    	var parent = node.parentNode;
 	    	this.recursiveCheckParent( parent, pChildCheckedCount );
 	    }
     },
@@ -86,22 +152,18 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 			return;
     	}
     	var me = this;
-	    p = node.parentNode;
-	    
-	    if ( !p ) return true;
-	    
-	    var pChildCheckedCount = 0;
-	    p.suspendEvents();
-	    p.eachChild(function(c) { 
-	        if (c.get('checked')) pChildCheckedCount++; 
-
-	    });
-       	me.recursiveCheckParent( node, pChildCheckedCount );	    
-	    p.resumeEvents();
+	    var serialId = node.get('serialId');
+	    // Interceptado por 'MCLM.view.paineis.LayerTreeController'
+	    this.fireEvent( "syncLayerNodeInMainTree", serialId, checked );
 	    
 	    this.toggleNode( node );
 	    node.dirty = true;
 	    node.set("selected", node.get("checked") );
+	    
+	    var p = node.parentNode;
+	    if ( !p ) return true;
+	    me.clearCheckToTheRoot( p );
+	    
     },
 
     // Mosta o menu de contexto quando clica com botao direito do mouse em um no da arvore
@@ -159,17 +221,17 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		    }
 		});      	
     },    
-    // Carrega um cenario para a area de trabalho. Apaga a area de trabalho atual
+    // Abre a janela de seleção de cenários para carregar um cenario para a area de trabalho.
     loadScenery : function() {
 
     	var sceneryStore = Ext.getStore('store.Scenery');
     	sceneryStore.load();
-		
+    	sceneryStore.sort('sceneryName','ASC');
+    	
     	var cenarioWindow = Ext.getCmp('cenarioWindow');
     	if ( cenarioWindow ) return;
     	cenarioWindow = Ext.create('MCLM.view.cenarios.CenarioWindow');
     	cenarioWindow.show();
-    	
     },
 
     // Salva a area de trabalho atual como um cenario

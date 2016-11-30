@@ -142,3 +142,13 @@
 	background-image: url('../img/loadscenery.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.scenery-public {
+	background-image: url('../img/public.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.scenery-private {
+	background-image: url('../img/private.svg') !important;
+	background-repeat: no-repeat;
+}

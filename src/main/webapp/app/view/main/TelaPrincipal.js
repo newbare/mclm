@@ -27,11 +27,11 @@ Ext.define('MCLM.view.main.TelaPrincipal', {
     items: [{
         
     	xtype: 'tabpanel',
-
+    	id : 'painelesquerdo',
         region:'west',
         layout: 'border',
         floatable: true,
-
+        title:'',
         width: 300,
         minWidth: 100,
         maxWidth: 300,

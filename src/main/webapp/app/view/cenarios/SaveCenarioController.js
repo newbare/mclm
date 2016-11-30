@@ -40,6 +40,10 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 			    	var trabalhoTree = Ext.getCmp('trabalhoTree');
 			    	var root = trabalhoTree.getRootNode();
 			    	root.data.text = sceneryName;
+			    	
+			    	var painelEsquerdo = Ext.getCmp('painelesquerdo');
+			    	painelEsquerdo.setTitle(sceneryName);
+			    	
 			    	root.collapse();
 			    	root.expand();
 			    	
@@ -54,7 +58,8 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 							 	cenario: MCLM.Globals.currentScenery
 							 },
 						     success: function (batch, options) {
-							    me.reloadScenery();
+						    	 Ext.Msg.alert('Sucesso', 'Cenário criado com sucesso.', me.onCloseWindow);
+						    	 me.reloadScenery();
 							 },
 							 failure: function (batch, options){
 							    Ext.Msg.alert('Falha ao gravar camadas do Cenário', 'Erro desconhecido ao gravar camadas do cenário', me.onCloseWindow);

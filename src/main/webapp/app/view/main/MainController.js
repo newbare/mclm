@@ -5,7 +5,10 @@ Ext.define('MCLM.view.main.MainController', {
 	requires: [
 	   'MCLM.Globals',        
 	   'MCLM.view.config.ConfigWindow'
-	],      
+	],
+	
+	// --------------------------------------------------------------------------------------------
+    // Methods / Events
 	// --------------------------------------------------------------------------------------------
 	toggleMapGrid : function( button ) {
 		MCLM.Map.toggleMapGrid();

@@ -85,14 +85,12 @@ public class Scenery {
     	return false;
     }
     
-    /*
-    public void addNode( Node node ) {
-    	SceneryLayer sl = new SceneryLayer();
-    	sl.setScenery( this );
-    	sl.setNode( node );
-    	layers.add( sl );
+    
+    public void addNode( SceneryNode node ) {
+    	nodes.add( node );
     }
     
+    /*
     public void removeNode( int idNode ) {
     	for ( SceneryLayer layer : layers ) {
     		Node node = layer.getNode(); 
