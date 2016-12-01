@@ -52,6 +52,12 @@ Ext.define('MCLM.view.cenarios.CenarioGrid', {
 		        text: 'Recupera um cenário para a área de trabalho. O conteúdo atual será apagado.',
 		        width: 150,
 		        dismissDelay: 5000 
+		    },{
+		        target: 'id304',
+		        title: 'Salvar Cenário como...',
+		        text: 'Salva uma cópia do cenário selecionado.',
+		        width: 150,
+		        dismissDelay: 5000 
 		    });			
 			
 		},        
@@ -76,6 +82,10 @@ Ext.define('MCLM.view.cenarios.CenarioGrid', {
             handler : 'makeSceneryPrivate'
         },{
         	xtype: 'tbseparator'
+        },{
+        	iconCls: 'copy-icon',
+        	id: 'id304',
+            handler : 'cloneScenery'
         },{
         	iconCls: 'loadscenery-icon',
         	id: 'id303',

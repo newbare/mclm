@@ -182,5 +182,4 @@ public class NodeData {
 		this.serialId = serialId;
 	}
 	
-	
 }

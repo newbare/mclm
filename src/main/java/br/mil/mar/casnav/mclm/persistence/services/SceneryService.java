@@ -51,6 +51,33 @@ public class SceneryService {
 	*/
 	}
 	
+	
+	public String updateScenery(Integer idScenery, String mapCenter, Integer mapZoom, String mapaBase,
+			String servidorBase, String mapBbox, Boolean mapaBaseAtivo, Boolean gradeAtiva) throws Exception {
+		
+		String resp = "{ \"success\": true, \"msg\": \"Operação efetuada com sucesso.\" }";
+		
+		try {
+			Scenery oldScenery;
+			oldScenery = rep.getScenery( idScenery );
+			
+			oldScenery.setBaseMap( mapaBase );
+			oldScenery.setZoomLevel( mapZoom );
+			oldScenery.setMapCenter( mapCenter );
+			oldScenery.setGraticule( gradeAtiva );
+			oldScenery.setMapBbox(mapBbox);
+			oldScenery.setBaseServerURL( servidorBase );
+			oldScenery.setBaseMapActive( mapaBaseAtivo );
+			
+			rep.newTransaction();
+			rep.updateScenery(oldScenery);
+		} catch ( Exception e ) {
+			resp = "{ \"error\": true, \"msg\": \"" + e.getMessage() + "\" }";
+		}
+		
+		return resp;
+	}
+	
 	public void updateScenery(Scenery scenery) throws UpdateException {
 		Scenery oldScenery;
 

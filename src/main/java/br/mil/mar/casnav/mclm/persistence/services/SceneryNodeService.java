@@ -27,7 +27,7 @@ public class SceneryNodeService {
 	
 	public String updateOrCreateNodes(String data, Integer idScenery) {
 		String result = "{ \"success\": true, \"msg\": \"Cenário atualizado com sucesso.\" }";
-		
+
 		try {
 			SceneryService ss = new SceneryService();
 			Scenery scenery = ss.getScenery( idScenery );  
@@ -42,14 +42,34 @@ public class SceneryNodeService {
 			
 			for ( Object obj : array ) {
 				JSONObject jsonobj = (JSONObject)obj;
-				//SceneryNode sn = gson.fromJson(jsonobj.toString(), SceneryNode.class);
-				//sn.setScenery( scenery );
-				
-				NodeData layer = gson.fromJson(jsonobj.toString(), NodeData.class);
+				NodeData layer = gson.fromJson( jsonobj.toString(), NodeData.class);
+
+				int id = jsonobj.getInt( "id" );
 				SceneryNode sn = new SceneryNode();
-				sn.setScenery( scenery );
-				sn.setLayer( layer );
 				
+				try {
+					int idSceneryNode = jsonobj.getInt( "idSceneryNode" );
+					int indexOrder = jsonobj.getInt( "indexOrder" );
+					int layerStackIndex = jsonobj.getInt( "layerStackIndex" );
+					int transparency = jsonobj.getInt( "transparency" );
+					boolean selected = jsonobj.getBoolean( "selected" );
+					
+					sn.setSelected(selected);
+					sn.setTransparency(transparency);
+					sn.setLayerStackIndex(layerStackIndex);
+					sn.setIdSceneryNode(idSceneryNode);
+					sn.setIndexOrder(indexOrder);
+				} catch ( Exception isANewNode ) {
+					// ignore
+				}
+				
+				int idNodeParent = jsonobj.getInt( "idNodeParent" );
+				
+				
+				sn.setScenery( scenery );
+				sn.setIdNodeParent(idNodeParent);
+				sn.setLayer( layer );
+				sn.setId(id);
 				nodes.add( sn );
 			}
 			

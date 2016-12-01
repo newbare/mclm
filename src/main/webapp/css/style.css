@@ -152,3 +152,8 @@
 	background-image: url('../img/private.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.copy-icon {
+	background-image: url('../img/copy.svg') !important;
+	background-repeat: no-repeat;
+}

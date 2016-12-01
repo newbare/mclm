@@ -85,6 +85,10 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	// Limpa a arvore do cenario (trabalho)
 		root.removeAll();
 		MCLM.Globals.currentScenery = -1;
+		
+		var cloneSceneryButton = Ext.getCmp('id803'); 
+		cloneSceneryButton.disable();
+		
     },
     // Pergunta se deseja limpar a área de trabalho
     clearWorkspace : function() {
@@ -223,7 +227,6 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     },    
     // Abre a janela de seleção de cenários para carregar um cenario para a area de trabalho.
     loadScenery : function() {
-
     	var sceneryStore = Ext.getStore('store.Scenery');
     	sceneryStore.load();
     	sceneryStore.sort('sceneryName','ASC');
@@ -233,7 +236,39 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	cenarioWindow = Ext.create('MCLM.view.cenarios.CenarioWindow');
     	cenarioWindow.show();
     },
-
+    // Apos salvar um cenario existente (estrutura das arvores),
+    // eh preciso salvar os dados do cenario (zoom, center, etc)
+    updateSceneryData : function() {
+    	
+		var mapCenter = MCLM.Map.getMapCenter();
+		var mapZoom = MCLM.Map.getMapZoom();	    	
+		var mapaBase = MCLM.Map.getBaseMapName();
+		var servidorBase = MCLM.Map.getBaseServerURL();
+		var mapaBaseAtivo = MCLM.Map.isBaseMapActive();
+		var gradeAtiva = MCLM.Map.isGraticuleActive();
+		var mapBbox = MCLM.Map.getMapCurrentBbox();		    	
+    	
+		Ext.Ajax.request({
+			url: 'updateSceneryData',
+		    params: {
+		        'idScenery' 	: MCLM.Globals.currentScenery,
+		        'mapCenter' 	: mapCenter,
+		        'mapZoom' 		: mapZoom,
+		        'mapaBase' 		: mapaBase,
+		        'servidorBase' 	: servidorBase,
+		        'mapaBaseAtivo' : mapaBaseAtivo,
+		        'gradeAtiva' 	: gradeAtiva,
+		        'mapBbox' 		: mapBbox,
+		    },						
+			success: function(response, opts) {				   
+			    Ext.Msg.alert('Sucesso', 'Cenário gravado.');
+			},
+			failure: function(response, opts) {
+				Ext.Msg.alert('Erro','Não foi possível atualizar os dados do cenário.' );
+			}
+		});
+		
+    },
     // Salva a area de trabalho atual como um cenario
     saveScenery : function() {
     	var me = this;
@@ -265,14 +300,14 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 				 	cenario: MCLM.Globals.currentScenery
 				 },
 			     success: function (action, options) {
-				    Ext.Msg.alert('Sucesso', 'Cenário gravado.');
-				    me.reloadScenery();
+			    	 me.reloadScenery(); 
 				 },
 				 failure: function (action, options){
-				    Ext.Msg.alert('Falha ao gravar camadas do Cenário', 'Não foi possível gravar o cenário atual.');
+				    Ext.Msg.alert('Falha', 'Falha ao gravar as camadas do Cenário.');
 				 }	
 	    	});
 	    	
+	    	me.updateSceneryData();	    	
     	}
 
    	

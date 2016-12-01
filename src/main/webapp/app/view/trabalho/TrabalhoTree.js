@@ -44,6 +44,13 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
         	id: 'id800',
             handler : 'saveScenery'
         },{
+        	iconCls: 'copy-icon',
+        	id: 'id803',
+        	disabled:true,
+            handler : 'cloneScenery'
+        },{
+        	xtype: 'tbseparator'
+        },{
         	iconCls: 'scenery-icon',
         	id: 'id801',
             handler : 'loadScenery'
@@ -61,8 +68,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 			
 		    Ext.tip.QuickTipManager.register({
 		        target: 'id800',
-		        title: 'Salvar como Cenário',
-		        text: 'Salva o conteúdo da área de trabalho como cenário.',
+		        title: 'Salvar',
+		        text: 'Salva o conteúdo da área de trabalho / Cenário.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }, {
@@ -75,6 +82,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		        target: 'id802',
 		        title: 'Limpar Área de trabalho',
 		        text: 'Limpa a Área de Trabalho. As modificações não gravadas no cenário atual serão perdidas.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    }, {
+		        target: 'id803',
+		        title: 'Salvar Cenário como...',
+		        text: 'Salva uma cópia do Cenário atual.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    });			

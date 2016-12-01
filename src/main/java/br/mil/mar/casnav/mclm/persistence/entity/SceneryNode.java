@@ -34,36 +34,15 @@ public class SceneryNode {
 	@Column(name="index_order")
 	private int indexOrder;	
 	
-	@Column(length=5)
-	@Enumerated(EnumType.STRING)
-	private LayerType layerType;
+	@Column(length=150)
+	private String layerAlias;
 	
 	@Transient
 	private int children;
-
-	@Column(length=250)
-	private String serviceUrl;
 	
-	@Column(length=250)
-	private String originalServiceUrl;
-
-	@Column(length=250)
-	private String description;
-	
-	@Column(length=250)
-	private String institute;
-	
-	@Column(length=150)
-	private String layerName;
-	
-	@Column(length=150)
-	private String layerAlias;
-
-	@Column(length=10, name = "serialid")
-	private String serialId;	
-	
-	@Column(name = "read_only")
-	private boolean readOnly;
+	@Column(length=5)
+	@Enumerated(EnumType.STRING)
+	private LayerType layerType;	
 
 	@Column
 	private boolean selected;	
@@ -106,38 +85,6 @@ public class SceneryNode {
 		this.layerStackIndex = layerStackIndex;
 	}
 
-	public String getServiceUrl() {
-		return serviceUrl;
-	}
-
-	public void setServiceUrl(String serviceUrl) {
-		this.serviceUrl = serviceUrl;
-	}
-
-	public String getLayerName() {
-		return layerName;
-	}
-
-	public void setLayerName(String layerName) {
-		this.layerName = layerName;
-	}
-
-	public String getLayerAlias() {
-		return layerAlias;
-	}
-
-	public void setLayerAlias(String layerAlias) {
-		this.layerAlias = layerAlias;
-	}
-
-	public String getOriginalServiceUrl() {
-		return originalServiceUrl;
-	}
-
-	public void setOriginalServiceUrl(String originalServiceUrl) {
-		this.originalServiceUrl = originalServiceUrl;
-	}
-
 	public int getIdNodeParent() {
 		return idNodeParent;
 	}
@@ -162,45 +109,6 @@ public class SceneryNode {
 		this.indexOrder = indexOrder;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getInstitute() {
-		return institute;
-	}
-
-	public void setInstitute(String institute) {
-		this.institute = institute;
-	}
-	
-	public LayerType getLayerType() {
-		return layerType;
-	}
-	
-	public void setLayerType(LayerType layerType) {
-		this.layerType = layerType;
-	}
-
-	public void setReadOnly(boolean readOnly) {
-		this.readOnly = readOnly;
-	}
-	
-	public boolean isReadOnly() {
-		return readOnly;
-	}
-	
-	public String getSerialId() {
-		return serialId;
-	}
-	
-	public void setSerialId(String serialId) {
-		this.serialId = serialId;
-	}
 
 	public Scenery getScenery() {
 		return scenery;
@@ -230,8 +138,28 @@ public class SceneryNode {
 		return layer;
 	}
 
-	public void setLayer(NodeData layer) {
+	public void setLayer( NodeData layer ) {
+		if ( layer != null ) {
+			this.layerAlias = layer.getLayerAlias();
+			this.layerType = layer.getLayerType();
+		}
 		this.layer = layer;
+	}
+
+	public String getLayerAlias() {
+		return layerAlias;
+	}
+
+	public void setLayerAlias(String layerAlias) {
+		this.layerAlias = layerAlias;
+	}
+
+	public LayerType getLayerType() {
+		return layerType;
+	}
+
+	public void setLayerType(LayerType layerType) {
+		this.layerType = layerType;
 	}
 
 	

@@ -30,19 +30,13 @@ public class GetCenarioTreeNodeAction extends BasicActionClass {
 		
 		try {
 			
-			try {
-				
-				SceneryService ss = new SceneryService();
-				resp = ss.getSceneryTreeAsJSON( cenario, node );
-				
-			} catch ( Exception e ) {
-				
-			}
-			
+			SceneryService ss = new SceneryService();
+			resp = ss.getSceneryTreeAsJSON( cenario, node );
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.setContentType("application/json");
 			response.getWriter().write( resp );  
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}	

@@ -34,6 +34,7 @@ Ext.define('MCLM.view.cenarios.CenarioWindow', {
 		 	 Ext.tip.QuickTipManager.unregister('id301');
 		 	 Ext.tip.QuickTipManager.unregister('id302');
 		 	 Ext.tip.QuickTipManager.unregister('id303');
+		 	 Ext.tip.QuickTipManager.unregister('id304');
 		 },	
 	}
 

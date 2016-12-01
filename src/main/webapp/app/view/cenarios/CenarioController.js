@@ -118,8 +118,8 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
 					        'operation' : 'PVT'
 					    },						
 						success: function(response, opts) {				   
-						   var sceneryStore = Ext.getStore('store.Scenery');
-						   sceneryStore.load();
+							var sceneryStore = Ext.getStore('store.Scenery');
+							sceneryStore.load();
 							Ext.Msg.alert('Concluído','Operação efetuada com sucesso.' );
 						},
 						failure: function(response, opts) {
@@ -238,7 +238,9 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
 		var zoomLevel = row.get('zoomLevel');
 		var mapCenter = row.get('mapCenter');
 		
+		// Interceptado por 'MCLM.view.trabalho.TrabalhoTreeController'
 		this.fireEvent('doClearWorkspace');
+		// INterceptado por 'MCLM.view.paineis.LayerTreeController'
 		this.fireEvent( "clearMainTree");	
     	
 		// Carrega as camadas do cenario na arvore de trabalho
@@ -261,6 +263,10 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
 		    			tree.expandAll();
 		    		}
 		    		MCLM.Map.panTo( mapCenter, zoomLevel );
+		    		
+		    		var cloneSceneryButton = Ext.getCmp('id803'); 
+		    		cloneSceneryButton.enable();
+		    		
 		    	}
 		    }
 		});  

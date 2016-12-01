@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
@@ -58,14 +59,25 @@ public class SceneryNodeRepository extends BasicRepository {
 					oldSceneryNode.setIdNodeParent( newSceneryNode.getIdNodeParent() );
 					oldSceneryNode.setIndexOrder( newSceneryNode.getIndexOrder() );
 					oldSceneryNode.setLayerStackIndex( newSceneryNode.getLayerStackIndex() );
-					oldSceneryNode.setReadOnly( newSceneryNode.isReadOnly() );
 					oldSceneryNode.setSelected( newSceneryNode.isSelected() );
+					oldSceneryNode.setTransparency( newSceneryNode.getTransparency() );
 					snDao.updateDO( oldSceneryNode );
 				} catch ( NotFoundException e ) {
 					// Nao achou esta camada do cenario. Criar nova.
 					Scenery scenery = sfDao.getDO( newSceneryNode.getScenery().getIdScenery() );
-					NodeData layer = ndDao.getDO( newSceneryNode.getLayer().getIdNodeData() );
-					newSceneryNode.setLayer( layer );
+					
+					if ( newSceneryNode.getLayerType() != LayerType.FDR ) {
+						NodeData layer = ndDao.getDO( newSceneryNode.getLayer().getIdNodeData() );
+						newSceneryNode.setLayer( layer );
+					} else {
+						// Necessário remover o objeto por causa do contexto de persistência.
+						// Quando chega aqui, "layer" representa uma pasta e não tem correspondente em
+						// "NodeData". Então só precisamos do "layerAlias" que é o nome da pasta e foi
+						// setado no construtor da classe "SceneryNode" durante 
+						// SceneryNodeService.updateOrCreateNodes : ( sn.setLayer( layer ) )
+						newSceneryNode.setLayer( null );
+					}
+					
 					newSceneryNode.setScenery( scenery );
 					snDao.insertDO( newSceneryNode );
 				}

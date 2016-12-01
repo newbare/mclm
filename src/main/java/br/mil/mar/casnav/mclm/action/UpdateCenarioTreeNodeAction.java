@@ -26,8 +26,6 @@ public class UpdateCenarioTreeNodeAction extends BasicActionClass {
 	public String execute () {
 		String resp;
 		
-		System.out.println( data );
-		
 		try {
 			try {
 				SceneryNodeService sns = new SceneryNodeService();

@@ -35,22 +35,34 @@ public class SceneryTreeNode {
 		this.idNodeParent = sn.getIdNodeParent();
 		this.indexOrder = sn.getIndexOrder();
 		this.layerType = sn.getLayerType().toString();
-		this.serviceUrl = sn.getServiceUrl();
-		this.originalServiceUrl = sn.getOriginalServiceUrl();
-		this.description = sn.getDescription();
-		this.institute = sn.getInstitute();
-		this.layerName = sn.getLayerName();
 		this.layerAlias = sn.getLayerAlias();
-		this.serialId = sn.getSerialId();
-		this.readOnly = sn.isReadOnly();
+		this.readOnly = false;
 		this.layerStackIndex = sn.getLayerStackIndex();
 		this.transparency = sn.getTransparency();
 		this.checked = sn.isSelected();
 		this.selected = sn.isSelected();
 		
+		if ( sn.getLayer() != null ) {
+			this.serviceUrl = sn.getLayer().getServiceUrl();
+			this.originalServiceUrl = sn.getLayer().getOriginalServiceUrl();
+			this.description = sn.getLayer().getDescription();
+			this.institute = sn.getLayer().getInstitute();
+			this.layerName = sn.getLayer().getLayerName();
+			this.serialId = sn.getLayer().getSerialId();
+		} else {
+			// Não pode ser "null" porque a conversão para JSON vai omitir o atributo.
+			this.serviceUrl = "";
+			this.originalServiceUrl = "";
+			this.description = "";
+			this.institute = "";
+			this.layerName = "";
+			this.serialId = "";
+		}
+		
 		// Precisa para ser compativel com o TreeNode do ExtJS
 		this.id = String.valueOf( sn.getId() );
-
+		this.text = this.layerAlias;
+		
 		if ( this.layerName == null || this.layerName.equals("") ) {
 			this.leaf = false;
 		} else {
@@ -61,7 +73,6 @@ public class SceneryTreeNode {
 			if ( this.layerType.equals("TIF") ) this.iconCls = "tif-icon";
 		}
 		
-		this.text = this.layerAlias;
 	}
 
 

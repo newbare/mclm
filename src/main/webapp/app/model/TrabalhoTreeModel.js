@@ -2,6 +2,7 @@ Ext.define('MCLM.model.TrabalhoTreeModel', {
     extend: 'Ext.data.TreeModel',
 	fields: [
         { name: 'index', type: 'int' },
+        { name: 'idSceneryNode', type: 'int' },
         { name: 'text', type: 'string' },
         { name: 'serviceUrl', type: 'string' },
         { name: 'layerName', type: 'string' },
