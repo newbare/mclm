@@ -1,7 +1,7 @@
 Ext.define('MCLM.view.cenarios.PainelCentral', {
 	extend: 'Ext.Panel',
 	xtype: 'cenariosPainelCentral',
-	width:400,
+	width: 300,
 	region: 'east',
 	margin: '0 0 0 0',
 	layout:'border',

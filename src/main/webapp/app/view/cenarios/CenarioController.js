@@ -28,20 +28,12 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
     	
     	for (x = 0; x < nodes.length; x++ ) {
     		if ( nodes[x].leaf ) {
-    			var serialId =  nodes[x].serialId;
-    			
-    			var html = "<div style='float:left;width:100%;height:52px'>" +
-    				"<div style='width:100px;height:50px;border:1px solid black;float:left;margin-right: 5px;'> <img style='display:none;width:98px;height:48px;' src='' id='MIN_"+serialId+"'>  </div>" +
-    				"<div style='font-family:Courier;float:left;'>"+
-    				"<b>["+nodes[x].layerType+"]</b><br>" + nodes[x].layerAlias + "<br></div>" +
-    				"</div>";
-    			
-    			nodesHtml = nodesHtml + html; //"<b>["+nodes[x].layerType+"]</b> " + nodes[x].layerAlias + "<br>";
+    			nodesHtml = nodesHtml + "<b>["+nodes[x].layerType+"]</b> " + nodes[x].layerAlias + "<br>";
     		}
     	}
     	
     	var painel = Ext.getCmp('inferiorDireito');
-    	painel.update("<div style='width:100%;margin-bottom: 10px;'><b>" + scenery + "</b><br><i>" + description + "</i></div>" + nodesHtml );
+    	painel.update("<b>" + scenery + "</b><br><i>" + description + "</i><br><p style='font-family:Courier'>" + nodesHtml + "</p>");
     	
     	this.mountImagePreview( record );
     	
@@ -74,7 +66,7 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
 			var layerImage = MCLM.Map.getSceneryImagePreview( layerName, serviceUrl, bbox );
         	
 			if ( (layerType == "WMS") && checked ) {
-	    		content = content + "<img class='minithumb' serial="+ serialId +" id='IMG_" + serialId + "' style='z-index:"+ 
+	    		content = content + "<img class='minithumb' id='MT_" + serialId + "' style='z-index:"+ 
 	    		indexOrder +";display:none;position: absolute;width:100%;height:100%' src='"+layerImage+"' />";
         	}
         	
@@ -85,12 +77,6 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
     	// (evita o simbolo de imagem quebrada enquanto o geoserver cria a miniatura)
     	$(".minithumb").one("load", function() {
     		$(this).css("display","block");
-    		var serial = $(this).attr("serial");
-    		var src = $(this).attr("src");
-    		console.log( serial + " " + src );
-    		$("#MIN_" + serial).attr('src', src );
-    		$("#MIN_" + serial).css("display","block");
-    		
     	}).each(function() {
     		if(this.complete) $(this).load();
     	});    	

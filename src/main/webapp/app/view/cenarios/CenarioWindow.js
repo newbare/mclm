@@ -10,7 +10,7 @@ Ext.define('MCLM.view.cenarios.CenarioWindow', {
 	],	    
     controller : 'cenario',	
 	
-	width : 850,
+	width : 750,
 	height: 500,
     scrollable: false,
     frame : false,

@@ -1,7 +1,5 @@
 package br.mil.mar.casnav.mclm.persistence.entity;
 
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -76,27 +74,14 @@ public class SceneryNode {
 	@Column
 	private int transparency = 1;	
 	
-	public SceneryNode() {
-		// TODO Auto-generated constructor stub
-	}
-	
 	@ManyToOne()
 	@JoinColumn(name="id_scenery", foreignKey = @ForeignKey(name = "fk_scenery_layer_scenery"))
 	private Scenery scenery;		
-	
-	public SceneryNode( int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, 
-			String layerAlias, LayerType layerType ) {
-		this.idNodeParent = idNodeParent;
-		this.originalServiceUrl = originalServiceUrl;
-		this.description = description;
-		this.institute = institute;
-		this.layerName = layerName;
-		this.layerAlias = layerAlias;
-		this.layerType = layerType;
-		this.readOnly = false;
-		this.serialId = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
-	}
 
+	@ManyToOne()
+	@JoinColumn(name="id_layer", foreignKey = @ForeignKey(name = "fk_scenery_layer_node"))
+	private NodeData layer;	
+	
 	public int getTransparency() {
 		return transparency;
 	}
@@ -240,5 +225,14 @@ public class SceneryNode {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public NodeData getLayer() {
+		return layer;
+	}
+
+	public void setLayer(NodeData layer) {
+		this.layer = layer;
+	}
+
 	
 }

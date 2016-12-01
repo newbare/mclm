@@ -37,6 +37,7 @@ public class SceneryNodeService {
 			Gson gson = new Gson();
 			JSONArray array = new JSONArray( data );
 			List<SceneryNode> nodes = new ArrayList<SceneryNode>();
+			
 			for ( Object obj : array ) {
 				JSONObject jsonobj = (JSONObject)obj;
 				SceneryNode sn = gson.fromJson(jsonobj.toString(), SceneryNode.class);
