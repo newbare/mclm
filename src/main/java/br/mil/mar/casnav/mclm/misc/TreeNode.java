@@ -18,6 +18,7 @@ public class TreeNode {
 	private String layerAlias;
 	private int index;
 	private int idNodeParent;
+	private int idNodeData;
 	private String serialId;
 	private String layerType;
 	private int childrenCount;
@@ -37,7 +38,7 @@ public class TreeNode {
 		this.layerType = ute.getData("layertype");
 		this.readOnly = Boolean.valueOf( ute.getData("read_only") );
 		this.iconCls = "";
-		
+		this.idNodeData = Integer.valueOf( ute.getData("id_node_data") );
 		
 		this.serialId = ute.getData("serialid");
 		
@@ -195,5 +196,15 @@ public class TreeNode {
 	public String getIconCls() {
 		return iconCls;
 	}
+
+	public int getIdNodeData() {
+		return idNodeData;
+	}
+
+	public void setIdNodeData(int idNodeData) {
+		this.idNodeData = idNodeData;
+	}
+	
+	
 	
 }

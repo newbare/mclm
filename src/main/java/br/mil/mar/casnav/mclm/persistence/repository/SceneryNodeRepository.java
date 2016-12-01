@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -38,35 +39,35 @@ public class SceneryNodeRepository extends BasicRepository {
 	
 	public void insertSceneryNodeList(List<SceneryNode> sceneryNodeList) throws Exception {
 		
-		DaoFactory<SceneryNode> df = new DaoFactory<SceneryNode>();
-		IDao<SceneryNode> fm = df.getDao(this.session, SceneryNode.class);
+		DaoFactory<SceneryNode> sn = new DaoFactory<SceneryNode>();
+		IDao<SceneryNode> snDao = sn.getDao(this.session, SceneryNode.class);
 
-		DaoFactory<Scenery> nf = new DaoFactory<Scenery>();
-		IDao<Scenery> nd = nf.getDao(this.session, Scenery.class);
+		DaoFactory<Scenery> sf = new DaoFactory<Scenery>();
+		IDao<Scenery> sfDao = sf.getDao(this.session, Scenery.class);
 		
+		DaoFactory<NodeData> nd = new DaoFactory<NodeData>();
+		IDao<NodeData> ndDao = nd.getDao(this.session, NodeData.class);
 		
 		try {
-			for( SceneryNode sl : sceneryNodeList ) {
+			for( SceneryNode newSceneryNode : sceneryNodeList ) {
 				
 				try {
 					// Tenta encontrar a camada para atualizar.
-					SceneryNode oldSn = fm.getDO( sl.getIdSceneryNode() );
-					oldSn.setDescription( sl.getDescription() );
-					oldSn.setIdNodeParent( sl.getIdNodeParent() );
-					oldSn.setIndexOrder( sl.getIndexOrder() );
-					oldSn.setLayerStackIndex( sl.getLayerStackIndex() );
-					oldSn.setReadOnly( sl.isReadOnly() );
-					oldSn.setSelected( sl.isSelected() );
-					fm.updateDO( oldSn );
+					SceneryNode oldSceneryNode = snDao.getDO( newSceneryNode.getIdSceneryNode() );
+					// Estes atributos PRECISAM ser duplicados da tabela de Camadas (NodeData)
+					oldSceneryNode.setIdNodeParent( newSceneryNode.getIdNodeParent() );
+					oldSceneryNode.setIndexOrder( newSceneryNode.getIndexOrder() );
+					oldSceneryNode.setLayerStackIndex( newSceneryNode.getLayerStackIndex() );
+					oldSceneryNode.setReadOnly( newSceneryNode.isReadOnly() );
+					oldSceneryNode.setSelected( newSceneryNode.isSelected() );
+					snDao.updateDO( oldSceneryNode );
 				} catch ( NotFoundException e ) {
 					// Nao achou esta camada do cenario. Criar nova.
-					try {
-						Scenery scenery = nd.getDO( sl.getScenery().getIdScenery() );
-						sl.setScenery(scenery);
-					} catch ( Exception nfe ) { 
-						//
-					}
-					fm.insertDO( sl );
+					Scenery scenery = sfDao.getDO( newSceneryNode.getScenery().getIdScenery() );
+					NodeData layer = ndDao.getDO( newSceneryNode.getLayer().getIdNodeData() );
+					newSceneryNode.setLayer( layer );
+					newSceneryNode.setScenery( scenery );
+					snDao.insertDO( newSceneryNode );
 				}
 				
 				

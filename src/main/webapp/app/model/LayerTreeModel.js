@@ -13,7 +13,9 @@ Ext.define('MCLM.model.LayerTreeModel', {
          { name: 'description', type: 'string' },
          { name: 'institute', type: 'string' },
          { name: 'idNodeParent', type: 'int' },
-         { name: 'readOnly', type: 'boolean' }
+         { name: 'readOnly', type: 'boolean' },
+         { name: 'idNodeData', type: 'string' }
+         
 	],
 
 });

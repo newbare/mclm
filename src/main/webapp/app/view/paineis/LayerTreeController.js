@@ -128,6 +128,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     addToScenery : function( record ) {
     	var trabalhoTree = Ext.getCmp('trabalhoTree');
     	var root = trabalhoTree.getRootNode();
+    	
     	var copy = record.copy();    
     	var y = 0;
     	root.cascadeBy( function(n) { 

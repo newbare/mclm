@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -38,12 +39,20 @@ public class SceneryNodeService {
 			JSONArray array = new JSONArray( data );
 			List<SceneryNode> nodes = new ArrayList<SceneryNode>();
 			
+			
 			for ( Object obj : array ) {
 				JSONObject jsonobj = (JSONObject)obj;
-				SceneryNode sn = gson.fromJson(jsonobj.toString(), SceneryNode.class);
+				//SceneryNode sn = gson.fromJson(jsonobj.toString(), SceneryNode.class);
+				//sn.setScenery( scenery );
+				
+				NodeData layer = gson.fromJson(jsonobj.toString(), NodeData.class);
+				SceneryNode sn = new SceneryNode();
 				sn.setScenery( scenery );
+				sn.setLayer( layer );
+				
 				nodes.add( sn );
 			}
+			
 			
 			insertSceneryNodeList( nodes );
 			
