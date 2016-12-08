@@ -240,10 +240,11 @@ Ext.define('MCLM.Map', {
 				        url: serverUrl,
 				        isBaseLayer : false,
 				        params: {
-				        	tiled: true,
-				            'layers': layerName,
-				            'VERSION': '1.1.1', 
-				            'format': 'image/png'
+				        	'tiled'		: true,
+				            'layers'	: layerName,
+				            'version'	: '1.1.1', 
+				            'format'	: 'image/png',
+				            'viewparams': 'directed:false;numroutes:10;source_id:1369892;target_id:6450',
 				        },
 				        projection: ol.proj.get('EPSG:4326')
 				    })
