@@ -358,6 +358,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	toggleNode: function( node ) {
 		var checked = node.get('checked');
 		var layerName = node.get('layerName');
+		var serialId = node.get('serialId');
 		
 		if ( layerName == "" ) return;
 		
@@ -367,7 +368,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			this.fireEvent('mountImagePreview');
 		} else {
 			// Remove a camada do mapa
-			MCLM.Map.removeLayer( layerName );
+			MCLM.Map.removeLayer( serialId );
 			this.fireEvent('mountImagePreview');
 		}	
 	},

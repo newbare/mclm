@@ -20,9 +20,13 @@
 	<script type="text/javascript" src="app.js"></script>
 	
 <!-- OPENLAYERS -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.20.0/ol-debug.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.20.0/ol-debug.css" type="text/css">
+
+	<!-- 
 	<script type="text/javascript" src="js/openlayers3.15.js"></script>
 	<link rel="stylesheet" href="css/openlayers3.15.css" type="text/css">
-	
+	-->
 <!-- JQUERY -->
 	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
 

@@ -113,7 +113,7 @@ public class WebClient {
 			
 			System.out.println( "WebClient:doPostStream >>> " + theString );
 		} catch ( Exception e ) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		
 		con.disconnect();

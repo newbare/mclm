@@ -181,5 +181,6 @@ public class NodeData {
 	public void setSerialId(String serialId) {
 		this.serialId = serialId;
 	}
+
 	
 }

@@ -134,14 +134,13 @@ public class NodeService {
 		
 		try {
 			NodeService ns = new NodeService();
-			NodeData node = new NodeData(layerFolderID, "", "", "", "", newFolderName, LayerType.FDR);
+			NodeData node = new NodeData( layerFolderID, "", "", "", "", newFolderName, LayerType.FDR );
 			
 			ns.addNode( node );			
 			return "{ \"success\": true, \"msg\": \"Pasta " + newFolderName + " criada com sucesso.\" }";
 		} catch ( Exception e ) {
 			return "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
 		}
-		
 		
 	}
 	

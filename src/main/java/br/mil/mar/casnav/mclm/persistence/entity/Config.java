@@ -43,6 +43,21 @@ public class Config {
 	@Column(length=100, name = "shape_file_target_path")
 	private String shapeFileTargetPath;
 
+	@Column(length=100, name = "geoserver_database_addr")
+	private String geoserverDatabaseAddr;
+
+	@Column(name = "geoserver_database_port")
+	private int geoserverDatabasePort;
+	
+	@Column(length=100, name = "geoserver_database_user")
+	private String geoserverDatabaseUser;
+		
+	@Column(length=100, name = "geoserver_database_password")
+	private String geoserverDatabasePassword;
+	
+	@Column(length=100, name = "geoserver_database_dbname")
+	private String geoserverDatabaseDbName;
+	
 	@Column(length=50, name = "proxy_user")
 	private String proxyUser;
 	
@@ -243,5 +258,47 @@ public class Config {
 	public User getUser() {
 		return user;
 	}
+
+	public String getGeoserverDatabaseAddr() {
+		return geoserverDatabaseAddr;
+	}
+
+	public void setGeoserverDatabaseAddr(String geoserverDatabaseAddr) {
+		this.geoserverDatabaseAddr = geoserverDatabaseAddr;
+	}
+
+	public int getGeoserverDatabasePort() {
+		return geoserverDatabasePort;
+	}
+
+	public void setGeoserverDatabasePort(int geoserverDatabasePort) {
+		this.geoserverDatabasePort = geoserverDatabasePort;
+	}
+
+	public String getGeoserverDatabaseUser() {
+		return geoserverDatabaseUser;
+	}
+
+	public void setGeoserverDatabaseUser(String geoserverDatabaseUser) {
+		this.geoserverDatabaseUser = geoserverDatabaseUser;
+	}
+
+	public String getGeoserverDatabasePassword() {
+		return geoserverDatabasePassword;
+	}
+
+	public void setGeoserverDatabasePassword(String geoserverDatabasePassword) {
+		this.geoserverDatabasePassword = geoserverDatabasePassword;
+	}
+
+	public String getGeoserverDatabaseDbName() {
+		return geoserverDatabaseDbName;
+	}
+
+	public void setGeoserverDatabaseDbName(String geoserverDatabaseDbName) {
+		this.geoserverDatabaseDbName = geoserverDatabaseDbName;
+	}
+
+
 	
 }

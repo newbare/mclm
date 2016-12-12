@@ -2,6 +2,17 @@ Ext.define('MCLM.Functions', {
 	
 	statics: {
 		
+		guid : function() {
+			  function s4() {
+			    return Math.floor((1 + Math.random()) * 0x10000)
+			      .toString(16)
+			      .substring(1);
+			  }
+			  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+			    s4() + '-' + s4() + s4() + s4();
+		},
+		
+		
 		inicializaDicas : function() {
 		    Ext.tip.QuickTipManager.init();
 		    
@@ -73,7 +84,7 @@ Ext.define('MCLM.Functions', {
 		    }, {
 		        target: 'id119',
 		        title: 'Ocultar/Exibir Base',
-		        text: 'Oculta e exibe a camada de base do mapa.',
+		        text: 'Oculta ou exibe a camada de base do mapa.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }); 	

@@ -13,27 +13,66 @@ import br.mil.mar.casnav.mclm.misc.PathFinder;
 import br.mil.mar.casnav.mclm.misc.RESTResponse;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.misc.WebClient;
+import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 
 public class LayerService {
 
-	public String getAsFeatureLayer( String tableName, String queryParameter ) throws Exception {
-		String sql = "SELECT row_to_json(fc)\\:\\:text As featurecollection " +  
-			"FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features " + 
+	/*
+	public String getLayerAsFeatures( String requestUrl ) {
+		String result = "";
+		
+		// http://www.geoservicos.ibge.gov.br/geoserver/wms?service=WFS&version=1.0.0&request=GetFeature&typeName=CGEO:C06_aglomerados_subnormais_2010&maxFeatures=50&outputFormat=json&srsName=EPSG:4326&bbox=-45.75805664062501,-24.161790257643688,-40.13305664062501,-21.028109978642803
+
+		// http://www.geoservicos.ibge.gov.br/geoserver/CGEO/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=CGEO:C06_aglomerados_subnormais_2010&maxFeatures=50&outputFormat=json
+		//String requestUrl = serverUrl.replace("wms/", "") + "/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=" + layerName + 
+		//		limit + "&bbox=" + bbox + "&outputFormat=json"; 
+		
+		try {
+			WebClient ws = new WebClient();
+			result = ws.doGet( requestUrl );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	*/
+	
+	public String getAsFeatures( String propertiesColumns, String whereClause, String sourceTables, String geometryColumn, String bbox, String database ) throws Exception {
+
+		Config cfg = Configurator.getInstance().getConfig();
+		/*
+			propertiesColumns = "osm_name";
+			whereClause = "1=1";
+			sourceTables = "osm_2po_4pgr";
+			geometryColumn = "geom_way";
+			bbox = "-43.1838739,-22.9275921,-43.1760001,-22.9028997";
+			databse = cfg.getGeoserverDatabaseDbName()
+		*/
+		
+		String sql = "SELECT row_to_json( fc )::text As featurecollection " +  
+			"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) ) As features " + 
 			     "FROM (SELECT 'Feature' As type, " + 
-			     "ST_AsGeoJSON( geom )\\:\\:json As geometry, " +  
-			     "row_to_json((SELECT l FROM (SELECT \"name\" as nome, adm0_name as pais) As l)) As properties " +  
-			     "FROM \"admin1\" As l where adm0_name like '%Brazil%') As f) as fc; ";
+			     "ST_AsGeoJSON( " + geometryColumn + " )::json As geometry, " +  
+			     "row_to_json((SELECT l FROM (SELECT " + propertiesColumns + ") As l)) As properties " +  
+			     "FROM " + sourceTables + " As l where " + whereClause + " and " + geometryColumn + " @ ST_MakeEnvelope ("+bbox+")  ) As f) as fc; ";
 		
 		String result = "";
-		GenericService gs = new GenericService();
+		
+		String connectionString = "jdbc:postgresql://" + cfg.getGeoserverDatabaseAddr() +
+				":" + cfg.getGeoserverDatabasePort() + "/" + database;
+		
+		GenericService gs = new GenericService( connectionString, cfg.getGeoserverDatabaseUser(), cfg.getGeoserverDatabasePassword()  );
+		
 		List<UserTableEntity> utes = gs.genericFetchList( sql );
+		
+		System.out.println("GetAsFeatures retornou " + utes.size() + " registros.");
+		
 		if ( utes.size() > 0 ) {
 			UserTableEntity ute = utes.get(0);
 			result = ute.getData("featurecollection");
 		}
-		
-		System.out.println( result );
 		
 		return result;
 	}
@@ -154,6 +193,9 @@ public class LayerService {
 				serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/coveragestores/" + layerName + "?recurse=true";
 			}
 		
+			ns.newTransaction();
+			ns.deleteNode(node);
+			
 			if ( !serverRESTAPI.equals("") ) {
 				System.out.println("DELETE " + serverRESTAPI );
 				WebClient wc = new WebClient();
@@ -173,8 +215,6 @@ public class LayerService {
 				}
 			}
 
-			ns.newTransaction();
-			ns.deleteNode(node);
 		} catch (Exception e) {
 			result = "{ \"error\": true, \"msg\": \"" + e.getMessage()+ ".\" }";
 		}

@@ -64,11 +64,6 @@ Ext.define('MCLM.view.main.MainController', {
     	MCLM.Map.toggleQueryTool();
 	},
 	// --------------------------------------------------------------------------------------------
-	getAsFeatures : function() {
-		Ext.Msg.alert('Não implementado ainda.' );
-		//MCLM.Map.getAsFeatures('aaaaaa','bbbbbb');
-	},
-	// --------------------------------------------------------------------------------------------
 	showLayerStack : function() {
     	var stackWindow = Ext.getCmp('layerStack');
     	if ( stackWindow ) return;

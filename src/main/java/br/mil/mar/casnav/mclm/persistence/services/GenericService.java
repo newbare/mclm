@@ -11,6 +11,10 @@ import br.mil.mar.casnav.mclm.persistence.repository.GenericRepository;
 public class GenericService {
 	private GenericRepository rep;
 	
+	public GenericService( String connectionString, String user, String password ) throws DatabaseConnectException {
+		this.rep = new GenericRepository(connectionString, user, password);
+	}
+	
 	public GenericService() throws DatabaseConnectException {
 		this.rep = new GenericRepository();
 	}

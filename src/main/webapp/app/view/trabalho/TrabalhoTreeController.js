@@ -348,16 +348,22 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 	toggleNode: function( node ) {
 		var checked = node.get('checked');
 		var layerName = node.get('layerName');
+		var serviceUrl = node.get('serviceUrl' );
+		var serialId = node.get('serialId' );
 		
 		if ( layerName == "" ) return;
 		
 		if( checked == true ) {
 			// adiciona a camada no mapa
-			var layer = MCLM.Map.addLayer( node );
+			//var layer = MCLM.Map.addLayer( node );
+			
+			// Para pegar a camada como features, descomente a linha abaixo.
+			MCLM.Map.getLayerAsFeatures( node, serialId );
+			
 			this.fireEvent('mountImagePreview');
 		} else {
 			// Remove a camada do mapa
-			MCLM.Map.removeLayer( layerName );
+			MCLM.Map.removeLayer( serialId );
 			this.fireEvent('mountImagePreview');
 		}	
 	},

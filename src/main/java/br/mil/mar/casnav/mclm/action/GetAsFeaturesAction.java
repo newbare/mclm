@@ -19,20 +19,23 @@ import br.mil.mar.casnav.mclm.persistence.services.LayerService;
 
 @ParentPackage("default")
 public class GetAsFeaturesAction {
-	private String tableName;
-	private String queryParameter;
+	private String whereClause;
+	private String propertiesColumns;
+	private String sourceTables;
+	private String geometryColumn;
+	private String bbox;
+	private String database;
 	
 	public String execute(){
 
 		try { 
 			String result = "";
 			
-			if ( tableName != null ) {
-
-				LayerService ls = new LayerService();
-				result = ls.getAsFeatureLayer( tableName, queryParameter );
+			if ( sourceTables != null ) {
 				
-				System.out.println("Resposta getAsFeatures ("+tableName+"): " + result );
+				LayerService ls = new LayerService();
+				result = ls.getAsFeatures(  propertiesColumns, whereClause, sourceTables, geometryColumn, bbox, database );
+				
 			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
@@ -45,12 +48,28 @@ public class GetAsFeaturesAction {
 		return "ok";
 	}
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
+	public void setWhereClause(String whereClause) {
+		this.whereClause = whereClause;
+	}
+
+	public void setPropertiesColumns(String propertiesColumns) {
+		this.propertiesColumns = propertiesColumns;
+	}
+
+	public void setSourceTables(String sourceTables) {
+		this.sourceTables = sourceTables;
+	}
+
+	public void setGeometryColumn(String geometryColumn) {
+		this.geometryColumn = geometryColumn;
+	}
+
+	public void setBbox(String bbox) {
+		this.bbox = bbox;
 	}
 	
-	public void setQueryParameter(String queryParameter) {
-		this.queryParameter = queryParameter;
+	public void setDatabase(String database) {
+		this.database = database;
 	}
 	
 }

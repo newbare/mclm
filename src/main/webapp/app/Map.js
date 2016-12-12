@@ -224,7 +224,6 @@ Ext.define('MCLM.Map', {
 			if( layerType == 'KML' ) {
 				
 				var kmlFileUrl = window.location + "/" + serverUrl; 
-				//urlKml = "http://localhost:8080/mclm/kmlFolderStorage/map.kml";
 				var newLayer = new ol.layer.Vector({
 					  source: new ol.source.Vector({
 						    url: kmlFileUrl,
@@ -235,6 +234,7 @@ Ext.define('MCLM.Map', {
 				});				
 				
 			} else {
+				
 				var newLayer = new ol.layer.Tile({
 				    source: new ol.source.TileWMS({
 				        url: serverUrl,
@@ -244,11 +244,12 @@ Ext.define('MCLM.Map', {
 				            'layers'	: layerName,
 				            'version'	: '1.1.1', 
 				            'format'	: 'image/png',
-				            'viewparams': 'directed:false;numroutes:10;source_id:1369892;target_id:6450',
+				            //'viewparams': 'directed:false;numroutes:10;source_id:1369892;target_id:6450',
 				        },
 				        projection: ol.proj.get('EPSG:4326')
 				    })
 				});
+				
 			}
 			
 			newLayer.set('name', layerName);
@@ -279,7 +280,7 @@ Ext.define('MCLM.Map', {
 		isLayerEnabled : function( layerName ) {
 			var achou = false;
 			this.map.getLayers().forEach( function ( layer ) {
-				if( layer.U.name == layerName ) {
+				if( layer.get("name") == layerName ) {
 					achou = true;
 				}
 			});
@@ -301,10 +302,10 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Remove uma camada do mapa
-		removeLayer : function ( layerName ) {
+		removeLayer : function ( serialId ) {
 			var me = this;
 			this.map.getLayers().forEach( function ( layer ) {
-				if( layer.U.name == layerName ) {
+				if( layer.get("serialId") == serialId ) {
 					me.map.removeLayer( layer );	
 					return;
 				}
@@ -314,7 +315,7 @@ Ext.define('MCLM.Map', {
 	    	var layerStackStore = Ext.getStore('store.layerStack');
 	    	var stackGridPanel = Ext.getCmp('stackGridPanel');
 	    	layerStackStore.each( function(rec) {
-	    	    if (rec.data.layerName == layerName) {
+	    	    if (rec.data.serialId == serialId) {
 	    	    	layerStackStore.remove(rec);
 	    	        return false;
 	    	    }
@@ -329,7 +330,7 @@ Ext.define('MCLM.Map', {
 		// Liga/ Desliga o mapa do OpenSeaMap
 		toggleSeaMapLayer : function() {
 			if ( this.isLayerEnabled('OpenSeaMap') ) {
-				this.removeLayer( 'OpenSeaMap' );
+				this.removeLayer( 'mclm_openseamap_cmoa' );
 			} else {
 				this.map.addLayer( this.openSeaMapLayer );	
 			}
@@ -475,8 +476,8 @@ Ext.define('MCLM.Map', {
 			var featureCount = this.featureCount;
 			var me = this;
 			this.map.getLayers().forEach( function (layer) {
-				var layerName = layer.U.name;
-				var baseLayer = layer.U.baseLayer;
+				var layerName = layer.get("name");
+				var baseLayer = layer.get("baseLayer");
 				var found = false;
 				// Retire os comentarios para nao interrogar a camada de base
 				//if ( layerName && ( !baseLayer ) ) {
@@ -497,7 +498,7 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Interroga uma camada dada uma URL do tipo "REQUEST=GetFeatureInfo"
 		queryLayer : function( layerName, urlFeatureInfo ) {
-			console.log( urlFeatureInfo );
+			
 			var encodedUrl = encodeURIComponent( urlFeatureInfo );
 			var me = this;
 			Ext.Ajax.request({
@@ -541,64 +542,56 @@ Ext.define('MCLM.Map', {
 			console.log( "queryLayerError Error: " + response + " " + layerName );
 		},
 		// --------------------------------------------------------------------------------------------
-		// Solicita um conjunto de Features a partir de uma tabela do banco de dados
-		getAsFeatures : function( tableName, queryParameter ) {
-
-			var me = this;
-			Ext.Ajax.request({
-			       url: 'getAsFeatures',
-			       params: {
-			           'tableName': tableName,
-			           'queryParameter' : queryParameter 
-			       },       
-			       success: function(response, opts) {
-			    	   try {
-				    	   	var jsonObj = JSON.parse(response.responseText);
-				    	   	var features = response.responseText;//JSON.stringify( jsonObj );
-
-				    	   	var defaultStyle = new ol.style.Style({
-				    	        fill: new ol.style.Fill({
-				    	          color: [250,250,250,1]
-				    	        }),
-				    	        stroke: new ol.style.Stroke({
-				    	          color: [220,220,220,1],
-				    	          width: 1
-				    	        })
-				    	    });
-				    	   	
-				    	   	var formatJSON = new ol.format.GeoJSON(); 
-							var vectorSource = new ol.source.Vector({
-								format: formatJSON 
-							});
-							
-							//http://openlayersbook.github.io/ch06-styling-vector-layers/example-07.html
-							var vectorLayer = new ol.layer.Vector({
-						         source: vectorSource,
-						         style: function(feature, resolution) {
-						        	 
-						        	 //var textLabel = feature.get('nome');
-						        	 //console.log( textLabel );
-						        	 
-						        	 return [defaultStyle];
-						         }
-							});			
-
-							vectorLayer.set('alias', tableName);
-							vectorLayer.set('name', tableName);
-							vectorLayer.set('serialId', tableName);
-							vectorLayer.set('ready', false);
-							vectorLayer.set('baseLayer', false);							
-							
-							var featuresOl = formatJSON.readFeatures( jsonObj, {featureProjection: 'EPSG:4326'} );
-							vectorSource.addFeatures( featuresOl ) ;
-							me.map.addLayer( vectorLayer );				    	   
-				    	   
-				    	   
-			    	   } catch ( err ) {
-			    		   me.queryLayerError( response, layerName );
-			    	   }
-			       }
+		// Solicita uma camada do GeoServer em formato GeoJSON (Features)
+		// Chamado por TrabalhoTreeController.toggleNode()
+		getLayerAsFeatures : function( node, serialId ) {
+			var	bbox = this.getMapCurrentBbox();
+			
+			//var layerName = node.get('layerName');
+			var propertiesColumns = "osm_name";
+			var whereClause = "1=1";
+			var sourceTables = "osm_2po_4pgr";
+			var geometryColumn = "geom_way";
+			var database = "osm";
+			//bbox = "-43.1838739,-22.9275921,-43.1760001,-22.9028997";			
+			
+    	   	var formatJSON = new ol.format.GeoJSON(); 
+			var vectorSource = new ol.source.Vector({
+				format: formatJSON,
+		        projection : 'EPSG:4326',
+		        url: 'getAsFeatures?propertiesColumns=' + propertiesColumns +
+		         	'&whereClause=' + whereClause + '&sourceTables=' + sourceTables + '&geometryColumn=' + 
+		         	geometryColumn + '&bbox=' + bbox + "&database=" + database
+			});			
+			
+			/*
+			var clusterSource = new ol.source.Cluster({
+				distance: 20,
+				source: vectorSource
 			});
+			*/			
+			
+			var vectorLayer = new ol.layer.Vector({
+			      source: vectorSource
+			});
+			
+			//var uuid = MCLM.Functions.guid();
+			vectorLayer.set('alias', sourceTables);
+			vectorLayer.set('name', sourceTables);
+			vectorLayer.set('serialId', serialId);
+			vectorLayer.set('ready', false);
+			vectorLayer.set('baseLayer', false);	
+			
+	    	var layerStackStore = Ext.getStore('store.layerStack');
+			var stackGridPanel = Ext.getCmp('stackGridPanel');
+	    	var layerStack = layerStackStore.getRange();
+	    	layerStack.push( node.data );
+			layerStackStore.loadData( layerStack );    				
+	    	if ( stackGridPanel ) {
+	    		stackGridPanel.getView().refresh();
+	    	}				
+			
+			this.map.addLayer( vectorLayer );
 			
 		},
 		// --------------------------------------------------------------------------------------------
