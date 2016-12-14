@@ -12,7 +12,7 @@ Ext.define('MCLM.view.paineis.AbaCatalogo', {
         align: 'stretch'
     },	
 	
-    title: 'Camadas',
+    title: 'Catálogo',
 
     width: 300,
     minWidth: 100,

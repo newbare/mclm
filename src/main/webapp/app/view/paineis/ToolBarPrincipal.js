@@ -93,5 +93,13 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'socket-icon',
         handler: 'checkInternetConnection'
+    }, 
+    {
+    	xtype: 'button',
+    	id: 'id120',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    iconCls: 'route-icon',
+        handler: 'calcRoute'
     }]
 });

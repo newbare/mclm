@@ -157,3 +157,8 @@
 	background-image: url('../img/copy.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.route-icon {
+	background-image: url('../img/route.svg') !important;
+	background-repeat: no-repeat;
+}

@@ -87,6 +87,12 @@ Ext.define('MCLM.Functions', {
 		        text: 'Oculta ou exibe a camada de base do mapa.',
 		        width: 150,
 		        dismissDelay: 5000 
+		    }, {
+		        target: 'id120',
+		        title: 'Calcular Rota',
+		        text: 'Calcula a rota entre dois pontos.',
+		        width: 150,
+		        dismissDelay: 5000 
 		    }); 	
 		}
 		

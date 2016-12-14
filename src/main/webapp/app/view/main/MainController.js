@@ -39,6 +39,13 @@ Ext.define('MCLM.view.main.MainController', {
     	configForm.getForm().setValues( MCLM.Globals.config );    	
     },
 	// --------------------------------------------------------------------------------------------
+    calcRoute : function() {
+    	var rotaWindow = Ext.getCmp('rotaWindow');
+    	if ( rotaWindow ) return;
+    	rotaWindow = Ext.create('MCLM.view.rotas.RotaWindow');
+    	rotaWindow.show();
+    },
+	// --------------------------------------------------------------------------------------------
     checkInternetConnection: function ( button ) {
     	var box = Ext.MessageBox.wait('Aguarde alguns instantes enquanto a conexão com a Internet é testada.', 'Verificando Conectividade');
     	
