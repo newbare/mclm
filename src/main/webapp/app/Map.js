@@ -219,7 +219,10 @@ Ext.define('MCLM.Map', {
 			var data = node.data;
 			var serialId = node.get('serialId');
 			var version = node.get('version');
-			var layerType = node.get('layerType');			
+			var layerType = node.get('layerType');		
+			
+            var transparency = node.get('transparency') / 10;
+            var layerStackIndex = node.get('layerStackIndex');			
 			
 			if( layerType == 'KML' ) {
 				
@@ -252,6 +255,8 @@ Ext.define('MCLM.Map', {
 				
 			}
 			
+			if ( transparency == 0 ) transparency = 1;
+			newLayer.setOpacity( transparency );
 			newLayer.set('name', layerName);
 			newLayer.set('alias', layerAlias);
 			newLayer.set('serverUrl', serverUrl);
@@ -263,6 +268,8 @@ Ext.define('MCLM.Map', {
 			this.bindTileEvent( newLayer );
 			this.map.addLayer( newLayer );
 
+			if ( layerStackIndex > 0 ) me.setNewIndex( layerName, layerStackIndex );
+			
 			// Adiciona na lista do gerenciador de camadas.
 	    	var layerStackStore = Ext.getStore('store.layerStack');
 			var stackGridPanel = Ext.getCmp('stackGridPanel');
@@ -286,16 +293,19 @@ Ext.define('MCLM.Map', {
 			});
 			return achou;
 		},
+		setMapGridVisibility : function( visible ) {
+			if ( visible ) {
+				this.graticule.setMap( this.map );
+				this.graticuleEnabled = true;
+			} else {
+				this.graticule.setMap( null );
+				this.graticuleEnabled = false;
+			}	
+		},
 		// --------------------------------------------------------------------------------------------
 		// Liga / desliga a grade de coordenadas
 		toggleMapGrid : function () {
-			if ( this.graticuleEnabled ) {
-				this.graticule.setMap( null );
-				this.graticuleEnabled = false;
-			} else {
-				this.graticule.setMap( this.map );
-				this.graticuleEnabled = true;
-			}	
+			this.setMapGridVisibility( !this.graticuleEnabled );
 		},		
 		isGraticuleActive : function() {
 			return this.graticuleEnabled;
@@ -370,6 +380,19 @@ Ext.define('MCLM.Map', {
 			return null;
 		},
 		// --------------------------------------------------------------------------------------------
+		// Retorna uma camada do mapa dado o seu serialId
+		findBySerialID : function ( serial ) {
+			var layers = this.map.getLayers();
+			var length = layers.getLength();
+			for (var i = 0; i < length; i++) {
+				var serialId = layers.item(i).get('serialId');
+				if (serialId === serial) {
+					return layers.item(i);
+				}
+			}
+			return null;
+		},
+		// --------------------------------------------------------------------------------------------
 		// Marca uma camada como selecionada.
 		selectLayer : function ( layerName ) {
 			this.selectedLayer = this.findByName( layerName );
@@ -387,21 +410,29 @@ Ext.define('MCLM.Map', {
 		// Ajusta a opacidade da camada selecionada
 		setSelectedLayerOpacity : function ( opacity ) {
 			if ( this.selectedLayer ) {
-				console.log( opacity );
 				this.selectedLayer.setOpacity( opacity );
 			} else {
 				Ext.Msg.alert('Nenhuma Camada Selecionada','Selecione uma camada para alterar sua opacidade.' );
 			}
 		},
 		// --------------------------------------------------------------------------------------------
+		// Retorna o indice de uma camada no mapa
+		getLayerIndex : function( layer ) {
+			var layers = this.map.getLayers();
+			var index = this.indexOf(layers, layer);
+			return index;
+		},
+		// --------------------------------------------------------------------------------------------
 		// Modifica o indice de uma camada no mapa (nivel)
 		setNewIndex : function ( layerName , newIndex ) {
 			var layer = this.findByName( layerName );
 			var layers = this.map.getLayers();
-			var length = layers.getLength();
-			var index = this.indexOf(layers, layer);
-		    var layer = this.map.getLayers().removeAt( index );
-		    this.map.getLayers().insertAt( newIndex, layer );	
+			if ( layer ) {
+				var length = layers.getLength();
+				var index = this.getLayerIndex(layer);
+			    var layer = layers.removeAt( index );
+			    layers.insertAt( newIndex, layer );
+			} 
 		},		
 		// --------------------------------------------------------------------------------------------
 		// Retorna o bounding box atual do mapa
@@ -544,15 +575,17 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Solicita uma camada do GeoServer em formato GeoJSON (Features)
 		// Chamado por TrabalhoTreeController.toggleNode()
-		getLayerAsFeatures : function( node, serialId ) {
-			var	bbox = this.getMapCurrentBbox();
+		getLayerAsFeatures : function( node ) {
 			
 			//var layerName = node.get('layerName');
+			var serialId = node.get('serialId' );
+			
 			var propertiesColumns = "osm_name";
 			var whereClause = "1=1";
 			var sourceTables = "osm_2po_4pgr";
 			var geometryColumn = "geom_way";
 			var database = "osm";
+			var	bbox = this.getMapCurrentBbox();
 			//bbox = "-43.1838739,-22.9275921,-43.1760001,-22.9028997";			
 			
     	   	var formatJSON = new ol.format.GeoJSON(); 
@@ -564,18 +597,10 @@ Ext.define('MCLM.Map', {
 		         	geometryColumn + '&bbox=' + bbox + "&database=" + database
 			});			
 			
-			/*
-			var clusterSource = new ol.source.Cluster({
-				distance: 20,
-				source: vectorSource
-			});
-			*/			
-			
 			var vectorLayer = new ol.layer.Vector({
 			      source: vectorSource
 			});
 			
-			//var uuid = MCLM.Functions.guid();
 			vectorLayer.set('alias', sourceTables);
 			vectorLayer.set('name', sourceTables);
 			vectorLayer.set('serialId', serialId);
@@ -606,7 +631,6 @@ Ext.define('MCLM.Map', {
 			
 			var result = [];
 			
-			
 			console.log("CAMADAS EXISTENTES NO MAPA: -----------------------");
 			for (var i = 0; i < length; i++) {
 				var layerName = layers.item(i).get('name');
@@ -636,19 +660,12 @@ Ext.define('MCLM.Map', {
 			var lon = Number( coord[1].trim() );
 			var coordinate = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');
 			
-			var pan = ol.animation.pan({
-				duration: 2000,
-				source: ( this.theView.getCenter() )
+			this.theView.animate({
+				  zoom		: zoom,
+				  center	: coordinate,
+				  duration	: 2000,
 			});
 			
-			var aZoom = ol.animation.zoom({
-		        resolution: this.theView.getResolution()
-		    });			
-			
-			this.map.beforeRender( pan );
-			this.map.beforeRender( aZoom );
-			this.theView.setCenter( coordinate );	
-			this.theView.setZoom( zoom );
 		}
 		
 	}

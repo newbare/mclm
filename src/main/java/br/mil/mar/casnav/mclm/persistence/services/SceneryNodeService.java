@@ -50,13 +50,6 @@ public class SceneryNodeService {
 				try {
 					int idSceneryNode = jsonobj.getInt( "idSceneryNode" );
 					int indexOrder = jsonobj.getInt( "indexOrder" );
-					int layerStackIndex = jsonobj.getInt( "layerStackIndex" );
-					int transparency = jsonobj.getInt( "transparency" );
-					boolean selected = jsonobj.getBoolean( "selected" );
-					
-					sn.setSelected(selected);
-					sn.setTransparency(transparency);
-					sn.setLayerStackIndex(layerStackIndex);
 					sn.setIdSceneryNode(idSceneryNode);
 					sn.setIndexOrder(indexOrder);
 				} catch ( Exception isANewNode ) {
@@ -64,8 +57,13 @@ public class SceneryNodeService {
 				}
 				
 				int idNodeParent = jsonobj.getInt( "idNodeParent" );
-				
-				
+				int layerStackIndex = jsonobj.getInt( "layerStackIndex" );
+				int transparency = jsonobj.getInt( "transparency" );
+				boolean selected = jsonobj.getBoolean( "selected" );
+
+				sn.setSelected(selected);
+				sn.setTransparency(transparency);
+				sn.setLayerStackIndex(layerStackIndex);
 				sn.setScenery( scenery );
 				sn.setIdNodeParent(idNodeParent);
 				sn.setLayer( layer );

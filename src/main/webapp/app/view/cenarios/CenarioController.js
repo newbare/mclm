@@ -237,10 +237,12 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
 		var sceneryName = row.get('sceneryName');
 		var zoomLevel = row.get('zoomLevel');
 		var mapCenter = row.get('mapCenter');
+		var graticule = row.get('graticule');
+		MCLM.Map.setMapGridVisibility( graticule );
 		
 		// Interceptado por 'MCLM.view.trabalho.TrabalhoTreeController'
 		this.fireEvent('doClearWorkspace');
-		// INterceptado por 'MCLM.view.paineis.LayerTreeController'
+		// Interceptado por 'MCLM.view.paineis.LayerTreeController'
 		this.fireEvent( "clearMainTree");	
     	
 		// Carrega as camadas do cenario na arvore de trabalho
@@ -249,6 +251,11 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
 		trabalhoTreeStore.load({
 			params:{cenario: MCLM.Globals.currentScenery},
 		    callback: function(records, operation, success) {
+		    	
+		    	// Após recuperar a árvore do cenário do banco de dados, expande a árvore.
+		    	// Cada nó carregado será processado por 'onLoadNode' em 
+		    	// 'MCLM.view.trabalho.TrabalhoTreeController' para acender as camadas marcadas como ativas e
+		    	// ajustar a transparência e level de cada camada.
 		    	if ( success ) {
 		        	// Mudar o titulo do no raiz para o nome do cenario
 		    		var tree = Ext.getCmp('trabalhoTree');

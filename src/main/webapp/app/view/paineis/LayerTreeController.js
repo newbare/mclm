@@ -141,8 +141,9 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	copy.set('readOnly', false);
     	root.appendChild( copy );
     	
-    	if ( copy.get('checked') ) {
-    		root.set('checked', true);
+    	if ( copy.get( 'checked' ) ) {
+    		copy.set( 'selected', true );
+    		root.set( 'checked', true );
     	}
     	
     	

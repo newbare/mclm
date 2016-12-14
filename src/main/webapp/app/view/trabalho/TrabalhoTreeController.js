@@ -89,6 +89,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		var cloneSceneryButton = Ext.getCmp('id803'); 
 		cloneSceneryButton.disable();
 		
+		
+		var mapZoom = MCLM.Globals.config.mapZoom; 
+		var mapCenter = MCLM.Globals.config.mapCenter;		
+		MCLM.Map.panTo( mapCenter, mapZoom );
+		
+		
     },
     // Pergunta se deseja limpar a área de trabalho
     clearWorkspace : function() {
@@ -102,7 +108,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		 });
 		
     },
-    //
+    // Processa cada nó da árvore de cenário após o cenário ser carregado.
+    // Interceptado de 'MCLM.view.trabalho.TrabalhoTree' evento 'load'.
     onLoadNode : function(loader, nodes, response) {
     	var me = this;
     	for (x=0; x< nodes.length; x++  ) {
@@ -210,6 +217,16 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	Ext.getCmp('newFolderName').focus(true, 100);    	
     },
     reloadScenery : function() {
+    	var me = this;
+    	
+    	// Apaga do layer stack
+    	var trabalhoTree = Ext.getCmp("trabalhoTree");
+    	trabalhoTree.getRootNode().cascade( function(node) { 
+    		node.set('checked', false );
+    		me.toggleNode( node );
+		});			    	
+		// this.fireEvent( "clearMainTree");	    	
+		
     	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
 		trabalhoTreeStore.load({
 			params:{cenario: MCLM.Globals.currentScenery},
@@ -236,12 +253,54 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	cenarioWindow = Ext.create('MCLM.view.cenarios.CenarioWindow');
     	cenarioWindow.show();
     },
-    // Apos salvar um cenario existente (estrutura das arvores),
-    // eh preciso salvar os dados do cenario (zoom, center, etc)
-    updateSceneryData : function() {
+    // Salva a arvore do cenario
+    updateSceneryTree : function() {
+    	var me = this;
+		// Salva a arvore de camadas
+    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
     	
+		trabalhoTreeStore.data.each( function( item, index, totalItems ) {
+	        var layerName = item.get('layerName');
+	        var serialId = item.get('serialId');
+	        var layerType = item.get('layerType');
+	        var layers = MCLM.Map.getLayers();
+	        var length = layers.getLength(); 
+	        	
+	        if ( (layerType != 'FDR') && serialId) {
+
+				for (var i = 0; i < length; i++) {
+					var serial = layers.item(i).get('serialId');
+					var opacity = layers.item(i).getOpacity() * 10;
+					
+					if (serial === serialId) {
+			        	item.set("transparency", opacity );
+			        	item.set("layerStackIndex", i );
+			        	
+					}
+				}		        
+				
+	        }
+	        
+	    });	    	
+    	
+    	trabalhoTreeStore.sync({
+			 params: {
+			 	cenario: MCLM.Globals.currentScenery
+			 },
+		     success: function (action, options) {
+		    	me.reloadScenery(); 
+			 },
+			 failure: function (action, options){
+			    Ext.Msg.alert('Falha', 'Falha ao gravar Árvore de Camadas do Cenário.');
+			 }	
+    	});
+    	
+    },
+    // Salva os dados do cenario (zoom, center, etc)
+    updateSceneryData : function() {
+    	var me = this;
 		var mapCenter = MCLM.Map.getMapCenter();
-		var mapZoom = MCLM.Map.getMapZoom();	    	
+		var mapZoom = parseInt( MCLM.Map.getMapZoom() );	    	
 		var mapaBase = MCLM.Map.getBaseMapName();
 		var servidorBase = MCLM.Map.getBaseServerURL();
 		var mapaBaseAtivo = MCLM.Map.isBaseMapActive();
@@ -260,8 +319,9 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		        'gradeAtiva' 	: gradeAtiva,
 		        'mapBbox' 		: mapBbox,
 		    },						
-			success: function(response, opts) {				   
-			    Ext.Msg.alert('Sucesso', 'Cenário gravado.');
+			success: function(response, opts) {
+				me.updateSceneryTree();
+		    	Ext.Msg.alert('Sucesso', 'Cenário gravado.');
 			},
 			failure: function(response, opts) {
 				Ext.Msg.alert('Erro','Não foi possível atualizar os dados do cenário.' );
@@ -294,20 +354,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 	    	
     	} else {
     		// Salva o cenario atual.
-	    	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
-	    	trabalhoTreeStore.sync({
-				 params: {
-				 	cenario: MCLM.Globals.currentScenery
-				 },
-			     success: function (action, options) {
-			    	 me.reloadScenery(); 
-				 },
-				 failure: function (action, options){
-				    Ext.Msg.alert('Falha', 'Falha ao gravar as camadas do Cenário.');
-				 }	
-	    	});
-	    	
-	    	me.updateSceneryData();	    	
+    		me.updateSceneryData();
     	}
 
    	
@@ -355,15 +402,18 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		
 		if( checked == true ) {
 			// adiciona a camada no mapa
-			//var layer = MCLM.Map.addLayer( node );
+			var layer = MCLM.Map.addLayer( node );
 			
 			// Para pegar a camada como features, descomente a linha abaixo.
-			MCLM.Map.getLayerAsFeatures( node, serialId );
+			//MCLM.Map.getLayerAsFeatures( node );
 			
+			
+			// Interceptado por MCLM.view.stack.LayerStackController
 			this.fireEvent('mountImagePreview');
 		} else {
 			// Remove a camada do mapa
 			MCLM.Map.removeLayer( serialId );
+			// Interceptado por MCLM.view.stack.LayerStackController
 			this.fireEvent('mountImagePreview');
 		}	
 	},

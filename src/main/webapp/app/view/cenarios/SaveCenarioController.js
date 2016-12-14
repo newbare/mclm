@@ -44,15 +44,40 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 			    	var painelEsquerdo = Ext.getCmp('painelesquerdo');
 			    	painelEsquerdo.setTitle(sceneryName);
 			    	
-			    	root.collapse();
-			    	root.expand();
-			    	
 					// Depois de criar o cenario, precisamos salvar a arvore de trabalho. 
 					// O ID do cenario recem-criado precisa ja ter retornado.
 					var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
 					
-					if ( trabalhoTreeStore.getCount() > 1 ) { // 1 = Root node (default )
+					if ( trabalhoTreeStore.getCount() > 1 ) { // 1 = So tem o root. Nao faz nada
 					
+						// Para cada no da arvore que nao eh uma pasta...
+						// ... ajusta a transparencia e o index da camada
+						trabalhoTreeStore.data.each( function( item, index, totalItems ) {
+					        var layerName = item.get('layerName');
+					        var serialId = item.get('serialId');
+					        var layerType = item.get('layerType');
+					        var layers = MCLM.Map.getLayers();
+					        var length = layers.getLength(); 
+					        	
+					        if ( (layerType != 'FDR') && serialId) {
+
+								for (var i = 0; i < length; i++) {
+									var serial = layers.item(i).get('serialId');
+									var opacity = layers.item(i).getOpacity() * 10;
+									
+									if (serial === serialId) {
+							        	item.set("transparency", opacity );
+							        	item.set("layerStackIndex", i );
+							        	
+									}
+								}		        
+								
+					        }
+					        
+					    });	
+						
+						
+						
 						trabalhoTreeStore.sync({
 							 params: {
 							 	cenario: MCLM.Globals.currentScenery
