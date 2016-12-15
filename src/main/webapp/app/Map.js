@@ -480,10 +480,57 @@ Ext.define('MCLM.Map', {
 		 	}
 		},  
 		// --------------------------------------------------------------------------------------------
+		getNearestRoads : function( center, type ) {
+			var coordinate = ol.proj.transform( center , 'EPSG:900913', 'EPSG:4326');			
+			
+			Ext.Ajax.request({
+		       url: 'getNearestRoads',
+		       params: {
+		           'coordinate': coordinate
+		       },       
+		       success: function(response, opts) {
+		    	   
+		    	   var respText = Ext.decode(response.responseText); //JSON.parse(response.responseText);
+		    	   var jsonObj = respText[0];
+		    	   var osmName = "<Sem Nome>";
+		    	   if ( jsonObj.osm_name != null ) osmName = jsonObj.osm_name;
+		    	   var source = jsonObj.source;
+		    	   var target = jsonObj.target;
+		    	   
+		    	   if( type == 'S' ) {
+		    		   $("#sourceAddrText").text( osmName );
+		    		   $("#sourceValue").val( source );
+		    	   }
+		    	   if( type == 'T' ) {
+		    		   $("#targetAddrText").text( osmName );
+		    		   $("#targetValue").val( target );
+		    	   }
+		       },
+		       failure: function(response, opts) {
+		    	   Ext.Msg.alert('Erro','Erro ao receber os dados da coordenada selecionada.' );
+		       }
+			});				
+		},
+		bindMapToGetSourceAddress : function() {
+			var me = this;
+			this.unbindMapClick();
+			this.onClickBindKey = this.map.on('click', function(event) {
+				me.getNearestRoads( event.coordinate, 'S' );
+			});
+		},
+		// --------------------------------------------------------------------------------------------
+		bindMapToGetTargetAddress : function() {
+			var me = this;
+			this.unbindMapClick();
+			this.onClickBindKey = this.map.on('click', function(event) {
+				me.getNearestRoads( event.coordinate, 'T' );
+			});
+		},
+		// --------------------------------------------------------------------------------------------
 		// Libera o click do mouse no mapa da ultima ferramenta ligada
 		unbindMapClick : function () {
-			if ( onClickBindKey ) {
-				this.map.unByKey( onClickBindKey );
+			if ( this.onClickBindKey ) {
+				this.map.unByKey( this.onClickBindKey );
 			}
 		},		
 		// --------------------------------------------------------------------------------------------

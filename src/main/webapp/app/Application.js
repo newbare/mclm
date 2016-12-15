@@ -18,6 +18,7 @@ Ext.define('MCLM.Application', {
        'MCLM.store.Capabilities',
        'MCLM.store.TrabalhoTree',
        'MCLM.store.Scenery',
+       'MCLM.store.RouteResult',
     ],
    
     launch: function () {
@@ -60,6 +61,11 @@ Ext.define('MCLM.Application', {
 				    	var trabalhoTree = Ext.getCmp('trabalhoTree');
 				    	var root2 = trabalhoTree.getRootNode();
 				    	root2.expand();
+				    	
+				    	setInterval( function() {
+				    		if ( !MCLM.Globals.routeBlinkEnabled ) return true;
+				    		$("#"+MCLM.Globals.selectRouteActiveIcon).fadeTo(250, 0.2).fadeTo(250, 1.0); 
+				    	}, 1000);					    	
 				
 				
 		        // ---------------------------------------------

@@ -4,5 +4,7 @@ Ext.define("MCLM.Globals", {
          mapLayerPreview : null,
          btnHeight : 32,
          btnWidth : 32,  
-         currentScenery : -1
+         currentScenery : -1,
+         routeBlinkEnabled : false,
+         selectRouteActiveIcon : 'selectSourceIcon'
  });

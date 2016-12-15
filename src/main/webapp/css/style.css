@@ -1,3 +1,11 @@
+.routeText {
+	font-weight: bold;
+}
+
+.routeSubText {
+	font-style: italic;
+}
+
 .setting-icon {
 	background-image: url('../img/settings.svg') !important;
 	background-repeat: no-repeat; 

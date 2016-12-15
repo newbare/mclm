@@ -44,6 +44,9 @@ Ext.define('MCLM.view.main.MainController', {
     	if ( rotaWindow ) return;
     	rotaWindow = Ext.create('MCLM.view.rotas.RotaWindow');
     	rotaWindow.show();
+    	
+    	MCLM.Globals.routeBlinkEnabled = true;
+    	
     },
 	// --------------------------------------------------------------------------------------------
     checkInternetConnection: function ( button ) {

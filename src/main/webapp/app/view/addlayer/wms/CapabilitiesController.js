@@ -169,7 +169,7 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
     // remove a camada do mapa na tela de preview
     removeLayerFromPreviewPanel : function () {
     	MCLM.Globals.mapLayerPreview.getLayers().forEach(function (lyr) {
-    		if( lyr.U.name ==  'preview_layer') {
+    		if( lyr.get('name') ==  'preview_layer') {
     			MCLM.Globals.mapLayerPreview.removeLayer( lyr );	
     			return;
     		}
