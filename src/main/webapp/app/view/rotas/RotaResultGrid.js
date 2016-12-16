@@ -6,7 +6,7 @@ Ext.define('MCLM.view.rotas.RotaResultGrid', {
 	title : '',
 	store : 'store.RouteResult',
     frame: false,
-    height : 320,
+    height : 335,
     listeners: {
         rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
         }
@@ -14,7 +14,7 @@ Ext.define('MCLM.view.rotas.RotaResultGrid', {
     region:'south',
     loadMask: true,
     columns:[
-   	     {text:'ID', dataIndex:'seq', width:40},
+   	     {text:'Seq', dataIndex:'seq', width:45},
 	     {text:'Nome', dataIndex:'osm_name', width:400},
     ]
 });	

@@ -1,9 +1,11 @@
 .routeText {
 	font-weight: bold;
+	font-size : 11px;
 }
 
 .routeSubText {
 	font-style: italic;
+	font-size : 10px;
 }
 
 .setting-icon {

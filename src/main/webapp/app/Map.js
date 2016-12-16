@@ -20,6 +20,8 @@ Ext.define('MCLM.Map', {
 		queryFactorRadius: 4,
 		graticule: null,
 		geoserverUrl: '',
+		highlight : null,
+		featureOverlay : null,
 		
 		getBaseMapName : function() {
 			return this.baseLayerName;
@@ -69,7 +71,17 @@ Ext.define('MCLM.Map', {
 						me.updateMapCenter();
 						break;  
 				}
-			});				
+			});	
+			
+			this.map.on('pointermove', function(evt) {
+				if (evt.dragging) {
+					return;
+				}
+				var pixel = me.map.getEventPixel(evt.originalEvent);
+				me.displayFeatureInfo(pixel);
+			});	
+			
+			this.map.addLayer( this.featureOverlay );
 			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -99,6 +111,7 @@ Ext.define('MCLM.Map', {
 			
 			this.openSeaMapLayer = this.createOpenSeaMapLayer();
 			this.baseLayer = this.createBaseLayer();
+			this.featureOverlay = this.createFeatureOverlay();
 			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -695,12 +708,11 @@ Ext.define('MCLM.Map', {
 				};
 				
 				result.push( layerDetail );
-				console.log( layerDetail );
+				console.log( layers.item(i) );
 			}
 			console.log("---------------------------------------------------");
 		},
 		// --------------------------------------------------------------------------------------------
-		
 		panTo : function( center, zoom ) {
 			var coord = center.split(",");
 			var lat = Number( coord[0].trim() );
@@ -713,7 +725,79 @@ Ext.define('MCLM.Map', {
 				  duration	: 2000,
 			});
 			
-		}
+		},
+		// --------------------------------------------------------------------------------------------
+		displayFeatureInfo : function( pixel ) {
+			var feature = this.map.forEachFeatureAtPixel( pixel, function(feature) {
+				return feature;
+			});
+
+			/*
+	        var info = document.getElementById('info');
+	        if (feature) {
+	        	info.innerHTML = feature.getId() + ': ' + feature.get('name');
+	        } else {
+	        	info.innerHTML = '&nbsp;';
+	        }
+	        */
+			
+	        if ( feature != this.highlight ) {
+	        	if ( this.highlight ) {
+	        		console.log( "removido");
+	        		this.featureOverlay.getSource().removeFeature( this.highlight );
+	        	}
+	        	if ( feature ) {
+	        		console.log( "adicionado");
+	        		this.featureOverlay.getSource().addFeature( feature );
+	        	}
+	        	this.highlight = feature;
+	        }
+
+		},
+		// --------------------------------------------------------------------------------------------
+		createFeatureOverlay : function() {
+			
+	    	var featureOverlayStyle = new ol.style.Style({
+	    		fill: new ol.style.Fill({
+	    			color: '#000'
+	    		}),
+	    		stroke: new ol.style.Stroke({
+	    			color: '#319FD3',
+	    			width: 3
+	    		})
+	    	});		
+	    	
+		   	//=============
+		   	var geojsonObject = {
+   				"type": "FeatureCollection",
+   		        "features": [
+   					{
+   						"type": "Feature",
+   						"properties": {},
+   						"geometry": {
+   							"type":"MultiLineString",
+   							"coordinates":[[[-60.029297,-24.706915], [-30.014648,-11.931852]]]
+   						}
+   					}
+   				]
+		   	};		   	
+		   	
+		   	//=============
+		   	
+	    	var features = new ol.format.GeoJSON().readFeatures(geojsonObject, {
+	    	    featureProjection: 'EPSG:3857'
+	    	});		   	
+		   	
+			var vectorSource = new ol.source.Vector({
+			     features: features,
+			});			
+			
+			var featureOverlay = new ol.layer.Vector({
+			      source: vectorSource
+			});
+			
+			return featureOverlay;
+		},
 		
 	}
 

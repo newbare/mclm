@@ -42,14 +42,14 @@ public class LayerService {
 	public String getAsFeatures( String propertiesColumns, String whereClause, String sourceTables, String geometryColumn, String bbox, String database ) throws Exception {
 
 		Config cfg = Configurator.getInstance().getConfig();
-		/*
+			
 			propertiesColumns = "osm_name";
 			whereClause = "1=1";
 			sourceTables = "osm_2po_4pgr";
 			geometryColumn = "geom_way";
 			bbox = "-43.1838739,-22.9275921,-43.1760001,-22.9028997";
-			databse = cfg.getGeoserverDatabaseDbName()
-		*/
+			database = cfg.getGeoserverDatabaseDbName();
+		
 		
 		String sql = "SELECT row_to_json( fc )::text As featurecollection " +  
 			"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) ) As features " + 

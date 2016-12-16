@@ -385,6 +385,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     },
     
     onLoadNode : function (loader, nodes, response) {
+    	if( !nodes ) return;
     	var me = this;
     	var trabalhoTree = Ext.getCmp("trabalhoTree");
     	for ( x=0; x< nodes.length; x++ ) {
