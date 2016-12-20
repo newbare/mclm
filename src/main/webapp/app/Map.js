@@ -73,15 +73,19 @@ Ext.define('MCLM.Map', {
 				}
 			});	
 			
+			
 			this.map.on('pointermove', function(evt) {
 				if (evt.dragging) {
 					return;
 				}
 				var pixel = me.map.getEventPixel(evt.originalEvent);
 				me.displayFeatureInfo(pixel);
-			});	
+			});
+				
 			
 			this.map.addLayer( this.featureOverlay );
+			
+
 			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -325,6 +329,15 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Remove uma camada do mapa
+		removeLayerByName : function ( layerName ) {
+			var me = this;
+			this.map.getLayers().forEach( function ( layer ) {
+				if( layer.get("name") == layerName ) {
+					me.map.removeLayer( layer );	
+					return;
+				}
+			});
+		},
 		removeLayer : function ( serialId ) {
 			var me = this;
 			this.map.getLayers().forEach( function ( layer ) {
@@ -494,7 +507,7 @@ Ext.define('MCLM.Map', {
 		},  
 		// --------------------------------------------------------------------------------------------
 		getNearestRoads : function( center, type ) {
-			var coordinate = ol.proj.transform( center , 'EPSG:900913', 'EPSG:4326');			
+			var coordinate = ol.proj.transform( center , 'EPSG:3857', 'EPSG:4326');			
 			
 			Ext.Ajax.request({
 		       url: 'getNearestRoads',
@@ -549,6 +562,7 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Liga o click do mouse no mapa com o metodo de consulta de camada
 		bindMapToQueryTool : function () {
+			MCLM.Map.unbindMapClick();
 			var me = this;
 			this.onClickBindKey = this.map.on('click', function(event) {
 				me.queryMap( event.coordinate );
@@ -713,6 +727,7 @@ Ext.define('MCLM.Map', {
 			console.log("---------------------------------------------------");
 		},
 		// --------------------------------------------------------------------------------------------
+		// Posiciona o centro do mapa em uma coordenada e zoom. Usado pela carga do cenário
 		panTo : function( center, zoom ) {
 			var coord = center.split(",");
 			var lat = Number( coord[0].trim() );
@@ -727,31 +742,31 @@ Ext.define('MCLM.Map', {
 			
 		},
 		// --------------------------------------------------------------------------------------------
+		// Exibe informações sobre um segmento de rota ao passar o mouse
 		displayFeatureInfo : function( pixel ) {
+			
 			var feature = this.map.forEachFeatureAtPixel( pixel, function(feature) {
 				return feature;
 			});
 
-			/*
-	        var info = document.getElementById('info');
-	        if (feature) {
-	        	info.innerHTML = feature.getId() + ': ' + feature.get('name');
-	        } else {
-	        	info.innerHTML = '&nbsp;';
-	        }
-	        */
-			
+       
 	        if ( feature != this.highlight ) {
+
+	        	var detail = '';
+	        	var roadDetailPanel = Ext.getCmp('roadDetailPanel');
+		    	
 	        	if ( this.highlight ) {
-	        		console.log( "removido");
 	        		this.featureOverlay.getSource().removeFeature( this.highlight );
 	        	}
 	        	if ( feature ) {
-	        		console.log( "adicionado");
+	        		var osmName = feature.get('osm_name');
+	        		if ( osmName == 'null' ) osmName = "<Sem Nome>"; 
+	        		detail = feature.get('osm_id') + ': ' + osmName;
 	        		this.featureOverlay.getSource().addFeature( feature );
 	        	}
 	        	this.highlight = feature;
-	        }
+	        	roadDetailPanel.update( detail );
+	        } 
 
 		},
 		// --------------------------------------------------------------------------------------------
@@ -763,37 +778,17 @@ Ext.define('MCLM.Map', {
 	    		}),
 	    		stroke: new ol.style.Stroke({
 	    			color: '#319FD3',
-	    			width: 3
+	    			width: 7
 	    		})
 	    	});		
 	    	
-		   	//=============
-		   	var geojsonObject = {
-   				"type": "FeatureCollection",
-   		        "features": [
-   					{
-   						"type": "Feature",
-   						"properties": {},
-   						"geometry": {
-   							"type":"MultiLineString",
-   							"coordinates":[[[-60.029297,-24.706915], [-30.014648,-11.931852]]]
-   						}
-   					}
-   				]
-		   	};		   	
-		   	
-		   	//=============
-		   	
-	    	var features = new ol.format.GeoJSON().readFeatures(geojsonObject, {
-	    	    featureProjection: 'EPSG:3857'
-	    	});		   	
-		   	
 			var vectorSource = new ol.source.Vector({
-			     features: features,
+			     //features: features,
 			});			
 			
 			var featureOverlay = new ol.layer.Vector({
-			      source: vectorSource
+			      source: vectorSource,
+			      style : featureOverlayStyle
 			});
 			
 			return featureOverlay;

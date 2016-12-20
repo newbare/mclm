@@ -6,15 +6,22 @@ Ext.define('MCLM.view.rotas.RotaResultGrid', {
 	title : '',
 	store : 'store.RouteResult',
     frame: false,
-    height : 335,
+    flex : 3,
     listeners: {
         rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
+        	var osmName = record.get('osm_name');
+        	var osmId = record.get('osm_id');
+        	if ( osmName == 'null' ) osmName = "<Sem Nome>";
+        	var roadDetailPanel = Ext.getCmp('roadDetailPanel');
+        	roadDetailPanel.update( osmId + ": " + osmName );
+        	
         }
     },	    
-    region:'south',
+    
+
     loadMask: true,
     columns:[
    	     {text:'Seq', dataIndex:'seq', width:45},
-	     {text:'Nome', dataIndex:'osm_name', width:400},
+	     {text:'Nome', dataIndex:'osm_name', width:350},
     ]
 });	

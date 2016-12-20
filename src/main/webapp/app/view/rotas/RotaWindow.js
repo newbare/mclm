@@ -10,16 +10,17 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
         'MCLM.view.rotas.PainelOrigem',
         'MCLM.view.rotas.PainelDestino',
         'MCLM.view.rotas.RotaResultGrid',
+        'MCLM.view.rotas.RoadDetailPanel'
 	],	    
     controller : 'calcRota',	
 	
-	width : 500,
-	height: 500,
+	width : 420,
+	height: 400,
     scrollable: false,
     frame : false,
     
     layout: {
-        type: 'border',
+        type: 'vbox',
         align: 'stretch'
     },    
     
@@ -32,6 +33,8 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
 		xtype: 'painelOrigem'
 	}, {
 		xtype: 'painelDestino'
+	},{
+		xtype: 'roadDetailPanel'
 	},{
 		xtype: 'rotaResultGrid'
 	}],
