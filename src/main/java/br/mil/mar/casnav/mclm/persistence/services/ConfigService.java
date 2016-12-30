@@ -19,11 +19,37 @@ public class ConfigService {
 		this.rep = new ConfigRepository();
 	}
 	
-	public String getAsJson( User user ) throws Exception {
-		Config cfg = getConfig();
-		cfg.setUser( user );
-		JSONObject itemObj = new JSONObject( cfg );
-		return itemObj.toString();
+	public String getAsJson( User user ) {
+		String result = "";
+		try {
+			Config cfg = null;
+			try {
+				cfg = getConfig();
+			} catch ( Exception ex ) {
+				cfg = new Config();
+				cfg.setBaseLayer("osm_auto:all");
+				cfg.setGeoserverUrl("http://129.206.228.72/cached/osm");
+				cfg.setMapCenter("-48.129374999999925,-14.120633163259185");
+				cfg.setGeoserverDatabasePort(5432);
+				cfg.setMapZoom(5);
+				cfg.setProxyPort(8080);
+				cfg.setUseProxy(false);
+				newTransaction();
+				insertConfig(cfg);
+				
+			}
+			cfg.setUser( user );
+			JSONObject itemObj = new JSONObject( cfg );
+			result = itemObj.toString();
+			
+			Configurator.getInstance().updateConfiguration( cfg );
+		} catch ( Exception e ) {
+			result = "{ \"error\": true, \"msg\": \"" + e.getMessage()+ ".\" }";
+			e.printStackTrace();
+		}
+		//System.out.println( result );
+		
+		return result;
 	}
 
 	public void updateConfig(Config config) throws Exception {

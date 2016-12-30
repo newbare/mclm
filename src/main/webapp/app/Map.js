@@ -145,6 +145,7 @@ Ext.define('MCLM.Map', {
 			    source: new ol.source.TileWMS({
 			        url: this.geoserverUrl,
 			        isBaseLayer : true,
+			        projection: ol.proj.get('EPSG:4326'),
 			        params: {
 			            'LAYERS': this.baseLayerName, 
 			            'FORMAT': 'image/png'

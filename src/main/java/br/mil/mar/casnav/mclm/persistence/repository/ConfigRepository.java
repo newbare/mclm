@@ -41,6 +41,7 @@ public class ConfigRepository extends BasicRepository {
 			fm.insertDO(user);
 			commit();
 		} catch (InsertException e) {
+			//e.printStackTrace();
 			rollBack();
 			closeSession();
 			throw e;
