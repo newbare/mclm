@@ -1,8 +1,12 @@
+
+// http://examples.sencha.com/extjs/6.0.2/examples/kitchensink/#grid-filtering
+
 Ext.define('MCLM.view.addlayer.wms.CapabilitiesGrid', {
 	extend: 'Ext.grid.Panel',
+
 	xtype: 'capabilitiesGrid',
 	id: 'capabilitiesGrid',
-	border: true,
+	border: false,
 	title : '',
 	store : 'store.Capabilities',
     frame: false,
@@ -16,9 +20,37 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesGrid', {
     region:'center',
     loadMask: true,
     columns:[
-	     {text:'Título', dataIndex:'layerTitle', width:200},
-	     {text:'Camada', dataIndex:'layerName', width:200},
-	     {text:'URL', dataIndex:'serverUrl', width:200, xtype : 'hidden'},
-	     {text:'Consultável', dataIndex:'queryable', width:70, xtype: 'booleancolumn', falseText:'Não', trueText: 'Sim'}
-    ]
+	     {text:'Título', dataIndex:'layerTitle', width:200,         
+	    	 filter: {
+	            type: 'string',
+	            itemDefaults: {
+	                emptyText: 'Procurar...'
+	            }
+	        }
+	     },
+	     {text:'Camada', dataIndex:'layerName', width:200,
+	    	 filter: {
+		            type: 'string',
+		            itemDefaults: {
+		                emptyText: 'Procurar...'
+		            }
+		        }
+	     },
+	     {text:'Consultável', dataIndex:'queryable', width:75, xtype: 'booleancolumn', falseText:'Não', trueText: 'Sim', filter: 'boolean'},
+	     {text:'URL', dataIndex:'serverUrl', width:200},
+    ],
+    
+    
+    tbar: [{
+        text: 'Limpar Filtros',
+        // Processado por 'MCLM.view.addlayer.wms.CapabilitiesController'
+        handler: 'onClearFilters'
+    }],    
+    
+    
+    plugins: 'gridfilters',
+    emptyText: 'Nenhum Registro Encontrado',
+    loadMask: true,
+    stateful: false,    
+    
 });	

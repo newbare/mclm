@@ -24,6 +24,16 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
         align: 'stretch'
     },    
     
+    
+    dockedItems: [{
+        xtype: 'toolbar',
+        items: [{
+        	iconCls: 'save-icon',
+        	id: 'idAddRoute',
+        	// Processado por 'MCLM.view.rotas.CalcRotaController'
+            handler : 'addRouteToCurrentScenery'
+        }]
+    }],	    
 	
 	constrain: true,
 	bodyStyle:"background:#FFFFFF;",
@@ -51,6 +61,15 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
     
 	listeners: {
 		afterrender: function(component, eOpts) {
+			
+		    Ext.tip.QuickTipManager.register({
+		        target: 'idAddRoute',
+		        title: 'Adicionar Rota ao Cenário',
+		        text: 'Adiciona a rota atual ao Cenário na Área de Trabalho.',
+		        width: 190,
+		        dismissDelay: 5000 
+		    });				
+			
 			
 			// Inicialmente, espera que o clique no mapa selecione a origem:
 			MCLM.Map.bindMapToGetSourceAddress();

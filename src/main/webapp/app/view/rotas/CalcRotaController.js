@@ -16,6 +16,25 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
         })
     },
     
+    addRouteToCurrentScenery : function() {
+		var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
+		var routeData = routeResultStore.getRange();
+		var count = routeData.length;    	
+		   
+		if ( count == 0 ) {
+			Ext.Msg.alert('Rota Inexistente','Calcule uma rota antes de efetuar esta operação.' );
+			return true;
+		}
+		
+		var routeLayer = MCLM.Map.getLayerByName("routeLayer");
+		console.log( routeLayer.features );
+		
+		for(x=0; x < routeData.length; x++ ) {
+			//console.log( routeData[x].get("geometry").coordinates );
+		}
+    	
+    },
+    
     closeWindow : function() {
     	var rotaWindow = Ext.getCmp('rotaWindow');
     	rotaWindow.close();

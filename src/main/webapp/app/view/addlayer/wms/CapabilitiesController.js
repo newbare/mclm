@@ -30,7 +30,14 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
             	click: this.submitForm 
             },
         });
-    },  
+    }, 
+    
+    
+    onClearFilters: function () {
+    	var capabilitiesGrid = Ext.getCmp('capabilitiesGrid');
+    	capabilitiesGrid.filters.clearFilters();
+    },       
+    
     submitForm : function() {
     	var capabilitiesGrid = Ext.getCmp('capabilitiesGrid');
     	var me = this;

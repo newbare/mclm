@@ -7,7 +7,10 @@ Ext.define('MCLM.view.addlayer.wms.LayerPreviewPanel', {
        'MCLM.view.addlayer.wms.LayerPreviewMap',
        'MCLM.view.addlayer.wms.LayerDetailForm',
 	],	    
-            	
+          
+	border: false,
+    frame: false,
+    margin: "0 0 0 0",	
 	layout:'border',
 	items: [{
 		xtype: 'view.layerPreviewMap'

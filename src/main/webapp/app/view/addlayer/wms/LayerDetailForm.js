@@ -3,6 +3,10 @@ Ext.define('MCLM.view.addlayer.wms.LayerDetailForm', {
 	xtype : 'view.layerDetailForm',
 	id : 'layerDetailForm',
 
+	
+    frame: false,
+    margin: "0 0 0 0",		
+	
     bodyPadding: 5,
     region:'south',
     defaultType: 'textfield',

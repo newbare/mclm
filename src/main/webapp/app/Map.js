@@ -329,6 +329,18 @@ Ext.define('MCLM.Map', {
 			return this.graticuleEnabled;
 		},
 		// --------------------------------------------------------------------------------------------
+		getLayerByName : function ( layerName ) {
+			var me = this;
+			var result = null;
+			this.map.getLayers().forEach( function ( layer ) {
+				if( layer.get("name") == layerName ) {
+					console.log( layer.get("name") );
+					result = layer;
+				}
+			});
+			return result;
+		},
+		// --------------------------------------------------------------------------------------------
 		// Remove uma camada do mapa
 		removeLayerByName : function ( layerName ) {
 			var me = this;
@@ -661,7 +673,7 @@ Ext.define('MCLM.Map', {
 			var geometryColumn = "geom_way";
 			var database = "osm";
 			var	bbox = this.getMapCurrentBbox();
-			//bbox = "-43.1838739,-22.9275921,-43.1760001,-22.9028997";			
+					
 			
     	   	var formatJSON = new ol.format.GeoJSON(); 
 			var vectorSource = new ol.source.Vector({
