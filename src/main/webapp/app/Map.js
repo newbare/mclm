@@ -39,8 +39,32 @@ Ext.define('MCLM.Map', {
 			me = this;
 			this.init();
 			
+			
+			// ===================================================
+			/*
+			var draw = new ol.interaction.Draw({
+			  source: vectorSource,
+			  type: ('Polygon')
+			});
+			var select = new ol.interaction.Select();
+			select.setActive(false);
+			var selected = select.getFeatures();
+			var modify = new ol.interaction.Modify({
+			  features: selected
+			});
+			modify.setActive(false);
+			*/
+			// ===================================================
+			
+			
+			
+			
 			this.map = new ol.Map({
 				layers: [ this.baseLayer ],
+				
+				//interactions: ol.interaction.defaults().extend([draw, select, modify]),
+				
+				
 				target: container,
 				renderer: 'canvas',
 			    loadTilesWhileAnimating: true,
@@ -329,16 +353,84 @@ Ext.define('MCLM.Map', {
 			return this.graticuleEnabled;
 		},
 		// --------------------------------------------------------------------------------------------
+		// Retorna uma camada dado seu nome
 		getLayerByName : function ( layerName ) {
 			var me = this;
 			var result = null;
 			this.map.getLayers().forEach( function ( layer ) {
 				if( layer.get("name") == layerName ) {
-					console.log( layer.get("name") );
 					result = layer;
 				}
 			});
 			return result;
+		},
+		// --------------------------------------------------------------------------------------------
+		// Converte uma String GeoJSON para uma camada Vector
+		createVectorLayerFromGeoJSON : function( geojsonStr ) {
+			/*			
+	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr, {
+	    	    featureProjection: 'EPSG:3857'
+	    	});		   	
+		   	
+			var vectorSource = new ol.source.Vector({
+			     features: features,
+			});			
+			
+			var vectorLayer = new ol.layer.Vector({
+			      source: vectorSource,
+			      style : featureStyle
+			});
+			
+			vectorLayer.set('alias', 'routeLayer');
+			vectorLayer.set('name', 'routeLayer');
+			vectorLayer.set('serialId', 'routeLayer');
+			vectorLayer.set('ready', false);
+			vectorLayer.set('baseLayer', false);	
+			*/
+		},
+		// --------------------------------------------------------------------------------------------
+		// Carrega as Features de uma String para a camada de Rotas.
+		loadRouteDataToRouteLayer : function( routeData ) {
+	   		if (  MCLM.Map.featureOverlay.getSource() ) MCLM.Map.featureOverlay.getSource().clear();
+	    	
+	    	var features = new ol.format.GeoJSON().readFeatures( routeData, {
+	    	    featureProjection: 'EPSG:3857'
+	    	});		   	
+		   	
+			var vectorSource = new ol.source.Vector({
+			     features: features,
+			});			
+			
+	    	var featureStyle = new ol.style.Style({
+	    		stroke: new ol.style.Stroke({
+	    			color: 'red',
+	    			width: 3
+	    		})
+	    	});
+			var vectorLayer = new ol.layer.Vector({
+			      source: vectorSource,
+			      style : featureStyle
+			});
+			
+			
+			vectorLayer.set('alias', 'routeLayer');
+			vectorLayer.set('name', 'routeLayer');
+			vectorLayer.set('serialId', 'routeLayer');
+			vectorLayer.set('ready', false);
+			vectorLayer.set('baseLayer', false);	        
+	        
+			MCLM.Map.removeLayerByName( 'routeLayer' );
+			
+			MCLM.Map.map.addLayer( vectorLayer );
+		},
+		// --------------------------------------------------------------------------------------------
+		// Converte as Features da camada de Rotas para uma String GeoJSON
+		convertRouteLayerToJson : function() {
+			var routeLayer = MCLM.Map.getLayerByName("routeLayer");
+			var source = routeLayer.getSource();
+			var writer = new ol.format.GeoJSON();
+			var geojsonStr = writer.writeFeatures( source.getFeatures() );
+			return geojsonStr; 
 		},
 		// --------------------------------------------------------------------------------------------
 		// Remove uma camada do mapa
@@ -503,11 +595,6 @@ Ext.define('MCLM.Map', {
 			return url;
 		},
 		// --------------------------------------------------------------------------------------------
-		// Retorna todas as camadas existentes no mapa
-		getCurrentLayersInMap : function () {
-			return this.map.getLayers();
-		},		
-		// --------------------------------------------------------------------------------------------
 		// Liga / desliga ferramenta de consulta de camada
 	    toggleQueryTool : function () {
 			if ( !this.queryToolEnabled ) {
@@ -550,6 +637,8 @@ Ext.define('MCLM.Map', {
 		       }
 			});				
 		},
+		// --------------------------------------------------------------------------------------------
+		// Um clique no mapa seleciona a origem da rota
 		bindMapToGetSourceAddress : function() {
 			var me = this;
 			this.unbindMapClick();
@@ -558,6 +647,7 @@ Ext.define('MCLM.Map', {
 			});
 		},
 		// --------------------------------------------------------------------------------------------
+		// Um clique no mapa seleciona o destino da rota
 		bindMapToGetTargetAddress : function() {
 			var me = this;
 			this.unbindMapClick();

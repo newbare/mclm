@@ -26,12 +26,8 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 			return true;
 		}
 		
-		var routeLayer = MCLM.Map.getLayerByName("routeLayer");
-		console.log( routeLayer.features );
-		
-		for(x=0; x < routeData.length; x++ ) {
-			//console.log( routeData[x].get("geometry").coordinates );
-		}
+		var geoJsonData = MCLM.Map.convertRouteLayerToJson();
+		console.log( geoJsonData );
     	
     },
     
@@ -94,39 +90,8 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	}
     	
     	geojsonObject = geojsonObject + "]}";
-    	
-   		if (  MCLM.Map.featureOverlay.getSource() ) MCLM.Map.featureOverlay.getSource().clear();
-    	
-    	var featureStyle = new ol.style.Style({
-    		stroke: new ol.style.Stroke({
-    			color: 'red',
-    			width: 3
-    		})
-    	});
-    	
-    	var features = new ol.format.GeoJSON().readFeatures(geojsonObject, {
-    	    featureProjection: 'EPSG:3857'
-    	});		   	
-	   	
-		var vectorSource = new ol.source.Vector({
-		     features: features,
-		});			
-		
-		var vectorLayer = new ol.layer.Vector({
-		      source: vectorSource,
-		      style : featureStyle
-		});
-		
-		
-		vectorLayer.set('alias', 'routeLayer');
-		vectorLayer.set('name', 'routeLayer');
-		vectorLayer.set('serialId', 'routeLayer');
-		vectorLayer.set('ready', false);
-		vectorLayer.set('baseLayer', false);	        
-        
-		MCLM.Map.removeLayerByName( 'routeLayer' );
-		
-		MCLM.Map.map.addLayer( vectorLayer );
+
+    	MCLM.Map.loadRouteDataToRouteLayer( geojsonObject );
 		
     }
 
