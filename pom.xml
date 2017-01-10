@@ -13,6 +13,7 @@
 		<jdk.version>1.8</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<geotools.version>15.0</geotools.version>
+		<postgresql.version>9.4.1212</postgresql.version>
 	</properties>	
   
   
@@ -125,7 +126,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.4-1201-jdbc41</version>
+			<version>${postgresql.version}</version>
 		</dependency>
 		
 		<dependency>

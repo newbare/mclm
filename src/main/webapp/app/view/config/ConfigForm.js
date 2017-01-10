@@ -7,8 +7,14 @@ Ext.define('MCLM.view.config.ConfigForm', {
     defaults: {
         anchor: '100%',
         msgTarget: 'under',
-        labelWidth: 150
-    },	    
+        labelWidth: 200
+    },	   
+    height : 700,
+    
+	autoScroll: true,
+	overflowY: 'scroll',
+	scrollable: true,    
+    
     url: 'saveConfig',
     items: [{
             fieldLabel: 'ID',
@@ -65,6 +71,72 @@ Ext.define('MCLM.view.config.ConfigForm', {
             name: 'geoserverPassword',
             invalidText: 'Teste'
         },
+        
+        {
+            fieldLabel: 'End. do Servidor de Dados',
+            width: 350,
+            allowBlank : false,
+            name: 'dataLayerServer',
+        },
+        {
+            fieldLabel: 'Usuário do Servidor de Dados',
+            width: 350,
+            allowBlank : false,
+            name: 'dataLayerUser',
+        },
+        {
+            fieldLabel: 'Senha do Servidor de Dados',
+            inputType: 'password',
+            width: 350,
+            allowBlank : false,
+            name: 'dataLayerPassword',
+        },
+        {
+            fieldLabel: 'Porta do Servidor de Dados',
+            width: 150,
+            maskRe: /[0-9.]/, 
+            name: 'dataLayerPort',
+            allowBlank : false,
+            invalidText: 'Apenas números'
+        },
+        {
+            fieldLabel: 'End. do Servidor de Rotas',
+            width: 350,
+            allowBlank : false,
+            name: 'routingServer',
+        },
+        {
+            fieldLabel: 'Usuário do Servidor de Rotas',
+            width: 350,
+            allowBlank : false,
+            name: 'routingUser',
+        },
+        {
+            fieldLabel: 'Senha do Servidor de Rotas',
+            inputType: 'password',
+            width: 350,
+            allowBlank : false,
+            name: 'routingPassword',
+        },
+        {
+            fieldLabel: 'Banco de Dados de Rotas',
+            width: 350,
+            allowBlank : false,
+            name: 'routingDatabase',
+        },
+        {
+            fieldLabel: 'Porta do Servidor de Rotas',
+            width: 150,
+            maskRe: /[0-9.]/, 
+            name: 'routingPort',
+            allowBlank : false,
+            invalidText: 'Apenas números'
+        },
+        
+        
+        
+        
+        
         {
             fieldLabel: 'Fator de Busca da Interrogação',
             width: 150,

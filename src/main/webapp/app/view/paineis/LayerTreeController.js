@@ -106,6 +106,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		          { iconCls: 'wms-icon', text: 'Adicionar Camada WMS', handler: function() { me.addNewLayerWMS(record); } },
 		          { iconCls: 'shp-icon', text: 'Adicionar Camada SHP', handler: function() { me.addNewLayerSHP(record); } },
 		          { iconCls: 'tif-icon', text: 'Adicionar Camada TIF', handler: function() { me.addNewLayerTIF(record); } },
+		          { iconCls: 'cube-icon', text: 'Adicionar Camada de Dados', handler: function() { me.addNewLayerData(record); } },
 		          { xtype: 'menuseparator' },
 		          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { me.addNewFolder(record); } },
 		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteFolder( record ); } },
@@ -307,6 +308,28 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	
     	Ext.getCmp('newLayerShpAlias').focus(true, 100);
     	
+	},
+	addNewLayerData : function( record ) {
+		var data = record.data;
+		record.expand();
+		
+		
+    	var dataLayerWindow = Ext.getCmp('dataLayerWindow');
+    	if ( dataLayerWindow ) return;
+    	
+    	var path = record.getPath("text");
+    	var title = "Nova Camada de Dados para " + path,
+    	
+    	dataLayerWindow = Ext.create('MCLM.view.addlayer.dta.DataLayerWindow');
+    	dataLayerWindow.setTitle( title );
+
+    	dataLayerWindow.show();	
+
+    	var layerFolderID = Ext.getCmp('layerFolderID');
+		layerFolderID.setValue( data.id );
+		
+    	Ext.getCmp('dataSourceName').focus(true, 100);
+		
 	},
 	// Abre o dialogo para adicionar uma camada GeoTIFF
 	addNewLayerTIF : function ( record ) {

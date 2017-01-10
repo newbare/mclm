@@ -172,3 +172,8 @@
 	background-image: url('../img/route.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.cube-icon {
+	background-image: url('../img/cube.svg') !important;
+	background-repeat: no-repeat;
+}

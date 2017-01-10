@@ -21,7 +21,7 @@ import br.mil.mar.casnav.mclm.persistence.services.LayerService;
 public class GetAsFeaturesAction {
 	private String whereClause;
 	private String propertiesColumns;
-	private String sourceTables;
+	private String tableName;
 	private String geometryColumn;
 	private String bbox;
 	private String database;
@@ -31,10 +31,10 @@ public class GetAsFeaturesAction {
 		try { 
 			String result = "";
 			
-			if ( sourceTables != null ) {
+			if ( tableName != null ) {
 				
 				LayerService ls = new LayerService();
-				result = ls.getAsFeatures(  propertiesColumns, whereClause, sourceTables, geometryColumn, bbox, database );
+				result = ls.getAsFeatures(  propertiesColumns, whereClause, tableName, geometryColumn, bbox, database );
 				
 			}
 			
@@ -56,8 +56,8 @@ public class GetAsFeaturesAction {
 		this.propertiesColumns = propertiesColumns;
 	}
 
-	public void setSourceTables(String sourceTables) {
-		this.sourceTables = sourceTables;
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
 	public void setGeometryColumn(String geometryColumn) {

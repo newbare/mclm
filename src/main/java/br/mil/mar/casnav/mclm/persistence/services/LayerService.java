@@ -43,31 +43,24 @@ public class LayerService {
 
 		Config cfg = Configurator.getInstance().getConfig();
 			
-			propertiesColumns = "osm_name";
-			whereClause = "1=1";
-			sourceTables = "osm_2po_4pgr";
-			geometryColumn = "geom_way";
-			bbox = "-43.1838739,-22.9275921,-43.1760001,-22.9028997";
-			database = cfg.getGeoserverDatabaseDbName();
-		
-		
 		String sql = "SELECT row_to_json( fc )::text As featurecollection " +  
 			"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) ) As features " + 
 			     "FROM (SELECT 'Feature' As type, " + 
 			     "ST_AsGeoJSON( " + geometryColumn + " )::json As geometry, " +  
 			     "row_to_json((SELECT l FROM (SELECT " + propertiesColumns + ") As l)) As properties " +  
-			     "FROM " + sourceTables + " As l where " + whereClause + " and " + geometryColumn + " @ ST_MakeEnvelope ("+bbox+")  ) As f) as fc; ";
+			     //"FROM " + sourceTables + " As l where " + whereClause + " and " + geometryColumn + " @ ST_MakeEnvelope ("+bbox+")  ) As f) as fc; ";
+				 "FROM " + sourceTables + " As l where " + whereClause + ") As f) as fc; ";
+
+		System.out.println( sql );
+		
 		
 		String result = "";
 		
-		String connectionString = "jdbc:postgresql://" + cfg.getGeoserverDatabaseAddr() +
-				":" + cfg.getGeoserverDatabasePort() + "/" + database;
-		
-		GenericService gs = new GenericService( connectionString, cfg.getGeoserverDatabaseUser(), cfg.getGeoserverDatabasePassword()  );
+		String connectionString = "jdbc:postgresql://" + cfg.getDataLayerServer() +
+				":" + cfg.getDataLayerPort() + "/" + database;
+		GenericService gs = new GenericService( connectionString, cfg.getDataLayerUser(), cfg.getDataLayerPassword()  );
 		
 		List<UserTableEntity> utes = gs.genericFetchList( sql );
-		
-		System.out.println("GetAsFeatures retornou " + utes.size() + " registros.");
 		
 		if ( utes.size() > 0 ) {
 			UserTableEntity ute = utes.get(0);
@@ -124,16 +117,16 @@ public class LayerService {
 	
 	public String deleteLayer( int idNode ) throws Exception {
 		
-		String result = "{ \"success\": true, \"msg\": \"Opera√ß√£o efetuada com sucesso.\" }";
+		String result = "{ \"success\": true, \"msg\": \"OperaÁ„o efetuada com sucesso.\" }";
 		
 		try {
 			NodeService ns = new NodeService();
 			NodeData node = ns.getNode(idNode);
 			
 			if ( node.getLayerType() == LayerType.FDR ) {
-				// √â uma pasta. Apaga somente o n√≥ SE ESTIVER VAZIO.
+				// … uma pasta. Apaga somente o n„ SE ESTIVER VAZIO.
 				if ( node.getChildren() > 0 ) {
-					throw new Exception("A pasta n√£o est√° vazia.");
+					throw new Exception("A pasta n„o est· vazia.");
 				} else {
 					ns.newTransaction();
 					ns.deleteNode(node);
@@ -150,7 +143,7 @@ public class LayerService {
 				workspaceName = workspaceAndLayer[0];
 				layerName = workspaceAndLayer[1];
 			} else {
-				throw new Exception("Nome da camada malformado. Deve ser no padr√£o 'workspace:layer' e est√° '" + layerName + "'");
+				throw new Exception("Nome da camada malformado. Deve ser no padr„o 'workspace:layer' e est· '" + layerName + "'");
 			}
 			
 			Configurator cfg = Configurator.getInstance();

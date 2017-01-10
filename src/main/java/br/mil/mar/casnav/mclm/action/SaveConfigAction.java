@@ -26,7 +26,7 @@ public class SaveConfigAction extends BasicActionClass {
 		
 		try { 
 			
-			String result = "{ \"success\": true, \"msg\": \"ConfiguraÃ§Ã£o atualizada com sucesso.\" }";
+			String result = "{ \"success\": true, \"msg\": \"Configuração atualizada com sucesso.\" }";
 			
 			try {
 				HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
@@ -47,10 +47,23 @@ public class SaveConfigAction extends BasicActionClass {
 				int queryFactorRadius = Integer.valueOf( request.getParameter("queryFactorRadius") );
 				int proxyPort = Integer.valueOf( request.getParameter("proxyPort") );
 				int idConfig = Integer.valueOf( request.getParameter("idConfig") );
+
+				int routingPort = Integer.valueOf( request.getParameter("routingPort") );
+				int dataLayerPort = Integer.valueOf( request.getParameter("dataLayerPort") );
+				
+				
+				String dataLayerServer = request.getParameter("dataLayerServer");
+				String dataLayerUser = request.getParameter("dataLayerUser");
+				String dataLayerPassword = request.getParameter("dataLayerPassword");
+				String routingServer = request.getParameter("routingServer");
+				String routingUser = request.getParameter("routingUser");
+				String routingPassword = request.getParameter("routingPassword");
+				String routingDatabase = request.getParameter("routingDatabase");
 				
 				Config config = new Config(idConfig, geoserverUrl, baseLayer, useProxy, externalLayersToLocalServer, externalWorkspaceName, 
 							proxyHost, nonProxyHosts, proxyUser, proxyPassword, proxyPort, geoserverUser, 
-							geoserverPassword, mapZoom, queryFactorRadius, mapCenter, shapeFileTargetPath);	
+							geoserverPassword, mapZoom, queryFactorRadius, mapCenter, shapeFileTargetPath, dataLayerServer, dataLayerUser, dataLayerPassword,
+							dataLayerPort, routingServer, routingUser, routingPassword, routingPort, routingDatabase );	
 				
 				
 				ConfigService cs = new ConfigService();

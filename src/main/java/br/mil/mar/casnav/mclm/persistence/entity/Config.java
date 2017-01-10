@@ -43,21 +43,6 @@ public class Config {
 	@Column(length=100, name = "shape_file_target_path")
 	private String shapeFileTargetPath;
 
-	@Column(length=100, name = "geoserver_database_addr")
-	private String geoserverDatabaseAddr;
-
-	@Column(name = "geoserver_database_port")
-	private int geoserverDatabasePort;
-	
-	@Column(length=100, name = "geoserver_database_user")
-	private String geoserverDatabaseUser;
-		
-	@Column(length=100, name = "geoserver_database_password")
-	private String geoserverDatabasePassword;
-	
-	@Column(length=100, name = "geoserver_database_dbname")
-	private String geoserverDatabaseDbName;
-	
 	@Column(length=50, name = "proxy_user")
 	private String proxyUser;
 	
@@ -82,6 +67,33 @@ public class Config {
 	@Column(name = "map_center")
 	private String mapCenter;
 	
+	@Column(length=100, name = "datalayer_server")
+	private String dataLayerServer;
+	
+	@Column(length=100, name = "datalayer_user")
+	private String dataLayerUser;
+	
+	@Column(length=100, name = "datalayer_password")
+	private String dataLayerPassword;
+	
+	@Column(name = "datalayer_port")
+	private Integer dataLayerPort; 
+
+	@Column(length=100, name = "routing_server")
+	private String routingServer;
+	
+	@Column(length=100, name = "routing_user")
+	private String routingUser;
+	
+	@Column(length=100, name = "routing_password")
+	private String routingPassword;
+	
+	@Column(length=100, name = "routing_database")
+	private String routingDatabase;
+
+	@Column(name = "routing_port")
+	private Integer routingPort; 
+	
 	public Config() {
 		//
 	}
@@ -92,7 +104,9 @@ public class Config {
 	public Config(int idConfig, String geoserverUrl, String baseLayer, Boolean useProxy,
 			Boolean externalLayersToLocalServer, String externalWorkspaceName, String proxyHost, String nonProxyHosts,
 			String proxyUser, String proxyPassword, Integer proxyPort, String geoserverUser, String geoserverPassword,
-			Integer mapZoom, Integer queryFactorRadius, String mapCenter, String shapeFileTargetPath ) {
+			Integer mapZoom, Integer queryFactorRadius, String mapCenter, String shapeFileTargetPath, String dataLayerServer,
+			String dataLayerUser, String dataLayerPassword, Integer dataLayerPort, String routingServer, String routingUser,
+			String routingPassword, Integer routingPort, String routingDatabase ) {
 		super();
 		this.idConfig = idConfig;
 		this.geoserverUrl = geoserverUrl;
@@ -111,6 +125,17 @@ public class Config {
 		this.queryFactorRadius = queryFactorRadius;
 		this.mapCenter = mapCenter;
 		this.shapeFileTargetPath = shapeFileTargetPath;
+		
+		this.dataLayerServer = dataLayerServer;
+		this.dataLayerUser = dataLayerUser;
+		this.dataLayerPassword = dataLayerPassword;
+		this.dataLayerPort = dataLayerPort;
+		this.routingServer = routingServer;
+		this.routingUser = routingUser;
+		this.routingPassword = routingPassword;
+		this.routingPort = routingPort;
+		this.routingDatabase = routingDatabase;
+		
 	}
 
 	public Integer getIdConfig() {
@@ -259,46 +284,77 @@ public class Config {
 		return user;
 	}
 
-	public String getGeoserverDatabaseAddr() {
-		return geoserverDatabaseAddr;
+	public String getDataLayerServer() {
+		return dataLayerServer;
 	}
 
-	public void setGeoserverDatabaseAddr(String geoserverDatabaseAddr) {
-		this.geoserverDatabaseAddr = geoserverDatabaseAddr;
+	public void setDataLayerServer(String dataLayerServer) {
+		this.dataLayerServer = dataLayerServer;
 	}
 
-	public int getGeoserverDatabasePort() {
-		return geoserverDatabasePort;
+	public String getDataLayerUser() {
+		return dataLayerUser;
 	}
 
-	public void setGeoserverDatabasePort(int geoserverDatabasePort) {
-		this.geoserverDatabasePort = geoserverDatabasePort;
+	public void setDataLayerUser(String dataLayerUser) {
+		this.dataLayerUser = dataLayerUser;
 	}
 
-	public String getGeoserverDatabaseUser() {
-		return geoserverDatabaseUser;
+	public String getDataLayerPassword() {
+		return dataLayerPassword;
 	}
 
-	public void setGeoserverDatabaseUser(String geoserverDatabaseUser) {
-		this.geoserverDatabaseUser = geoserverDatabaseUser;
+	public void setDataLayerPassword(String dataLayerPassword) {
+		this.dataLayerPassword = dataLayerPassword;
 	}
 
-	public String getGeoserverDatabasePassword() {
-		return geoserverDatabasePassword;
+	public Integer getDataLayerPort() {
+		return dataLayerPort;
 	}
 
-	public void setGeoserverDatabasePassword(String geoserverDatabasePassword) {
-		this.geoserverDatabasePassword = geoserverDatabasePassword;
+	public void setDataLayerPort(Integer dataLayerPort) {
+		this.dataLayerPort = dataLayerPort;
 	}
 
-	public String getGeoserverDatabaseDbName() {
-		return geoserverDatabaseDbName;
+	public String getRoutingServer() {
+		return routingServer;
 	}
 
-	public void setGeoserverDatabaseDbName(String geoserverDatabaseDbName) {
-		this.geoserverDatabaseDbName = geoserverDatabaseDbName;
+	public void setRoutingServer(String routingServer) {
+		this.routingServer = routingServer;
 	}
 
+	public String getRoutingUser() {
+		return routingUser;
+	}
+
+	public void setRoutingUser(String routingUser) {
+		this.routingUser = routingUser;
+	}
+
+	public String getRoutingPassword() {
+		return routingPassword;
+	}
+
+	public void setRoutingPassword(String routingPassword) {
+		this.routingPassword = routingPassword;
+	}
+
+	public String getRoutingDatabase() {
+		return routingDatabase;
+	}
+
+	public void setRoutingDatabase(String routingDatabase) {
+		this.routingDatabase = routingDatabase;
+	}
+
+	public Integer getRoutingPort() {
+		return routingPort;
+	}
+
+	public void setRoutingPort(Integer routingPort) {
+		this.routingPort = routingPort;
+	}
 
 	
 }

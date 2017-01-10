@@ -266,6 +266,11 @@ Ext.define('MCLM.Map', {
             var transparency = node.get('transparency') / 10;
             var layerStackIndex = node.get('layerStackIndex');			
 			
+            if( layerType == 'DTA' ) {
+            	this.getLayerAsFeatures( node );
+            	return false;
+            }
+            
 			if( layerType == 'KML' ) {
 				
 				var kmlFileUrl = window.location + "/" + serverUrl; 
@@ -366,8 +371,8 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Converte uma String GeoJSON para uma camada Vector
-		createVectorLayerFromGeoJSON : function( geojsonStr ) {
-			/*			
+		createVectorLayerFromGeoJSON : function( geojsonStr, node ) {
+			
 	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr, {
 	    	    featureProjection: 'EPSG:3857'
 	    	});		   	
@@ -376,17 +381,42 @@ Ext.define('MCLM.Map', {
 			     features: features,
 			});			
 			
+
+			var customStyleFunction = function( feature, resolution ) {
+				
+		    	var featureStyle = new ol.style.Style({
+		    		stroke: new ol.style.Stroke({
+		    			color: 'red',
+		    			width: 3
+		    		})
+		    	});
+		    	
+		    	console.log( feature.getGeometry().getType() );
+		    	
+		    	return [ featureStyle ];
+			};
+			
 			var vectorLayer = new ol.layer.Vector({
 			      source: vectorSource,
-			      style : featureStyle
+			      //style : customStyleFunction
 			});
 			
-			vectorLayer.set('alias', 'routeLayer');
-			vectorLayer.set('name', 'routeLayer');
-			vectorLayer.set('serialId', 'routeLayer');
+        	var dataSource = node.get("dataSource");
+        	var tableName = dataSource.tableName;
+        	var database = dataSource.database;
+			var serialId = node.get('serialId' );			
+			var layerName = node.get( 'layerName' );			
+			var layerAlias = node.get( 'layerAlias' );			
+			
+			vectorLayer.set('alias', layerAlias);
+			vectorLayer.set('name', layerName);
+			vectorLayer.set('serialId', serialId );
 			vectorLayer.set('ready', false);
-			vectorLayer.set('baseLayer', false);	
-			*/
+			vectorLayer.set('baseLayer', false);	        
+	        
+			MCLM.Map.removeLayer( 'serialId' );
+			
+			MCLM.Map.map.addLayer( vectorLayer );
 		},
 		// --------------------------------------------------------------------------------------------
 		// Carrega as Features de uma String para a camada de Rotas.
@@ -753,24 +783,53 @@ Ext.define('MCLM.Map', {
 		// Solicita uma camada do GeoServer em formato GeoJSON (Features)
 		// Chamado por TrabalhoTreeController.toggleNode()
 		getLayerAsFeatures : function( node ) {
-			
-			//var layerName = node.get('layerName');
+			var me = this;
+        	var dataSource = node.get("dataSource");
 			var serialId = node.get('serialId' );
-			
-			var propertiesColumns = "osm_name";
-			var whereClause = "1=1";
-			var sourceTables = "osm_2po_4pgr";
-			var geometryColumn = "geom_way";
-			var database = "osm";
+
+			var tableName = dataSource.tableName;
+        	var database = dataSource.database;
+			var whereClause = dataSource.whereClause;
+			var geometryColumn = dataSource.geometryColumn;
+			var propertiesColumns = dataSource.propertiesColumns;
+
 			var	bbox = this.getMapCurrentBbox();
-					
+
+	    	Ext.Ajax.setTimeout(120000);
+	    	
+			Ext.Ajax.request({
+		        url: 'getAsFeatures',
+	         	params: {
+			           'propertiesColumns': propertiesColumns,
+			           'whereClause' : whereClause,
+			           'tableName' : tableName,
+			           'geometryColumn' : geometryColumn,
+			           'bbox' : bbox,
+			           'database' : database
+			       },       
+			       success: function(response, opts) {
+			    	   var respText = Ext.decode(response.responseText);
+			    	   var layer = me.createVectorLayerFromGeoJSON( respText, node ) 
+			    	   
+			    	   
+			    	   //var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
+			    	   //routeResultStore.loadData( respText );
+			    	   //me.getFeaturesFromRouteData( respText );
+			       },
+			       failure: function(response, opts) {
+			    	   Ext.Msg.alert('Erro','Erro ao receber dados.' );
+			       }
+			});			
+			
+			
+			/*
 			
     	   	var formatJSON = new ol.format.GeoJSON(); 
 			var vectorSource = new ol.source.Vector({
 				format: formatJSON,
 		        projection : 'EPSG:4326',
 		        url: 'getAsFeatures?propertiesColumns=' + propertiesColumns +
-		         	'&whereClause=' + whereClause + '&sourceTables=' + sourceTables + '&geometryColumn=' + 
+		         	'&whereClause=' + whereClause + '&sourceTables=' + tableName + '&geometryColumn=' + 
 		         	geometryColumn + '&bbox=' + bbox + "&database=" + database
 			});			
 			
@@ -778,8 +837,8 @@ Ext.define('MCLM.Map', {
 			      source: vectorSource
 			});
 			
-			vectorLayer.set('alias', sourceTables);
-			vectorLayer.set('name', sourceTables);
+			vectorLayer.set('alias', tableName + serialId);
+			vectorLayer.set('name', tableName + serialId);
 			vectorLayer.set('serialId', serialId);
 			vectorLayer.set('ready', false);
 			vectorLayer.set('baseLayer', false);	
@@ -794,7 +853,7 @@ Ext.define('MCLM.Map', {
 	    	}				
 			
 			this.map.addLayer( vectorLayer );
-			
+			*/
 		},
 		// --------------------------------------------------------------------------------------------
 		getLayers : function() {
@@ -868,6 +927,7 @@ Ext.define('MCLM.Map', {
 	        		this.featureOverlay.getSource().addFeature( feature );
 	        	}
 	        	this.highlight = feature;
+	        	
 	        	roadDetailPanel.update( detail );
 	        } 
 

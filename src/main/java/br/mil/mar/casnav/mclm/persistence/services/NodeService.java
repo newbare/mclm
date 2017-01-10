@@ -120,9 +120,11 @@ public class NodeService {
 		GenericService gs = new GenericService();
 		List<UserTableEntity> utes = gs.genericFetchList( sql );
 		
+		DataSourceService dss = new DataSourceService();
+		
 		JSONArray arrayObj = new JSONArray();
 		for ( UserTableEntity ute : utes ) {
-			TreeNode tn = new TreeNode( ute );
+			TreeNode tn = new TreeNode( ute, dss );
 			JSONObject itemObj = new JSONObject( tn );
             arrayObj.put( itemObj );		
 		}

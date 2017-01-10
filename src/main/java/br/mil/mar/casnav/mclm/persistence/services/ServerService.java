@@ -49,13 +49,20 @@ public class ServerService {
 		}
 	}
 	
-	public Server insertServer( String name, String url, String version ) throws InsertException {
-		if ( !url.endsWith("/") ) {
-			url = url + "/";
+	public String insertServer( String name, String url, String version ) throws InsertException {
+		String result = "{ \"success\": true, \"msg\": \"Fonte de Dados criada com sucesso.\" }";
+		try {
+			if ( !url.endsWith("/") ) {
+				url = url + "/";
+			}
+			Server server = new Server( name, url, version );
+			rep.insertServer( server );
+		} catch ( Exception ex ) {
+			ex.printStackTrace();
+			result = "{ \"error\": true, \"msg\": \""+ex.getMessage()+".\" }";	
 		}
-		Server server = new Server( name, url, version );
-		Server expRet = rep.insertServer( server );
-		return expRet ;
+		
+		return result;
 	}	
 
 	public void deleteServer( int idServer ) throws DeleteException {

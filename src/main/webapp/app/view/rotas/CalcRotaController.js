@@ -27,8 +27,10 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 		}
 		
 		var geoJsonData = MCLM.Map.convertRouteLayerToJson();
-		console.log( geoJsonData );
-    	
+		//console.log( geoJsonData );
+
+		Ext.Msg.alert('Não Implementado Ainda','MCLM.views.rotas.CalcRotaController :: 32' );
+
     },
     
     closeWindow : function() {

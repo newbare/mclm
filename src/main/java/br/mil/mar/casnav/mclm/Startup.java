@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebListener;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
+import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
 import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
 
@@ -38,10 +39,17 @@ public class Startup implements ServletContextListener {
 			String passwd = config.getPassword();
 			String database = config.getDatabaseName();
 			String port = config.getDatabasePort();
+			String databaseAddr = config.getDatabaseAddr();
+			
+    		ConnFactory.setCredentials(user, passwd, database, port, databaseAddr );
     		
-    		ConnFactory.setCredentials(user, passwd, database, port);
-			Config cfg = new ConfigService().getConfig();
-			Configurator.getInstance().updateConfiguration( cfg );
+    		try {
+	    		ConfigService cs = new ConfigService();
+				Config cfg = cs.getConfig();  
+				Configurator.getInstance().updateConfiguration( cfg );
+    		} catch ( NotFoundException e ) {
+    			System.out.println("Nenhum registro encontrado na tabela de configuração.");
+    		}
 			
 		} catch (Exception e) { 
 			e.printStackTrace(); 
@@ -53,6 +61,8 @@ public class Startup implements ServletContextListener {
 	@Override
     public void contextDestroyed(ServletContextEvent event) {
 		loggerDebug("shutdown");
-		scheduler.shutdownNow();
+		try {
+			scheduler.shutdownNow();
+		} catch ( Exception e ) {}
     }
 }

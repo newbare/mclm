@@ -16,10 +16,9 @@ public class RouteService {
 		String sql = "SELECT array_to_json( array_agg( t ) ) as result FROM ( select osm_name,source,target from nearest_way('" + coordinate + "', 1, 4326) ) as t";
 		String result = "";
 		
-		String connectionString = "jdbc:postgresql://" + cfg.getGeoserverDatabaseAddr() +
-				":" + cfg.getGeoserverDatabasePort() + "/" + cfg.getGeoserverDatabaseDbName();
-		
-		GenericService gs = new GenericService( connectionString, cfg.getGeoserverDatabaseUser(), cfg.getGeoserverDatabasePassword()  );
+		String connectionString = "jdbc:postgresql://" + cfg.getRoutingServer() +
+				":" + cfg.getRoutingPort() + "/" + cfg.getRoutingDatabase();
+		GenericService gs = new GenericService( connectionString, cfg.getRoutingUser(), cfg.getRoutingPassword()  );
 		
 		List<UserTableEntity> utes = gs.genericFetchList( sql );
 		
@@ -39,10 +38,9 @@ public class RouteService {
 				+ kpaths + ", " + directed + ") as r INNER JOIN osm_2po_4pgr as g ON r.edge = g.id ) as t";
 		String result = "";
 		
-		String connectionString = "jdbc:postgresql://" + cfg.getGeoserverDatabaseAddr() +
-				":" + cfg.getGeoserverDatabasePort() + "/" + cfg.getGeoserverDatabaseDbName();
-		
-		GenericService gs = new GenericService( connectionString, cfg.getGeoserverDatabaseUser(), cfg.getGeoserverDatabasePassword()  );
+		String connectionString = "jdbc:postgresql://" + cfg.getRoutingServer() +
+				":" + cfg.getRoutingPort() + "/" + cfg.getRoutingDatabase();
+		GenericService gs = new GenericService( connectionString, cfg.getRoutingUser(), cfg.getRoutingPassword()  );
 		
 		List<UserTableEntity> utes = gs.genericFetchList( sql );
 		

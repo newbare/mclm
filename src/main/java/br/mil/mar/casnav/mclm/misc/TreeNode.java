@@ -1,5 +1,8 @@
 package br.mil.mar.casnav.mclm.misc;
 
+import br.mil.mar.casnav.mclm.persistence.entity.DataSource;
+import br.mil.mar.casnav.mclm.persistence.services.DataSourceService;
+
 public class TreeNode {
 	// Especifico do TreePanel
 	private String id;
@@ -23,8 +26,9 @@ public class TreeNode {
 	private String layerType;
 	private int childrenCount;
 	private boolean readOnly = false;
+	private DataSource dataSource;
 	
-	public TreeNode( UserTableEntity ute ) {
+	public TreeNode( UserTableEntity ute, DataSourceService dss ) {
 		this.childrenCount = Integer.valueOf( ute.getData("children") );
 
 		this.idNodeParent = Integer.valueOf( ute.getData("id_node_parent") );
@@ -52,6 +56,19 @@ public class TreeNode {
 			if ( this.layerType.equals("WMS") ) this.iconCls = "wms-icon";
 			if ( this.layerType.equals("SHP") ) this.iconCls = "shp-icon";
 			if ( this.layerType.equals("TIF") ) this.iconCls = "tif-icon";
+			if ( this.layerType.equals("DTA") ) {
+				
+				try {
+					dss.newTransaction();
+					String[] dssData = this.layerName.split(":");
+					Integer idDataSource = Integer.valueOf( dssData[1] );
+					this.dataSource = dss.getDataSource( idDataSource );
+				} catch ( Exception e ) {
+					//
+				}
+				this.iconCls = "cube-icon";
+				
+			}
 		}
 		
 		this.checked = false;
@@ -203,6 +220,14 @@ public class TreeNode {
 
 	public void setIdNodeData(int idNodeData) {
 		this.idNodeData = idNodeData;
+	}
+
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 	

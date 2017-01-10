@@ -1,4 +1,3 @@
-
 package br.mil.mar.casnav.mclm.action;
 
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +32,7 @@ public class GetLayersTreeNodeAction extends BasicActionClass {
 				NodeService ns = new NodeService();
 				resp = ns.getNodesAsJSON( idParent );
 				
-				//System.out.println( "Resposta getLayersTreeNode: " + resp );
+				System.out.println( resp );
 				
 			} catch ( Exception e ) {
 				//

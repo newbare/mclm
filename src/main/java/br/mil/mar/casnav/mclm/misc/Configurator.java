@@ -24,6 +24,7 @@ public class Configurator {
 	private String userName;
 	private String password;
 	private String databaseName;
+	private String databaseAddr;
 	private String databasePort;
 	private Config config;
 	
@@ -108,6 +109,10 @@ public class Configurator {
 		return databasePort;
 	}	
 	
+	public String getDatabaseAddr() {
+		return databaseAddr;
+	}	
+
 	public String getPassword() {
 		return password;
 	}
@@ -195,6 +200,7 @@ public class Configurator {
 			userName = getTagValue("userName", mpElement);
 			password = getTagValue("password", mpElement);
 			databaseName = getTagValue("databaseName", mpElement);
+			databaseAddr = getTagValue("databaseAddr", mpElement);
 			databasePort = getTagValue("databasePort", mpElement);
 		} catch ( Exception e ) {
 			System.out.println( e.getMessage() );

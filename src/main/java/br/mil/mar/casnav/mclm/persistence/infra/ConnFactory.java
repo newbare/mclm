@@ -12,13 +12,15 @@ public class ConnFactory {
 	private static String password;
 	private static String databaseName;	
 	private static String databasePort;	
+	private static String databaseAddr;	
 	
 	
-	public static void setCredentials( String user, String passwd, String database, String port ) {
+	public static void setCredentials( String user, String passwd, String database, String port, String addr ) {
 		userName = user;
 		password = passwd;
 		databaseName = database;
 		databasePort = port;
+		databaseAddr = addr;
 	}
 	
 	public static Session getSession() {
@@ -28,7 +30,7 @@ public class ConnFactory {
 				Configuration cfg1 = new Configuration();
 				cfg1.configure("hibernate.cfg.xml");
 				
-				String url = "jdbc:postgresql://localhost:" + databasePort + "/" + databaseName + "?ApplicationName=MCLMv2.0";
+				String url = "jdbc:postgresql://" + databaseAddr + ":" + databasePort + "/" + databaseName + "?ApplicationName=MCLMv2.0";
 				cfg1.setProperty("hibernate.connection.username", userName);
 				cfg1.setProperty("hibernate.connection.url", url);
 			 	cfg1.setProperty("hibernate.connection.password", password);
