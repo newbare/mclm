@@ -1,7 +1,14 @@
 package br.mil.mar.casnav.mclm.misc;
 
+import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
+import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 
+/*
+ * Se mexer nesta estrutura, altere também 
+ * em TreeNode
+ * 
+ */
 public class SceneryTreeNode {
 	// Especifico do TreePanel
 	private String id;
@@ -28,9 +35,10 @@ public class SceneryTreeNode {
 	private boolean selected;
 	private int layerStackIndex;
 	private int transparency;	
+	private DataLayer dataLayer;
 	
 	
-	public SceneryTreeNode( SceneryNode sn ) {
+	public SceneryTreeNode( SceneryNode sn, DataLayerService dss ) {
 		this.idSceneryNode = sn.getIdSceneryNode();
 		this.idNodeParent = sn.getIdNodeParent();
 		this.indexOrder = sn.getIndexOrder();
@@ -50,7 +58,7 @@ public class SceneryTreeNode {
 			this.layerName = sn.getLayer().getLayerName();
 			this.serialId = sn.getLayer().getSerialId();
 		} else {
-			// NÃ£o pode ser "null" porque a conversÃ£o para JSON vai omitir o atributo.
+			// Não pode ser "null" porque a conversão para JSON vai omitir o atributo.
 			this.serviceUrl = "";
 			this.originalServiceUrl = "";
 			this.description = "";
@@ -71,6 +79,21 @@ public class SceneryTreeNode {
 			if ( this.layerType.equals("WMS") ) this.iconCls = "wms-icon";
 			if ( this.layerType.equals("SHP") ) this.iconCls = "shp-icon";
 			if ( this.layerType.equals("TIF") ) this.iconCls = "tif-icon";
+			
+			if ( this.layerType.equals("DTA") ) {
+				
+				try {
+					dss.newTransaction();
+					String[] dssData = this.layerName.split(":");
+					Integer idDataLayer = Integer.valueOf( dssData[1] );
+					this.dataLayer = dss.getDataLayer( idDataLayer );
+				} catch ( Exception e ) {
+					//
+				}
+				this.iconCls = "cube-icon";
+				
+			}			
+			
 		}
 		
 	}
@@ -183,4 +206,9 @@ public class SceneryTreeNode {
 	public boolean isSelected() {
 		return selected;
 	}
+	
+	public DataLayer getDataLayer() {
+		return dataLayer;
+	}
+	
 }

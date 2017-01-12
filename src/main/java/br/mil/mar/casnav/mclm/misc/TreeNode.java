@@ -3,6 +3,11 @@ package br.mil.mar.casnav.mclm.misc;
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 
+/*
+ * Se mexer nesta estrutura, altere também 
+ * em SceneryTreeNode
+ * 
+ */
 public class TreeNode {
 	// Especifico do TreePanel
 	private String id;

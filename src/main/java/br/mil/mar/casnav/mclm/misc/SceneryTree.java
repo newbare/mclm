@@ -6,6 +6,7 @@ import java.util.List;
 
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
+import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 
 public class SceneryTree {
 	private int idScenery;
@@ -23,7 +24,7 @@ public class SceneryTree {
     private List<SceneryTreeNode> nodes;
 	private Boolean graticule;
 
-	public SceneryTree( Scenery scenery ) {
+	public SceneryTree( Scenery scenery ) throws Exception {
 		this.idScenery = scenery.getIdScenery();
 		this.creationDate = scenery.getCreationDate();
 		this.sceneryName = scenery.getSceneryName();
@@ -39,8 +40,11 @@ public class SceneryTree {
 		this.bbox = scenery.getMapBbox();
 		
 		this.nodes = new ArrayList<SceneryTreeNode>();
+		
+		DataLayerService dss = new DataLayerService();
+		
 		for ( SceneryNode sn : scenery.getNodes() ) {
-			SceneryTreeNode stn = new SceneryTreeNode( sn );
+			SceneryTreeNode stn = new SceneryTreeNode( sn, dss );
 			nodes.add( stn );
 		}
 		
