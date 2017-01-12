@@ -12,26 +12,24 @@ import com.opensymphony.xwork2.ActionContext;
 
 import br.mil.mar.casnav.mclm.persistence.services.ServerService;
 
-@Action(value="deleteExternalSource", results= {  
+@Action(value="getPostgreSources", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
 		interceptorRefs= { @InterceptorRef("seguranca")	 }
 )   
 
 @ParentPackage("default")
-public class DeleteExternalSourceAction extends BasicActionClass {
-	private int idServer;
-	private String type;
+public class GetPostgreSourcesAction extends BasicActionClass {
 	
 	public String execute(){
-
+		
 		try { 
 			
 			ServerService ss = new ServerService();
-			String result = ss.deleteServer(idServer, type);
+			String servers = ss.getPGRAsJson( );
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
-			response.getWriter().write( result );  
+			response.getWriter().write( servers );  
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			
@@ -39,12 +37,4 @@ public class DeleteExternalSourceAction extends BasicActionClass {
 		return "ok";
 	}
 
-	public void setIdServer(int idServer) {
-		this.idServer = idServer;
-	}
-	
-	public void setType(String type) {
-		this.type = type;
-	}
-	
 }

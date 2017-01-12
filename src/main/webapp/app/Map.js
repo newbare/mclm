@@ -102,14 +102,11 @@ Ext.define('MCLM.Map', {
 				if (evt.dragging) {
 					return;
 				}
-				var pixel = me.map.getEventPixel(evt.originalEvent);
-				me.displayFeatureInfo(pixel);
+				var pixel = me.map.getEventPixel( evt.originalEvent );
+				me.displayFeatureInfo( pixel );
 			});
-				
-			
-			this.map.addLayer( this.featureOverlay );
-			
 
+			this.map.addLayer( this.featureOverlay );
 			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -387,7 +384,7 @@ Ext.define('MCLM.Map', {
 		    	var featureStyle = new ol.style.Style({
 		    		stroke: new ol.style.Stroke({
 		    			color: 'red',
-		    			width: 3
+		    			width: 2
 		    		})
 		    	});
 		    	
@@ -401,9 +398,9 @@ Ext.define('MCLM.Map', {
 			      //style : customStyleFunction
 			});
 			
-        	var dataSource = node.get("dataSource");
-        	var tableName = dataSource.tableName;
-        	var database = dataSource.database;
+        	var dataLayer = node.get("dataLayer");
+        	var tableName = dataLayer.tableName;
+        	var database = dataLayer.database;
 			var serialId = node.get('serialId' );			
 			var layerName = node.get( 'layerName' );			
 			var layerAlias = node.get( 'layerAlias' );			
@@ -411,12 +408,12 @@ Ext.define('MCLM.Map', {
 			vectorLayer.set('alias', layerAlias);
 			vectorLayer.set('name', layerName);
 			vectorLayer.set('serialId', serialId );
-			vectorLayer.set('ready', false);
+			vectorLayer.set('ready', true);
 			vectorLayer.set('baseLayer', false);	        
 	        
-			MCLM.Map.removeLayer( 'serialId' );
-			
+			MCLM.Map.removeLayer( serialId );
 			MCLM.Map.map.addLayer( vectorLayer );
+			
 		},
 		// --------------------------------------------------------------------------------------------
 		// Carrega as Features de uma String para a camada de Rotas.
@@ -781,17 +778,13 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Solicita uma camada do GeoServer em formato GeoJSON (Features)
-		// Chamado por TrabalhoTreeController.toggleNode()
+		// Quando o Node representar uma Camada de Dados (tipo DTA)
 		getLayerAsFeatures : function( node ) {
 			var me = this;
-        	var dataSource = node.get("dataSource");
+        	var dataLayer = node.get("dataLayer");
 			var serialId = node.get('serialId' );
 
-			var tableName = dataSource.tableName;
-        	var database = dataSource.database;
-			var whereClause = dataSource.whereClause;
-			var geometryColumn = dataSource.geometryColumn;
-			var propertiesColumns = dataSource.propertiesColumns;
+			var idDataLayer = dataLayer.idDataLayer;
 
 			var	bbox = this.getMapCurrentBbox();
 
@@ -800,21 +793,23 @@ Ext.define('MCLM.Map', {
 			Ext.Ajax.request({
 		        url: 'getAsFeatures',
 	         	params: {
-			           'propertiesColumns': propertiesColumns,
-			           'whereClause' : whereClause,
-			           'tableName' : tableName,
-			           'geometryColumn' : geometryColumn,
-			           'bbox' : bbox,
-			           'database' : database
+			           'idDataLayer': idDataLayer,
+			           'bbox' : bbox
 			       },       
 			       success: function(response, opts) {
 			    	   var respText = Ext.decode(response.responseText);
-			    	   var layer = me.createVectorLayerFromGeoJSON( respText, node ) 
+			    	   var layer = me.createVectorLayerFromGeoJSON( respText, node );
 			    	   
+			    	   // Adiciona ao Layer Stack
+			    	   var layerStackStore = Ext.getStore('store.layerStack');
+			    	   var stackGridPanel = Ext.getCmp('stackGridPanel');
+			    	   var layerStack = layerStackStore.getRange();
+			    	   layerStack.push( node.data );
+			    	   layerStackStore.loadData( layerStack );    				
+			    	   if ( stackGridPanel ) {
+			    		   stackGridPanel.getView().refresh();
+			    	   }
 			    	   
-			    	   //var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
-			    	   //routeResultStore.loadData( respText );
-			    	   //me.getFeaturesFromRouteData( respText );
 			       },
 			       failure: function(response, opts) {
 			    	   Ext.Msg.alert('Erro','Erro ao receber dados.' );
@@ -822,38 +817,7 @@ Ext.define('MCLM.Map', {
 			});			
 			
 			
-			/*
-			
-    	   	var formatJSON = new ol.format.GeoJSON(); 
-			var vectorSource = new ol.source.Vector({
-				format: formatJSON,
-		        projection : 'EPSG:4326',
-		        url: 'getAsFeatures?propertiesColumns=' + propertiesColumns +
-		         	'&whereClause=' + whereClause + '&sourceTables=' + tableName + '&geometryColumn=' + 
-		         	geometryColumn + '&bbox=' + bbox + "&database=" + database
-			});			
-			
-			var vectorLayer = new ol.layer.Vector({
-			      source: vectorSource
-			});
-			
-			vectorLayer.set('alias', tableName + serialId);
-			vectorLayer.set('name', tableName + serialId);
-			vectorLayer.set('serialId', serialId);
-			vectorLayer.set('ready', false);
-			vectorLayer.set('baseLayer', false);	
-			
-	    	var layerStackStore = Ext.getStore('store.layerStack');
-			var stackGridPanel = Ext.getCmp('stackGridPanel');
-	    	var layerStack = layerStackStore.getRange();
-	    	layerStack.push( node.data );
-			layerStackStore.loadData( layerStack );    				
-	    	if ( stackGridPanel ) {
-	    		stackGridPanel.getView().refresh();
-	    	}				
-			
-			this.map.addLayer( vectorLayer );
-			*/
+	    	
 		},
 		// --------------------------------------------------------------------------------------------
 		getLayers : function() {
@@ -904,7 +868,7 @@ Ext.define('MCLM.Map', {
 			
 		},
 		// --------------------------------------------------------------------------------------------
-		// Exibe informações sobre um segmento de rota ao passar o mouse
+		// Realca uma Feature quando o mouse passa por cima
 		displayFeatureInfo : function( pixel ) {
 			
 			var feature = this.map.forEachFeatureAtPixel( pixel, function(feature) {
@@ -915,44 +879,57 @@ Ext.define('MCLM.Map', {
 	        if ( feature != this.highlight ) {
 
 	        	var detail = '';
-	        	var roadDetailPanel = Ext.getCmp('roadDetailPanel');
 		    	
 	        	if ( this.highlight ) {
 	        		this.featureOverlay.getSource().removeFeature( this.highlight );
 	        	}
 	        	if ( feature ) {
+	        		this.featureOverlay.getSource().addFeature( feature );
+	        		
+	        		// Relativo a um segmento de rota ||===================
 	        		var osmName = feature.get('osm_name');
 	        		if ( osmName == 'null' ) osmName = "<Sem Nome>"; 
 	        		detail = feature.get('osm_id') + ': ' + osmName;
-	        		this.featureOverlay.getSource().addFeature( feature );
+	        		// ====================================================
 	        	}
 	        	this.highlight = feature;
 	        	
-	        	roadDetailPanel.update( detail );
+	        	
+	        	// Tenta exibir as informações do segmento de rota, caso a Feature seja uma rota.
+	        	var roadDetailPanel = Ext.getCmp('roadDetailPanel');
+	        	if ( roadDetailPanel ) roadDetailPanel.update( detail );
 	        } 
 
 		},
 		// --------------------------------------------------------------------------------------------
+		// Cria um Layer para exibir o realce de uma Feature quando o mouse passar por cima 
 		createFeatureOverlay : function() {
 			
 	    	var featureOverlayStyle = new ol.style.Style({
 	    		fill: new ol.style.Fill({
-	    			color: '#000'
+	    			color: '#FFE8AA'
 	    		}),
+	    		/*
 	    		stroke: new ol.style.Stroke({
-	    			color: '#319FD3',
-	    			width: 7
+	    			color: '#FFD04F',
+	    			width: 1
 	    		})
+	    		*/
 	    	});		
 	    	
-			var vectorSource = new ol.source.Vector({
-			     //features: features,
-			});			
+			var vectorSource = new ol.source.Vector({});			
 			
 			var featureOverlay = new ol.layer.Vector({
 			      source: vectorSource,
 			      style : featureOverlayStyle
 			});
+			
+			featureOverlay.set('alias', 'FeatureOverlay' );
+			featureOverlay.set('name',  'FeatureOverlay' );
+			featureOverlay.set('serialId', 'FeatureOverlay' );
+			featureOverlay.set('ready', false);
+			featureOverlay.set('baseLayer', false);	
+			
 			
 			return featureOverlay;
 		},

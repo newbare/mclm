@@ -26,12 +26,31 @@ public class NewExternalSourceAction extends BasicActionClass {
 		try { 
 			
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
-			String name = request.getParameter("name");
-			String url = request.getParameter("url");
-			String version = request.getParameter("version");
+			String type = request.getParameter("type");
+			String result = "";
 			
-			ServerService ss = new ServerService();
-			String result = ss.insertServer(name, url, version);
+			if ( type.equals("WMS") ) {
+				String name = request.getParameter("name");
+				String url = request.getParameter("url");
+				String version = request.getParameter("version");
+				ServerService ss = new ServerService();
+				result = ss.insertServerWMS(name, url, version);
+			}
+			
+			if ( type.equals("PGR") ) {
+				String name = request.getParameter("name");
+				String serverAddress = request.getParameter("serverAddress");
+				String serverUser = request.getParameter("serverUser");
+				String serverPassword = request.getParameter("serverPassword");
+				String serverDatabase = request.getParameter("serverDatabase");
+				
+				Integer serverPort = Integer.valueOf( request.getParameter("serverPort") );
+				
+				ServerService ss = new ServerService();
+				result = ss.insertServerPGR( name, serverAddress, serverUser, serverPassword, serverDatabase, serverPort );
+				
+			}
+
 				
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

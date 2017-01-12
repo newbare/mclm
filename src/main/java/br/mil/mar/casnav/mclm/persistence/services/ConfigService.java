@@ -30,7 +30,6 @@ public class ConfigService {
 				cfg.setBaseLayer("osm_auto:all");
 				cfg.setGeoserverUrl("http://129.206.228.72/cached/osm");
 				cfg.setMapCenter("-48.129374999999925,-14.120633163259185");
-				cfg.setDataLayerPort(5432);
 				cfg.setRoutingPort(5432);
 				cfg.setMapZoom(5);
 				cfg.setProxyPort(8080);
@@ -82,11 +81,6 @@ public class ConfigService {
 		oldConfig.setExternalLayersToLocalServer( config.isExternalLayersToLocalServer() );
 		oldConfig.setShapeFileTargetPath( config.getShapeFileTargetPath() );
 		
-		oldConfig.setDataLayerPassword( config.getDataLayerPassword() );
-		oldConfig.setDataLayerPort( config.getDataLayerPort() );
-		oldConfig.setDataLayerServer( config.getDataLayerServer() );
-		oldConfig.setDataLayerUser( config.getDataLayerUser() );
-
 		oldConfig.setRoutingPassword( config.getRoutingPassword() );
 		oldConfig.setRoutingPort( config.getRoutingPort() );
 		oldConfig.setRoutingServer( config.getRoutingServer() );

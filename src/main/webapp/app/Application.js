@@ -14,11 +14,13 @@ Ext.define('MCLM.Application', {
        'MCLM.store.LayerTree',
        'MCLM.store.LayerDetail',
        'MCLM.store.ExternalSource',
+       'MCLM.store.PostgreSource',
        'MCLM.store.LayerStack',
        'MCLM.store.Capabilities',
        'MCLM.store.TrabalhoTree',
        'MCLM.store.Scenery',
        'MCLM.store.RouteResult',
+       'MCLM.store.Tables',
     ],
    
     launch: function () {

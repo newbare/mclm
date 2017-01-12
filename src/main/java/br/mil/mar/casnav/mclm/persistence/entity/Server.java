@@ -11,14 +11,15 @@ import javax.persistence.Table;
 @Table(name="servers") 
 public class Server {
 
-	public Server(String name, String url, String version) {
+	public Server(String name, String url, String version, String type) {
 		this.url = url;
 		this.name = name;
 		this.version = version;
+		this.type = type;
 	}
 	
 	public Server() {
-		// Necess√°rio para uso do Hibernate
+		// Necess·rio para uso do Hibernate
 	}
 
 	@Id
@@ -26,6 +27,9 @@ public class Server {
 	@Column(name="id_server")
 	private int idServer;
 	
+	@Column(length=3)
+	private String type;
+
 	@Column(length=250)
 	private String url;
 

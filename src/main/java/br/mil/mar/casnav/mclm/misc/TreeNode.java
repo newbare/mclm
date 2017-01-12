@@ -1,7 +1,7 @@
 package br.mil.mar.casnav.mclm.misc;
 
-import br.mil.mar.casnav.mclm.persistence.entity.DataSource;
-import br.mil.mar.casnav.mclm.persistence.services.DataSourceService;
+import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
+import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 
 public class TreeNode {
 	// Especifico do TreePanel
@@ -26,9 +26,9 @@ public class TreeNode {
 	private String layerType;
 	private int childrenCount;
 	private boolean readOnly = false;
-	private DataSource dataSource;
+	private DataLayer dataLayer;
 	
-	public TreeNode( UserTableEntity ute, DataSourceService dss ) {
+	public TreeNode( UserTableEntity ute, DataLayerService dss ) {
 		this.childrenCount = Integer.valueOf( ute.getData("children") );
 
 		this.idNodeParent = Integer.valueOf( ute.getData("id_node_parent") );
@@ -61,8 +61,8 @@ public class TreeNode {
 				try {
 					dss.newTransaction();
 					String[] dssData = this.layerName.split(":");
-					Integer idDataSource = Integer.valueOf( dssData[1] );
-					this.dataSource = dss.getDataSource( idDataSource );
+					Integer idDataLayer = Integer.valueOf( dssData[1] );
+					this.dataLayer = dss.getDataLayer( idDataLayer );
 				} catch ( Exception e ) {
 					//
 				}
@@ -222,12 +222,12 @@ public class TreeNode {
 		this.idNodeData = idNodeData;
 	}
 
-	public DataSource getDataSource() {
-		return dataSource;
+	public DataLayer getDataLayer() {
+		return dataLayer;
 	}
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public void setDataLayer(DataLayer dataLayer) {
+		this.dataLayer = dataLayer;
 	}
 	
 	

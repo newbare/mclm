@@ -25,7 +25,7 @@ public class GetExternalSourcesAction extends BasicActionClass {
 		try { 
 			
 			ServerService ss = new ServerService();
-			String servers = ss.getAsJson( );
+			String servers = ss.getWMSAsJson( );
 		
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

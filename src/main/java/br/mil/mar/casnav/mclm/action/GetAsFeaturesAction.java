@@ -19,22 +19,18 @@ import br.mil.mar.casnav.mclm.persistence.services.LayerService;
 
 @ParentPackage("default")
 public class GetAsFeaturesAction {
-	private String whereClause;
-	private String propertiesColumns;
-	private String tableName;
-	private String geometryColumn;
+	private Integer idDataLayer;
 	private String bbox;
-	private String database;
 	
 	public String execute(){
 
 		try { 
 			String result = "";
 			
-			if ( tableName != null ) {
+			if ( idDataLayer != null ) {
 				
 				LayerService ls = new LayerService();
-				result = ls.getAsFeatures(  propertiesColumns, whereClause, tableName, geometryColumn, bbox, database );
+				result = ls.getAsFeatures(  idDataLayer );
 				
 			}
 			
@@ -48,28 +44,13 @@ public class GetAsFeaturesAction {
 		return "ok";
 	}
 
-	public void setWhereClause(String whereClause) {
-		this.whereClause = whereClause;
-	}
-
-	public void setPropertiesColumns(String propertiesColumns) {
-		this.propertiesColumns = propertiesColumns;
-	}
-
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-
-	public void setGeometryColumn(String geometryColumn) {
-		this.geometryColumn = geometryColumn;
-	}
-
 	public void setBbox(String bbox) {
 		this.bbox = bbox;
 	}
 	
-	public void setDatabase(String database) {
-		this.database = database;
+	public void setIdDataLayer(Integer idDataLayer) {
+		this.idDataLayer = idDataLayer;
 	}
+
 	
 }

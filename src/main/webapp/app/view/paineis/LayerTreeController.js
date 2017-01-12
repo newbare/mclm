@@ -147,7 +147,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     		root.set( 'checked', true );
     	}
     	
-    	
     },
     // Adiciona uma nova pasta na arvore 
     addNewFolder : function( record ) {
@@ -328,7 +327,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	var layerFolderID = Ext.getCmp('layerFolderID');
 		layerFolderID.setValue( data.id );
 		
-    	Ext.getCmp('dataSourceName').focus(true, 100);
+    	Ext.getCmp('dataLayerName').focus(true, 100);
 		
 	},
 	// Abre o dialogo para adicionar uma camada GeoTIFF

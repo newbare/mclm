@@ -13,7 +13,7 @@ import br.mil.mar.casnav.mclm.misc.PathFinder;
 import br.mil.mar.casnav.mclm.misc.RESTResponse;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.misc.WebClient;
-import br.mil.mar.casnav.mclm.persistence.entity.Config;
+import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 
 public class LayerService {
@@ -39,26 +39,24 @@ public class LayerService {
 	}
 	*/
 	
-	public String getAsFeatures( String propertiesColumns, String whereClause, String sourceTables, String geometryColumn, String bbox, String database ) throws Exception {
+	public String getAsFeatures( int idDataLayer ) throws Exception {
 
-		Config cfg = Configurator.getInstance().getConfig();
+		DataLayerService dls = new DataLayerService();
+		DataLayer dl = dls.getDataLayer( idDataLayer );
 			
 		String sql = "SELECT row_to_json( fc )::text As featurecollection " +  
 			"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) ) As features " + 
 			     "FROM (SELECT 'Feature' As type, " + 
-			     "ST_AsGeoJSON( " + geometryColumn + " )::json As geometry, " +  
-			     "row_to_json((SELECT l FROM (SELECT " + propertiesColumns + ") As l)) As properties " +  
-			     //"FROM " + sourceTables + " As l where " + whereClause + " and " + geometryColumn + " @ ST_MakeEnvelope ("+bbox+")  ) As f) as fc; ";
-				 "FROM " + sourceTables + " As l where " + whereClause + ") As f) as fc; ";
+			     "ST_AsGeoJSON( " + dl.getTable().getGeometryColumnName() + " )::json As geometry, " +  
+			     "row_to_json((SELECT l FROM (SELECT " + dl.getPropertiesColumns() + ") As l)) As properties " +  
+				 "FROM " + dl.getTable().getName() + " As l where " + dl.getWhereClause() + ") As f) as fc; ";
 
-		System.out.println( sql );
-		
-		
 		String result = "";
 		
-		String connectionString = "jdbc:postgresql://" + cfg.getDataLayerServer() +
-				":" + cfg.getDataLayerPort() + "/" + database;
-		GenericService gs = new GenericService( connectionString, cfg.getDataLayerUser(), cfg.getDataLayerPassword()  );
+		String connectionString = "jdbc:postgresql://" + dl.getTable().getServer().getServerAddress() +
+				":" + dl.getTable().getServer().getServerPort() + "/" + dl.getTable().getServer().getServerDatabase();
+		GenericService gs = new GenericService( connectionString, dl.getTable().getServer().getServerUser(), 
+				dl.getTable().getServer().getServerPassword()  );
 		
 		List<UserTableEntity> utes = gs.genericFetchList( sql );
 		

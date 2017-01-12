@@ -2,7 +2,7 @@ Ext.define('MCLM.view.servers.NewServerWindow', {
 	extend: 'Ext.Window',
 	xtype : 'newServerWindow',
 	id : 'newServerWindow',
-	title : "Nova Fonte Externa",
+	title : "Nova Fonte Externa (Geoserver)",
 	width : 380,
 	height: 220,
     scrollable: false,

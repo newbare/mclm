@@ -1,7 +1,16 @@
 Ext.define('MCLM.view.servers.ServersController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.serversController',
-    	
+    
+    // ----------------------------------------------------------------------------------------------	
+    addPostgreSource : function() {
+    	var newPostgreWindow = Ext.getCmp('newPostgreWindow');
+    	if ( newPostgreWindow ) return;
+    	newPostgreWindow = Ext.create('MCLM.view.servers.NewPostgreWindow');
+    	newPostgreWindow.show();
+    	Ext.getCmp('newPostgreName').focus(true, 100);
+    },
+    // ----------------------------------------------------------------------------------------------	
     addExternalSource : function() {
     	var newServerWindow = Ext.getCmp('newServerWindow');
     	if ( newServerWindow ) return;
@@ -10,6 +19,30 @@ Ext.define('MCLM.view.servers.ServersController', {
     	Ext.getCmp('newServerName').focus(true, 100);
     },    	
     // ----------------------------------------------------------------------------------------------	
+    askDeletePostgreSource : function() {
+    	var postgresGrid = Ext.getCmp('postgresGrid');
+    	var me = this;    
+    	if ( postgresGrid.getSelectionModel().hasSelection() ) {
+
+			var row = postgresGrid.getSelectionModel().getSelection()[0];
+			var id = row.get('idServer');
+			var name = row.get('name');
+			var postgresource = Ext.getStore('store.postgresource');
+			
+			Ext.Msg.confirm('Remover Fonte Externa PostgreSQL', 'Deseja realmente remover a Fonte Externa PostgreSQL "' + name + '" ?', function(btn){
+				   if( btn === 'yes' ){
+					   me.deleteExternalSource( id, name, 'PGR', postgresource );
+				   } else {
+				      return;
+				   }
+			 });	
+    		
+    	} else {
+			Ext.Msg.alert('Fonte não selecionada','Selecione uma Fonte Externa PostgreSQL na lista e tente novamente.' );
+		}	
+    	
+    	
+    },
     askDeleteExternalSource : function() {
     	var externalGrid = Ext.getCmp('serversGrid');
     	var me = this;
@@ -18,12 +51,11 @@ Ext.define('MCLM.view.servers.ServersController', {
 			var row = externalGrid.getSelectionModel().getSelection()[0];
 			var id = row.get('idServer');
 			var name = row.get('name');
-			var url = row.get('url');
-			var version = row.get('version');	
-	
+			var externalsource = Ext.getStore('store.externalsource');
+			
 			Ext.Msg.confirm('Remover Fonte Externa', 'Deseja realmente remover a Fonte Externa "' + name + '" ?', function(btn){
 				   if( btn === 'yes' ){
-					   me.deleteExternalSource( id, name, url, version );
+					   me.deleteExternalSource( id, name, 'WMS', externalsource );
 				   } else {
 				      return;
 				   }
@@ -34,19 +66,19 @@ Ext.define('MCLM.view.servers.ServersController', {
 		}	
 	},   
     // ----------------------------------------------------------------------------------------------	
-    deleteExternalSource : function( id, name, url, version ) {
+    deleteExternalSource : function( id, name, type, store ) {
     	
     	Ext.Ajax.request({
  	       url: 'deleteExternalSource',
  	       params: {
- 	           'idServer': id
+ 	           'idServer': id,
+ 	           'type' : type
  	       },       
  	       success: function(response, opts) {
  	    	   var resp = JSON.parse( response.responseText );
  	    	   if ( resp.success ) {
-			    	var externalsource = Ext.getStore('store.externalsource');
-			    	externalsource.load();
-			    	Ext.Msg.alert('Sucesso','Fonte Externa ' + name + ' removida com sucesso.' );
+ 	    		   store.load();
+ 	    		   Ext.Msg.alert('Sucesso','Fonte Externa ' + name + ' removida com sucesso.' );
  	    	   } else {
  	    		   Ext.Msg.alert('Falha', resp.msg );
  	    	   }  

@@ -11,7 +11,7 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import br.mil.mar.casnav.mclm.persistence.services.DataSourceService;
+import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 
 @Action(value="newDtaLayer", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
@@ -19,27 +19,26 @@ import br.mil.mar.casnav.mclm.persistence.services.DataSourceService;
 )   
 
 @ParentPackage("default")
-public class NewDataSourceLayerAction extends BasicActionClass {
+public class NewDataLayerAction extends BasicActionClass {
 	
 	public String execute(){
 		
 		try { 
 			
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
-			String dataSourceName = request.getParameter("dataSourceName");
+			String dataLayerName = request.getParameter("dataLayerName");
 			String hint = request.getParameter("hint");
-			String tableName = request.getParameter("tableName");
+			
 			String institute = request.getParameter("institute");
-			String database = request.getParameter("database");
 			String whereClause = request.getParameter("whereClause");
-			String geometryColumn = request.getParameter("geometryColumn");
 			String propertiesColumns = request.getParameter("propertiesColumns");
 			
 			Integer layerFolderID = Integer.valueOf( request.getParameter("layerFolderID") );
+			Integer idTable = Integer.valueOf( request.getParameter("idTable") );
 			
-			DataSourceService dss = new DataSourceService();
-			String result = dss.insertDataSource(dataSourceName, hint, tableName, institute, layerFolderID, database, 
-					whereClause, geometryColumn, propertiesColumns);
+			DataLayerService dss = new DataLayerService();
+			String result = dss.insertDataLayer(dataLayerName, hint, idTable, institute, layerFolderID,  
+					whereClause, propertiesColumns);
 				
 				
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);

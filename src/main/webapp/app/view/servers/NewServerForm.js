@@ -23,6 +23,12 @@ Ext.define('MCLM.view.servers.NewServerForm', {
             invalidText: '',
 	    },
 	    {
+            width: 350,
+            name: 'type',
+            value : 'WMS',
+            xtype : 'hidden',
+	    },
+	    {
             fieldLabel: 'Versão',
             width: 350,
             msgTarget: 'under',

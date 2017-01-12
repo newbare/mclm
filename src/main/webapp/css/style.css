@@ -177,3 +177,9 @@
 	background-image: url('../img/cube.svg') !important;
 	background-repeat: no-repeat;
 }
+
+.postgres-icon {
+	background-image: url('../img/server.svg') !important;
+	background-repeat: no-repeat;
+}
+

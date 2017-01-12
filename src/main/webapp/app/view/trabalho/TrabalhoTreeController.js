@@ -158,7 +158,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     // Adiciona ou remove uma camada na lista de camadas e no mapa
     onLayerTreeCheckChange : function( node, checked, eOpts ) {
     	if ( !node.isLeaf() ) {
-			Ext.Msg.alert('Operação Inválida', ' Não é permitido marcar um grupo de camadas. Você deve marcar as camadas individualmente.' );
+			Ext.Msg.alert('Operação Inválida', 'Não é permitido marcar um grupo de camadas. Você deve marcar as camadas individualmente.' );
 			node.set('checked',false);
 			return;
     	}
@@ -395,7 +395,6 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 	toggleNode: function( node ) {
 		var checked = node.get('checked');
 		var layerName = node.get('layerName');
-		var serviceUrl = node.get('serviceUrl' );
 		var serialId = node.get('serialId' );
 		
 		if ( layerName == "" ) return;
@@ -403,12 +402,6 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		if( checked == true ) {
 			// adiciona a camada no mapa
 			var layer = MCLM.Map.addLayer( node );
-			
-			// Para pegar a camada como features, descomente a linha abaixo.
-			//MCLM.Map.getLayerAsFeatures( node );
-			
-			
-			// Interceptado por MCLM.view.stack.LayerStackController
 			this.fireEvent('mountImagePreview');
 		} else {
 			// Remove a camada do mapa

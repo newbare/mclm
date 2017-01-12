@@ -120,7 +120,7 @@ public class NodeService {
 		GenericService gs = new GenericService();
 		List<UserTableEntity> utes = gs.genericFetchList( sql );
 		
-		DataSourceService dss = new DataSourceService();
+		DataLayerService dss = new DataLayerService();
 		
 		JSONArray arrayObj = new JSONArray();
 		for ( UserTableEntity ute : utes ) {

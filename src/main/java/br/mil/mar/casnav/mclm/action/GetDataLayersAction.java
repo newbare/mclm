@@ -10,26 +10,26 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import br.mil.mar.casnav.mclm.persistence.services.DataSourceService;
+import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 
-@Action(value="getDataSources", results= {  
+@Action(value="getDataLayers", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
 		interceptorRefs= { @InterceptorRef("seguranca")	 }
 )   
 
 @ParentPackage("default")
-public class GetDataSourcesAction extends BasicActionClass {
+public class GetDataLayersAction extends BasicActionClass {
 	
 	public String execute(){
 
 		try { 
 			
-			DataSourceService dss = new DataSourceService();
-			String dataSources = dss.getAsJson( );
+			DataLayerService dss = new DataLayerService();
+			String dataLayers = dss.getAsJson( );
 		
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
-			response.getWriter().write( dataSources );  
+			response.getWriter().write( dataLayers );  
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			

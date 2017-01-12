@@ -67,18 +67,6 @@ public class Config {
 	@Column(name = "map_center")
 	private String mapCenter;
 	
-	@Column(length=100, name = "datalayer_server")
-	private String dataLayerServer;
-	
-	@Column(length=100, name = "datalayer_user")
-	private String dataLayerUser;
-	
-	@Column(length=100, name = "datalayer_password")
-	private String dataLayerPassword;
-	
-	@Column(name = "datalayer_port")
-	private Integer dataLayerPort; 
-
 	@Column(length=100, name = "routing_server")
 	private String routingServer;
 	
@@ -104,9 +92,8 @@ public class Config {
 	public Config(int idConfig, String geoserverUrl, String baseLayer, Boolean useProxy,
 			Boolean externalLayersToLocalServer, String externalWorkspaceName, String proxyHost, String nonProxyHosts,
 			String proxyUser, String proxyPassword, Integer proxyPort, String geoserverUser, String geoserverPassword,
-			Integer mapZoom, Integer queryFactorRadius, String mapCenter, String shapeFileTargetPath, String dataLayerServer,
-			String dataLayerUser, String dataLayerPassword, Integer dataLayerPort, String routingServer, String routingUser,
-			String routingPassword, Integer routingPort, String routingDatabase ) {
+			Integer mapZoom, Integer queryFactorRadius, String mapCenter, String shapeFileTargetPath, 
+			String routingServer, String routingUser, String routingPassword, Integer routingPort, String routingDatabase ) {
 		super();
 		this.idConfig = idConfig;
 		this.geoserverUrl = geoserverUrl;
@@ -126,10 +113,6 @@ public class Config {
 		this.mapCenter = mapCenter;
 		this.shapeFileTargetPath = shapeFileTargetPath;
 		
-		this.dataLayerServer = dataLayerServer;
-		this.dataLayerUser = dataLayerUser;
-		this.dataLayerPassword = dataLayerPassword;
-		this.dataLayerPort = dataLayerPort;
 		this.routingServer = routingServer;
 		this.routingUser = routingUser;
 		this.routingPassword = routingPassword;
@@ -282,38 +265,6 @@ public class Config {
 	
 	public User getUser() {
 		return user;
-	}
-
-	public String getDataLayerServer() {
-		return dataLayerServer;
-	}
-
-	public void setDataLayerServer(String dataLayerServer) {
-		this.dataLayerServer = dataLayerServer;
-	}
-
-	public String getDataLayerUser() {
-		return dataLayerUser;
-	}
-
-	public void setDataLayerUser(String dataLayerUser) {
-		this.dataLayerUser = dataLayerUser;
-	}
-
-	public String getDataLayerPassword() {
-		return dataLayerPassword;
-	}
-
-	public void setDataLayerPassword(String dataLayerPassword) {
-		this.dataLayerPassword = dataLayerPassword;
-	}
-
-	public Integer getDataLayerPort() {
-		return dataLayerPort;
-	}
-
-	public void setDataLayerPort(Integer dataLayerPort) {
-		this.dataLayerPort = dataLayerPort;
 	}
 
 	public String getRoutingServer() {

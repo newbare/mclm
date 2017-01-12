@@ -19,8 +19,8 @@ Ext.define('MCLM.view.addlayer.dta.DataLayerForm', {
     {
         fieldLabel: 'Nome',
         width: 330,
-        name: 'dataSourceName',
-        id: 'dataSourceName',
+        name: 'dataLayerName',
+        id: 'dataLayerName',
         allowBlank : false,
     }, {
         fieldLabel: 'Descrição',
@@ -28,30 +28,25 @@ Ext.define('MCLM.view.addlayer.dta.DataLayerForm', {
         name: 'hint',
         allowBlank : false,
     }, {
-        fieldLabel: 'Nome da Tabela',
-        width: 330,
-        name: 'tableName',
-        allowBlank : false,
-    }, {
         fieldLabel: 'Origem',
         width: 330,
         name: 'institute',
         allowBlank : false,
-    }, {
-        fieldLabel: 'Banco de Dados',
+    },{
+        fieldLabel: 'Fonte de Dados',
         width: 330,
-        name: 'database',
-        allowBlank : false,
+        name: 'idTable',
+        xtype: 'combo',
+        store : 'store.tables',
+    	valueField: 'idTable',
+    	displayField: 'name',
+    	editable: false,
+    	triggerAction: 'all'
     }, {
         fieldLabel: 'Critério de Seleção',
         width: 330,
         name: 'whereClause',
         allowBlank : false,
-    }, {
-    	fieldLabel: 'Atributo da Geometria',
-    	width: 330,
-    	name: 'geometryColumn',
-    	allowBlank : false,
     }, {
     	fieldLabel: 'Atributos de Propriedade',
     	width: 330,

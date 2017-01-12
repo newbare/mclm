@@ -17,8 +17,13 @@ Ext.define('MCLM.view.main.MainController', {
 	manageServers : function( button ) {
     	var serversWindow = Ext.getCmp('serversWindow');
     	if ( serversWindow ) return;
+    	
     	var serversStore = Ext.getStore('store.externalsource');
     	serversStore.load();
+    	
+    	var postgreStore = Ext.getStore('store.postgresource');
+    	postgreStore.load();
+    	
     	serversWindow = Ext.create('MCLM.view.servers.ServersWindow');
     	serversWindow.show();
 	},
