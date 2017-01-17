@@ -26,13 +26,22 @@ Ext.define('MCLM.Application', {
    
     launch: function () {
         
-    	Ext.Ajax.on("beforerequest", function (con) {
-            con.setUseDefaultXhrHeader(false);
-            con.setWithCredentials(true);
+    	Ext.Ajax.on("beforerequest", function (conn, options, eOpts) {
+    		$("#mainLoadingIcon").css('display','block');
+    		$("#mainLoadingInfo").text( options.url );
+    		
+    		conn.setUseDefaultXhrHeader(false);
+    		conn.setWithCredentials(true);
         });    	
     	
+    	Ext.Ajax.on("requestcomplete", function(conn, options, eOpts){
+    		$("#mainLoadingInfo").text( "" );
+    		$("#mainLoadingIcon").css('display','none');
+        });    	
     	
     	Ext.Ajax.on('requestexception', function (con, resp, op, e) {
+    		$("#mainLoadingInfo").text( "" );
+    		$("#mainLoadingIcon").css('display','none');
            if (resp.status === 401) {
                Ext.Msg.alert('','A sessão de usuário expirou!');
            }

@@ -12,6 +12,7 @@ Ext.define('MCLM.view.dicionario.DictGrid', {
     columns:[
 	     {text:'Nome Original', dataIndex:'originalName', width:200},
 	     {text:'Nome Traduzido', dataIndex:'translatedName', width:200, editor: 'textfield'},
+	     {text:'Descrição', dataIndex:'description', width:200, editor: 'textfield'},
 	     {text:'Tipo de Dado', dataIndex:'dataType', width:100},
 	     
     ],

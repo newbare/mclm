@@ -29,7 +29,10 @@ public class DictionaryItem {
 	private String originalName;	
 	
 	@Column(length=250)
-	private String translatedName = "";	
+	private String translatedName = "";
+	
+	@Column(length=250)
+	private String description = "";	
 	
 	@Column(length=80)
 	private String dataType;	
@@ -41,7 +44,7 @@ public class DictionaryItem {
 	}
 	
 	public DictionaryItem( ) {
-		// TODO Auto-generated constructor stub
+		// 
 	}
 
 	public int getIdDictionaryItem() {
@@ -84,5 +87,12 @@ public class DictionaryItem {
 		this.dataType = dataType;
 	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
 	
 }

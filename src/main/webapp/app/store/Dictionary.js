@@ -17,6 +17,7 @@ Ext.define('MCLM.store.Dictionary', {
          {name: 'dataType',type:'string', mapping:'dataType'},
          {name: 'originalName',type:'string', mapping:'originalName'},
          {name: 'translatedName',type:'string', mapping:'translatedName'},
+         {name: 'description',type:'string', mapping:'description'},
     ], 
 
 

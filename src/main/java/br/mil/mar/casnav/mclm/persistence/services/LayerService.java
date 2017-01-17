@@ -14,7 +14,9 @@ import br.mil.mar.casnav.mclm.misc.RESTResponse;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.misc.WebClient;
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
+import br.mil.mar.casnav.mclm.persistence.entity.DictionaryItem;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
+import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 
 public class LayerService {
 
@@ -72,6 +74,31 @@ public class LayerService {
 		String result = "";
 		WebClient wc = new WebClient();
 		result = wc.doGet(  URLDecoder.decode( targetUrl, "UTF-8")   ); 
+		
+		/*
+		JSONObject layerDetail = new JSONObject( result );
+		JSONArray features = layerDetail.getJSONArray("features");
+		JSONObject featureZero = features.getJSONObject(0);
+		JSONObject properties = featureZero.getJSONObject("properties");
+		*/
+		
+		try {
+			DictionaryService ds = new DictionaryService();
+			List<DictionaryItem> dictItems = ds.getListByLayer( layerName );
+			
+			for ( DictionaryItem item : dictItems ) {
+				if ( item.getTranslatedName()!= null && !item.getTranslatedName().equals("") )
+					result = result.replace( "\"" + item.getOriginalName() + "\":", "\"" + item.getTranslatedName() + "\":" );
+			}
+			
+			
+		} catch ( NotFoundException nfe ) {
+			// Ignored
+		}
+		
+		
+		
+		
 		return result;
 	}
 	

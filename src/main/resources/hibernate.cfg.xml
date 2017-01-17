@@ -25,7 +25,7 @@
 
 		<property name="hibernate.c3p0.autoCommitOnClose">true</property>
 		<property name="hibernate.c3p0.debugUnreturnedConnectionStackTraces">false</property> 
-		<!--  <property name="hibernate.c3p0.unreturnedConnectionTimeout">40</property>  -->
+		<property name="hibernate.c3p0.unreturnedConnectionTimeout">20</property>
 		                                
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Config"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.NodeData"/>

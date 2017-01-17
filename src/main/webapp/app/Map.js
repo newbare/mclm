@@ -714,8 +714,13 @@ Ext.define('MCLM.Map', {
 				var layerName = layer.get("name");
 				var baseLayer = layer.get("baseLayer");
 				var found = false;
-				// Retire os comentarios para nao interrogar a camada de base
-				//if ( layerName && ( !baseLayer ) ) {
+				
+				var queryResultWindow = Ext.getCmp('queryResultWindow');
+				if ( !queryResultWindow ) queryResultWindow = Ext.create('MCLM.view.paineis.QueryResultWindow');
+				queryResultWindow.removeAll();
+				
+				
+				if ( layerName && ( !baseLayer ) ) {
 					try {
 						urlFeatureInfo = layer.getSource().getGetFeatureInfoUrl(
 							coordinate, viewResolution, projection,
@@ -724,12 +729,15 @@ Ext.define('MCLM.Map', {
 						found = true;
 						me.queryLayer( layerName, urlFeatureInfo );
 					} catch ( err ) { me.queryLayerError("Erro ao interrogar camada", layerName);  }
-				//}				
+				}				
 				//if( !found ) {
 				//	Ext.Msg.alert('Não é possível interrogar a camada de base','Não existem camadas a serem interrogadas.' );
 				//}
 			});
 		},
+		
+		
+		
 		// --------------------------------------------------------------------------------------------
 		// Interroga uma camada dada uma URL do tipo "REQUEST=GetFeatureInfo"
 		queryLayer : function( layerName, urlFeatureInfo ) {
@@ -743,33 +751,92 @@ Ext.define('MCLM.Map', {
 		           'layerName' : layerName 
 		       },       
 		       success: function(response, opts) {
-		    	   try {
-			    	   var jsonObj = JSON.parse(response.responseText);
-			    	   var rawData = [];
-			    	   for ( x=0; x<jsonObj.features.length;x++ ) {
-			    		   rawData.push( jsonObj.features[x].properties );
-			    	   }
-			    	   if ( rawData.length > 0 ) {
-			    		   
-			    		   
-			    		   
-			    		   var painelInferior = Ext.getCmp('painelInferior');
-			    		   painelInferior.update( JSON.stringify( rawData ) );
-			    		  //addGrid( layerName, rawData );
-			    		  //$('#waitForQueryResultIcon').css('display','none');
-			    		   
-			    		   
-			    		   
-			    	   }
-		    	   } catch ( err ) {
-		    		   me.queryLayerError( response, layerName );
+		    	  
+		    	   var jsonObj = JSON.parse(response.responseText);
+		    	   
+		    	   var rawData = [];
+		    	   for ( x=0; x<jsonObj.features.length;x++ ) {
+		    		   rawData.push( jsonObj.features[x].properties );
 		    	   }
+		    	   
+		    	   if ( rawData.length > 0 ) {
+		    		  me.addGrid( layerName, rawData );
+		    	   }
+
 		       },
 		       failure: function(response, opts) {
 		    	   me.queryLayerError( response, layerName );
 		       }
 			});				
 		},
+		getStoreColumnsFromJson : function ( obj ) {
+		    var keys = [];
+		    for (var key in obj) {
+		        if ( obj.hasOwnProperty(key) ) {
+		            keys.push({name : key});
+		        }
+		    }
+		    return keys;	
+		},
+
+		getGridColumnsFromJson : function( obj ) {
+		    var keys = [];
+		    for (var key in obj) {
+		        if ( obj.hasOwnProperty(key) ) {
+		            keys.push({text: key, dataIndex: key});
+		        }
+		    }
+		    return keys;	
+		},		
+		createGrid : function( layerName, store, columnNames ) {
+			var dummyGrid = Ext.create('Ext.grid.Panel', {
+				border: false,
+				title : layerName,
+				store : store,
+			    frame: false,
+			    margin: "10 0 0 0", 
+			    flex:1,
+			    loadMask: true,
+			    columns:columnNames,
+			    autoHeight:true
+			});
+			return dummyGrid;
+		},		
+		createStore : function ( storeData, columns ) {
+			var arrData = [];
+			var theData = storeData;
+			if ( !$.isArray( storeData ) ) {
+				arrData.push( storeData );
+				theData = arrData;
+			} 
+			
+			var store =  Ext.create('Ext.data.Store',{
+		        fields: columns,
+				autoLoad: true,
+				data: theData
+			}); 	
+			return store;
+		},
+		addGrid : function ( layerName, data ) {
+			console.log( data );
+			
+			var storeColumns = this.getStoreColumnsFromJson( data[0] );   
+			var gridColumns = this.getGridColumnsFromJson( data[0] );
+
+			var store = this.createStore( data, storeColumns );
+			var grid = this.createGrid( layerName, store, gridColumns );
+			
+			var queryResultWindow = Ext.getCmp('queryResultWindow');
+			if ( !queryResultWindow ) queryResultWindow = Ext.create('MCLM.view.paineis.QueryResultWindow');
+			queryResultWindow.show();
+			
+			queryResultWindow.add( grid );
+			
+		},
+		
+		
+		
+		
 		// --------------------------------------------------------------------------------------------
 		// Exibe uma mensagem de erro da rotina "queryLayer"
 		queryLayerError : function( response, layerName ) {

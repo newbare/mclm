@@ -2,6 +2,9 @@ package br.mil.mar.casnav.mclm.persistence.services;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -56,6 +59,10 @@ public class DictionaryService {
 		return result;
 	}	
 	
+	public List<DictionaryItem> getListByLayer( String layerName ) throws Exception {
+		return rep.getListByLayer(layerName);
+	}
+	
 	public List<DictionaryItem> getDictionary( int idNodeData ) throws Exception {
 		List<DictionaryItem> result = rep.getList( idNodeData );
 		return result;
@@ -83,7 +90,7 @@ public class DictionaryService {
 				}
 			}
 		} else {
-			System.out.println("Tipo de Camada '" + node.getLayerType() + "' n�o suporta dicion�rio.");
+			System.out.println("Tipo de Camada '" + node.getLayerType() + "' não suporta dicionário.");
 		}
 		return result;
 	}
@@ -144,9 +151,38 @@ public class DictionaryService {
 		
 		String result = "";
 		
-		
-		
 		return result;
+	}
+
+	public String updateDictionaryItems(String dictionary) {
+		String resp = "{ \"success\": true, \"msg\": \"Operação efetuada com sucesso.\" }";
+		
+		try {
+			
+			JSONArray ja = new JSONArray( dictionary );
+			for( int x=0; x < ja.length(); x++ ) {
+				JSONObject jo = ja.getJSONObject( x );
+				
+				String description = jo.getString("description" );
+				String translatedName = jo.getString("translatedName" );
+				int idDictionaryItem = jo.getInt("idDictionaryItem" );
+				
+				newTransaction();
+				DictionaryItem item = rep.getItem( idDictionaryItem );
+				item.setTranslatedName( translatedName );
+				item.setDescription( description );
+				
+				rep.newTransaction();
+				rep.updateItem( item );
+				
+			}
+			
+		} catch ( Exception e ) {
+			resp = "{ \"error\": true, \"msg\": \"" + e.getMessage() + "\" }";
+		}		
+		
+		return resp;
+
 	}
 	
 	

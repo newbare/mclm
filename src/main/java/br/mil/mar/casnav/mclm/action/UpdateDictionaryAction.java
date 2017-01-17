@@ -9,10 +9,10 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.opensymphony.xwork2.ActionContext;
+
+import br.mil.mar.casnav.mclm.persistence.services.DictionaryService;
 
 @Action (value = "updateDictionary", results = {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
@@ -30,17 +30,8 @@ public class UpdateDictionaryAction extends BasicActionClass {
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
 			String dictionary = request.getParameter("dictionary");			
 			
-			System.out.println( dictionary );
-			
-			JSONArray ja = new JSONArray( dictionary );
-			for( int x=0; x < ja.length(); x++ ) {
-				JSONObject jo = ja.getJSONObject( x );
-				JSONObject node = jo.getJSONObject("node");
-				System.out.println( " >>>> " + node.getInt("idNodeData") + "  " + jo.getInt("idDictionaryItem" ) );
-			}
-					
-			resp = "{}";
-			
+			DictionaryService ds = new DictionaryService();
+			resp = ds.updateDictionaryItems( dictionary );
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

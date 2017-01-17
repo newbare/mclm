@@ -87,6 +87,21 @@ public class DictionaryRepository extends BasicRepository {
 		closeSession();
 		return users;
 	}
+
+	
+	public List<DictionaryItem> getListByLayer( String layerName ) throws Exception {
+		DaoFactory<DictionaryItem> df = new DaoFactory<DictionaryItem>();
+		IDao<DictionaryItem> fm = df.getDao(this.session, DictionaryItem.class);
+		List<DictionaryItem> users = null;
+		try {
+			users = new ArrayList<DictionaryItem>( fm.getList("select * from dictionary d join node_data nd on d.id_node_data = nd.id_node_data and nd.layername = '" + layerName + "'" ) );
+		} catch ( Exception e ) {
+			closeSession();
+			throw e;
+		}
+		closeSession();
+		return users;
+	}	
 	
 	public List<DictionaryItem> getList() throws Exception {
 		DaoFactory<DictionaryItem> df = new DaoFactory<DictionaryItem>();
