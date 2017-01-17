@@ -1,7 +1,7 @@
-Ext.define('MCLM.view.config.ConfigForm', {
+Ext.define('MCLM.view.dicionario.DictForm', {
 	extend: 'Ext.form.Panel',
-	xtype: 'configForm',
-	id:'configForm',
+	xtype: 'dictForm',
+	id:'dictForm',
     bodyPadding: 5,
     defaultType: 'textfield',
     defaults: {

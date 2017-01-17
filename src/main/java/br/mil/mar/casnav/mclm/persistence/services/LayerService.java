@@ -363,7 +363,7 @@ public class LayerService {
 	        	node.setServiceUrl( cfg.getGeoserverUrl() );
 	        	node.setLayerName( newLayerName );
 	        } else {
-	        	// Nao transfere para local. Seta a URL de servico como a ariginal.
+	        	// Nao transfere para local. Seta a URL de servico como a original.
 	        	node.setServiceUrl( node.getOriginalServiceUrl() );
 	        }
 			

@@ -1,5 +1,6 @@
 package br.mil.mar.casnav.mclm.action;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsStatics;
@@ -10,39 +11,40 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
-@Action(value="getLayerAsFeatures", results= {  
+import br.mil.mar.casnav.mclm.persistence.services.DictionaryService;
+
+@Action(value="getDictionary", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
 		interceptorRefs= { @InterceptorRef("seguranca")	 }	
 )   
 
 @ParentPackage("default")
-public class GetLayerAsFeaturesAction {
-	private String requestUrl;
+public class GetDictionaryAction {
 	
 	public String execute(){
 
 		try { 
-			String result = "ESTE SERVIÇO ESTÁ DESATIVADO";
+
+			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
+			String layerName = request.getParameter("layerName");			
+			String serviceUrl = request.getParameter("serviceUrl");			
+			int idNodeData = Integer.valueOf( request.getParameter("idNodeData") );			
 			
-			/*
-			if ( requestUrl != null ) {
-				LayerService ls = new LayerService();
-				result = ls.getLayerAsFeatures( requestUrl );
-			}
-			*/
+			DictionaryService ds = new DictionaryService();
+			String result = ds.getListAsJson( idNodeData, layerName, serviceUrl );
+
+			System.out.println( result );
+			
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.getWriter().write( result );  
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			
 		}
 		return "ok";
 	}
 
-	public void setRequestUrl(String requestUrl) {
-		this.requestUrl = requestUrl;
-	}
+
 	
 }

@@ -35,6 +35,7 @@
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Postgres"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.PostgresTable"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.DataLayer"/>		
+		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.DictionaryItem"/>		
 		
 	</session-factory> 
 </hibernate-configuration>

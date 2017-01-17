@@ -116,6 +116,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		    var menu_grid = new Ext.menu.Menu({ 
 		    	items: [
 				  { iconCls: 'add-scenery-icon', text: 'Copiar para Área de Trabalho', handler: function() { me.addToScenery(record); } },
+				  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
 				  { xtype: 'menuseparator' },
 		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
 		        ]
@@ -124,6 +125,31 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	    var position = [e.getX()-10, e.getY()-10];
 	    menu_grid.showAt( position );
 		e.stopEvent();    	
+    },
+    // Edita o dicionario de dados para uma camada
+    configDictionary : function(record) {
+    	var data = record.data;
+    	
+    	var layerName = data.layerName;
+    	var layerType = data.layerType;
+    	var serviceUrl = data.serviceUrl;
+    	var idNodeData = data.idNodeData;
+    	
+    	var dictionaryStore = Ext.data.StoreManager.lookup('store.dictionary');
+    	dictionaryStore.load({
+    			params:{
+    				'layerName': layerName,
+    				'serviceUrl' : serviceUrl,
+    				'idNodeData' : idNodeData
+    			},
+    			callback: function(records, operation, success) {
+    				if ( records.length > 0 ) {
+    					var dictWindow = Ext.create('MCLM.view.dicionario.DictWindow');
+    					dictWindow.show();		            	   
+    				}
+    			}
+    	});    	
+    	
     },
     // Adiciona para o cenario atual / area de trabalho
     addToScenery : function( record ) {

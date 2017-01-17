@@ -8,6 +8,10 @@ package br.mil.mar.casnav.mclm.misc;
 // FDR : Pasta na Árvore
 
 public enum LayerType {
-	SHP, WMS, KML, FTR, TIF, FDR, DTA
+	SHP, WMS, KML, FTR, TIF, FDR, DTA;
 
+	public String getLayerType() {
+		return this.name();
+	}
+	
 }

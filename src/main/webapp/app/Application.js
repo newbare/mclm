@@ -21,6 +21,7 @@ Ext.define('MCLM.Application', {
        'MCLM.store.Scenery',
        'MCLM.store.RouteResult',
        'MCLM.store.Tables',
+       'MCLM.store.Dictionary',
     ],
    
     launch: function () {

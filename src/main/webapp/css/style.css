@@ -183,3 +183,7 @@
 	background-repeat: no-repeat;
 }
 
+.dictionary-icon {
+	background-image: url('../img/dictionary.svg') !important;
+	background-repeat: no-repeat;
+}
