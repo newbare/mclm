@@ -56,9 +56,13 @@ Ext.define('MCLM.Application', {
 			success: function(response, opts) {
 				var config = Ext.decode(response.responseText);
 				
+				// O Mapa é inicializado em 'MCLM.view.paineis.PainelCentral' no 
+				// metodo 'afterRender'.
+				
+				
 				// Nao modifique a ordem das chamadas abaixo
 				
-				/* 1. */ MCLM.Globals.config = config;				// A aplicacao precida das configuracoes
+				/* 1. */ MCLM.Globals.config = config;				// A aplicacao precisa das configuracoes
 				/* 2. */ Ext.create({ xtype: 'telaPrincipal' });	// 
 				/* 3. */ MCLM.Functions.inicializaDicas();			// As dicas dos botoes precisam dos botoes instanciados
 
@@ -74,6 +78,7 @@ Ext.define('MCLM.Application', {
 				    	var root2 = trabalhoTree.getRootNode();
 				    	root2.expand();
 				    	
+				    	// Icone piscante da tela de rotas
 				    	setInterval( function() {
 				    		if ( !MCLM.Globals.routeBlinkEnabled ) return true;
 				    		$("#"+MCLM.Globals.selectRouteActiveIcon).fadeTo(250, 0.2).fadeTo(250, 1.0); 

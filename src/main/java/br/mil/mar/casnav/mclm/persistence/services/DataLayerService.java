@@ -51,6 +51,10 @@ public class DataLayerService {
 		}
 	}
 	
+	public void closeSession() {
+		rep.closeSession();
+	}
+	
 	public String insertDataLayer(String dataLayerName, String hint, Integer idTable, String institute,
 			Integer layerFolderID, String whereClause, String propertiesColumns) throws InsertException {
 		
@@ -82,6 +86,7 @@ public class DataLayerService {
 		
 
 	public void deleteDataLayer( int idDataLayer ) throws DeleteException {
+		
 		try {
 			DataLayer dataLayer = rep.getDataLayer(idDataLayer);
 			rep.newTransaction();
@@ -99,6 +104,9 @@ public class DataLayerService {
 		List<DataLayer> dataLayers = getList();
 		DataLayersCollection esc = new DataLayersCollection( dataLayers );
 		JSONObject itemObj = new JSONObject( esc );
+		
+		rep.closeSession();
+		
 		return itemObj.toString();		
 	}
 

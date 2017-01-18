@@ -34,6 +34,13 @@ public class Startup implements ServletContextListener {
 
     	try {
        
+    		// Isso inicia o monitor de conexoes. Serve para verificar connection leaks
+    		/*
+    		ScheduledExecutorService  scheduler = Executors.newSingleThreadScheduledExecutor();
+    		Cron cron = new Cron();
+    		scheduler.scheduleAtFixedRate( cron , 0, 1, TimeUnit.MINUTES);
+    		*/
+    		
     		
     		String configFile = path + "WEB-INF/classes/config.xml";
 			Configurator config = Configurator.getInstance( configFile );

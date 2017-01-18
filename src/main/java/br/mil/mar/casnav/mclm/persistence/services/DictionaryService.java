@@ -2,6 +2,7 @@ package br.mil.mar.casnav.mclm.persistence.services;
 
 import java.util.List;
 
+import org.apache.http.conn.HttpHostConnectException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -72,9 +73,14 @@ public class DictionaryService {
 		String layerName = node.getLayerName();
 		String serviceUrl = node.getServiceUrl();
 		int result = 0;
+		GeoserverLayersSchema schema = null;
 		
 		if ( node.getLayerType() == LayerType.WMS ) {
-			GeoserverLayersSchema schema = getLayerAttributeSchema( layerName, serviceUrl );
+			try {
+				schema = getLayerAttributeSchema( layerName, serviceUrl );
+			} catch ( HttpHostConnectException ex ) {
+				System.out.println("Conexao com '" + serviceUrl + "' excedeu o tempo limite");
+			}
 			
 			if ( schema == null ) return 0;
 			

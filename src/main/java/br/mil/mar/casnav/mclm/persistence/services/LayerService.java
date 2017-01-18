@@ -67,6 +67,7 @@ public class LayerService {
 			result = ute.getData("featurecollection");
 		}
 		
+		
 		return result;
 	}
 	

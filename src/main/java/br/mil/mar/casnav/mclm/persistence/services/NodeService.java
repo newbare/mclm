@@ -131,6 +131,10 @@ public class NodeService {
 			JSONObject itemObj = new JSONObject( tn );
             arrayObj.put( itemObj );		
 		}
+		
+		dss.closeSession();
+		rep.closeSession();
+		
 		return arrayObj.toString();
 		
 	}
