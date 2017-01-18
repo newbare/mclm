@@ -178,8 +178,13 @@
 	background-repeat: no-repeat;
 }
 
-.postgres-icon {
-	background-image: url('../img/server.svg') !important;
+.add-server-icon {
+	background-image: url('../img/add-server.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.delete-server-icon {
+	background-image: url('../img/delete-server.svg') !important;
 	background-repeat: no-repeat;
 }
 
@@ -187,3 +192,16 @@
 	background-image: url('../img/dictionary.svg') !important;
 	background-repeat: no-repeat;
 }
+
+
+.pgtable-icon {
+	background-image: url('../img/add-table.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.remove-pgtable-icon {
+	background-image: url('../img/delete-table.svg') !important;
+	background-repeat: no-repeat;
+}
+
+

@@ -49,8 +49,8 @@ public class LayerService {
 		String sql = "SELECT row_to_json( fc )::text As featurecollection " +  
 			"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) ) As features " + 
 			     "FROM (SELECT 'Feature' As type, " + 
-			     "ST_AsGeoJSON( " + dl.getTable().getGeometryColumnName() + " )::json As geometry, " +  
-			     "row_to_json((SELECT l FROM (SELECT " + dl.getPropertiesColumns() + ") As l)) As properties " +  
+			     "ST_AsGeoJSON( ST_Transform("+ dl.getTable().getGeometryColumnName() + ",4326) )::json As geometry, " +  
+			     "row_to_json((SELECT l FROM (SELECT " + dl.getPropertiesColumns() + ", 'aki' as label) As l)) As properties " +  
 				 "FROM " + dl.getTable().getName() + " As l where " + dl.getWhereClause() + ") As f) as fc; ";
 
 		String result = "";
@@ -66,7 +66,6 @@ public class LayerService {
 			UserTableEntity ute = utes.get(0);
 			result = ute.getData("featurecollection");
 		}
-		
 		
 		return result;
 	}

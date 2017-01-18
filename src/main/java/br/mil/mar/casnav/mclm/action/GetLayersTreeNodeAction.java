@@ -32,9 +32,8 @@ public class GetLayersTreeNodeAction extends BasicActionClass {
 				NodeService ns = new NodeService();
 				resp = ns.getNodesAsJSON( idParent );
 
-				
 			} catch ( Exception e ) {
-				//
+				e.printStackTrace();
 			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);

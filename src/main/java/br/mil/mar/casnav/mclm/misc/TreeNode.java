@@ -68,6 +68,7 @@ public class TreeNode {
 					String[] dssData = this.layerName.split(":");
 					Integer idDataLayer = Integer.valueOf( dssData[1] );
 					this.dataLayer = dss.getDataLayer( idDataLayer );
+					this.dataLayer.getTable().getServer().setTables( null );
 				} catch ( Exception e ) {
 					//
 				}

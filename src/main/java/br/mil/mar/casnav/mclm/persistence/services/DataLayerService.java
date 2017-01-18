@@ -33,7 +33,6 @@ public class DataLayerService {
 		
 		oldDataLayer.setDataLayerName( dataLayer.getDataLayerName() );
 		oldDataLayer.setHint( dataLayer.getHint() );
-		//oldDataLayer.setTable( dataLayer.getTable() );
 		
 		rep.newTransaction();
 		rep.updateDataLayer(oldDataLayer);

@@ -370,6 +370,8 @@ Ext.define('MCLM.Map', {
 		// Converte uma String GeoJSON para uma camada Vector
 		createVectorLayerFromGeoJSON : function( geojsonStr, node ) {
 			
+			console.log( geojsonStr );
+			
 	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr, {
 	    	    featureProjection: 'EPSG:3857'
 	    	});		   	
@@ -382,20 +384,35 @@ Ext.define('MCLM.Map', {
 			var customStyleFunction = function( feature, resolution ) {
 				
 		    	var featureStyle = new ol.style.Style({
-		    		stroke: new ol.style.Stroke({
-		    			color: 'red',
-		    			width: 2
-		    		})
+		    		  image: new ol.style.Icon(({
+		    			    anchor: [0.5, 46],
+		    			    scale : 0.5,
+		    			    anchorXUnits: 'fraction',
+		    			    anchorYUnits: 'pixels',
+		    			    opacity: 0.75,
+		    			    //color: '#8959A8',
+		    			    src: 'icons/trafficcamera.png'
+		    		  }))
 		    	});
 		    	
-		    	console.log( feature.getGeometry().getType() );
+		        var featureText = new ol.style.Style({
+		            text: new ol.style.Text({
+		                text: feature.properties.label,
+		                offsetY: -25,
+		                fill: new ol.style.Fill({
+		                    color: '#fff'
+		                })
+		            })
+		        });
 		    	
-		    	return [ featureStyle ];
+		    	
+		    	
+		    	return [ featureStyle, featureText ];
 			};
 			
 			var vectorLayer = new ol.layer.Vector({
 			      source: vectorSource,
-			      //style : customStyleFunction
+			      style : customStyleFunction
 			});
 			
         	var dataLayer = node.get("dataLayer");
