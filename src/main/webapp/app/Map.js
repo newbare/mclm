@@ -369,58 +369,92 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Converte uma String GeoJSON para uma camada Vector
 		createVectorLayerFromGeoJSON : function( geojsonStr, node ) {
-			
-			console.log( geojsonStr );
-			
-	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr, {
-	    	    featureProjection: 'EPSG:3857'
-	    	});		   	
-		   	
-			var vectorSource = new ol.source.Vector({
-			     features: features,
-			});			
-			
 
-			var customStyleFunction = function( feature, resolution ) {
-				
-		    	var featureStyle = new ol.style.Style({
-		    		  image: new ol.style.Icon(({
-		    			    anchor: [0.5, 46],
-		    			    scale : 0.5,
-		    			    anchorXUnits: 'fraction',
-		    			    anchorYUnits: 'pixels',
-		    			    opacity: 0.75,
-		    			    //color: '#8959A8',
-		    			    src: 'icons/trafficcamera.png'
-		    		  }))
-		    	});
-		    	
-		        var featureText = new ol.style.Style({
-		            text: new ol.style.Text({
-		                text: feature.properties.label,
-		                offsetY: -25,
-		                fill: new ol.style.Fill({
-		                    color: '#fff'
-		                })
-		            })
-		        });
-		    	
-		    	
-		    	
-		    	return [ featureStyle, featureText ];
-			};
-			
-			var vectorLayer = new ol.layer.Vector({
-			      source: vectorSource,
-			      style : customStyleFunction
-			});
-			
         	var dataLayer = node.get("dataLayer");
         	var tableName = dataLayer.tableName;
         	var database = dataLayer.database;
 			var serialId = node.get('serialId' );			
 			var layerName = node.get( 'layerName' );			
-			var layerAlias = node.get( 'layerAlias' );			
+			var layerAlias = node.get( 'layerAlias' );	
+			var layerStyle = dataLayer.style;
+			
+			
+			//console.log( layerStyle );
+			
+			// Carregas as features
+	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr, {
+	    	    featureProjection: 'EPSG:3857'
+	    	});		   	
+		   	
+	    	// Cria um source para as features
+			var vectorSource = new ol.source.Vector({
+			     features: features,
+			});	
+			
+			/*
+			var clusterSource = new ol.source.Cluster({
+			    distance: 15,
+			    source: vectorSource
+			});
+			*/			
+			
+			// Estiliza as features baseado nos dados da tabela "FeatureStyle"
+			// que eh atributo da tabela "DataLayer", que eh atributo de "Node"
+			var customStyleFunction = function( feature, resolution ) {
+				
+				var featureGeomType = feature.getGeometry().getType();
+				
+				
+				var polygonStyle = new ol.style.Style({
+					fill: new ol.style.Fill({
+						color: [250,250,250]
+					}),
+					stroke: new ol.style.Stroke({
+						color: [220,220,220],
+						width: 1
+					})
+				});				
+				
+		    	var pointStyle = new ol.style.Style({
+		    		  image: new ol.style.Icon(({
+		    			    anchor: JSON.parse( layerStyle.iconAnchor ),
+		    			    scale : layerStyle.iconScale,
+		    			    anchorXUnits: layerStyle.iconAnchorXUnits,
+		    			    anchorYUnits: layerStyle.iconAnchorYUnits,
+		    			    opacity: layerStyle.iconApacity,
+		    			    color   : layerStyle.iconColor,
+		    			    rotation: layerStyle.iconRotation,
+		    			    src: layerStyle.iconSrc
+		    		  }))
+		    	});
+		    	
+		        var featureText = new ol.style.Style({
+		            text: new ol.style.Text({
+		                text: feature.getProperties().label,
+		                offsetY: -25,
+		                // offsetX: -25,
+		                // font: 'bold 20px Times New Roman',
+		                fill: new ol.style.Fill({
+		                    color: '#000000'
+		                }),
+		                // stroke: new ol.style.Stroke({color: '#000000', width: 1})
+		            })
+		        });
+		        
+		        var resultStyles = [polygonStyle, pointStyle];
+		        if ( featureGeomType == 'Point' ) resultStyles.push( featureText );
+		        
+		    	return resultStyles;
+			};
+
+			
+			
+			var vectorLayer = new ol.layer.Vector({
+				//source: clusterSource,
+			    source: vectorSource,
+			    style : customStyleFunction
+			});
+			
 			
 			vectorLayer.set('alias', layerAlias);
 			vectorLayer.set('name', layerName);
@@ -835,7 +869,6 @@ Ext.define('MCLM.Map', {
 			return store;
 		},
 		addGrid : function ( layerName, data ) {
-			console.log( data );
 			
 			var storeColumns = this.getStoreColumnsFromJson( data[0] );   
 			var gridColumns = this.getGridColumnsFromJson( data[0] );

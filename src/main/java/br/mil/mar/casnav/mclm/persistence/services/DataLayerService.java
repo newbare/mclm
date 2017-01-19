@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import br.mil.mar.casnav.mclm.misc.DataLayersCollection;
 import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
+import br.mil.mar.casnav.mclm.persistence.entity.FeatureStyle;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.entity.PostgresTable;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -54,17 +55,30 @@ public class DataLayerService {
 		rep.closeSession();
 	}
 	
+	public FeatureStyle getFeatureStyle( int idFeatureStyle ) {
+		try {
+			return rep.getStyle( idFeatureStyle );
+		} catch ( Exception e ) {
+			return null;
+		}
+	}
+	
 	public String insertDataLayer(String dataLayerName, String hint, Integer idTable, String institute,
-			Integer layerFolderID, String whereClause, String propertiesColumns) throws InsertException {
+			Integer layerFolderID, String whereClause, String propertiesColumns, String displayColumn, int idFeatureStyle) throws InsertException {
 		
 		String result = "{ \"success\": true, \"msg\": \"Camada de Dados criada com sucesso.\" }";
 		
 		try {
 			
+			
+			FeatureStyle style = getFeatureStyle( idFeatureStyle );
+			
+			
 			ServerService ss = new ServerService();
 			PostgresTable table = ss.getTable( idTable );
 			
-			DataLayer dataLayer = new DataLayer(dataLayerName, hint,  whereClause, propertiesColumns, table);
+			DataLayer dataLayer = new DataLayer(dataLayerName, hint,  whereClause, propertiesColumns, table,
+					displayColumn, style);
 			dataLayer = rep.insertDataLayer( dataLayer );
 			
 			String layerAlias = table.getName() + ":" + dataLayer.getIdDataLayer();
@@ -107,6 +121,29 @@ public class DataLayerService {
 		rep.closeSession();
 		
 		return itemObj.toString();		
+	}
+
+	public String insertFeatureStyle(String layerStyleName, String iconAnchor, String iconScale,
+			String iconAnchorXUnits, String iconAnchorYUnits, String iconApacity, String iconColor, String iconRotation,
+			String iconSrc, String textOffsetY, String textOffsetX, String textFont, String textFillColor,
+			String textStrokeColor, String textStrokeWidth) {
+		
+		String result = "{ \"success\": true, \"msg\": \"Estilo criado com sucesso.\" }";
+		
+		try {
+			FeatureStyle style = new FeatureStyle(layerStyleName, iconAnchor, iconScale, iconAnchorXUnits,
+					iconAnchorYUnits, iconApacity, iconColor, iconRotation, iconSrc,
+					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
+					textStrokeWidth);
+			
+			rep.insertFeatureStyle( style );
+			
+		} catch ( Exception ex ) {
+			ex.printStackTrace();
+			result = "{ \"error\": true, \"msg\": \""+ex.getMessage()+".\" }";	
+		}
+		
+		return result;
 	}
 
 	

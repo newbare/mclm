@@ -3,6 +3,7 @@ package br.mil.mar.casnav.mclm.persistence.repository;
 import java.util.List;
 
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
+import br.mil.mar.casnav.mclm.persistence.entity.FeatureStyle;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.InsertException;
@@ -87,5 +88,35 @@ public class DataLayerRepository extends BasicRepository {
 			throw e;			
 		}
 		closeSession();
+	}
+
+	public FeatureStyle getStyle(int idFeatureStyle) throws Exception {
+		DaoFactory<FeatureStyle> df = new DaoFactory<FeatureStyle>();
+		IDao<FeatureStyle> fm = df.getDao(this.session, FeatureStyle.class);
+		FeatureStyle style = null;
+		try {
+			style = fm.getDO( idFeatureStyle );
+		} catch ( Exception e ) {
+			closeSession();		
+			throw e;
+		} 
+		closeSession();		
+		return style;
+	}
+
+	public FeatureStyle insertFeatureStyle(FeatureStyle style) throws Exception {
+		DaoFactory<FeatureStyle> df = new DaoFactory<FeatureStyle>();
+		IDao<FeatureStyle> fm = df.getDao(this.session, FeatureStyle.class);
+		
+		try {
+			fm.insertDO( style );
+			commit();
+		} catch (InsertException e) {
+			rollBack();
+			closeSession();
+			throw e;
+		}
+		closeSession();
+		return style;
 	}		
 }

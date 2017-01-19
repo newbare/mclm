@@ -63,6 +63,15 @@ public class BasicRepository {
 		}
 	}
 	
+	protected void finalize() throws Throwable {  
+	    try { 
+	    	closeSession(); 
+	    } catch ( Exception e) { 
+	        e.printStackTrace();
+	    }
+	    super.finalize();  
+	}  	
+	
 	public void commit() {
 		tx.commit(); 
 	}

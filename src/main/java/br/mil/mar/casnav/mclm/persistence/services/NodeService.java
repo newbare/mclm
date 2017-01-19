@@ -124,14 +124,12 @@ public class NodeService {
 		List<UserTableEntity> utes = gs.genericFetchList( sql );
 		
 		DataLayerService dss = new DataLayerService();
-		
 		JSONArray arrayObj = new JSONArray();
 		for ( UserTableEntity ute : utes ) {
 			TreeNode tn = new TreeNode( ute, dss );
 			JSONObject itemObj = new JSONObject( tn );
             arrayObj.put( itemObj );		
 		}
-		
 		dss.closeSession();
 		rep.closeSession();
 		
