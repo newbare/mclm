@@ -39,6 +39,7 @@ public class DataLayerRepository extends BasicRepository {
 			fm.insertDO( dataLayer );
 			commit();
 		} catch (InsertException e) {
+			e.printStackTrace();
 			rollBack();
 			closeSession();
 			throw e;

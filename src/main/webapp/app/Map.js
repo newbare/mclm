@@ -367,6 +367,19 @@ Ext.define('MCLM.Map', {
 			});
 			return result;
 		},
+		replacePattern : function( subject, properties ) {
+			try {
+				Object.keys( properties ).forEach(function ( key ) {
+				    var val = properties[key];
+				    var pattern = "${" + key + "}";
+				    subject = subject.replace( pattern, val);
+				    
+				    console.log( key + " = " + val );
+				    
+				});
+			} catch ( err ) { }
+			return subject;
+		},
 		// --------------------------------------------------------------------------------------------
 		// Converte uma String GeoJSON para uma camada Vector
 		createVectorLayerFromGeoJSON : function( geojsonStr, node ) {
@@ -403,50 +416,80 @@ Ext.define('MCLM.Map', {
 			// que eh atributo da tabela "DataLayer", que eh atributo de "Node"
 			var customStyleFunction = function( feature, resolution ) {
 				
-				console.log( resolution );
-				
-				
 				var featureGeomType = feature.getGeometry().getType();
+				var props = feature.getProperties();
+				var resultStyles = [];
 				
 				
-				var polygonStyle = new ol.style.Style({
+				//console.log( me.replacePattern("A vaca caiu na ${areakm2} e saiu voando até ${nome}...", props)  )
+
+				
+	        	var defaultStyle = new ol.style.Style({
 					fill: new ol.style.Fill({
-						color: [250,250,250]
+						color: '#CACACA'
 					}),
 					stroke: new ol.style.Stroke({
-						color: [220,220,220],
+						color: 'black',
 						width: 1
 					})
 				});				
+				resultStyles.push( defaultStyle );
 				
-		    	var pointStyle = new ol.style.Style({
-		    		  image: new ol.style.Icon(({
-		    			    anchor: JSON.parse( layerStyle.iconAnchor ),
-		    			    scale : layerStyle.iconScale,
-		    			    anchorXUnits: layerStyle.iconAnchorXUnits,
-		    			    anchorYUnits: layerStyle.iconAnchorYUnits,
-		    			    opacity: layerStyle.iconApacity,
-		    			    color   : layerStyle.iconColor,
-		    			    rotation: layerStyle.iconRotation,
-		    			    src: layerStyle.iconSrc
-		    		  }))
-		    	});
-		    	
+				
+		        if ( featureGeomType == 'MultiPolygon' || featureGeomType == 'Polygon' ) {
+		        	
+		        	var polygonStyle = new ol.style.Style({
+						fill: new ol.style.Fill({
+							color: me.replacePattern(layerStyle.polygonFillColor, props)
+						}),
+						stroke: new ol.style.Stroke({
+							color: me.replacePattern(layerStyle.polygonStrokeColor),
+							width: layerStyle.polygonStrokeWidth,
+							lineDash: JSON.parse( layerStyle.polygonLineDash ), // [10, 20, 0, 20]
+							strokeLinecap : layerStyle.polygonStrokeLinecap, // butt, round, square
+						})
+					});
+		        	
+		        	resultStyles.push( polygonStyle );
+		        	//resultStyles.push( featureText );
+		        }		        	
+		        	
+				/*
 		        var featureText = new ol.style.Style({
 		            text: new ol.style.Text({
 		                text: feature.getProperties().label,
-		                offsetY: -25,
-		                // offsetX: -25,
-		                // font: 'bold 20px Times New Roman',
+		                offsetY: layerStyle.textOffsetY,
+		                offsetX: layerStyle.textOffsetX,
+		                font: layerStyle.textFont,
 		                fill: new ol.style.Fill({
-		                    color: '#000000'
+		                    color: layerStyle.textFillColor
 		                }),
-		                // stroke: new ol.style.Stroke({color: '#000000', width: 1})
+		                stroke: new ol.style.Stroke({
+		                	color: layerStyle.textStrokeColor, 
+		                	width: layerStyle.textStrokeWidth
+		                })
+		            
 		            })
 		        });
+		        */
 		        
-		        var resultStyles = [polygonStyle, pointStyle];
-		        if ( featureGeomType == 'Point' ) resultStyles.push( featureText );
+
+				if ( featureGeomType == 'Point' ) {
+			    	var pointStyle = new ol.style.Style({
+			    		  image: new ol.style.Icon(({
+			    			    anchor: JSON.parse( layerStyle.iconAnchor ),
+			    			    scale : layerStyle.iconScale,
+			    			    anchorXUnits: layerStyle.iconAnchorXUnits,
+			    			    anchorYUnits: layerStyle.iconAnchorYUnits,
+			    			    opacity: layerStyle.iconApacity,
+			    			    color   : layerStyle.iconColor,
+			    			    rotation: layerStyle.iconRotation,
+			    			    src:  me.replacePattern(layerStyle.iconSrc, props)
+			    		  }))
+			    	});
+			    	resultStyles.push( pointStyle );
+			    	//if ( resolution < 150 ) resultStyles.push( featureText );
+				}			        
 		        
 		    	return resultStyles;
 			};

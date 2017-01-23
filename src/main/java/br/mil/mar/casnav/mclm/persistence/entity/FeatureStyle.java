@@ -55,7 +55,8 @@ public class FeatureStyle {
 	public FeatureStyle(String featureStyleName, String iconAnchor, String iconScale, String iconAnchorXUnits,
 			String iconAnchorYUnits, String iconApacity, String iconColor, String iconRotation, String iconSrc,
 			String textOffsetY, String textOffsetX, String textFont, String textFillColor, String textStrokeColor,
-			String textStrokeWidth) {
+			String textStrokeWidth, String polygonFillColor, String polygonStrokeColor, String polygonStrokeWidth,
+			String polygonLineDash, String polygonStrokeLinecap) {
 		super();
 
 		this.featureStyleName = featureStyleName;
@@ -73,6 +74,11 @@ public class FeatureStyle {
 		this.textFillColor = textFillColor;
 		this.textStrokeColor = textStrokeColor;
 		this.textStrokeWidth = textStrokeWidth;
+		this.polygonFillColor = polygonFillColor;
+		this.polygonStrokeColor = polygonStrokeColor;
+		this.polygonStrokeWidth = polygonStrokeWidth;
+		this.polygonLineDash = polygonLineDash;
+		this.polygonStrokeLinecap = polygonStrokeLinecap;
 	}
 
 	@Column(length=250) private String featureStyleName;
@@ -91,6 +97,12 @@ public class FeatureStyle {
 	@Column(length=25) private String textFillColor;
 	@Column(length=25) private String textStrokeColor;
 	@Column(length=25) private String textStrokeWidth;
+	
+	@Column(length=25) private String polygonFillColor;
+	@Column(length=25) private String polygonStrokeColor;
+	@Column(length=25) private String polygonStrokeWidth;
+	@Column(length=25) private String polygonLineDash;
+	@Column(length=25) private String polygonStrokeLinecap;
 	
 	public int getIdFeatureStyle() {
 		return idFeatureStyle;
@@ -219,8 +231,46 @@ public class FeatureStyle {
 	public void setFeatureStyleName(String featureStyleName) {
 		this.featureStyleName = featureStyleName;
 	}
-	
 
+	public String getPolygonFillColor() {
+		return polygonFillColor;
+	}
+
+	public void setPolygonFillColor(String polygonFillColor) {
+		this.polygonFillColor = polygonFillColor;
+	}
+
+	public String getPolygonStrokeColor() {
+		return polygonStrokeColor;
+	}
+
+	public void setPolygonStrokeColor(String polygonStrokeColor) {
+		this.polygonStrokeColor = polygonStrokeColor;
+	}
+
+	public String getPolygonStrokeWidth() {
+		return polygonStrokeWidth;
+	}
+
+	public void setPolygonStrokeWidth(String polygonStrokeWidth) {
+		this.polygonStrokeWidth = polygonStrokeWidth;
+	}
+
+	public String getPolygonLineDash() {
+		return polygonLineDash;
+	}
+
+	public void setPolygonLineDash(String polygonLineDash) {
+		this.polygonLineDash = polygonLineDash;
+	}
+
+	public String getPolygonStrokeLinecap() {
+		return polygonStrokeLinecap;
+	}
+
+	public void setPolygonStrokeLinecap(String polygonStrokeLinecap) {
+		this.polygonStrokeLinecap = polygonStrokeLinecap;
+	}
 	
 	
 }

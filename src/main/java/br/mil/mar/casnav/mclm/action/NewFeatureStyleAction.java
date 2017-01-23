@@ -36,19 +36,27 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			String iconColor = request.getParameter("iconColor");
 			String iconRotation = request.getParameter("iconRotation");
 			String iconSrc = request.getParameter("iconSrc");
+			
 			String textOffsetY = request.getParameter("textOffsetY");
 			String textOffsetX = request.getParameter("textOffsetX");
 			String textFont = request.getParameter("textFont");
 			String textFillColor = request.getParameter("textFillColor");
 			String textStrokeColor = request.getParameter("textStrokeColor");
-			String textStrokeWidth = request.getParameter("textStrokeWidth");		
+			String textStrokeWidth = request.getParameter("textStrokeWidth");
+			
+			String polygonFillColor = request.getParameter("polygonFillColor");		
+			String polygonStrokeColor = request.getParameter("polygonStrokeColor");		
+			String polygonStrokeWidth = request.getParameter("polygonStrokeWidth");		
+			String polygonLineDash = request.getParameter("polygonLineDash");		
+			String polygonStrokeLinecap = request.getParameter("polygonStrokeLinecap");		
+			
 			
 			
 			DataLayerService dss = new DataLayerService();
 			String result = dss.insertFeatureStyle(layerStyleName, iconAnchor, iconScale, iconAnchorXUnits,
 					iconAnchorYUnits, iconApacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
-					textStrokeWidth);
+					textStrokeWidth, polygonFillColor, polygonStrokeColor, polygonStrokeWidth, polygonLineDash, polygonStrokeLinecap);
 				
 				
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);

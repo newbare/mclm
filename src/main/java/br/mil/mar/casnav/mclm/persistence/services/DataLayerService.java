@@ -79,6 +79,8 @@ public class DataLayerService {
 			
 			DataLayer dataLayer = new DataLayer(dataLayerName, hint,  whereClause, propertiesColumns, table,
 					displayColumn, style);
+			
+			newTransaction();
 			dataLayer = rep.insertDataLayer( dataLayer );
 			
 			String layerAlias = table.getName() + ":" + dataLayer.getIdDataLayer();
@@ -126,7 +128,8 @@ public class DataLayerService {
 	public String insertFeatureStyle(String layerStyleName, String iconAnchor, String iconScale,
 			String iconAnchorXUnits, String iconAnchorYUnits, String iconApacity, String iconColor, String iconRotation,
 			String iconSrc, String textOffsetY, String textOffsetX, String textFont, String textFillColor,
-			String textStrokeColor, String textStrokeWidth) {
+			String textStrokeColor, String textStrokeWidth, String polygonFillColor, String polygonStrokeColor, 
+			String polygonStrokeWidth, String polygonLineDash, String polygonStrokeLinecap) {
 		
 		String result = "{ \"success\": true, \"msg\": \"Estilo criado com sucesso.\" }";
 		
@@ -134,7 +137,8 @@ public class DataLayerService {
 			FeatureStyle style = new FeatureStyle(layerStyleName, iconAnchor, iconScale, iconAnchorXUnits,
 					iconAnchorYUnits, iconApacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
-					textStrokeWidth);
+					textStrokeWidth, polygonFillColor, polygonStrokeColor, polygonStrokeWidth,
+					polygonLineDash, polygonStrokeLinecap);
 			
 			rep.insertFeatureStyle( style );
 			
