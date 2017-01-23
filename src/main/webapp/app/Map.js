@@ -21,7 +21,7 @@ Ext.define('MCLM.Map', {
 		graticule: null,
 		geoserverUrl: '',
 		highlight : null,
-		featureOverlay : null,
+		
 		
 		getBaseMapName : function() {
 			return this.baseLayerName;
@@ -98,15 +98,17 @@ Ext.define('MCLM.Map', {
 			});	
 			
 			
+			/*
 			this.map.on('pointermove', function(evt) {
 				if (evt.dragging) {
 					return;
 				}
 				var pixel = me.map.getEventPixel( evt.originalEvent );
-				me.displayFeatureInfo( pixel );
+				// Do something
 			});
-
-			this.map.addLayer( this.featureOverlay );
+			*/
+			
+			
 			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -136,7 +138,7 @@ Ext.define('MCLM.Map', {
 			
 			this.openSeaMapLayer = this.createOpenSeaMapLayer();
 			this.baseLayer = this.createBaseLayer();
-			this.featureOverlay = this.createFeatureOverlay();
+			
 			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -291,7 +293,6 @@ Ext.define('MCLM.Map', {
 				            'layers'	: layerName,
 				            'version'	: '1.1.1', 
 				            'format'	: 'image/png',
-				            //'viewparams': 'directed:false;numroutes:10;source_id:1369892;target_id:6450',
 				        },
 				        projection: ol.proj.get('EPSG:4326')
 				    })
@@ -402,6 +403,9 @@ Ext.define('MCLM.Map', {
 			// que eh atributo da tabela "DataLayer", que eh atributo de "Node"
 			var customStyleFunction = function( feature, resolution ) {
 				
+				console.log( resolution );
+				
+				
 				var featureGeomType = feature.getGeometry().getType();
 				
 				
@@ -469,7 +473,6 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Carrega as Features de uma String para a camada de Rotas.
 		loadRouteDataToRouteLayer : function( routeData ) {
-	   		if (  MCLM.Map.featureOverlay.getSource() ) MCLM.Map.featureOverlay.getSource().clear();
 	    	
 	    	var features = new ol.format.GeoJSON().readFeatures( routeData, {
 	    	    featureProjection: 'EPSG:3857'
@@ -485,21 +488,22 @@ Ext.define('MCLM.Map', {
 	    			width: 3
 	    		})
 	    	});
-			var vectorLayer = new ol.layer.Vector({
+	    	
+			var routeLayer = new ol.layer.Vector({
 			      source: vectorSource,
 			      style : featureStyle
 			});
 			
 			
-			vectorLayer.set('alias', 'routeLayer');
-			vectorLayer.set('name', 'routeLayer');
-			vectorLayer.set('serialId', 'routeLayer');
-			vectorLayer.set('ready', false);
-			vectorLayer.set('baseLayer', false);	        
+			routeLayer.set('alias', 'routeLayer');
+			routeLayer.set('name', 'routeLayer');
+			routeLayer.set('serialId', 'routeLayer');
+			routeLayer.set('ready', false);
+			routeLayer.set('baseLayer', false);	        
 	        
 			MCLM.Map.removeLayerByName( 'routeLayer' );
 			
-			MCLM.Map.map.addLayer( vectorLayer );
+			MCLM.Map.map.addLayer( routeLayer );
 		},
 		// --------------------------------------------------------------------------------------------
 		// Converte as Features da camada de Rotas para uma String GeoJSON
@@ -684,6 +688,7 @@ Ext.define('MCLM.Map', {
 		 	}
 		},  
 		// --------------------------------------------------------------------------------------------
+		// Interroga o servidor de rotas para saber quais ruas estão mais perto do ponto clicado pelo usuário
 		getNearestRoads : function( center, type ) {
 			var coordinate = ol.proj.transform( center , 'EPSG:3857', 'EPSG:4326');			
 			
@@ -941,35 +946,6 @@ Ext.define('MCLM.Map', {
 			return this.map.getLayers();
 		},
 		// --------------------------------------------------------------------------------------------
-		// Apenas para debug. Apagar assim que possível.
-		getLayersDetails : function () {
-			var layers = this.map.getLayers();
-			var length = layers.getLength();
-			
-			var result = [];
-			
-			console.log("CAMADAS EXISTENTES NO MAPA: -----------------------");
-			for (var i = 0; i < length; i++) {
-				var layerName = layers.item(i).get('name');
-				var serverUrl = layers.item(i).get('serverUrl');
-				var serialId = layers.item(i).get('serialId');
-				var alias = layers.item(i).get('alias');
-				var layerOpacity = layers.item(i).getOpacity();
-				
-				var layerDetail = {
-					layerName:layerName, 
-					serverUrl:serverUrl, 
-					serialId:serialId, 
-					alias:alias,
-					layerOpacity: layerOpacity
-				};
-				
-				result.push( layerDetail );
-				console.log( layers.item(i) );
-			}
-			console.log("---------------------------------------------------");
-		},
-		// --------------------------------------------------------------------------------------------
 		// Posiciona o centro do mapa em uma coordenada e zoom. Usado pela carga do cenário
 		panTo : function( center, zoom ) {
 			var coord = center.split(",");
@@ -985,71 +961,6 @@ Ext.define('MCLM.Map', {
 			
 		},
 		// --------------------------------------------------------------------------------------------
-		// Realca uma Feature quando o mouse passa por cima
-		displayFeatureInfo : function( pixel ) {
-			
-			var feature = this.map.forEachFeatureAtPixel( pixel, function(feature) {
-				return feature;
-			});
-
-       
-	        if ( feature != this.highlight ) {
-
-	        	var detail = '';
-		    	
-	        	if ( this.highlight ) {
-	        		this.featureOverlay.getSource().removeFeature( this.highlight );
-	        	}
-	        	if ( feature ) {
-	        		this.featureOverlay.getSource().addFeature( feature );
-	        		
-	        		// Relativo a um segmento de rota ||===================
-	        		var osmName = feature.get('osm_name');
-	        		if ( osmName == 'null' ) osmName = "<Sem Nome>"; 
-	        		detail = feature.get('osm_id') + ': ' + osmName;
-	        		// ====================================================
-	        	}
-	        	this.highlight = feature;
-	        	
-	        	
-	        	// Tenta exibir as informações do segmento de rota, caso a Feature seja uma rota.
-	        	var roadDetailPanel = Ext.getCmp('roadDetailPanel');
-	        	if ( roadDetailPanel ) roadDetailPanel.update( detail );
-	        } 
-
-		},
-		// --------------------------------------------------------------------------------------------
-		// Cria um Layer para exibir o realce de uma Feature quando o mouse passar por cima 
-		createFeatureOverlay : function() {
-			
-	    	var featureOverlayStyle = new ol.style.Style({
-	    		fill: new ol.style.Fill({
-	    			color: '#FFE8AA'
-	    		}),
-	    		/*
-	    		stroke: new ol.style.Stroke({
-	    			color: '#FFD04F',
-	    			width: 1
-	    		})
-	    		*/
-	    	});		
-	    	
-			var vectorSource = new ol.source.Vector({});			
-			
-			var featureOverlay = new ol.layer.Vector({
-			      source: vectorSource,
-			      style : featureOverlayStyle
-			});
-			
-			featureOverlay.set('alias', 'FeatureOverlay' );
-			featureOverlay.set('name',  'FeatureOverlay' );
-			featureOverlay.set('serialId', 'FeatureOverlay' );
-			featureOverlay.set('ready', false);
-			featureOverlay.set('baseLayer', false);	
-			
-			
-			return featureOverlay;
-		},
 		
 	}
 
