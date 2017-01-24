@@ -129,7 +129,7 @@ public class DataLayerService {
 			String iconAnchorXUnits, String iconAnchorYUnits, String iconApacity, String iconColor, String iconRotation,
 			String iconSrc, String textOffsetY, String textOffsetX, String textFont, String textFillColor,
 			String textStrokeColor, String textStrokeWidth, String polygonFillColor, String polygonStrokeColor, 
-			String polygonStrokeWidth, String polygonLineDash, String polygonStrokeLinecap) {
+			String polygonStrokeWidth, String polygonLineDash, String polygonStrokeLinecap, String lineFillColor, String lineStrokeColor, String lineStrokeWidth) {
 		
 		String result = "{ \"success\": true, \"msg\": \"Estilo criado com sucesso.\" }";
 		
@@ -138,7 +138,7 @@ public class DataLayerService {
 					iconAnchorYUnits, iconApacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
 					textStrokeWidth, polygonFillColor, polygonStrokeColor, polygonStrokeWidth,
-					polygonLineDash, polygonStrokeLinecap);
+					polygonLineDash, polygonStrokeLinecap, lineFillColor, lineStrokeColor, lineStrokeWidth);
 			
 			rep.insertFeatureStyle( style );
 			

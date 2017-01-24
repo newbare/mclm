@@ -425,6 +425,14 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     viewready: function (tree) {
         var view = tree.getView();
         var dd = view.findPlugin('treeviewdragdrop');
+
+        view.on({
+            'drop': function () {
+        		var layerTreeStore = Ext.data.StoreManager.lookup('store.layerTree');
+        		layerTreeStore.sync();
+
+            }
+        });
         
         dd.dragZone.onBeforeDrag = function (data, e) {
             var rec = view.getRecord(e.getTarget(view.itemSelector));

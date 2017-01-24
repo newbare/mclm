@@ -49,6 +49,9 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			String polygonStrokeWidth = request.getParameter("polygonStrokeWidth");		
 			String polygonLineDash = request.getParameter("polygonLineDash");		
 			String polygonStrokeLinecap = request.getParameter("polygonStrokeLinecap");		
+			String lineFillColor = request.getParameter("lineFillColor");		
+			String lineStrokeColor = request.getParameter("lineStrokeColor");		
+			String lineStrokeWidth = request.getParameter("lineStrokeWidth");		
 			
 			
 			
@@ -56,7 +59,8 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			String result = dss.insertFeatureStyle(layerStyleName, iconAnchor, iconScale, iconAnchorXUnits,
 					iconAnchorYUnits, iconApacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
-					textStrokeWidth, polygonFillColor, polygonStrokeColor, polygonStrokeWidth, polygonLineDash, polygonStrokeLinecap);
+					textStrokeWidth, polygonFillColor, polygonStrokeColor, polygonStrokeWidth, polygonLineDash, polygonStrokeLinecap,
+					lineFillColor, lineStrokeColor,  lineStrokeWidth);
 				
 				
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);

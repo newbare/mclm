@@ -374,7 +374,7 @@ Ext.define('MCLM.Map', {
 				    var pattern = "${" + key + "}";
 				    subject = subject.replace( pattern, val);
 				    
-				    console.log( key + " = " + val );
+				    //console.log( key + " = " + val );
 				    
 				});
 			} catch ( err ) { }
@@ -391,6 +391,7 @@ Ext.define('MCLM.Map', {
 			var layerName = node.get( 'layerName' );			
 			var layerAlias = node.get( 'layerAlias' );	
 			var layerStyle = dataLayer.style;
+
 			
 			
 			//console.log( layerStyle );
@@ -402,8 +403,16 @@ Ext.define('MCLM.Map', {
 		   	
 	    	// Cria um source para as features
 			var vectorSource = new ol.source.Vector({
-			     features: features,
+				loader: function() {
+					MCLM.Functions.showMainLoadingIcon( 'Criando camada "' + layerName + '"...');
+					this.addFeatures(features);
+				}
+			    // features: features,
 			});	
+			vectorSource.once('change',function(e){
+				console.log('change ' + vectorSource.getState() );
+				MCLM.Functions.hideMainLoadingIcon();
+			});			
 			
 			/*
 			var clusterSource = new ol.source.Cluster({
@@ -417,6 +426,9 @@ Ext.define('MCLM.Map', {
 			var customStyleFunction = function( feature, resolution ) {
 				
 				var featureGeomType = feature.getGeometry().getType();
+				//console.log( featureGeomType );
+				
+				
 				var props = feature.getProperties();
 				var resultStyles = [];
 				
@@ -435,6 +447,18 @@ Ext.define('MCLM.Map', {
 				});				
 				resultStyles.push( defaultStyle );
 				
+				if ( featureGeomType == 'LineString' || featureGeomType == 'Line' ) {
+		        	var lineStyle = new ol.style.Style({
+						fill: new ol.style.Fill({
+							color: layerStyle.lineFillColor
+						}),
+						stroke: new ol.style.Stroke({
+							color: layerStyle.lineStrokeColor,
+							width: layerStyle.lineStrokeWidth
+						})
+					});	
+		        	resultStyles.push( lineStyle );
+				}
 				
 		        if ( featureGeomType == 'MultiPolygon' || featureGeomType == 'Polygon' ) {
 		        	
@@ -491,6 +515,8 @@ Ext.define('MCLM.Map', {
 			    	//if ( resolution < 150 ) resultStyles.push( featureText );
 				}			        
 		        
+				
+				
 		    	return resultStyles;
 			};
 
@@ -511,6 +537,7 @@ Ext.define('MCLM.Map', {
 	        
 			MCLM.Map.removeLayer( serialId );
 			MCLM.Map.map.addLayer( vectorLayer );
+			
 			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -956,29 +983,31 @@ Ext.define('MCLM.Map', {
 	    	Ext.Ajax.setTimeout(120000);
 	    	
 			Ext.Ajax.request({
-		        url: 'getAsFeatures',
-	         	params: {
-			           'idDataLayer': idDataLayer,
-			           'bbox' : bbox
-			       },       
-			       success: function(response, opts) {
-			    	   var respText = Ext.decode(response.responseText);
-			    	   var layer = me.createVectorLayerFromGeoJSON( respText, node );
-			    	   
-			    	   // Adiciona ao Layer Stack
-			    	   var layerStackStore = Ext.getStore('store.layerStack');
-			    	   var stackGridPanel = Ext.getCmp('stackGridPanel');
-			    	   var layerStack = layerStackStore.getRange();
-			    	   layerStack.push( node.data );
-			    	   layerStackStore.loadData( layerStack );    				
-			    	   if ( stackGridPanel ) {
-			    		   stackGridPanel.getView().refresh();
-			    	   }
-			    	   
-			       },
-			       failure: function(response, opts) {
-			    	   Ext.Msg.alert('Erro','Erro ao receber dados.' );
-			       }
+				url: 'getAsFeatures',
+				params: {
+					'idDataLayer': idDataLayer,
+					'bbox' : bbox
+				},       
+				success: function(response, opts) {
+			    	MCLM.Functions.showMainLoadingIcon( 'Carregando Camada...');
+
+					var respText = Ext.decode(response.responseText);
+					var layer = me.createVectorLayerFromGeoJSON( respText, node );
+		    	   
+					//Adiciona ao Layer Stack
+					var layerStackStore = Ext.getStore('store.layerStack');
+					var stackGridPanel = Ext.getCmp('stackGridPanel');
+					var layerStack = layerStackStore.getRange();
+					layerStack.push( node.data );
+					layerStackStore.loadData( layerStack );    				
+					if ( stackGridPanel ) {
+						stackGridPanel.getView().refresh();
+					}
+				},
+				failure: function(response, opts) {
+					MCLM.Functions.hideMainLoadingIcon();
+					Ext.Msg.alert('Erro','Erro ao receber dados.' );
+				}
 			});			
 			
 			

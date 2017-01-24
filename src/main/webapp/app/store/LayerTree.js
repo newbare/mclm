@@ -2,7 +2,7 @@ Ext.define('MCLM.store.LayerTree', {
     extend: 'Ext.data.TreeStore',
     storeId:'store.layerTree',
     //autoLoad : true,
-    autoSync: true,
+    autoSync: false,
     requires: [
        'MCLM.model.LayerTreeModel'
     ],	    

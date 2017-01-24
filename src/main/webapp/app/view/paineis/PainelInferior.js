@@ -7,5 +7,5 @@ Ext.define('MCLM.view.paineis.PainelInferior', {
     margin: '0 0 0 0',
     height: 30,
     collapsed: false,
-    html : 	'<div id="mainLoadingInfo" style="float:left"></div>'
+    html : 	''
 });

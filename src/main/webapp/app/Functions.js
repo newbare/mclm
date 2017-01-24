@@ -12,6 +12,17 @@ Ext.define('MCLM.Functions', {
 			    s4() + '-' + s4() + s4() + s4();
 		},
 		
+		showMainLoadingIcon : function( action ) {
+    		$("#mainLoadingIcon").css('display','block');
+    		$("#mainLoadingInfo").text( action );
+    		$('#mainLoadingIcon').hide().show(0);
+    		console.log( action );
+    	},
+    	
+		hideMainLoadingIcon : function() {
+    		$("#mainLoadingInfo").text( "" );
+    		$("#mainLoadingIcon").css('display','none');			
+		},
 		
 		inicializaDicas : function() {
 		    Ext.tip.QuickTipManager.init();

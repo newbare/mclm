@@ -56,7 +56,7 @@ public class FeatureStyle {
 			String iconAnchorYUnits, String iconApacity, String iconColor, String iconRotation, String iconSrc,
 			String textOffsetY, String textOffsetX, String textFont, String textFillColor, String textStrokeColor,
 			String textStrokeWidth, String polygonFillColor, String polygonStrokeColor, String polygonStrokeWidth,
-			String polygonLineDash, String polygonStrokeLinecap) {
+			String polygonLineDash, String polygonStrokeLinecap, String lineFillColor, String lineStrokeColor, String lineStrokeWidth) {
 		super();
 
 		this.featureStyleName = featureStyleName;
@@ -79,6 +79,9 @@ public class FeatureStyle {
 		this.polygonStrokeWidth = polygonStrokeWidth;
 		this.polygonLineDash = polygonLineDash;
 		this.polygonStrokeLinecap = polygonStrokeLinecap;
+		this.lineFillColor = lineFillColor;
+		this.lineStrokeColor = lineStrokeColor;
+		this.lineStrokeWidth = lineStrokeWidth;
 	}
 
 	@Column(length=250) private String featureStyleName;
@@ -98,6 +101,10 @@ public class FeatureStyle {
 	@Column(length=25) private String textStrokeColor;
 	@Column(length=25) private String textStrokeWidth;
 	
+	@Column(length=25) private String lineFillColor;
+	@Column(length=25) private String lineStrokeColor;
+	@Column(length=25) private String lineStrokeWidth;
+
 	@Column(length=25) private String polygonFillColor;
 	@Column(length=25) private String polygonStrokeColor;
 	@Column(length=25) private String polygonStrokeWidth;
