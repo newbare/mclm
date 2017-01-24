@@ -54,6 +54,13 @@ Ext.define('MCLM.view.main.MainController', {
     	
     },
 	// --------------------------------------------------------------------------------------------
+    editStyles : function() {
+    	var styleEditorWindow = Ext.getCmp('styleEditorWindow');
+    	if ( styleEditorWindow ) return;
+    	styleEditorWindow = Ext.create('MCLM.view.style.StyleEditorWindow');
+    	styleEditorWindow.show();    	
+    },
+	// --------------------------------------------------------------------------------------------
     checkInternetConnection: function ( button ) {
     	var box = Ext.MessageBox.wait('Aguarde alguns instantes enquanto a conexão com a Internet é testada.', 'Verificando Conectividade');
     	

@@ -4,22 +4,30 @@ Ext.define('MCLM.view.style.StyleEditorWindow', {
 	id : 'styleEditorWindow',
 
     requires: [
-        'MCLM.view.style.StyleEditorForm',
+        'MCLM.view.style.StyleEditorTabContainer',
+        'MCLM.view.style.StyleEditorController',
 	],
 	
-    //controller : 'dataLayer',	
+    controller : 'styleEditor',	
 	
 	width : 500,
 	height: 380,
+
+	layout: {
+		type: 'vbox',
+		align: 'stretch'
+	},
+	
+	
     scrollable: false,
     frame : false,
-	layout : 'border',
+   
 	constrain: true,
 	bodyStyle:"background:#FFFFFF;",
 	renderTo: Ext.getBody(),
 	
 	items: [{
-		xtype: 'view.styleEditorForm'
+		xtype: 'view.styleEditorTC'
 	}],
 	
 	

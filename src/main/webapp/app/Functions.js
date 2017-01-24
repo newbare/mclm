@@ -16,7 +16,7 @@ Ext.define('MCLM.Functions', {
     		$("#mainLoadingIcon").css('display','block');
     		$("#mainLoadingInfo").text( action );
     		$('#mainLoadingIcon').hide().show(0);
-    		console.log( action );
+    		//console.log( action );
     	},
     	
 		hideMainLoadingIcon : function() {
@@ -104,90 +104,14 @@ Ext.define('MCLM.Functions', {
 		        text: 'Calcula a rota entre dois pontos.',
 		        width: 150,
 		        dismissDelay: 5000 
+		    }, {
+		        target: 'btnStyle',
+		        title: 'Gerenciar Estilos',
+		        text: 'Gerencia os estilos a serem aplicados nas camadas de dados.',
+		        width: 150,
+		        dismissDelay: 5000 
 		    }); 	
 		},
-		
-		getFeatureStyle : function( featureType ) {
-			
-			/*
-			
-			var icon = feature.get("icon");
-				var styleTemperature = new ol.style.Style({
-				        image: new ol.style.Icon({
-				        src: 'http://prognoza.hr/metsimboli/' + icon + '.gif'
-				})
-			});			
-			
-			
-			*/
-			var styles = {
-    	        'Point': new ol.style.Style({
-    	          image: image
-    	        }),
-    	        'LineString': new ol.style.Style({
-    	          stroke: new ol.style.Stroke({
-    	            color: 'green',
-    	            width: 1
-    	          })
-    	        }),
-    	        'MultiLineString': new ol.style.Style({
-    	          stroke: new ol.style.Stroke({
-    	            color: 'green',
-    	            width: 1
-    	          })
-    	        }),
-    	        'MultiPoint': new ol.style.Style({
-    	          image: image
-    	        }),
-    	        'MultiPolygon': new ol.style.Style({
-    	          stroke: new ol.style.Stroke({
-    	            color: 'yellow',
-    	            width: 1
-    	          }),
-    	          fill: new ol.style.Fill({
-    	            color: 'rgba(255, 255, 0, 0.1)'
-    	          })
-    	        }),
-    	        'Polygon': new ol.style.Style({
-    	          stroke: new ol.style.Stroke({
-    	            color: 'blue',
-    	            lineDash: [4],
-    	            width: 3
-    	          }),
-    	          fill: new ol.style.Fill({
-    	            color: 'rgba(0, 0, 255, 0.1)'
-    	          })
-    	        }),
-    	        'GeometryCollection': new ol.style.Style({
-    	          stroke: new ol.style.Stroke({
-    	            color: 'magenta',
-    	            width: 2
-    	          }),
-    	          fill: new ol.style.Fill({
-    	            color: 'magenta'
-    	          }),
-    	          image: new ol.style.Circle({
-    	            radius: 10,
-    	            fill: null,
-    	            stroke: new ol.style.Stroke({
-    	              color: 'magenta'
-    	            })
-    	          })
-    	        }),
-    	        'Circle': new ol.style.Style({
-    	          stroke: new ol.style.Stroke({
-    	            color: 'red',
-    	            width: 2
-    	          }),
-    	          fill: new ol.style.Fill({
-    	            color: 'rgba(255,0,0,0.2)'
-    	          })
-    	        })
-			};
-		      
-			return styles[featureType];
-			
-		} 
 		
 
 	}

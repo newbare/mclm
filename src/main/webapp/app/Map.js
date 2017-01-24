@@ -391,9 +391,8 @@ Ext.define('MCLM.Map', {
 			var layerName = node.get( 'layerName' );			
 			var layerAlias = node.get( 'layerAlias' );	
 			var layerStyle = dataLayer.style;
+			var clustered = false;
 
-			
-			
 			//console.log( layerStyle );
 			
 			// Carregas as features
@@ -403,23 +402,25 @@ Ext.define('MCLM.Map', {
 		   	
 	    	// Cria um source para as features
 			var vectorSource = new ol.source.Vector({
-				loader: function() {
-					MCLM.Functions.showMainLoadingIcon( 'Criando camada "' + layerName + '"...');
-					this.addFeatures(features);
-				}
-			    // features: features,
 			});	
-			vectorSource.once('change',function(e){
-				console.log('change ' + vectorSource.getState() );
-				MCLM.Functions.hideMainLoadingIcon();
-			});			
+			var clusterFeatureSource = new ol.source.Vector({
+			});	
+
+			for (var i = 0; i < features.length; i++) {
+			    if (features[i].getGeometry().getType() === 'Point') {
+			    	clusterFeatureSource.addFeature(features[i]);
+			    	clustered = true;
+			    } else {
+			    	vectorSource.addFeature(features[i]);
+			    }
+			}			
 			
-			/*
-			var clusterSource = new ol.source.Cluster({
-			    distance: 15,
-			    source: vectorSource
-			});
-			*/			
+			if( clustered ) {
+				var clusterSource = new ol.source.Cluster({
+				    distance: 15,
+				    source: clusterFeatureSource
+				});
+			}
 			
 			// Estiliza as features baseado nos dados da tabela "FeatureStyle"
 			// que eh atributo da tabela "DataLayer", que eh atributo de "Node"
@@ -433,9 +434,9 @@ Ext.define('MCLM.Map', {
 				var resultStyles = [];
 				
 				
-				//console.log( me.replacePattern("A vaca caiu na ${areakm2} e saiu voando até ${nome}...", props)  )
+				//console.log( me.replacePattern("A vaca caiu ${areakm2} e saiu voando até ${nome}...", props)  )
 
-				
+				/*
 	        	var defaultStyle = new ol.style.Style({
 					fill: new ol.style.Fill({
 						color: '#CACACA'
@@ -446,7 +447,10 @@ Ext.define('MCLM.Map', {
 					})
 				});				
 				resultStyles.push( defaultStyle );
+				*/
 				
+				
+				// ------------------------------------------------------------------------------
 				if ( featureGeomType == 'LineString' || featureGeomType == 'Line' ) {
 		        	var lineStyle = new ol.style.Style({
 						fill: new ol.style.Fill({
@@ -454,14 +458,16 @@ Ext.define('MCLM.Map', {
 						}),
 						stroke: new ol.style.Stroke({
 							color: layerStyle.lineStrokeColor,
-							width: layerStyle.lineStrokeWidth
+							width: layerStyle.lineStrokeWidth,
+							lineDash: JSON.parse( layerStyle.lineLineDash ) 
 						})
+						
 					});	
 		        	resultStyles.push( lineStyle );
 				}
 				
+				// ------------------------------------------------------------------------------
 		        if ( featureGeomType == 'MultiPolygon' || featureGeomType == 'Polygon' ) {
-		        	
 		        	var polygonStyle = new ol.style.Style({
 						fill: new ol.style.Fill({
 							color: me.replacePattern(layerStyle.polygonFillColor, props)
@@ -473,11 +479,11 @@ Ext.define('MCLM.Map', {
 							strokeLinecap : layerStyle.polygonStrokeLinecap, // butt, round, square
 						})
 					});
-		        	
 		        	resultStyles.push( polygonStyle );
 		        	//resultStyles.push( featureText );
 		        }		        	
 		        	
+				// ------------------------------------------------------------------------------
 				/*
 		        var featureText = new ol.style.Style({
 		            text: new ol.style.Text({
@@ -496,8 +502,8 @@ Ext.define('MCLM.Map', {
 		            })
 		        });
 		        */
-		        
 
+				// ------------------------------------------------------------------------------
 				if ( featureGeomType == 'Point' ) {
 			    	var pointStyle = new ol.style.Style({
 			    		  image: new ol.style.Icon(({
@@ -514,6 +520,7 @@ Ext.define('MCLM.Map', {
 			    	resultStyles.push( pointStyle );
 			    	//if ( resolution < 150 ) resultStyles.push( featureText );
 				}			        
+				// ------------------------------------------------------------------------------
 		        
 				
 				
@@ -522,23 +529,29 @@ Ext.define('MCLM.Map', {
 
 			
 			
-			var vectorLayer = new ol.layer.Vector({
-				//source: clusterSource,
-			    source: vectorSource,
-			    style : customStyleFunction
-			});
-			
-			
+			if ( clustered ) {
+				var vectorLayer = new ol.layer.Vector({
+					source: clusterSource,
+				    style : customStyleFunction
+				});
+			} else {
+				var vectorLayer = new ol.layer.Vector({
+				    source: vectorSource,
+				    style : customStyleFunction
+				});
+				
+			}
+
 			vectorLayer.set('alias', layerAlias);
 			vectorLayer.set('name', layerName);
 			vectorLayer.set('serialId', serialId );
 			vectorLayer.set('ready', true);
 			vectorLayer.set('baseLayer', false);	        
-	        
+			
 			MCLM.Map.removeLayer( serialId );
 			MCLM.Map.map.addLayer( vectorLayer );
 			
-			
+			MCLM.Functions.hideMainLoadingIcon();
 		},
 		// --------------------------------------------------------------------------------------------
 		// Carrega as Features de uma String para a camada de Rotas.

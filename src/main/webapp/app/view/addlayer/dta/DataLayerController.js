@@ -4,11 +4,11 @@ Ext.define('MCLM.view.addlayer.dta.DataLayerController', {
    
     init : function(app) {
         this.control({
-        	// Intercepta o evento 'click' do botao 'Enviar' do painel 'MCLM.view.addlayer.Kml.UploadKmlForm' 
+        	// Intercepta o evento 'click' do botao 'Enviar' do painel 'MCLM.view.addlayer.dta.DataLayerForm' 
             '#dataLayerFormSubmit' : {
             	click: this.submitForm 
             },
-        	// Intercepta o evento 'click' do botao 'Fechar' do painel 'MCLM.view.addlayer.Kml.UploadKmlForm' 
+        	// Intercepta o evento 'click' do botao 'Fechar' do painel 'MCLM.view.addlayer.dta.DataLayerForm' 
             '#closeDataLayerWindow' : {
             	click: this.closeWindow 
             },
@@ -24,8 +24,8 @@ Ext.define('MCLM.view.addlayer.dta.DataLayerController', {
     submitForm : function( ) {
     	var me = this;
     	
-		var uploadKmlForm = Ext.getCmp('dataLayerForm');
-		var form = uploadKmlForm.getForm();        
+		var dataLayerForm = Ext.getCmp('dataLayerForm');
+		var form = dataLayerForm.getForm();        
         
         if( form.isValid() ){
             

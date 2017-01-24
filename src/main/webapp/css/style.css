@@ -204,4 +204,9 @@
 	background-repeat: no-repeat;
 }
 
+.styles-icon {
+	background-image: url('../img/style.svg') !important;
+	background-repeat: no-repeat;
+}
+
 

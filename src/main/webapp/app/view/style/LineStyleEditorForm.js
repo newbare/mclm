@@ -1,17 +1,14 @@
- 
-
-
-// SUBMIT PARA newFeatureStyle Action
-
-Ext.define('MCLM.view.style.StyleEditorForm', {
+Ext.define('MCLM.view.style.LineStyleEditorForm', {
 	extend: 'Ext.form.Panel',
-	xtype : 'view.styleEditorForm',
-	id : 'styleEditorForm',
+	xtype : 'view.lineStyleEditorForm',
+	id : 'lineStyleEditorForm',
 	
     frame: false,
-    region: 'center',
+    
+    flex : 1,
+    
     fileUpload: true,
-    bodyPadding: '10 10 0',
+    bodyPadding: '10',
     defaultType: 'textfield',
     defaults: {
         anchor: '100%',
@@ -19,7 +16,7 @@ Ext.define('MCLM.view.style.StyleEditorForm', {
         msgTarget: 'under',
         labelWidth: 90
     },
-
+  
     items: [
     {
     	fieldLabel: 'Atributo de Exibição',
@@ -35,11 +32,10 @@ Ext.define('MCLM.view.style.StyleEditorForm', {
     }],
 
     buttons: [{
-        text: 'Fechar',
-        id : 'closeStyleEditorWindow'
-      },{
-    	// SUBMIT PARA newFeatureStyle Action
+    	text: 'Fechar',
+    	id: 'closeLineStyleEditorWindow'
+   	},{
         text: 'Enviar',
-        id : 'styleEditorFormSubmit'
+        id : 'lineStyleEditorFormSubmit'
     }]
 });

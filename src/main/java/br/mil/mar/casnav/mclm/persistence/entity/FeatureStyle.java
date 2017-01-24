@@ -7,38 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/*
-
-	var featureStyle = new ol.style.Style({
-		  image: new ol.style.Icon(({
-			    anchor: [0.5, 46],
-			    scale : 0.5,
-			    anchorXUnits: 'fraction',
-			    anchorYUnits: 'pixels',
-			    opacity: 0.75,
-			    // color: '#8959A8',
-			    // rotation: 30.0,
-			    src: 'icons/trafficcamera.png'
-		  }))
-	});
-	
-    var featureText = new ol.style.Style({
-        text: new ol.style.Text({
-            text: feature.getProperties().label,
-            offsetY: -25,
-            // offsetX: -25,
-            // font: 'bold 20px Times New Roman',
-            fill: new ol.style.Fill({
-                color: '#000000'
-            }),
-            // stroke: new ol.style.Stroke({color: '#000000', width: 1})
-        })
-    });
-
-
-
-*/
-
 @Entity
 @Table(name="feature_styles") 
 public class FeatureStyle {
@@ -56,7 +24,8 @@ public class FeatureStyle {
 			String iconAnchorYUnits, String iconApacity, String iconColor, String iconRotation, String iconSrc,
 			String textOffsetY, String textOffsetX, String textFont, String textFillColor, String textStrokeColor,
 			String textStrokeWidth, String polygonFillColor, String polygonStrokeColor, String polygonStrokeWidth,
-			String polygonLineDash, String polygonStrokeLinecap, String lineFillColor, String lineStrokeColor, String lineStrokeWidth) {
+			String polygonLineDash, String polygonStrokeLinecap, String lineFillColor, String lineStrokeColor, 
+			String lineStrokeWidth, String lineLineDash) {
 		super();
 
 		this.featureStyleName = featureStyleName;
@@ -82,6 +51,7 @@ public class FeatureStyle {
 		this.lineFillColor = lineFillColor;
 		this.lineStrokeColor = lineStrokeColor;
 		this.lineStrokeWidth = lineStrokeWidth;
+		this.lineLineDash = lineLineDash;
 	}
 
 	@Column(length=250) private String featureStyleName;
@@ -104,6 +74,7 @@ public class FeatureStyle {
 	@Column(length=25) private String lineFillColor;
 	@Column(length=25) private String lineStrokeColor;
 	@Column(length=25) private String lineStrokeWidth;
+	@Column(length=25) private String lineLineDash;
 
 	@Column(length=25) private String polygonFillColor;
 	@Column(length=25) private String polygonStrokeColor;
@@ -277,6 +248,38 @@ public class FeatureStyle {
 
 	public void setPolygonStrokeLinecap(String polygonStrokeLinecap) {
 		this.polygonStrokeLinecap = polygonStrokeLinecap;
+	}
+
+	public String getLineFillColor() {
+		return lineFillColor;
+	}
+
+	public void setLineFillColor(String lineFillColor) {
+		this.lineFillColor = lineFillColor;
+	}
+
+	public String getLineStrokeColor() {
+		return lineStrokeColor;
+	}
+
+	public void setLineStrokeColor(String lineStrokeColor) {
+		this.lineStrokeColor = lineStrokeColor;
+	}
+
+	public String getLineStrokeWidth() {
+		return lineStrokeWidth;
+	}
+
+	public void setLineStrokeWidth(String lineStrokeWidth) {
+		this.lineStrokeWidth = lineStrokeWidth;
+	}
+
+	public String getLineLineDash() {
+		return lineLineDash;
+	}
+
+	public void setLineLineDash(String lineLineDash) {
+		this.lineLineDash = lineLineDash;
 	}
 	
 	
