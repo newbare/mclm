@@ -26,8 +26,14 @@
 <!-- JQUERY -->
 	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
 
+<!-- COLOR PICKER -->
+	<link rel="stylesheet" media="screen" type="text/css" href="css/colorpicker.css" />
+	<script type="text/javascript" src="js/colorpicker.js"></script>
+
+
 <!-- INTERNO -->
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+		
 		
 	
 </head>

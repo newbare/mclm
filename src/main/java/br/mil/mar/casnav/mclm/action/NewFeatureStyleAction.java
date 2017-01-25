@@ -32,7 +32,7 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			String iconScale = request.getParameter("iconScale");
 			String iconAnchorXUnits = request.getParameter("iconAnchorXUnits");
 			String iconAnchorYUnits = request.getParameter("iconAnchorYUnits");
-			String iconApacity = request.getParameter("iconApacity");
+			String iconOpacity = request.getParameter("iconOpacity");
 			String iconColor = request.getParameter("iconColor");
 			String iconRotation = request.getParameter("iconRotation");
 			String iconSrc = request.getParameter("iconSrc");
@@ -59,7 +59,7 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			
 			DataLayerService dss = new DataLayerService();
 			String result = dss.insertFeatureStyle(layerStyleName, iconAnchor, iconScale, iconAnchorXUnits,
-					iconAnchorYUnits, iconApacity, iconColor, iconRotation, iconSrc,
+					iconAnchorYUnits, iconOpacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
 					textStrokeWidth, polygonFillColor, polygonStrokeColor, polygonStrokeWidth, polygonLineDash, polygonStrokeLinecap,
 					lineFillColor, lineStrokeColor,  lineStrokeWidth, lineLineDash);

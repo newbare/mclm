@@ -21,7 +21,7 @@ public class FeatureStyle {
 	}
 	
 	public FeatureStyle(String featureStyleName, String iconAnchor, String iconScale, String iconAnchorXUnits,
-			String iconAnchorYUnits, String iconApacity, String iconColor, String iconRotation, String iconSrc,
+			String iconAnchorYUnits, String iconOpacity, String iconColor, String iconRotation, String iconSrc,
 			String textOffsetY, String textOffsetX, String textFont, String textFillColor, String textStrokeColor,
 			String textStrokeWidth, String polygonFillColor, String polygonStrokeColor, String polygonStrokeWidth,
 			String polygonLineDash, String polygonStrokeLinecap, String lineFillColor, String lineStrokeColor, 
@@ -33,7 +33,7 @@ public class FeatureStyle {
 		this.iconScale = iconScale;
 		this.iconAnchorXUnits = iconAnchorXUnits;
 		this.iconAnchorYUnits = iconAnchorYUnits;
-		this.iconApacity = iconApacity;
+		this.iconOpacity = iconOpacity;
 		this.iconColor = iconColor;
 		this.iconRotation = iconRotation;
 		this.iconSrc = iconSrc;
@@ -59,7 +59,7 @@ public class FeatureStyle {
 	@Column(length=25) private String iconScale;
 	@Column(length=25) private String iconAnchorXUnits;
 	@Column(length=25) private String iconAnchorYUnits;
-	@Column(length=25) private String iconApacity;
+	@Column(length=25) private String iconOpacity;
 	@Column(length=25) private String iconColor;
 	@Column(length=25) private String iconRotation;
 	@Column(length=25) private String iconSrc;
@@ -122,12 +122,12 @@ public class FeatureStyle {
 		this.iconAnchorYUnits = iconAnchorYUnits;
 	}
 	
-	public String getIconApacity() {
-		return iconApacity;
+	public String getIconOpacity() {
+		return iconOpacity;
 	}
 	
-	public void setIconApacity(String iconApacity) {
-		this.iconApacity = iconApacity;
+	public void setIconApacity(String iconOpacity) {
+		this.iconOpacity = iconOpacity;
 	}
 	
 	public String getIconColor() {

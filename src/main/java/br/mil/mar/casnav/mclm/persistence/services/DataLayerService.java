@@ -126,7 +126,7 @@ public class DataLayerService {
 	}
 
 	public String insertFeatureStyle(String layerStyleName, String iconAnchor, String iconScale,
-			String iconAnchorXUnits, String iconAnchorYUnits, String iconApacity, String iconColor, String iconRotation,
+			String iconAnchorXUnits, String iconAnchorYUnits, String iconOpacity, String iconColor, String iconRotation,
 			String iconSrc, String textOffsetY, String textOffsetX, String textFont, String textFillColor,
 			String textStrokeColor, String textStrokeWidth, String polygonFillColor, String polygonStrokeColor, 
 			String polygonStrokeWidth, String polygonLineDash, String polygonStrokeLinecap, String lineFillColor, 
@@ -136,7 +136,7 @@ public class DataLayerService {
 		
 		try {
 			FeatureStyle style = new FeatureStyle(layerStyleName, iconAnchor, iconScale, iconAnchorXUnits,
-					iconAnchorYUnits, iconApacity, iconColor, iconRotation, iconSrc,
+					iconAnchorYUnits, iconOpacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
 					textStrokeWidth, polygonFillColor, polygonStrokeColor, polygonStrokeWidth,
 					polygonLineDash, polygonStrokeLinecap, lineFillColor, lineStrokeColor, lineStrokeWidth, lineLineDash);
