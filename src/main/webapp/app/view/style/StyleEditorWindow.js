@@ -10,7 +10,7 @@ Ext.define('MCLM.view.style.StyleEditorWindow', {
 	
     controller : 'styleEditor',	
 	
-	width : 600,
+	width : 670,
 	height: 450,
 
 	layout: {
@@ -39,6 +39,4 @@ Ext.define('MCLM.view.style.StyleEditorWindow', {
 		xtype: 'view.styleEditorTC'
 	}],
 	
-
-        
 });

@@ -22,6 +22,7 @@ Ext.define('MCLM.Application', {
        'MCLM.store.Tables',
        'MCLM.store.PostgreTable',
        'MCLM.store.Dictionary',
+       'MCLM.store.Styles',
     ],
    
     launch: function () {

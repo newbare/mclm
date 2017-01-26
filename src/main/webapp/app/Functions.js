@@ -113,7 +113,36 @@ Ext.define('MCLM.Functions', {
 		    }); 	
 		},
 		
+		updateStylePreview : function(width,linecap,dashes) {
+			//var c = $("#polyCanvas");
+			var c = document.getElementsByTagName('canvas')[0];
+			//c.width = 800; c.height = 600;
+			var ctx = c.getContext('2d');
+			ctx.strokeStyle = 'black';
 
+			var xy1     = "50 0",
+			    xy2     = "250 50";
+			
+			var x1y1 = xy1.split(/\D+/);
+			var x2y2 = xy2.split(/\D+/);
+			ctx.clearRect( 0, 0, c.width, c.height );
+			var dashGapArray = dashes.replace(/^\s+|\s+$/g,'').split(/\s+/);
+			if (!dashGapArray[0] || (dashGapArray.length==1 && dashGapArray[0]==0)) return;
+
+			ctx.lineWidth = width;
+			ctx.lineCap   = linecap;
+			ctx.beginPath();
+			ctx.dashedLine( x1y1[0]*1, x1y1[1]*1, x2y2[0]*1, x2y2[1]*1, dashGapArray );
+			ctx.stroke();
+			
+			/*
+			drawDashes();
+			width.onkeyup    = drawDashes;
+			linecap.onchange = drawDashes;
+			dashes.onkeyup   = drawDashes;
+			xy1.onkeyup = xy2.onkeyup = drawDashes;
+			*/
+		}
 	}
 
 });

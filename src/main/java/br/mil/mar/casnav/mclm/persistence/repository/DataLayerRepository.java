@@ -119,5 +119,19 @@ public class DataLayerRepository extends BasicRepository {
 		}
 		closeSession();
 		return style;
+	}
+
+	public List<FeatureStyle> getStyleList() throws Exception {
+		DaoFactory<FeatureStyle> df = new DaoFactory<FeatureStyle>();
+		IDao<FeatureStyle> fm = df.getDao(this.session, FeatureStyle.class);
+		List<FeatureStyle> styles = null;
+		try {
+			styles = fm.getList("select * from feature_styles");
+		} catch ( Exception e ) {
+			closeSession();
+			throw e;
+		}
+		closeSession();
+		return styles;
 	}		
 }

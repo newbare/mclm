@@ -37,17 +37,20 @@ public class FeatureStyle {
 		this.iconColor = iconColor;
 		this.iconRotation = iconRotation;
 		this.iconSrc = iconSrc;
+		
 		this.textOffsetY = textOffsetY;
 		this.textOffsetX = textOffsetX;
 		this.textFont = textFont;
 		this.textFillColor = textFillColor;
 		this.textStrokeColor = textStrokeColor;
 		this.textStrokeWidth = textStrokeWidth;
+		
 		this.polygonFillColor = polygonFillColor;
 		this.polygonStrokeColor = polygonStrokeColor;
 		this.polygonStrokeWidth = polygonStrokeWidth;
 		this.polygonLineDash = polygonLineDash;
 		this.polygonStrokeLinecap = polygonStrokeLinecap;
+		
 		this.lineFillColor = lineFillColor;
 		this.lineStrokeColor = lineStrokeColor;
 		this.lineStrokeWidth = lineStrokeWidth;

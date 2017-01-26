@@ -1,79 +1,23 @@
-@font-face {
-	font-family: MD_simb_basico;
-	src: url('http://10.5.115.136/SvgService/fonts/MD_simb_basico.ttf');
-}
 
-@font-face {
-	font-family: MD_simb_armas_01;
-	src: url('http://10.5.115.136/SvgService/fonts/MD_simb_armas_01.ttf');
-}
-
-@font-face {
-	font-family: MD_info_compl;
-	src: url('http://10.5.115.136/SvgService/fonts/MD_info_compl.ttf');
-}
-
-
-#colorSelector {
-	position: absolute;
-	top: 0;
-	left: 0;
-
-	background: url(../images/select2.png);
-	cursor : pointer;
-}
-#colorSelector div {
-	width: 28px;
-	height: 28px;
-	background: url(../images/select2.png) center;
-}
 #colorpickerHolder { 
-	top: 105px;
-	left: 100px;
 	width: 356px;
-	height: 0;
-	overflow: hidden;
-	position: absolute;
+	height: 178px;
+	/*border : 1px solid black;*/
 }
-#colorpickerHolder .colorpicker {
-	background-image: url(../images/custom_background.png);
-	position: absolute;
-	bottom: 0;
-	left: 0;
+
+#polyClrPickerHolder { 
+	width: 356px;
+	height: 178px;
+	/*border : 1px solid black;*/
 }
-#colorpickerHolder .colorpicker_hue div {
-	background-image: url(../images/custom_indic.gif);
+
+#iconSrcContainer {
+	left: 105px !important; 
+	top: 30px !important;
+	position : absolute !important;
+	border : 1px solid black !important;
 }
-#colorpickerHolder .colorpicker_hex {
-	background-image: url(../images/custom_hex.png);
-}
-#colorpickerHolder .colorpicker_rgb_r {
-	background-image: url(../images/custom_rgb_r.png);
-}
-#colorpickerHolder .colorpicker_rgb_g {
-	background-image: url(../images/custom_rgb_g.png);
-}
-#colorpickerHolder .colorpicker_rgb_b {
-	background-image: url(../images/custom_rgb_b.png);
-}
-#colorpickerHolder .colorpicker_hsb_s {
-	background-image: url(../images/custom_hsb_s.png);
-	display: none;
-}
-#colorpickerHolder .colorpicker_hsb_h {
-	background-image: url(../images/custom_hsb_h.png);
-	display: none;
-}
-#colorpickerHolder .colorpicker_hsb_b {
-	background-image: url(../images/custom_hsb_b.png);
-	display: none;
-}
-#colorpickerHolder .colorpicker_submit {
-	background-image: url(../images/custom_submit.png);
-}
-#colorpickerHolder .colorpicker input {
-	color: #778398;
-}
+
 
 .routeText {
 	font-weight: bold;

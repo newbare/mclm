@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import br.mil.mar.casnav.mclm.misc.DataLayersCollection;
+import br.mil.mar.casnav.mclm.misc.FeatureStylesCollection;
 import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.FeatureStyle;
@@ -149,6 +150,31 @@ public class DataLayerService {
 		}
 		
 		return result;
+	}
+
+	public String getFeatureStylesAsJson() {
+		String result = "{ \"success\": true, \"msg\": \"Estilo criado com sucesso.\" }";
+		
+		try {
+			List<FeatureStyle> featureStyles = getStyleList();
+			FeatureStylesCollection esc = new FeatureStylesCollection( featureStyles );
+			JSONObject itemObj = new JSONObject( esc );
+			
+			rep.closeSession();
+			
+			result = itemObj.toString();				
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = "{ \"error\": true, \"msg\": \""+e.getMessage()+".\" }";	
+		}
+		
+		return result;
+	}
+
+	private List<FeatureStyle> getStyleList() throws Exception {
+		// TODO Auto-generated method stub
+		return rep. getStyleList();
 	}
 
 	

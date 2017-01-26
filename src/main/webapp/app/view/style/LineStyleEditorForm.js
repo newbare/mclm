@@ -8,7 +8,7 @@ Ext.define('MCLM.view.style.LineStyleEditorForm', {
     flex : 1,
     
     fileUpload: true,
-    bodyPadding: '10',
+    bodyPadding: '0',
     defaultType: 'textfield',
     defaults: {
         anchor: '100%',

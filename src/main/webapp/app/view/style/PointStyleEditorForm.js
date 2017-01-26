@@ -4,8 +4,7 @@ Ext.define('MCLM.view.style.PointStyleEditorForm', {
 	id : 'pointStyleEditorForm',
     frame: false,
     flex : 1,
-    fileUpload: true,
-    bodyPadding: '10',
+    bodyPadding: '0',
     defaultType: 'textfield',
     defaults: {
         anchor: '100%',
@@ -13,18 +12,21 @@ Ext.define('MCLM.view.style.PointStyleEditorForm', {
         msgTarget: 'under',
         labelWidth: 90
     },
+    
+    layout: {
+        type: 'hbox',
+        align: 'stretch'
+    },    
   
     items: [{
-	    xtype: 'fieldcontainer',
-	    layout: 'hbox',
-	    margin: '10 0 0 0',
+        xtype: 'container',
+        padding: '10, 30, 10, 10',
+        layout: 'vbox',    
 	    items: [{
 	        xtype: 'textfield',
 	        fieldLabel: 'Caminho do Ícone',
-	    	allowBlank : false,
 	        name : 'iconSrc',
 	        id : 'iconSrc',
-	        labelWidth: 90,
 	        listeners: {
 	        	change: function(element) {
 	        		var imagePath = element.getValue();
@@ -36,71 +38,71 @@ Ext.define('MCLM.view.style.PointStyleEditorForm', {
 	        			$("#iconSrcContainer").html( image );
 	        		}
 	        	}
-	        }
-	    },{
+	        }	        
+	    }, {
 	        xtype: 'component',
 	        autoEl: 'div',
 	        width: 40,
 	        height: 40,
 	        id : 'iconSrcContainer',
-	        style: 'margin-left:5px;margin-bottom:10px'
-	    }]
-    },{
-    	xtype: 'textfield',
-    	fieldLabel: 'Ancoragem',
-    	width: 100,
-    	name: 'iconAnchor',
-    	allowBlank : false,
-    },{
-    	xtype: 'textfield',
-    	fieldLabel: 'Escala',
-    	width: 50,
-    	name: 'iconScale',
-    	allowBlank : false,
-    },{
-    	xtype: 'textfield',
-    	fieldLabel: 'Opacidade',
-    	width: 50,
-    	name: 'iconOpacity',
-    	allowBlank : false,
-    },{
-    	xtype: 'textfield',
-    	fieldLabel: 'Ancora X',
-    	width: 50,
-    	name: 'iconAnchorXUnits',
-    	allowBlank : false,
-    },{
-    	xtype: 'textfield',
-    	fieldLabel: 'Ancora Y',
-    	width: 50,
-    	name: 'iconAnchorYUnits',
-    	allowBlank : false,
-    },{
-    	xtype: 'textfield',
-    	fieldLabel: 'Rotação',
-    	width: 50,
-    	name: 'iconRotation',
-    	allowBlank : false,
-    },{
-    	xtype: 'fieldcontainer',
-	    layout: 'hbox',
-	    margin: '10 0 0 0',
-	    items: [{
-	        xtype: 'textfield',
-	        fieldLabel: 'Cor do Ícone',
-	    	allowBlank : false,
-	        name : 'iconColor',
-	        id : 'iconColor',
-	        value : '#CACACA',
-	        labelWidth: 90
+	    }, {
+	    	xtype: 'textfield',
+	    	fieldLabel: 'Escala',
+	    	name: 'iconScale',
+	    	emptyText: '0.6',
 	    },{
-	        xtype: 'component',
-	        autoEl: 'div',
-	        width: 32,
-	        height: 32,
-	        id : 'iconColorContainer',
-	        style: 'margin-left:10px;'
+	    	xtype: 'textfield',
+	    	fieldLabel: 'Opacidade',
+	    	name: 'iconOpacity',
+	    	emptyText: '1',
+	    },{
+	    	xtype: 'textfield',
+	    	fieldLabel: 'Ancoragem',
+	    	name: 'iconAnchor',
+	    	emptyText: '[0.5, 46]',
+	    },{
+	    	xtype: 'textfield',
+	    	fieldLabel: 'Ancora X',
+	    	name: 'iconAnchorXUnits',
+	    	emptyText: 'fraction ou pixels',
+	    },{
+	    	xtype: 'textfield',
+	    	fieldLabel: 'Ancora Y',
+	    	name: 'iconAnchorYUnits',
+	    	emptyText: 'fraction ou pixels',
+	    },{
+	    	xtype: 'textfield',
+	    	fieldLabel: 'Rotação',
+	    	emptyText: '0',
+	    	name: 'iconRotation',
 	    }]
+    }, {
+        xtype: 'container',
+        layout: 'vbox',    
+        padding: '10, 10, 10, 0',
+        items: [{
+		        xtype: 'textfield',
+		        fieldLabel: 'Cor',
+		    	allowBlank : false,
+		        name : 'iconColor',
+		        id : 'iconColor',
+		        value : '#CACACA',
+		        labelWidth: 90,
+		        emptyText: '#000000',
+		        listeners: {
+		        	change: function( element ) {
+		        		$( '#colorpickerHolder' ).ColorPickerSetColor( element.getValue() );
+		        	}
+		        }	        
+		    },{
+		        xtype: 'component',
+		        autoEl: 'div',
+		        id : 'colorpickerHolder',
+		    },{
+		    	xtype : 'hidden',
+		        name : 'idFeatureStyle',
+		        id : 'idFeatureStyle',
+		    }]
     }],
 
     buttons: [{
@@ -115,51 +117,17 @@ Ext.define('MCLM.view.style.PointStyleEditorForm', {
     listeners: {
 
         'afterrender' : function ( cmp ) {
-
-        	this.body.on('click', function(e) {
-        		console.log( e.target.id );
-        		//$('#colorpickerHolder').ColorPickerHide();
-        	});
-        	
-        	
-        	
-			var container = this.body.dom.id;
 			var iconColor = Ext.getCmp("iconColor");
 			var initialColor = iconColor.getValue();
 
-        	var comp = Ext.getCmp("iconColorContainer");
-        	var el = comp.getEl();
-        	var iconColorContainerId = el.id;
-			$("#"+iconColorContainerId).html('<div id="colorSelector">'+
-					'<div style="background-color:'+initialColor+'"></div></div>');
-        	
-			$("#" + container).append('<div id="colorpickerHolder"></div>');
-			        	
 			$('#colorpickerHolder').ColorPicker({
 				color : initialColor,
 				flat: true,
-				onSubmit: function(hsb, hex, rgb) {
-					$('#colorSelector div').css('backgroundColor', '#' + hex);
-					iconColor.setValue(hex);
-					
-				},
-				onShow: function (colpkr) {
-					$(colpkr).fadeIn(500);
-					return false;
-				},
-				onHide: function (colpkr) {
-					$(colpkr).fadeOut(500);
-					return false;
-				},				
+				onChange: function (hsb, hex, rgb) {
+					iconColor.setValue( "#" + hex.toUpperCase() );
+				}
 			});
-			
-			
-			var widt = false;
-			$('#colorSelector').bind('click', function() {
-				$('#colorpickerHolder').stop().animate({height: widt ? 0 : 173}, 500);
-				widt = !widt;
-			});
-        	
+			        	
         }
     }      
     

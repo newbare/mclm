@@ -55,10 +55,10 @@ Ext.define('MCLM.view.main.MainController', {
     },
 	// --------------------------------------------------------------------------------------------
     editStyles : function() {
-    	var styleEditorWindow = Ext.getCmp('styleEditorWindow');
-    	if ( styleEditorWindow ) return;
-    	styleEditorWindow = Ext.create('MCLM.view.style.StyleEditorWindow');
-    	styleEditorWindow.show();    	
+    	var styleListWindow = Ext.getCmp('styleListWindow');
+    	if ( styleListWindow ) return;
+    	styleListWindow = Ext.create('MCLM.view.style.StyleListWindow');
+    	styleListWindow.show();    	
     },
 	// --------------------------------------------------------------------------------------------
     checkInternetConnection: function ( button ) {
