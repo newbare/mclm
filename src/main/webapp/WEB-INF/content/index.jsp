@@ -35,6 +35,7 @@
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 		
 <script type="text/javascript" charset="utf-8">
+	// http://phrogz.net/tmp/canvas_dashed_line.html
 	if (window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype.lineTo){
 		CanvasRenderingContext2D.prototype.dashedLine = function(x,y,x2,y2,dashArray){
 			if (!dashArray) dashArray=[10,5];
@@ -54,14 +55,8 @@
 				y += slope*xStep;
 				this[draw ? 'lineTo' : 'moveTo'](x,y);
 				distRemaining -= dashLength;
-				
-				console.log( draw + " " + x + ", " + y + " | " + x2 + ", " + y2 + " = " + dashArray);				
-
 				draw = !draw;
-				
-				
 			}
-			// Ensure that the last segment is closed for proper stroking
 			this.moveTo(0,0);
 		}
 	}

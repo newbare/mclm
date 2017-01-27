@@ -20,14 +20,15 @@ public class FeatureStyle {
 		//
 	}
 	
-	public FeatureStyle(String featureStyleName, String iconAnchor, String iconScale, String iconAnchorXUnits,
+	public FeatureStyle(int idFeatureStyle, String featureStyleName, String iconAnchor, String iconScale, String iconAnchorXUnits,
 			String iconAnchorYUnits, String iconOpacity, String iconColor, String iconRotation, String iconSrc,
 			String textOffsetY, String textOffsetX, String textFont, String textFillColor, String textStrokeColor,
-			String textStrokeWidth, String polygonFillColor, String polygonStrokeColor, String polygonStrokeWidth,
+			String textStrokeWidth, String polygonFillColor, String polygonFillPattern, String polygonStrokeColor, String polygonStrokeWidth,
 			String polygonLineDash, String polygonStrokeLinecap, String lineFillColor, String lineStrokeColor, 
 			String lineStrokeWidth, String lineLineDash) {
 		super();
 
+		this.idFeatureStyle = idFeatureStyle;
 		this.featureStyleName = featureStyleName;
 		this.iconAnchor = iconAnchor;
 		this.iconScale = iconScale;
@@ -45,6 +46,7 @@ public class FeatureStyle {
 		this.textStrokeColor = textStrokeColor;
 		this.textStrokeWidth = textStrokeWidth;
 		
+		this.polygonFillPattern = polygonFillPattern;
 		this.polygonFillColor = polygonFillColor;
 		this.polygonStrokeColor = polygonStrokeColor;
 		this.polygonStrokeWidth = polygonStrokeWidth;
@@ -79,6 +81,7 @@ public class FeatureStyle {
 	@Column(length=25) private String lineStrokeWidth;
 	@Column(length=25) private String lineLineDash;
 
+	@Column(length=25) private String polygonFillPattern;
 	@Column(length=25) private String polygonFillColor;
 	@Column(length=25) private String polygonStrokeColor;
 	@Column(length=25) private String polygonStrokeWidth;
@@ -127,10 +130,6 @@ public class FeatureStyle {
 	
 	public String getIconOpacity() {
 		return iconOpacity;
-	}
-	
-	public void setIconApacity(String iconOpacity) {
-		this.iconOpacity = iconOpacity;
 	}
 	
 	public String getIconColor() {
@@ -283,6 +282,18 @@ public class FeatureStyle {
 
 	public void setLineLineDash(String lineLineDash) {
 		this.lineLineDash = lineLineDash;
+	}
+
+	public String getPolygonFillPattern() {
+		return polygonFillPattern;
+	}
+
+	public void setPolygonFillPattern(String polygonFillPattern) {
+		this.polygonFillPattern = polygonFillPattern;
+	}
+
+	public void setIconOpacity(String iconOpacity) {
+		this.iconOpacity = iconOpacity;
 	}
 	
 	

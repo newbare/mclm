@@ -27,7 +27,13 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
 
-			String layerStyleName = request.getParameter("layerStyleName");
+			int idFeatureStyle = -1;
+			String tempIdFS = request.getParameter("idFeatureStyle");
+			try {
+				if ( tempIdFS != null && !tempIdFS.equals("") ) idFeatureStyle = Integer.valueOf( tempIdFS );
+			} catch ( Exception ignored ) { }
+			
+			String featureStyleName = request.getParameter("featureStyleName");
 			String iconAnchor = request.getParameter("iconAnchor");
 			String iconScale = request.getParameter("iconScale");
 			String iconAnchorXUnits = request.getParameter("iconAnchorXUnits");
@@ -45,6 +51,7 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			String textStrokeWidth = request.getParameter("textStrokeWidth");
 			
 			String polygonFillColor = request.getParameter("polygonFillColor");		
+			String polygonFillPattern = request.getParameter("polygonFillPattern");		
 			String polygonStrokeColor = request.getParameter("polygonStrokeColor");		
 			String polygonStrokeWidth = request.getParameter("polygonStrokeWidth");		
 			String polygonLineDash = request.getParameter("polygonLineDash");		
@@ -55,13 +62,13 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			String lineStrokeWidth = request.getParameter("lineStrokeWidth");		
 			String lineLineDash = request.getParameter("lineLineDash");		
 			
-			
+			dumpParameters();
 			
 			DataLayerService dss = new DataLayerService();
-			String result = dss.insertFeatureStyle(layerStyleName, iconAnchor, iconScale, iconAnchorXUnits,
+			String result = dss.insertUpdateFeatureStyle(idFeatureStyle, featureStyleName, iconAnchor, iconScale, iconAnchorXUnits,
 					iconAnchorYUnits, iconOpacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
-					textStrokeWidth, polygonFillColor, polygonStrokeColor, polygonStrokeWidth, polygonLineDash, polygonStrokeLinecap,
+					textStrokeWidth, polygonFillColor, polygonFillPattern, polygonStrokeColor, polygonStrokeWidth, polygonLineDash, polygonStrokeLinecap,
 					lineFillColor, lineStrokeColor,  lineStrokeWidth, lineLineDash);
 				
 				

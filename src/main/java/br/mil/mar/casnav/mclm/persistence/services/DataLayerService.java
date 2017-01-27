@@ -125,24 +125,63 @@ public class DataLayerService {
 		
 		return itemObj.toString();		
 	}
+	
+	private void updateFeatureStyle( FeatureStyle style ) throws Exception {
+		FeatureStyle newStyle = rep.getStyle( style.getIdFeatureStyle() ); 
+		newStyle.setFeatureStyleName( style.getFeatureStyleName() );
+		newStyle.setIconAnchor( style.getIconAnchor() );
+		newStyle.setIconAnchorXUnits( style.getIconAnchorXUnits() );
+		newStyle.setIconAnchorYUnits( style.getIconAnchorYUnits() );
+		newStyle.setIconOpacity( style.getIconOpacity() );
+		newStyle.setIconColor( style.getIconColor() );
+		newStyle.setIconRotation( style.getIconRotation() );
+		newStyle.setIconScale( style.getIconScale() );
+		newStyle.setIconSrc( style.getIconSrc() );
+		
+		newStyle.setLineFillColor( style.getLineFillColor() );
+		newStyle.setLineLineDash( style.getLineLineDash() );
+		newStyle.setLineStrokeColor( style.getLineStrokeColor() );
+		newStyle.setLineStrokeWidth( style.getLineStrokeWidth() );
+		
+		newStyle.setPolygonFillColor( style.getPolygonFillColor() );
+		newStyle.setPolygonFillPattern( style.getPolygonFillPattern() );
+		newStyle.setPolygonLineDash( style.getPolygonLineDash() );
+		newStyle.setPolygonStrokeColor( style.getPolygonStrokeColor() );
+		newStyle.setPolygonStrokeLinecap( style.getPolygonStrokeLinecap());
+		newStyle.setPolygonStrokeWidth( style.getPolygonStrokeWidth() );
+		
+		newStyle.setTextFillColor( style.getTextFillColor() );
+		newStyle.setTextFont( style.getTextFont() );
+		newStyle.setTextOffsetX( style.getTextOffsetX() );
+		newStyle.setTextOffsetY( style.getTextOffsetY() );
+		newStyle.setTextStrokeColor( style.getTextStrokeColor() );
+		newStyle.setTextStrokeWidth( style.getTextStrokeWidth() );
+		
+		newTransaction();
+		rep.updateFeatureStyle(newStyle);
+	}
 
-	public String insertFeatureStyle(String layerStyleName, String iconAnchor, String iconScale,
+	public String insertUpdateFeatureStyle(int idFeatureStyle, String featureStyleName, String iconAnchor, String iconScale,
 			String iconAnchorXUnits, String iconAnchorYUnits, String iconOpacity, String iconColor, String iconRotation,
 			String iconSrc, String textOffsetY, String textOffsetX, String textFont, String textFillColor,
-			String textStrokeColor, String textStrokeWidth, String polygonFillColor, String polygonStrokeColor, 
+			String textStrokeColor, String textStrokeWidth, String polygonFillColor, String polygonFillPattern, String polygonStrokeColor, 
 			String polygonStrokeWidth, String polygonLineDash, String polygonStrokeLinecap, String lineFillColor, 
 			String lineStrokeColor, String lineStrokeWidth, String lineLineDash) {
 		
 		String result = "{ \"success\": true, \"msg\": \"Estilo criado com sucesso.\" }";
 		
 		try {
-			FeatureStyle style = new FeatureStyle(layerStyleName, iconAnchor, iconScale, iconAnchorXUnits,
+			FeatureStyle style = new FeatureStyle(idFeatureStyle, featureStyleName, iconAnchor, iconScale, iconAnchorXUnits,
 					iconAnchorYUnits, iconOpacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
-					textStrokeWidth, polygonFillColor, polygonStrokeColor, polygonStrokeWidth,
+					textStrokeWidth, polygonFillColor, polygonFillPattern, polygonStrokeColor, polygonStrokeWidth,
 					polygonLineDash, polygonStrokeLinecap, lineFillColor, lineStrokeColor, lineStrokeWidth, lineLineDash);
 			
-			rep.insertFeatureStyle( style );
+			
+			if ( style.getIdFeatureStyle() > -1 ) {
+				updateFeatureStyle( style );
+			} else 
+				rep.insertFeatureStyle( style );
 			
 		} catch ( Exception ex ) {
 			ex.printStackTrace();
@@ -173,7 +212,6 @@ public class DataLayerService {
 	}
 
 	private List<FeatureStyle> getStyleList() throws Exception {
-		// TODO Auto-generated method stub
 		return rep. getStyleList();
 	}
 

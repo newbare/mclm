@@ -22,6 +22,8 @@ public class GetLayerAsFeaturesAction {
 	public String execute(){
 
 		try { 
+			// Dado um serviço WMF, recebe o layer em formato JSON
+			
 			String result = "ESTE SERVIÇO ESTÁ DESATIVADO";
 			
 			/*

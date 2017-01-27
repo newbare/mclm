@@ -373,9 +373,6 @@ Ext.define('MCLM.Map', {
 				    var val = properties[key];
 				    var pattern = "${" + key + "}";
 				    subject = subject.replace( pattern, val);
-				    
-				    //console.log( key + " = " + val );
-				    
 				});
 			} catch ( err ) { }
 			return subject;
@@ -406,6 +403,14 @@ Ext.define('MCLM.Map', {
 			var clusterFeatureSource = new ol.source.Vector({
 			});	
 
+			if ( features.length > 50000) {
+				Ext.Msg.alert('Aviso: Sobrecarga de Elementos na Camada de Dados', 'Esta camada possui elementos em excesso ('+features.length+'). Isso poderá causar queda no desempenho de seu navegador, ' + 
+						'sem relação com o desempenho do próprio sistema. Considere refinar a consulta da camada de dados para conter menos elementos. O número ideal vai depender da '+
+						'quantidade de memória de seu computador e da capacidade de seu navegador em processar grandes volumes de dados, mas este aviso será exibido ' +
+						'quando este valor ultrapassar 50.000 elementos.');
+			}
+			
+			// Separa pontos do resto para montar o cluster
 			for (var i = 0; i < features.length; i++) {
 			    if (features[i].getGeometry().getType() === 'Point') {
 			    	clusterFeatureSource.addFeature(features[i]);
@@ -427,9 +432,6 @@ Ext.define('MCLM.Map', {
 			var customStyleFunction = function( feature, resolution ) {
 				
 				var featureGeomType = feature.getGeometry().getType();
-				//console.log( featureGeomType );
-				
-				
 				var props = feature.getProperties();
 				var resultStyles = [];
 				
@@ -468,6 +470,7 @@ Ext.define('MCLM.Map', {
 				
 				// ------------------------------------------------------------------------------
 		        if ( featureGeomType == 'MultiPolygon' || featureGeomType == 'Polygon' ) {
+		        	
 		        	var polygonStyle = new ol.style.Style({
 						fill: new ol.style.Fill({
 							color: me.replacePattern(layerStyle.polygonFillColor, props)
@@ -479,6 +482,7 @@ Ext.define('MCLM.Map', {
 							strokeLinecap : layerStyle.polygonStrokeLinecap, // butt, round, square
 						})
 					});
+		        	
 		        	resultStyles.push( polygonStyle );
 		        	//resultStyles.push( featureText );
 		        }		        	

@@ -63,11 +63,17 @@ Ext.define('MCLM.view.addlayer.dta.DataLayerForm', {
     	allowBlank : false,
     },
     {
-    	fieldLabel: 'Estilo da Camada',
-    	width: 330,
-    	name: 'idFeatureStyle',
-    	value : '1',
-    	allowBlank : false,
+    	
+		xtype: 'combobox',
+		name: 'idFeatureStyle',
+		fieldLabel: 'Estilo da Camada',
+		displayField: 'featureStyleName',	    	
+		id: 'idFeatureStyle',
+		store: 'store.styles',	    	
+
+	    queryMode: 'local',
+	    valueField: 'idFeatureStyle',		
+		
     },   
     {
         fieldLabel: 'Parend ID',

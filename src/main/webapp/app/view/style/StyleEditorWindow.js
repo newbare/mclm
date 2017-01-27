@@ -4,7 +4,7 @@ Ext.define('MCLM.view.style.StyleEditorWindow', {
 	id : 'styleEditorWindow',
 	title:'Editor de Estilos',
     requires: [
-        'MCLM.view.style.StyleEditorTabContainer',
+        'MCLM.view.style.StyleEditorForm',
         'MCLM.view.style.StyleEditorController',
 	],
 	
@@ -27,16 +27,7 @@ Ext.define('MCLM.view.style.StyleEditorWindow', {
 	renderTo: Ext.getBody(),
 	
 	items: [{
-		xtype: 'textfield',
-    	fieldLabel: 'Nome do Estilo',
-    	width: 100,
-    	name: 'layerStyleName',
-    	id: 'layerStyleName',
-    	height:22,
-    	margin: '5 130 20 10',
-    	allowBlank : false,
-    },{
-		xtype: 'view.styleEditorTC'
+		xtype: 'view.styleEditorForm'
 	}],
 	
 });

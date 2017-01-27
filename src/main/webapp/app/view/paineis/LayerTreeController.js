@@ -349,6 +349,9 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	dataLayerWindow.setTitle( title );
 
     	dataLayerWindow.show();	
+    	
+    	var stylesStore = Ext.getStore('store.styles');
+    	stylesStore.load();
 
     	var layerFolderID = Ext.getCmp('layerFolderID');
 		layerFolderID.setValue( data.id );

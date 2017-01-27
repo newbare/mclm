@@ -1,29 +1,31 @@
 Ext.define('MCLM.view.style.StyleEditorController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.styleEditor',
-   
+
     init : function(app) {
         this.control({
-        	// Intercepta o evento 'click' do botao 'Enviar' do painel 'MCLM.view.style.StyleEditorForm' 
-            '#pointStyleEditorFormSubmit' : {
-            	click: this.pointSubmitForm 
+            // Para saber o motivo de isto estar comentado vá em MCLM.Functions e procure "updateLineStylePreview" 
+            /*
+            '#polygonStrokeWidth' : {
+            	change : this.updateLinePreview
             },
-            '#lineStyleEditorFormSubmit' : {
-            	click: this.lineSubmitForm 
+            '#polygonLineDash' : {
+            	change : this.updateLinePreview
             },
-            '#polyStyleEditorFormSubmit' : {
-            	click: this.polySubmitForm 
+            '#polygonStrokeLinecap' : {
+            	change : this.updateLinePreview
+            },
+            */
+            
+  
+            '#styleEditorFormSubmit' : {
+            	click: this.submitForm 
             },
         	// Intercepta o evento 'click' do botao 'Fechar' do painel 'MCLM.view.style.StyleEditorForm' 
-            '#closePointStyleEditorWindow' : {
+            '#closeStyleEditorWindow' : {
             	click: this.closeWindow 
             },
-            '#closeLineStyleEditorWindow' : {
-            	click: this.closeWindow 
-            },
-            '#closePolyStyleEditorWindow' : {
-            	click: this.closeWindow 
-            },
+
             
         })
     },
@@ -33,13 +35,20 @@ Ext.define('MCLM.view.style.StyleEditorController', {
     	styleEditorWindow.close();
     },
     
-    polySubmitForm : function( ) {
-    	
+    // Para saber o motivo de isto estar comentado vá em MCLM.Functions e procure "updateLineStylePreview" 
+    /*
+    updateLinePreview : function() {
+    	var width = Ext.getCmp("polygonStrokeWidth").getValue();
+    	var dash = Ext.getCmp("polygonLineDash").getValue();
+    	var stroke = Ext.getCmp("polygonStrokeLinecap").getValue();
+    	var strokeColor = Ext.getCmp("polygonStrokeColor").getValue();
+		var canvas = document.getElementById('polyCanvas');
+		MCLM.Functions.updateLineStylePreview(canvas, width,stroke,dash,strokeColor);
     },
-    pointSubmitForm : function( ) {
-    	
-    },
-    lineSubmitForm : function( ) {
+    */
+    
+
+    submitForm : function( ) {
     	var me = this;
     	
 		var styleEditorForm = Ext.getCmp('styleEditorForm');
@@ -50,14 +59,8 @@ Ext.define('MCLM.view.style.StyleEditorController', {
         	form.submit({
                 url: 'newFeatureStyle',
                 success: function( form, action ) {
-                	/*
-                	var layerTree = Ext.getCmp('layerTree');
-        	  		var selectedTreeNode = layerTree.getSelectionModel().getSelection()[0];
-			  		var layerTreeStore = Ext.getStore('store.layerTree');
-			  		layerTreeStore.load( { node: selectedTreeNode } );
-			  		*/
 			  		me.closeWindow();
-                	Ext.Msg.alert('Sucesso', action.result.msg);
+                	Ext.Msg.alert('Sucesso', 'As alterações terão efeito quando você atualizar a página.');
                 },
               	failure: function(form, action) {
               		me.closeWindow();
