@@ -6,7 +6,9 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 	layoutOnTabChange: true, 
 	deferredRender: false,
 	
-	selectedColorField : 'polygonFillColor',
+	selectedPolygonColorField : 'polygonFillColor',
+	selectedLineColorField : 'lineStrokeColor',
+	selectedTextColorField : 'textFillColor',
 	
 	plain: true,
 	autoHeight:true,
@@ -14,6 +16,7 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 	flex : 1,
 
 	items: [{
+		// ========================= PONTOS ====================================
 		title:'Pontos',
 	    layout: {
 	        type: 'hbox',
@@ -39,8 +42,8 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 		        listeners: {
 		        	change: function(element) {
 		        		var imagePath = element.getValue();
-		        		var svgImage = '<object style="width:39px;height:39px" type="image/svg+xml" data="'+imagePath+'" class="logo"></object>';
-		        		var image = "<img style='width:39px;height:39px' src='" + imagePath + "'>"
+		        		var svgImage = '<object id="iconPreview" style="width:39px;height:39px" type="image/svg+xml" data="'+imagePath+'" class="logo"></object>';
+		        		var image = "<img id='iconPreview' style='width:39px;height:39px' src='" + imagePath + "'>"
 		        		if ( imagePath.search(".svg") ) {
 		        			$("#iconSrcContainer").html( svgImage );
 		        		} else {
@@ -109,6 +112,7 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 			        listeners: {
 			        	change: function( element ) {
 			        		$( '#colorpickerHolder' ).ColorPickerSetColor( element.getValue() );
+			        		$( '#iconPreview' ).css("background-color", element.getValue() );
 			        	}
 			        }	        
 			    },{
@@ -122,6 +126,119 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 			    }]
 		}]    
 	}, {
+		// ========================= TEXTO ====================================
+		title:'Texto',
+	    layout: {
+	        type: 'hbox',
+	        align: 'stretch'
+	    },  		
+	    bodyPadding: '0',
+	    defaultType: 'textfield',
+	    defaults: {
+	        anchor: '100%',
+	        msgTarget: 'under',
+	        labelWidth: 90
+	    },	    
+
+		items:[{
+			xtype: 'container',
+  	        layout: 'vbox',    
+   	        padding: '10, 30, 10, 10',
+   	        items: [{
+			     xtype: 'textfield',
+			     fieldLabel: 'Nome da Fonte',
+			     emptyText:'9px Tahoma',
+			     name: 'textFont',
+			},{
+			     xtype: 'textfield',
+			     fieldLabel: 'Largura do Contorno',
+			     emptyText:'0',
+			     name: 'textStrokeWidth',
+			},{
+			     xtype: 'textfield',
+			     fieldLabel: 'Offset Y',
+			     emptyText:'0',
+			     name: 'textOffsetY',
+			},{
+			     xtype: 'textfield',
+			     fieldLabel: 'Offset X',
+			     emptyText:'0',
+			     name: 'textOffsetX',
+			}]
+		},{
+			xtype: 'container',
+			layout: 'vbox',    
+			padding: '10, 10, 10, 0',
+			items: [
+				{
+					xtype: 'container',
+					layout: 'hbox',    
+					padding: '0',
+					items: [{
+						xtype: 'textfield',
+						fieldLabel: 'Cor da Fonte',
+						emptyText:'#000000',
+						name: 'textFillColor',
+						id: 'textFillColor',
+						value:'#000000',
+						listeners: {
+							change: function( element ) {
+								$( '#textClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
+							},
+							focus: function( element ) {
+								$( '#tfcId' ).css("display","block");
+								$( '#tscId' ).css("display","none");
+								Ext.getCmp("styleEditorTC").selectedTextColorField = 'textFillColor';
+								$( '#textClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
+							}
+						}
+					},{
+						xtype: 'component',
+						autoEl: 'div',
+						width : 30,
+						height:30,
+						style : 'margin-left:3px',
+						html : '<img id="tfcId" style="width:30px;height:30px" src="img/back-arrow.svg">'
+					}]
+				},{
+					xtype: 'container',
+					layout: 'hbox',    
+					padding: '10, 10, 10, 0',
+					items: [{
+						xtype: 'textfield',
+						fieldLabel: 'Cor do Contorno',
+						emptyText:'#000000',
+						name: 'textStrokeColor',
+						id: 'textStrokeColor',
+						value:'#000000',
+						listeners: {
+							change: function( element ) {
+								$( '#textClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
+							},
+							focus: function( element ) {
+								$( '#textClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
+								$( '#tfcId' ).css("display","none");
+								$( '#tscId' ).css("display","block");
+								Ext.getCmp("styleEditorTC").selectedTextColorField = 'textStrokeColor';
+							}
+						}	
+					},{
+						xtype: 'component',
+						autoEl: 'div',
+						width : 30,
+						height:30,
+						style : 'margin-left:3px',
+						html : '<img id="tscId" style="display:none;width:30px;height:30px" src="img/back-arrow.svg">'
+					}]    	
+				}, {
+					xtype: 'component',
+					autoEl: 'div',
+					id : 'textClrPickerHolder',
+				}   	        
+			]
+		}]
+	},{
+		// ========================= LINHAS ====================================
 		title:'Linhas',
 	    layout: {
 	        type: 'hbox',
@@ -136,23 +253,94 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 	    },	    
 
 		items:[{
-		     xtype: 'textfield',
-		     fieldLabel: 'First Name',
-		     name: 'lineFillColor',
+			xtype: 'container',
+  	        layout: 'vbox',    
+   	        padding: '10, 30, 10, 10',
+   	        items: [{
+			     xtype: 'textfield',
+			     fieldLabel: 'Largura do Contorno',
+			     emptyText:'2',
+			     name: 'lineStrokeWidth',
+			},{
+			     xtype: 'textfield',
+			     fieldLabel: 'Estilo da Linha',
+			     emptyText:'[2, 10, 2]',
+			     name: 'lineLineDash',
+   	        }]
 		},{
-		     xtype: 'textfield',
-		     fieldLabel: 'First Name',
-		     name: 'lineStrokeColor',
-		},{
-		     xtype: 'textfield',
-		     fieldLabel: 'First Name',
-		     name: 'lineStrokeWidth',
-		},{
-		     xtype: 'textfield',
-		     fieldLabel: 'First Name',
-		     name: 'lineLineDash',
-		}]    
+			xtype: 'container',
+  	        layout: 'vbox',    
+   	        padding: '10, 10, 10, 0',
+   	        items: [
+				{
+					xtype: 'container',
+					layout: 'hbox',    
+					padding: '0',
+					items: [{
+						xtype: 'textfield',
+						fieldLabel: 'Cor de Contorno da Linha',
+						emptyText:'#000000',
+						value : '#000000',
+						name: 'lineStrokeColor',
+						id: 'lineStrokeColor',
+						listeners: {
+							change: function( element ) {
+								$( '#lineClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
+							},
+							focus: function( element ) {
+								$( '#lfcId' ).css("display","block");
+								$( '#lscId' ).css("display","none");
+								Ext.getCmp("styleEditorTC").selectedLineColorField = 'lineStrokeColor';
+								$( '#lineClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
+							}
+						}
+					},{
+						xtype: 'component',
+						autoEl: 'div',
+						width : 30,
+						height:30,
+						style : 'margin-left:3px',
+						html : '<img id="lfcId" style="width:30px;height:30px" src="img/back-arrow.svg">'
+					}]
+				},{
+					xtype: 'container',
+					layout: 'hbox',    
+					padding: '10, 10, 10, 0',
+					items: [{
+						xtype: 'textfield',
+						fieldLabel: 'Cor da Linha',
+						emptyText:'#000000',
+						value : '#000000',
+						name: 'lineFillColor',	
+						id: 'lineFillColor',
+						listeners: {
+							change: function( element ) {
+								$( '#lineClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
+							},
+							focus: function( element ) {
+								$( '#lineClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
+								$( '#lfcId' ).css("display","none");
+								$( '#lscId' ).css("display","block");
+								Ext.getCmp("styleEditorTC").selectedLineColorField = 'lineFillColor';
+							}
+						}	
+					},{
+						xtype: 'component',
+						autoEl: 'div',
+						width : 30,
+						height:30,
+						style : 'margin-left:3px',
+						html : '<img id="lscId" style="display:none;width:30px;height:30px" src="img/back-arrow.svg">'
+					}]    	
+				}, {
+					xtype: 'component',
+					autoEl: 'div',
+					id : 'lineClrPickerHolder',
+				}   	        
+   	        ]
+		}],
 	}, {
+		// ========================= POLIGONOS ====================================
 		title:'Polígonos',
 	    layout: {
 	        type: 'hbox',
@@ -208,7 +396,7 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 		    items: [{
 			    xtype: 'container',
 			    layout: 'hbox',    
-			    padding: '10, 10, 10, 0',
+			    padding: '0',
 			    items: [{
 			    	xtype: 'textfield',
 			    	fieldLabel: 'Cor de Preenchimento',
@@ -223,7 +411,7 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 					    focus: function( element ) {
 					    	$( '#pfcId' ).css("display","block");
 					    	$( '#pscId' ).css("display","none");
-					    	Ext.getCmp("styleEditorTC").selectedColorField = 'polygonFillColor';
+					    	Ext.getCmp("styleEditorTC").selectedPolygonColorField = 'polygonFillColor';
 							$( '#polyClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
 					    }
 			        }
@@ -254,7 +442,7 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 							$( '#polyClrPickerHolder' ).ColorPickerSetColor( element.getValue() );
 							$( '#pfcId' ).css("display","none");
 					    	$( '#pscId' ).css("display","block");
-					    	Ext.getCmp("styleEditorTC").selectedColorField = 'polygonStrokeColor';
+					    	Ext.getCmp("styleEditorTC").selectedPolygonColorField = 'polygonStrokeColor';
 					    }
 					}	
 			    },{
@@ -296,13 +484,48 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 				color : initialColor,
 				flat: true,
 				onChange: function (hsb, hex, rgb) {
-					var selColorField = Ext.getCmp("styleEditorTC").selectedColorField;
+					var selColorField = Ext.getCmp("styleEditorTC").selectedPolygonColorField;
 					
 					var targetColorFieldId =  selColorField;
 					var targetColorField = Ext.getCmp( targetColorFieldId );
 					targetColorField.setValue( "#" + hex.toUpperCase() );
 				}
 			});
+			
+			// ======================================
+			var lineFillColor = Ext.getCmp("lineFillColor");
+			var initialLineColor = lineFillColor.getValue();
+
+			$('#lineClrPickerHolder').ColorPicker({
+				color : initialLineColor,
+				flat: true,
+				onChange: function (hsb, hex, rgb) {
+					var selLineColorField = Ext.getCmp("styleEditorTC").selectedLineColorField;
+					
+					var targetColorFieldId =  selLineColorField;
+					var targetColorField = Ext.getCmp( targetColorFieldId );
+					targetColorField.setValue( "#" + hex.toUpperCase() );
+				}
+			});
+			
+			// ======================================
+			var textFillColor = Ext.getCmp("textFillColor");
+			var initialTextColor = textFillColor.getValue();
+			
+			$('#textClrPickerHolder').ColorPicker({
+				color : initialTextColor,
+				flat: true,
+				onChange: function (hsb, hex, rgb) {
+					var selTextColorField = Ext.getCmp("styleEditorTC").selectedTextColorField;
+					
+					var targetColorFieldId =  selTextColorField;
+					var targetColorField = Ext.getCmp( targetColorFieldId );
+					targetColorField.setValue( "#" + hex.toUpperCase() );
+				}
+			});		
+			
+			
+			
 			
 			
         }

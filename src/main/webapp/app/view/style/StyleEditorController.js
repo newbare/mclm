@@ -59,6 +59,10 @@ Ext.define('MCLM.view.style.StyleEditorController', {
         	form.submit({
                 url: 'newFeatureStyle',
                 success: function( form, action ) {
+                	
+                	var stylesStore = Ext.getStore('store.styles');
+                	stylesStore.load();                	
+                	
 			  		me.closeWindow();
                 	Ext.Msg.alert('Sucesso', 'As alterações terão efeito quando você atualizar a página.');
                 },

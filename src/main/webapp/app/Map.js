@@ -473,9 +473,14 @@ Ext.define('MCLM.Map', {
 		        	
 		        	var polygonStyle = new ol.style.Style({
 						fill: new ol.style.Fill({
-							color: me.replacePattern(layerStyle.polygonFillColor, props)
+							color: me.replacePattern(layerStyle.polygonFillColor, props),
+							fillOpacity: 0.5,
 						}),
 						stroke: new ol.style.Stroke({
+							
+							//strokeOpacity: 1,
+							
+						
 							color: me.replacePattern(layerStyle.polygonStrokeColor),
 							width: layerStyle.polygonStrokeWidth,
 							lineDash: JSON.parse( layerStyle.polygonLineDash ), // [10, 20, 0, 20]
@@ -483,29 +488,39 @@ Ext.define('MCLM.Map', {
 						})
 					});
 		        	
+		        	
 		        	resultStyles.push( polygonStyle );
-		        	//resultStyles.push( featureText );
 		        }		        	
 		        	
 				// ------------------------------------------------------------------------------
-				/*
-		        var featureText = new ol.style.Style({
-		            text: new ol.style.Text({
-		                text: feature.getProperties().label,
-		                offsetY: layerStyle.textOffsetY,
-		                offsetX: layerStyle.textOffsetX,
-		                font: layerStyle.textFont,
-		                fill: new ol.style.Fill({
-		                    color: layerStyle.textFillColor
-		                }),
-		                stroke: new ol.style.Stroke({
-		                	color: layerStyle.textStrokeColor, 
-		                	width: layerStyle.textStrokeWidth
-		                })
-		            
-		            })
-		        });
-		        */
+		        // TEXT
+	        	var label = feature.getProperties().label;
+	        	if( label ) {
+	        		
+			        var featureText = new ol.style.Style({
+			            text: new ol.style.Text({
+			                text: label,
+			                //offsetY: layerStyle.textOffsetY,
+			                //offsetX: layerStyle.textOffsetX,
+			                font: layerStyle.textFont,
+			                scale : 1,
+			                //rotateWithView : true/false,
+			                //textAlign : '', // 'left', 'right', 'center', 'end' or 'start'. Default is 'start'.
+			                //textBaseline : '', //  'bottom', 'top', 'middle', 'alphabetic', 'hanging', 'ideographic'. Default is 'alphabetic'.
+			                
+			                fill: new ol.style.Fill({
+			                    color: layerStyle.textFillColor
+			                }),
+			                /*
+			                stroke: new ol.style.Stroke({
+			                	color: layerStyle.textStrokeColor, 
+			                	width: layerStyle.textStrokeWidth
+			                })
+			                */
+			            })
+			        });		        	
+		        	resultStyles.push( featureText );
+	        	}
 
 				// ------------------------------------------------------------------------------
 				if ( featureGeomType == 'Point' ) {

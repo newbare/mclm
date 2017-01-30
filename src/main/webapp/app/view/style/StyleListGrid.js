@@ -10,11 +10,11 @@ Ext.define('MCLM.view.style.StyleListGrid', {
     flex:1,
     loadMask: true,
     columns:[
-	     {text:'Nome', dataIndex:'featureStyleName'},
+	     {text:'Nome', dataIndex:'featureStyleName', width:200},
 	     {text:'Cor do Ponto', dataIndex:'iconColor'},
 	     {text:'Cor do Polígono', dataIndex:'polygonFillColor'},
 	     {text:'Cor da Linha', dataIndex:'lineStrokeColor'},
-	     {text:'Ícone', dataIndex:'iconSrc'},
+	     {text:'Ícone', dataIndex:'iconSrc', width:300},
     ],
     listeners: {
     	rowdblclick : function( grid , record , element , rowIndex , e , eOpts ){
