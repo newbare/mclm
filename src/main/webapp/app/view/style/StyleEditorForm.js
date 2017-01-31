@@ -20,15 +20,25 @@ Ext.define('MCLM.view.style.StyleEditorForm', {
     },      
   
     items: [{
-		xtype: 'textfield',
-    	fieldLabel: 'Nome do Estilo',
-    	width: 100,
-    	name: 'featureStyleName',
-    	id: 'featureStyleName',
-    	height:22,
-    	margin: '5 130 20 10',
-    	allowBlank : false,
-    },{
+    	xtype: 'container',
+		layout: 'hbox',    
+		padding: '5',
+		height : 100,
+		items: [{
+			xtype: 'textfield',
+	    	fieldLabel: 'Nome do Estilo',
+	    	name: 'featureStyleName',
+	    	id: 'featureStyleName',
+	    	allowBlank : false,
+	    },{
+			xtype: 'component',
+			autoEl: 'div',
+			width : 360,
+			height: 90,
+			id:'stylePreviewMapID',
+			style : 'border:1px solid black;margin-left:20px',
+	    }]
+	},{
         xtype: 'view.styleEditorTC',
     }],
 

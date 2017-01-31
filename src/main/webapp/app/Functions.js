@@ -113,47 +113,6 @@ Ext.define('MCLM.Functions', {
 		    }); 	
 		},
 
-		// Deixei comentado porque estava dando muito trabalho criar um preview da linha
-		// no editor de estilos.
-		// Quando for a hora, ir em 'MCLM.view.style.PolyStyleEditorForm' e habilitar o CANVAS.
-		// Ir em 'MCLM.view.style.StyleEditorController' e habilitar os eventos e métodos
-		// correnpondentes.
-		/*
-		updateRectStylePreview : function(canvas,width,height,fillStyle,strokeStyle, color) {
-			if ( !canvas ) return false;
-			
-			var ctx = canvas.getContext('2d');
-			ctx.strokeStyle = color;
-			ctx.clearRect( 0, 0, canvas.width, canvas.height );
-			
-			ctx.fillStyle = fillStyle;
-			ctx.strokeStyle = strokeStyle;
-			
-		},
-		updateLineStylePreview : function(canvas,width,linecap,dashes, color) {
-			// http://phrogz.net/tmp/canvas_dashed_line.html
-			if ( !canvas ) return false;
-			
-			var ctx = canvas.getContext('2d');
-			ctx.strokeStyle = color;
-
-			var xy1     = "10 50",
-			    xy2     = "250 50";
-			
-			var x1y1 = xy1.split(/\D+/);
-			var x2y2 = xy2.split(/\D+/);
-			ctx.clearRect( 0, 0, canvas.width, canvas.height );
-			var dashGapArray = dashes.replace(/^\s+|\s+$/g,'').split(/\s+/);
-			if (!dashGapArray[0] || (dashGapArray.length==1 && dashGapArray[0]==0)) return;
-
-			ctx.lineWidth = width;
-			ctx.lineCap   = linecap;
-			ctx.beginPath();
-			
-			ctx.dashedLine( x1y1[0]*1, x1y1[1]*1, x2y2[0]*1, x2y2[1]*1, dashGapArray );
-			ctx.stroke();
-		}
-		*/
 	}
 
 });

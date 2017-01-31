@@ -24,7 +24,7 @@ public class FeatureStyle {
 			String iconAnchorYUnits, String iconOpacity, String iconColor, String iconRotation, String iconSrc,
 			String textOffsetY, String textOffsetX, String textFont, String textFillColor, String textStrokeColor,
 			String textStrokeWidth, String polygonFillColor, String polygonFillPattern, String polygonStrokeColor, String polygonStrokeWidth,
-			String polygonLineDash, String polygonStrokeLinecap, String lineFillColor, String lineStrokeColor, 
+			String polygonLineDash, String polygonStrokeLinecap, String polygonFillOpacity, String lineFillColor, String lineStrokeColor, 
 			String lineStrokeWidth, String lineLineDash) {
 		super();
 
@@ -48,6 +48,7 @@ public class FeatureStyle {
 		
 		this.polygonFillPattern = polygonFillPattern;
 		this.polygonFillColor = polygonFillColor;
+		this.polygonFillOpacity = polygonFillOpacity;
 		this.polygonStrokeColor = polygonStrokeColor;
 		this.polygonStrokeWidth = polygonStrokeWidth;
 		this.polygonLineDash = polygonLineDash;
@@ -83,6 +84,7 @@ public class FeatureStyle {
 
 	@Column(length=25) private String polygonFillPattern;
 	@Column(length=25) private String polygonFillColor;
+	@Column(length=25) private String polygonFillOpacity;
 	@Column(length=25) private String polygonStrokeColor;
 	@Column(length=25) private String polygonStrokeWidth;
 	@Column(length=25) private String polygonLineDash;
@@ -295,6 +297,15 @@ public class FeatureStyle {
 	public void setIconOpacity(String iconOpacity) {
 		this.iconOpacity = iconOpacity;
 	}
+
+	public String getPolygonFillOpacity() {
+		return polygonFillOpacity;
+	}
+
+	public void setPolygonFillOpacity(String polygonFillOpacity) {
+		this.polygonFillOpacity = polygonFillOpacity;
+	}
+	
 	
 	
 }

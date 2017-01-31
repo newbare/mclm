@@ -23,7 +23,7 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 	        align: 'stretch'
 	    },  		
 	    bodyPadding: '0',
-	    defaultType: 'textfield',
+	    
 	    defaults: {
 	        anchor: '100%',
 	        msgTarget: 'under',
@@ -54,23 +54,26 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 		    }, {
 		        xtype: 'component',
 		        autoEl: 'div',
-		        width: 40,
-		        height: 40,
+		        width: 41,
+		        height: 41,
 		        id : 'iconSrcContainer',
 		    }, {
 		    	xtype: 'textfield',
 		    	fieldLabel: 'Escala',
 		    	name: 'iconScale',
+		    	id: 'iconScale',
 		    	emptyText: '0.6',
 		    },{
 		    	xtype: 'textfield',
 		    	fieldLabel: 'Opacidade',
 		    	name: 'iconOpacity',
+		    	id: 'iconOpacity',
 		    	emptyText: '1',
 		    },{
 		    	xtype: 'textfield',
 		    	fieldLabel: 'Ancoragem',
 		    	name: 'iconAnchor',
+		    	id: 'iconAnchor',
 		    	emptyText: '[0.5, 46]',
 		    },{
 				xtype: 'combobox',
@@ -95,6 +98,7 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 		    	fieldLabel: 'Rotação',
 		    	emptyText: '0',
 		    	name: 'iconRotation',
+		    	id: 'iconRotation',
 		    }]
 	    }, {
 	        xtype: 'container',
@@ -149,21 +153,25 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 			     fieldLabel: 'Nome da Fonte',
 			     emptyText:'9px Tahoma',
 			     name: 'textFont',
+			     id: 'textFont',
 			},{
 			     xtype: 'textfield',
 			     fieldLabel: 'Largura do Contorno',
 			     emptyText:'0',
 			     name: 'textStrokeWidth',
+			     id: 'textStrokeWidth',
 			},{
 			     xtype: 'textfield',
 			     fieldLabel: 'Offset Y',
 			     emptyText:'0',
 			     name: 'textOffsetY',
+			     id: 'textOffsetY',
 			},{
 			     xtype: 'textfield',
 			     fieldLabel: 'Offset X',
 			     emptyText:'0',
 			     name: 'textOffsetX',
+			     id: 'textOffsetX',
 			}]
 		},{
 			xtype: 'container',
@@ -261,11 +269,13 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 			     fieldLabel: 'Largura do Contorno',
 			     emptyText:'2',
 			     name: 'lineStrokeWidth',
+			     id: 'lineStrokeWidth',
 			},{
 			     xtype: 'textfield',
 			     fieldLabel: 'Estilo da Linha',
 			     emptyText:'[2, 10, 2]',
 			     name: 'lineLineDash',
+			     id: 'lineLineDash',
    	        }]
 		},{
 			xtype: 'container',
@@ -381,14 +391,14 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 				displayField: 'polygonStrokeLinecap',	    	
 				id: 'polygonStrokeLinecap',
 				store:['butt','round','square'],
-		    }/*,{
-		        xtype: 'component',
-		        autoEl: 'div',
-		        width : 30,
-		        height:30,
-		        style : 'margin-left:3px',
-		        html : '<canvas style="width:250px;height:50px;border:1px solid black" id="polyCanvas"></canvas>'
-		    }*/]
+		    },{ 
+		    	xtype: 'textfield',
+		    	fieldLabel: 'Transparência',
+		    	name: 'polygonFillOpacity',
+		    	id: 'polygonFillOpacity',
+		    	emptyText: '1',
+		    	value : '1'
+		    }]
 	    }, {
 	        xtype: 'container',
 	        layout: 'vbox',    
@@ -462,7 +472,7 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 	}],
 
     listeners: {
-
+    	
         'afterrender' : function ( cmp ) {
         	
 			var iconColor = Ext.getCmp("iconColor");

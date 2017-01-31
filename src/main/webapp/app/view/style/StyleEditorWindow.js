@@ -11,7 +11,7 @@ Ext.define('MCLM.view.style.StyleEditorWindow', {
     controller : 'styleEditor',	
 	
 	width : 670,
-	height: 450,
+	height: 480,
 
 	layout: {
 		type: 'vbox',

@@ -470,25 +470,23 @@ Ext.define('MCLM.Map', {
 				
 				// ------------------------------------------------------------------------------
 		        if ( featureGeomType == 'MultiPolygon' || featureGeomType == 'Polygon' ) {
+
+		        	var hexColor = me.replacePattern(layerStyle.polygonFillColor, props);
+		        	var newColor = ol.color.asArray(hexColor);
+		        	newColor = newColor.slice();
+		        	newColor[3] = layerStyle.polygonFillOpacity;
 		        	
 		        	var polygonStyle = new ol.style.Style({
 						fill: new ol.style.Fill({
-							color: me.replacePattern(layerStyle.polygonFillColor, props),
-							fillOpacity: 0.5,
+							color: newColor,
 						}),
 						stroke: new ol.style.Stroke({
-							
-							//strokeOpacity: 1,
-							
-						
 							color: me.replacePattern(layerStyle.polygonStrokeColor),
 							width: layerStyle.polygonStrokeWidth,
 							lineDash: JSON.parse( layerStyle.polygonLineDash ), // [10, 20, 0, 20]
 							strokeLinecap : layerStyle.polygonStrokeLinecap, // butt, round, square
 						})
 					});
-		        	
-		        	
 		        	resultStyles.push( polygonStyle );
 		        }		        	
 		        	
@@ -524,18 +522,45 @@ Ext.define('MCLM.Map', {
 
 				// ------------------------------------------------------------------------------
 				if ( featureGeomType == 'Point' ) {
-			    	var pointStyle = new ol.style.Style({
-			    		  image: new ol.style.Icon(({
-			    			    anchor: JSON.parse( layerStyle.iconAnchor ),
-			    			    scale : layerStyle.iconScale,
-			    			    anchorXUnits: layerStyle.iconAnchorXUnits,
-			    			    anchorYUnits: layerStyle.iconAnchorYUnits,
-			    			    opacity: layerStyle.iconApacity,
-			    			    color   : layerStyle.iconColor,
-			    			    rotation: layerStyle.iconRotation,
-			    			    src:  me.replacePattern(layerStyle.iconSrc, props)
-			    		  }))
-			    	});
+					
+		        	var hexColor = layerStyle.iconColor;
+		        	var newColor = ol.color.asArray(hexColor);
+		        	newColor = newColor.slice();
+		        	newColor[3] = layerStyle.iconOpacity;					
+					
+					if ( layerStyle.iconSrc ) {
+						// Se tiver icone (o caminho do icone) entao cria um estilo de icone
+				    	var pointStyle = new ol.style.Style({
+				    		  image: new ol.style.Icon(({
+				    			    anchor: JSON.parse( layerStyle.iconAnchor ),
+				    			    scale : layerStyle.iconScale,
+				    			    anchorXUnits: layerStyle.iconAnchorXUnits,
+				    			    anchorYUnits: layerStyle.iconAnchorYUnits,
+				    			    opacity: layerStyle.iconOpacity,
+				    			    color   : layerStyle.iconColor,
+				    			    rotation: layerStyle.iconRotation,
+				    			    src:  me.replacePattern(layerStyle.iconSrc, props)
+				    		  }))
+				    	});
+				    	
+					} else {
+						// Se nao, cria um circulo
+				    	var pointStyle = new ol.style.Style({
+				    		  image: new ol.style.Circle({
+					                radius: layerStyle.iconScale,
+					                fill: new ol.style.Fill({
+					                    color: newColor
+					                }),
+					                stroke: new ol.style.Stroke({
+					                    color: layerStyle.iconColor,
+					                    width: 2
+					                })
+				    		  })
+				    	});
+						
+						
+						
+					}
 			    	resultStyles.push( pointStyle );
 			    	//if ( resolution < 150 ) resultStyles.push( featureText );
 				}			        

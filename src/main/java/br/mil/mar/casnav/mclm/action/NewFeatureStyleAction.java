@@ -53,6 +53,7 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			String polygonFillColor = request.getParameter("polygonFillColor");		
 			String polygonFillPattern = request.getParameter("polygonFillPattern");		
 			String polygonStrokeColor = request.getParameter("polygonStrokeColor");		
+			String polygonFillOpacity = request.getParameter("polygonFillOpacity");		
 			String polygonStrokeWidth = request.getParameter("polygonStrokeWidth");		
 			String polygonLineDash = request.getParameter("polygonLineDash");		
 			String polygonStrokeLinecap = request.getParameter("polygonStrokeLinecap");		
@@ -62,13 +63,14 @@ public class NewFeatureStyleAction extends BasicActionClass {
 			String lineStrokeWidth = request.getParameter("lineStrokeWidth");		
 			String lineLineDash = request.getParameter("lineLineDash");		
 			
-			dumpParameters();
+			//dumpParameters();
 			
 			DataLayerService dss = new DataLayerService();
 			String result = dss.insertUpdateFeatureStyle(idFeatureStyle, featureStyleName, iconAnchor, iconScale, iconAnchorXUnits,
 					iconAnchorYUnits, iconOpacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
-					textStrokeWidth, polygonFillColor, polygonFillPattern, polygonStrokeColor, polygonStrokeWidth, polygonLineDash, polygonStrokeLinecap,
+					textStrokeWidth, polygonFillColor, polygonFillPattern, polygonStrokeColor, polygonStrokeWidth, polygonLineDash, 
+					polygonStrokeLinecap, polygonFillOpacity,
 					lineFillColor, lineStrokeColor,  lineStrokeWidth, lineLineDash);
 				
 				
