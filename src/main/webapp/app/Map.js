@@ -387,13 +387,13 @@ Ext.define('MCLM.Map', {
 			var serialId = node.get('serialId' );			
 			var layerName = node.get( 'layerName' );			
 			var layerAlias = node.get( 'layerAlias' );	
-			var layerStyle = dataLayer.style;
+			var layerStyle = geojsonStr.featureStyle;
 			var clustered = false;
 
 			//console.log( layerStyle );
 			
 			// Carregas as features
-	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr, {
+	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr.data, {
 	    	    featureProjection: 'EPSG:3857'
 	    	});		   	
 		   	

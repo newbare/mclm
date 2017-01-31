@@ -6,8 +6,10 @@ import java.net.URLDecoder;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
+import br.mil.mar.casnav.mclm.misc.DataLayerStylized;
 import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.misc.PathFinder;
 import br.mil.mar.casnav.mclm.misc.RESTResponse;
@@ -53,7 +55,7 @@ public class LayerService {
 			     "row_to_json((SELECT l FROM (SELECT " + dl.getPropertiesColumns() + "," + dl.getLabelColumn() + " as label) As l)) As properties " +  
 				 "FROM " + dl.getTable().getName() + " As l where " + dl.getWhereClause() + ") As f) as fc; ";
 
-		String result = "";
+		String jsonData = "";
 		
 		String connectionString = "jdbc:postgresql://" + dl.getTable().getServer().getServerAddress() +
 				":" + dl.getTable().getServer().getServerPort() + "/" + dl.getTable().getServer().getServerDatabase();
@@ -64,10 +66,13 @@ public class LayerService {
 		
 		if ( utes.size() > 0 ) {
 			UserTableEntity ute = utes.get(0);
-			result = ute.getData("featurecollection");
+			jsonData = ute.getData("featurecollection");
 		}
 		
-		return result;
+		DataLayerStylized dlsty = new DataLayerStylized( dl.getStyle(), jsonData );
+		JSONObject itemObj = new JSONObject( dlsty );
+		
+		return itemObj.toString();
 	}
 	
 	public String queryLayer( String targetUrl, String layerName ) throws Exception {

@@ -62,7 +62,7 @@ Ext.define('MCLM.view.style.StyleEditorController', {
                 	stylesStore.load();                	
                 	
 			  		me.closeWindow();
-                	Ext.Msg.alert('Sucesso', 'As alterações terão efeito quando você atualizar a página.');
+                	Ext.Msg.alert('Sucesso', 'As alterações terão efeito quando você recarregar as camadas que utilizam este estilo.');
                 },
               	failure: function(form, action) {
               		me.closeWindow();
