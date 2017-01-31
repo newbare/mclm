@@ -151,7 +151,7 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
    	        items: [{
 			     xtype: 'textfield',
 			     fieldLabel: 'Nome da Fonte',
-			     emptyText:'9px Tahoma',
+			     //emptyText:'9px Tahoma',
 			     name: 'textFont',
 			     id: 'textFont',
 			},{

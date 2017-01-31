@@ -493,28 +493,26 @@ Ext.define('MCLM.Map', {
 				// ------------------------------------------------------------------------------
 		        // TEXT
 	        	var label = feature.getProperties().label;
-	        	if( label ) {
+	        	var font = layerStyle.textFont;
+	        	if( label && font ) {
 	        		
 			        var featureText = new ol.style.Style({
 			            text: new ol.style.Text({
 			                text: label,
-			                //offsetY: layerStyle.textOffsetY,
-			                //offsetX: layerStyle.textOffsetX,
+			                offsetY: layerStyle.textOffsetY,
+			                offsetX: layerStyle.textOffsetX,
 			                font: layerStyle.textFont,
 			                scale : 1,
 			                //rotateWithView : true/false,
 			                //textAlign : '', // 'left', 'right', 'center', 'end' or 'start'. Default is 'start'.
 			                //textBaseline : '', //  'bottom', 'top', 'middle', 'alphabetic', 'hanging', 'ideographic'. Default is 'alphabetic'.
-			                
+			                stroke: new ol.style.Stroke({
+			                	color: layerStyle.textStrokeColor,
+			                	width: layerStyle.textStrokeWidth
+			                }),				                
 			                fill: new ol.style.Fill({
 			                    color: layerStyle.textFillColor
 			                }),
-			                /*
-			                stroke: new ol.style.Stroke({
-			                	color: layerStyle.textStrokeColor, 
-			                	width: layerStyle.textStrokeWidth
-			                })
-			                */
 			            })
 			        });		        	
 		        	resultStyles.push( featureText );

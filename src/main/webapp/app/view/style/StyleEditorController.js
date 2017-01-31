@@ -110,102 +110,117 @@ Ext.define('MCLM.view.style.StyleEditorController', {
 	    	  var featureGeomType = feature.getGeometry().getType();
 		    	  
  
-	    	  
-				if ( featureGeomType == 'Point' ) {
-					
-		        	var hexColor = Ext.getCmp("iconColor").getValue();
-		        	var newColor = ol.color.asArray(hexColor);
-		        	newColor = newColor.slice();
-		        	newColor[3] = Ext.getCmp("iconOpacity").getValue();					
-					
-					if ( Ext.getCmp("iconSrc").getValue() ) {
-						// Se tiver icone (o caminho do icone) entao cria um estilo de icone
-				    	var pointStyle = new ol.style.Style({
-				    		  image: new ol.style.Icon(({
-				    			    anchor: JSON.parse( Ext.getCmp("iconAnchor").getValue() ),
-				    			    scale : Ext.getCmp("iconScale").getValue(),
-				    			    anchorXUnits: Ext.getCmp("iconAnchorXUnits").getValue(),
-				    			    anchorYUnits: Ext.getCmp("iconAnchorYUnits").getValue(),
-				    			    opacity: Ext.getCmp("iconOpacity").getValue(),
-				    			    color   : Ext.getCmp("iconColor").getValue(),
-				    			    rotation:  Ext.getCmp("iconRotation").getValue(),
-				    			    src:  Ext.getCmp("iconSrc").getValue()
-				    		  }))
-				    	});
-				    	
-					} else {
-						// Se nao, cria um circulo
-				    	var pointStyle = new ol.style.Style({
-				    		  image: new ol.style.Circle({
-					                radius: Ext.getCmp("iconScale").getValue(),
-					                fill: new ol.style.Fill({
-					                    color: newColor
-					                }),
-					                stroke: new ol.style.Stroke({
-					                    color: Ext.getCmp("iconColor").getValue(),
-					                    width: 2
-					                })
-				    		  })
-				    	});
+	    	  try {
+		    	  if ( featureGeomType == 'Point' ) {
 						
+			        	var hexColor = Ext.getCmp("iconColor").getValue();
+			        	var newColor = ol.color.asArray(hexColor);
+			        	newColor = newColor.slice();
+			        	newColor[3] = Ext.getCmp("iconOpacity").getValue();					
 						
-						
-					}
-			    	resultStyles.push( pointStyle );
-				}		    	  
-	    	  
-	    	  
-	    	  if ( featureGeomType == 'LineString' || featureGeomType == 'Line' ) {
-	    		  var lineStyle = new ol.style.Style({
-	    			  fill: new ol.style.Fill({
-	    				  color: Ext.getCmp("lineFillColor").getValue() 
-	    			  }),
-	    			  stroke: new ol.style.Stroke({
-	    				  color: Ext.getCmp("lineStrokeColor").getValue(),
-	    				  width:  Ext.getCmp("lineStrokeWidth").getValue(),
-	    				  lineDash: JSON.parse( Ext.getCmp("lineLineDash").getValue() ) 
-	    			  })
-						
-	    		  });	
-	    		  resultStyles.push( lineStyle );
-	    	  }	    	  
-	    	  
-	    	  
-	    	  if ( featureGeomType == 'MultiPolygon' || featureGeomType == 'Polygon' ) {
+						if ( Ext.getCmp("iconSrc").getValue() ) {
+							// Se tiver icone (o caminho do icone) entao cria um estilo de icone
+					    	var pointStyle = new ol.style.Style({
+					    		  image: new ol.style.Icon(({
+					    			    anchor: JSON.parse( Ext.getCmp("iconAnchor").getValue() ),
+					    			    scale : Ext.getCmp("iconScale").getValue(),
+					    			    anchorXUnits: Ext.getCmp("iconAnchorXUnits").getValue(),
+					    			    anchorYUnits: Ext.getCmp("iconAnchorYUnits").getValue(),
+					    			    opacity: Ext.getCmp("iconOpacity").getValue(),
+					    			    color   : Ext.getCmp("iconColor").getValue(),
+					    			    rotation:  Ext.getCmp("iconRotation").getValue(),
+					    			    src:  Ext.getCmp("iconSrc").getValue()
+					    		  }))
+					    	});
+					    	
+						} else {
+							// Se nao, cria um circulo
+					    	var pointStyle = new ol.style.Style({
+					    		  image: new ol.style.Circle({
+						                radius: Ext.getCmp("iconScale").getValue(),
+						                fill: new ol.style.Fill({
+						                    color: newColor
+						                }),
+						                stroke: new ol.style.Stroke({
+						                    color: Ext.getCmp("iconColor").getValue(),
+						                    width: 2
+						                })
+					    		  })
+					    	});
+							
+							
+							
+						}
+						resultStyles.push( pointStyle );
+		    	  }		    	  
 
-		        	var hexColor = Ext.getCmp("polygonFillColor").getValue();
-		        	var newColor = ol.color.asArray(hexColor);
-		        	newColor = newColor.slice();
-		        	newColor[3] = Ext.getCmp("polygonFillOpacity").getValue();
-		        	
-		        	var polygonStyle = new ol.style.Style({
-						fill: new ol.style.Fill({
-							color: newColor,
-						}),
-						stroke: new ol.style.Stroke({
-							color: Ext.getCmp("polygonStrokeColor").getValue(),
-							width: Ext.getCmp("polygonStrokeWidth").getValue(), 
-							lineDash: JSON.parse( Ext.getCmp("polygonLineDash").getValue() ), 
-							strokeLinecap : Ext.getCmp("polygonStrokeLinecap").getValue(),
-						})
-					});
-		        	resultStyles.push( polygonStyle );
+	    	  } catch ( err ) {
+	    		  
+	    	  }
+		    	  
+	    	  try {
+		    	  if ( featureGeomType == 'LineString' || featureGeomType == 'Line' ) {
+		    		  var lineStyle = new ol.style.Style({
+		    			  fill: new ol.style.Fill({
+		    				  color: Ext.getCmp("lineFillColor").getValue() 
+		    			  }),
+		    			  stroke: new ol.style.Stroke({
+		    				  color: Ext.getCmp("lineStrokeColor").getValue(),
+		    				  width:  Ext.getCmp("lineStrokeWidth").getValue(),
+		    				  lineDash: JSON.parse( Ext.getCmp("lineLineDash").getValue() ) 
+		    			  })
+							
+		    		  });	
+		    		  resultStyles.push( lineStyle );
+		    	  }
+	    	  } catch ( err ) {
+	    		  
+	    	  }	 
+	    	  
+
+	    	  try {
+		    	  if ( featureGeomType == 'MultiPolygon' || featureGeomType == 'Polygon' ) {
+			        	var hexColor = Ext.getCmp("polygonFillColor").getValue();
+			        	var newColor = ol.color.asArray(hexColor);
+			        	newColor = newColor.slice();
+			        	newColor[3] = Ext.getCmp("polygonFillOpacity").getValue();
+			        	
+			        	var polygonStyle = new ol.style.Style({
+							fill: new ol.style.Fill({
+								color: newColor,
+							}),
+							stroke: new ol.style.Stroke({
+								color: Ext.getCmp("polygonStrokeColor").getValue(),
+								width: Ext.getCmp("polygonStrokeWidth").getValue(), 
+								lineDash: JSON.parse( Ext.getCmp("polygonLineDash").getValue() ), 
+								strokeLinecap : Ext.getCmp("polygonStrokeLinecap").getValue(),
+							})
+						});
+			        	resultStyles.push( polygonStyle );
+		    	  }
+	    	  } catch ( err ) {
+	    		  
 	    	  }
 	    	  
-	    	  
-		        var featureText = new ol.style.Style({
-		            text: new ol.style.Text({
-		                text: 'Texto de Exemplo',
-		                offsetY: Ext.getCmp("textOffsetY").getValue(),
-		                offsetX: Ext.getCmp("textOffsetX").getValue(),		                
-		                font: Ext.getCmp("textFont").getValue(),
-		                scale : 1,
-		                fill: new ol.style.Fill({
-		                    color: Ext.getCmp("textFillColor").getValue()
-		                }),
-		            })
-		        });		        	
-	        	resultStyles.push( featureText );
+	    	  if ( Ext.getCmp("textFont").getValue() ) {
+		    	  var featureText = new ol.style.Style({
+			            text: new ol.style.Text({
+			                text: 'Texto de Exemplo',
+			                offsetY: Ext.getCmp("textOffsetY").getValue(),
+			                offsetX: Ext.getCmp("textOffsetX").getValue(),		                
+			                font: Ext.getCmp("textFont").getValue(),
+			                scale : 1,
+			                fill: new ol.style.Fill({
+			                    color: Ext.getCmp("textFillColor").getValue()
+			                }),
+			                stroke: new ol.style.Stroke({
+			                	color: Ext.getCmp("textStrokeColor").getValue(),
+			                	width: Ext.getCmp("textStrokeWidth").getValue()
+			                })			                
+			            })
+		    	  });		        	
+		    	  resultStyles.push( featureText );
+	    	  } 
 	    	  
 	    	  
 	    	  return resultStyles;
