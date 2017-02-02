@@ -233,4 +233,37 @@
 	background-repeat: no-repeat;
 }
 
+.draw-icon {
+	background-image: url('../img/pencil.svg') !important;
+	background-repeat: no-repeat;
+}
 
+.circle-tool {
+	background-image: url('../img/circle.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.point-tool {
+	background-image: url('../img/point.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.square-tool {
+	background-image: url('../img/square.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.line-tool {
+	background-image: url('../img/line.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.rectangle-tool {
+	background-image: url('../img/rectangle.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.polygon-tool {
+	background-image: url('../img/polygon.svg') !important;
+	background-repeat: no-repeat;
+}

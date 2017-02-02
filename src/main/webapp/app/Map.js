@@ -626,9 +626,9 @@ Ext.define('MCLM.Map', {
 			routeLayer.set('ready', false);
 			routeLayer.set('baseLayer', false);	        
 	        
-			MCLM.Map.removeLayerByName( 'routeLayer' );
+			this.removeLayerByName( 'routeLayer' );
 			
-			MCLM.Map.map.addLayer( routeLayer );
+			this.map.addLayer( routeLayer );
 		},
 		// --------------------------------------------------------------------------------------------
 		// Converte as Features da camada de Rotas para uma String GeoJSON

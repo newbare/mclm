@@ -96,5 +96,22 @@ Ext.define('MCLM.view.main.MainController', {
     	this.fireEvent('mountImagePreview');
 	},
 	// --------------------------------------------------------------------------------------------
+    // Exibe a barra de ferramentas de desenho
+    showDrawToolBar : function() {
+
+    	var stylesStore = Ext.getStore('store.styles');
+    	stylesStore.load({
+            callback : function(records, options, success) {
+            	var drawToolBar = Ext.getCmp("drawToolBar");
+            	if ( !drawToolBar ) { 
+            		drawToolBar = Ext.create('MCLM.view.draw.DrawToolBarWindow');
+            	}
+            	drawToolBar.show();
+            	var estiloCombo = Ext.getCmp("idFeicaoStyle");
+            	estiloCombo.setValue( stylesStore.getAt(0) );
+            }
+        });     	
+    	
+    },
     
 });

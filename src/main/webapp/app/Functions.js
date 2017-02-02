@@ -110,6 +110,12 @@ Ext.define('MCLM.Functions', {
 		        text: 'Gerencia os estilos a serem aplicados nas camadas de dados.',
 		        width: 150,
 		        dismissDelay: 5000 
+		    }, {
+		        target: 'drawFeicaoBtn',
+		        title: 'Desenhar Feições',
+		        text: 'Exibe a barra de ferramentas de desenho de feições.',
+		        width: 150,
+		        dismissDelay: 5000 
 		    }); 	
 		},
 

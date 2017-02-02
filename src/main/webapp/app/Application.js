@@ -6,7 +6,8 @@ Ext.define('MCLM.Application', {
     requires: [
        'MCLM.view.main.TelaPrincipal',
        'MCLM.Globals',
-       'MCLM.Functions'
+       'MCLM.Functions',
+       'MCLM.DrawHelper'
     ],
     
     stores: [

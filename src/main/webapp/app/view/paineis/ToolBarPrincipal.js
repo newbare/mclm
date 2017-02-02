@@ -109,5 +109,12 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'styles-icon',
         handler: 'editStyles'
+    },{
+    	iconCls: 'draw-icon',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+    	xtype: 'button',
+    	id: 'drawFeicaoBtn',
+        handler : 'showDrawToolBar'
     }]
 });

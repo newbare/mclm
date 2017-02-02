@@ -15,9 +15,6 @@ Ext.define('MCLM.view.addlayer.dta.DataLayerForm', {
         labelWidth: 90
     },
 
-    
-    
-    
     items: [
     {
         fieldLabel: 'Nome',
@@ -70,7 +67,7 @@ Ext.define('MCLM.view.addlayer.dta.DataLayerForm', {
 		displayField: 'featureStyleName',	    	
 		id: 'idFeatureStyle',
 		store: 'store.styles',	    	
-
+		editable : false,
 	    queryMode: 'local',
 	    valueField: 'idFeatureStyle',		
 		

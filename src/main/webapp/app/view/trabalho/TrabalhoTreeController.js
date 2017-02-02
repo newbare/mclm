@@ -20,7 +20,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
             	doClearWorkspace : 'doClearWorkspace'
             }
         }
-    },     
+    },  
     // Disparado apos um no ser movido para outra pasta
     afterDropNode : function  (node, data, overModel, dropPosition) {
 		var theNode = data.records[0];

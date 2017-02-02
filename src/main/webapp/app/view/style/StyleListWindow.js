@@ -32,11 +32,14 @@ Ext.define('MCLM.view.style.StyleListWindow', {
 	
     listeners: {
 
-        'afterrender' : function ( cmp ) {
+    	close : function() {
+		 	 Ext.tip.QuickTipManager.unregister('newStyleBtn');    	
+    	},
+	    
+	    afterrender : function ( cmp ) {
         	
         	var stylesStore = Ext.getStore('store.styles');
         	stylesStore.load();
-        	
         	
     	    Ext.tip.QuickTipManager.register({
     	        target: 'newStyleBtn',
@@ -45,7 +48,6 @@ Ext.define('MCLM.view.style.StyleListWindow', {
     	        width: 150,
     	        dismissDelay: 5000 
     	    });			
-        	
         	
         }
 	
