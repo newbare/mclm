@@ -32,12 +32,10 @@ Ext.define('MCLM.view.addlayer.dta.DataLayerController', {
         	form.submit({
                 url: 'newDtaLayer',
                 success: function( form, action ) {
-	  		
                 	var layerTree = Ext.getCmp('layerTree');
         	  		var selectedTreeNode = layerTree.getSelectionModel().getSelection()[0];
 			  		var layerTreeStore = Ext.getStore('store.layerTree');
 			  		layerTreeStore.load( { node: selectedTreeNode } );
-			  		
 			  		me.closeWindow();
                 	Ext.Msg.alert('Sucesso', action.result.msg);
                 },

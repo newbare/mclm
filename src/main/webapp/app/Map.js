@@ -1089,6 +1089,30 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		
+		
+		
+		
+		
+		
+		
+		showLayers : function () {
+			var layers = this.map.getLayers();
+			var length = layers.getLength();
+			for (var i = 0; i < length; i++) {
+				var layerName = layers.item(i).get('name');
+				
+				var alias = layers.item(i).get('alias');
+				var serverUrl = layers.item(i).get('serverUrl');
+				var serialId = layers.item(i).get('serialId');
+				var layerType = layers.item(i).get('layerType');				
+				
+				console.log( " > " + layerName + " | " + serialId + " (" + alias + ")");
+			}
+			return null;
+		},
+		
+		
+		
 	}
 
 });
