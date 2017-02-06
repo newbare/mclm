@@ -9,7 +9,7 @@ Ext.define('MCLM.view.draw.AddDrawableLayerDialog', {
 	height: 200,
 	
     requires: [
-        'MCLM.view.draw.DrawTooBarController',
+        'MCLM.view.draw.DrawToolBarController',
 	],
     controller : 'drawToolBar',		
 

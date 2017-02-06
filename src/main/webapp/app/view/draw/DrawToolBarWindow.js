@@ -5,7 +5,7 @@ Ext.define('MCLM.view.draw.DrawToolBarWindow', {
 	title:'Ferramentas de Desenho',
 	
     requires: [
-        'MCLM.view.draw.DrawTooBarController',
+        'MCLM.view.draw.DrawToolBarController',
 	],
     controller : 'drawToolBar',	
 	

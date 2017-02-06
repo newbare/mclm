@@ -1,4 +1,4 @@
-Ext.define('MCLM.view.draw.DrawTooBarController', {
+Ext.define('MCLM.view.draw.DrawToolBarController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.drawToolBar',
 
@@ -114,6 +114,47 @@ Ext.define('MCLM.view.draw.DrawTooBarController', {
     		return true;
     	}
     	
+    	var obj = JSON.parse( data );
+    	
+    	var anWindow = Ext.getCmp("anWindow");
+    	if ( !anWindow ) { 
+    		anWindow = Ext.create('MCLM.view.apolo.feicoes.AreasNotaveisWindow');
+    	}
+    	anWindow.show();	    	
+    	
+    	
+    	switch ( obj.properties.feicaoDestinoId ) {
+    	  case 'AN.A':
+    	    //
+    	    break;
+    	  case 'AN.E':
+    	    //
+    	    break;
+    	  case 'AN.I':
+      	    //
+      	    break;
+    	  case 'AN.IB':
+    		  //
+    		  break;
+    	  case 'AN.PP':
+    		  //
+    		  break;
+    	  case 'OC':
+    		  //
+    		  break;
+    	  case 'CE':
+    		  //
+    		  break;
+    	  case 'NE':
+    		  //
+    		  break;
+    	  default:
+    	      //
+    	      break;
+    	}    	
+    	
+    	// Passar para o controller de 'MCLM.view.apolo.feicoes.AreasNotaveisWindow'
+    	/*
 		Ext.Ajax.request({
 		       url: 'newFeicao',
 		       params: {
@@ -126,8 +167,8 @@ Ext.define('MCLM.view.draw.DrawTooBarController', {
 		       failure: function(response, opts) {
 		    	   Ext.Msg.alert('Erro','Erro ao gravar Feição.' );
 		       }
-			});
-    	
+		});
+    	*/
     	
     }
     

@@ -31,6 +31,17 @@ Ext.define('MCLM.DrawHelper', {
 			if ( this.vectorSource ) this.vectorSource.changed();
 		},
 		
+		replacePattern : function( subject, properties ) {
+			try {
+				Object.keys( properties ).forEach(function ( key ) {
+				    var val = properties[key];
+				    var pattern = "${" + key + "}";
+				    subject = subject.replace( pattern, val);
+				});
+			} catch ( err ) { }
+			return subject;
+		},		
+		
 		init : function(feicaoNome, feicaoDescricao,idEstilo,feicaoDestinoId, feicaoDestino) {
 			this.feicaoNome = feicaoNome;
 			this.feicaoDescricao = feicaoDescricao;
@@ -51,7 +62,7 @@ Ext.define('MCLM.DrawHelper', {
 			var getStyle = function( feature, resolution ) {
 				var resultStyles = [];
 				var featureGeomType = feature.getGeometry().getType();
-		    	
+				var props = feature.getProperties();
 				
 				// Circulo
 	        	var hexColor = me.styleData.iconColor;
@@ -74,23 +85,43 @@ Ext.define('MCLM.DrawHelper', {
 				
 				// Ponto
 				if ( featureGeomType == 'Point' ) {
+					
 		        	var hexColor = me.styleData.iconColor;
 		        	var newColor = ol.color.asArray(hexColor);
 		        	newColor = newColor.slice();
-		        	newColor[3] = me.styleData.iconOpacity;	
+		        	newColor[3] = me.styleData.iconOpacity;						
+					
+					if ( me.styleData.iconSrc ) {
+						// Se tiver icone (o caminho do icone) entao cria um estilo de icone
+				    	var pointStyle = new ol.style.Style({
+				    		  image: new ol.style.Icon(({
+				    			    anchor: JSON.parse( me.styleData.iconAnchor ),
+				    			    scale : me.styleData.iconScale,
+				    			    anchorXUnits: me.styleData.iconAnchorXUnits,
+				    			    anchorYUnits: me.styleData.iconAnchorYUnits,
+				    			    opacity: me.styleData.iconOpacity,
+				    			    color   : me.styleData.iconColor,
+				    			    rotation: me.styleData.iconRotation,
+				    			    src:  me.replacePattern(me.styleData.iconSrc, props)
+				    		  }))
+				    	});					
+					
+					} else {
 		        	
-					var pointStyle = new ol.style.Style({
-						image: new ol.style.Circle({
-							radius: me.styleData.iconScale,
-							fill: new ol.style.Fill({
-								color: newColor
-							}),
-							stroke: new ol.style.Stroke({
-								color: me.styleData.iconColor,
-								width: 2
+						var pointStyle = new ol.style.Style({
+							image: new ol.style.Circle({
+								radius: me.styleData.iconScale,
+								fill: new ol.style.Fill({
+									color: newColor
+								}),
+								stroke: new ol.style.Stroke({
+									color: me.styleData.iconColor,
+									width: 2
+								})
 							})
-						})
-					});	
+						});
+					}
+					
 					resultStyles.push( pointStyle );
 				}
 

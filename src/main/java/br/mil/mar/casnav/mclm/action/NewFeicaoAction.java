@@ -26,7 +26,7 @@ public class NewFeicaoAction extends BasicActionClass {
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
 
 			String data = request.getParameter("data");
-			String result = "{ \"success\": true, \"msg\": \"Estilo criado com sucesso.\" }";
+			String result = "{ \"success\": true, \"msg\": \"Feição criada com sucesso.\" }";
 
 			System.out.println( data );
 			
