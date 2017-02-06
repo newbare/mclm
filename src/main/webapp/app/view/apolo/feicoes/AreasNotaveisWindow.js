@@ -1,16 +1,38 @@
 Ext.define('MCLM.view.apolo.feicoes.AreasNotaveisWindow', {
 	extend: 'Ext.Window',
 	
+    requires: [
+         'MCLM.view.apolo.feicoes.AreasNotaveisController',
+         'MCLM.view.apolo.feicoes.AreasNotaveisForm',
+    ],
+    controller : 'areasNotaveis',		
 	
 	id:'anWindow',    	
 	xtype: 'anWindow',
 	title : "Áreas Notáveis",
 	width : 550,
-	height: 550,
+	height: 400,
+	
+	resizable : false,
 	
 	layout : 'fit',
 	constrain: true,
 	renderTo: Ext.getBody(),
 	
+	
+    items: [{
+    	xtype: 'view.areasNotaveisForm'
+    }],
+	
+	
+    buttons: [{
+		  // Interceptado pelo controller 'MCLM.view.apolo.feicoes.AreasNotaveisController'	
+	      text: 'Fechar',
+	      handler: 'closeAnWindow'
+	},{
+			  // Interceptado pelo controller 'MCLM.view.apolo.feicoes.AreasNotaveisController'	
+	      text: 'Gravar Feição',
+	      handler: 'submitAn'
+	}],	
     
 });

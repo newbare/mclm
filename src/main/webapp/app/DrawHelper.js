@@ -247,8 +247,9 @@ Ext.define('MCLM.DrawHelper', {
 				    me.drawedFeature.set( 'feicaoDescricao', me.feicaoDescricao );
 				    me.drawedFeature.set( 'feicaoNome', me.feicaoNome );
 				    me.drawedFeature.set( 'feicaoTipo', me.feicaoTipo );
-				    me.drawedFeature.set( 'feicaoEstiloId', me.feicaoIdEstilo );
+				    //me.drawedFeature.set( 'feicaoEstiloId', me.feicaoIdEstilo );
 				    me.drawedFeature.set( 'feicaoDestinoId', me.feicaoDestinoId );
+				    me.drawedFeature.set( 'feicaoEstilo', me.styleData );
 				    
 				    var center = 0; var radius = 0;
 				    if ( me.feicaoTipo == 'Circle' ) {

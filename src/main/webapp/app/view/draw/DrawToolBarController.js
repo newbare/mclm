@@ -66,6 +66,7 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     	Ext.getCmp('drawSquareBtn').enable();
     	Ext.getCmp('drawCircleBtn').enable();
     	Ext.getCmp('saveDrawableBtn').enable();
+    	
     	MCLM.DrawHelper.init(feicaoNome, feicaoDescricao, idEstilo, feicaoDestinoId,feicaoDestino);
     	
     	var styleCombo = Ext.getCmp("idFeicaoStyle");
@@ -120,24 +121,33 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     	if ( !anWindow ) { 
     		anWindow = Ext.create('MCLM.view.apolo.feicoes.AreasNotaveisWindow');
     	}
-    	anWindow.show();	    	
+    	anWindow.show();	  
     	
+    	console.log( obj );
+    	
+    	Ext.getCmp("anData").setValue( data );
+    	Ext.getCmp("mappolycolor").setValue( obj.properties.feicaoEstilo.polygonFillColor );
     	
     	switch ( obj.properties.feicaoDestinoId ) {
     	  case 'AN.A':
-    	    //
+    		  anWindow.setTitle( "Áreas Agrícolas" );
+    		  Ext.getCmp("cat_code").setValue( "AGR" );
     	    break;
     	  case 'AN.E':
-    	    //
+    		  anWindow.setTitle( "Áreas de Endemias" );
+    		  Ext.getCmp("cat_code").setValue( "END" );
     	    break;
     	  case 'AN.I':
-      	    //
+    		  anWindow.setTitle( "Áreas de Interesse" );
+    		  Ext.getCmp("cat_code").setValue( "INT" );
       	    break;
     	  case 'AN.IB':
-    		  //
+    		  anWindow.setTitle( "Áreas de Insumos Biocombustíveis" );
+    		  Ext.getCmp("cat_code").setValue( "BIO" );
     		  break;
     	  case 'AN.PP':
-    		  //
+    		  anWindow.setTitle( "Áreas de Produção Pecuária" );
+    		  Ext.getCmp("cat_code").setValue( "PEC" );
     		  break;
     	  case 'OC':
     		  //

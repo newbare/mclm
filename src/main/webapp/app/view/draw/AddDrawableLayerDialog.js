@@ -35,7 +35,7 @@ Ext.define('MCLM.view.draw.AddDrawableLayerDialog', {
         allowBlank : false,
     },{
 		xtype:'combobox',
-		fieldLabel:'Destino',
+		fieldLabel:'Tipo',
 		name:'feicaoDestino',
 		id:'feicaoDestino',
 		valueField: 'id',
