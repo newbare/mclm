@@ -60,7 +60,7 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 					        var length = layers.getLength(); 
 					        	
 					        if ( (layerType != 'FDR') && serialId) {
-
+					        	
 								for (var i = 0; i < length; i++) {
 									var serial = layers.item(i).get('serialId');
 									var opacity = layers.item(i).getOpacity() * 10;
@@ -77,7 +77,6 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 					    });	
 						
 						
-						
 						trabalhoTreeStore.sync({
 							 params: {
 							 	cenario: MCLM.Globals.currentScenery
@@ -90,6 +89,7 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 							    Ext.Msg.alert('Falha ao gravar camadas do Cenário', 'Erro desconhecido ao gravar camadas do cenário', me.onCloseWindow);
 							 }						 
 						});
+						
 					} else {
 						Ext.Msg.alert('Sucesso', 'Cenário gravado, porém não possui camadas.', me.onCloseWindow);
 					}

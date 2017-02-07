@@ -247,7 +247,6 @@ Ext.define('MCLM.DrawHelper', {
 				    me.drawedFeature.set( 'feicaoDescricao', me.feicaoDescricao );
 				    me.drawedFeature.set( 'feicaoNome', me.feicaoNome );
 				    me.drawedFeature.set( 'feicaoTipo', me.feicaoTipo );
-				    //me.drawedFeature.set( 'feicaoEstiloId', me.feicaoIdEstilo );
 				    me.drawedFeature.set( 'feicaoDestinoId', me.feicaoDestinoId );
 				    me.drawedFeature.set( 'feicaoEstilo', me.styleData );
 				    

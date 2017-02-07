@@ -37,6 +37,7 @@
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.DataLayer"/>		
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.DictionaryItem"/>		
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.FeatureStyle"/>		
+		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Feicao"/>		
 		
 	</session-factory> 
 </hibernate-configuration>

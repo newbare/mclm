@@ -115,7 +115,106 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     		return true;
     	}
     	
+    	console.log("Nota: Continuar a criação de areas de interesse pela feicao.");
+    	console.log("MCLM.view.draw.DrawToolBarController : 119");
+    	//console.log( data );
+
     	var obj = JSON.parse( data );
+    	
+    	
+    	switch ( obj.properties.feicaoDestinoId ) {
+	  	  case 'AN.A':
+	  		  Ext.Msg.alert('Erro','Não implementado ainda.' );
+	  		  //anWindow.setTitle( "Áreas Agrícolas" );
+	  		  //Ext.getCmp("cat_code").setValue( "AGR" );
+	  	      break;
+	  	  case 'AN.E':
+	  		  Ext.Msg.alert('Erro','Não implementado ainda.' );
+	  		  //anWindow.setTitle( "Áreas de Endemias" );
+	  		  //Ext.getCmp("cat_code").setValue( "END" );
+	  	      break;
+	  	  case 'AN.I':
+	  		  Ext.Msg.alert('Erro','Não implementado ainda.' );
+	  		  //anWindow.setTitle( "Áreas de Interesse" );
+	  		  //Ext.getCmp("cat_code").setValue( "INT" );
+	    	  break;
+	  	  case 'AN.IB':
+	  		  Ext.Msg.alert('Erro','Não implementado ainda.' );
+	  		  //anWindow.setTitle( "Áreas de Insumos Biocombustíveis" );
+	  		  //Ext.getCmp("cat_code").setValue( "BIO" );
+	  		  break;
+	  	  case 'AN.PP':
+	  		  Ext.Msg.alert('Erro','Não implementado ainda.' );
+	  		  //anWindow.setTitle( "Áreas de Produção Pecuária" );
+	  		  //Ext.getCmp("cat_code").setValue( "PEC" );
+	  		  break;
+	  	  case 'OC':
+	  		  Ext.Msg.alert('Erro','Não implementado ainda.' );
+	  		  break;
+	  	  case 'CE':
+	  		  
+		  		Ext.Ajax.request({
+				       url: 'newFeicao',
+				       params: {
+				           'data': data,
+				       },       
+				       success: function(response, opts) {
+				    	   var respObj = Ext.decode( response.responseText );
+				    	   
+				    	   if( respObj.success ) {
+					    	   
+				    		   var layerAlias = respObj.layerAlias;
+				    		   
+				    		   var serialId = "FE" + MCLM.Functions.guid().substring(1, 8);
+					    	   
+				    	    	var trabalhoTree = Ext.getCmp('trabalhoTree');
+				    	    	var root = trabalhoTree.getRootNode();
+				    	    	
+				    	    	root.appendChild({
+				    			   'text' : obj.properties.feicaoNome,
+				    			   'layerAlias' : layerAlias,
+				    			   'layerName' : obj.properties.feicaoNome,
+				    			   'layerType' : 'FEI',
+				    			   'description' : obj.properties.feicaoDescricao,
+				    			   'readOnly' : false,
+				    			   'checked' : true,
+				    			   'selected' : true,
+				    			   'institute' : obj.properties.feicaoTipo,
+				    			   'indexOrder' : 0,
+				    			   'iconCls' : 'fei-icon',
+				    			   'leaf' : true,
+				    			   'idNodeParent' : 0,
+				    			   'serialId' : serialId,
+				    			   
+				    			   // PRECISA TER O IDLAYER.
+				    			   // 
+				    	    	});			    		   
+				    		   
+					    	   
+					    	   Ext.Msg.alert('Sucesso','Feição gravada com sucesso.');
+				    	   } else {
+					    	   Ext.Msg.alert('Erro','Erro ao gravar Feição: ' + respObj.msg );
+				    	   }
+				       },
+				       failure: function(response, opts) {
+				    	   var respObj = Ext.decode( response.responseText );
+				    	   Ext.Msg.alert('Erro','Erro ao gravar Feição: ' + respObj.msg );
+				       }
+				});   	  		  
+	  		  
+	  		  
+	  		  break;
+	  	  case 'NE':
+	  		  //
+	  		  break;
+	  	  default:
+	  	      //
+	  	      break;
+	  	}    	
+    	
+    	Ext.getCmp("drawToolBar").close();
+    	
+    	/*
     	
     	var anWindow = Ext.getCmp("anWindow");
     	if ( !anWindow ) { 
@@ -123,63 +222,12 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     	}
     	anWindow.show();	  
     	
-    	console.log( obj );
-    	
     	Ext.getCmp("anData").setValue( data );
     	Ext.getCmp("mappolycolor").setValue( obj.properties.feicaoEstilo.polygonFillColor );
+    	Ext.get('mappolycolorBox').setStyle('background-color', obj.properties.feicaoEstilo.polygonFillColor );
     	
-    	switch ( obj.properties.feicaoDestinoId ) {
-    	  case 'AN.A':
-    		  anWindow.setTitle( "Áreas Agrícolas" );
-    		  Ext.getCmp("cat_code").setValue( "AGR" );
-    	    break;
-    	  case 'AN.E':
-    		  anWindow.setTitle( "Áreas de Endemias" );
-    		  Ext.getCmp("cat_code").setValue( "END" );
-    	    break;
-    	  case 'AN.I':
-    		  anWindow.setTitle( "Áreas de Interesse" );
-    		  Ext.getCmp("cat_code").setValue( "INT" );
-      	    break;
-    	  case 'AN.IB':
-    		  anWindow.setTitle( "Áreas de Insumos Biocombustíveis" );
-    		  Ext.getCmp("cat_code").setValue( "BIO" );
-    		  break;
-    	  case 'AN.PP':
-    		  anWindow.setTitle( "Áreas de Produção Pecuária" );
-    		  Ext.getCmp("cat_code").setValue( "PEC" );
-    		  break;
-    	  case 'OC':
-    		  //
-    		  break;
-    	  case 'CE':
-    		  //
-    		  break;
-    	  case 'NE':
-    		  //
-    		  break;
-    	  default:
-    	      //
-    	      break;
-    	}    	
     	
-    	// Passar para o controller de 'MCLM.view.apolo.feicoes.AreasNotaveisWindow'
-    	/*
-		Ext.Ajax.request({
-		       url: 'newFeicao',
-		       params: {
-		           'data': data,
-		       },       
-		       success: function(response, opts) {
-		    	   Ext.Msg.alert('Sucesso','Feição gravada com sucesso.' );
-		    	   Ext.getCmp("drawToolBar").close();
-		       },
-		       failure: function(response, opts) {
-		    	   Ext.Msg.alert('Erro','Erro ao gravar Feição.' );
-		       }
-		});
     	*/
-    	
     }
     
 });

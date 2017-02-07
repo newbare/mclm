@@ -106,8 +106,12 @@ Ext.define('MCLM.view.config.ConfigForm', {
         },
         
         
-        
-        
+        {
+            fieldLabel: 'Endereço REST Apolo',
+            width: 350,
+            allowBlank : false,
+            name: 'apoloServer',
+        },
         
         {
             fieldLabel: 'Fator de Busca da Interrogação',

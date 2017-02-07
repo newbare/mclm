@@ -49,16 +49,20 @@ public class SaveConfigAction extends BasicActionClass {
 				int idConfig = Integer.valueOf( request.getParameter("idConfig") );
 
 				int routingPort = Integer.valueOf( request.getParameter("routingPort") );
-				
 
 				String routingServer = request.getParameter("routingServer");
 				String routingUser = request.getParameter("routingUser");
 				String routingPassword = request.getParameter("routingPassword");
 				String routingDatabase = request.getParameter("routingDatabase");
 				
+				String apoloServer = request.getParameter("apoloServer");
+
+				
 				Config config = new Config(idConfig, geoserverUrl, baseLayer, useProxy, externalLayersToLocalServer, externalWorkspaceName, 
 							proxyHost, nonProxyHosts, proxyUser, proxyPassword, proxyPort, geoserverUser, 
-							geoserverPassword, mapZoom, queryFactorRadius, mapCenter, shapeFileTargetPath, routingServer, routingUser, routingPassword, routingPort, routingDatabase );	
+							geoserverPassword, mapZoom, queryFactorRadius, mapCenter, shapeFileTargetPath, 
+							routingServer, routingUser, routingPassword, routingPort, routingDatabase,	
+							apoloServer);	
 				
 				
 				ConfigService cs = new ConfigService();

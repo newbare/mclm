@@ -137,6 +137,11 @@
 	background-repeat: no-repeat;
 }
 
+.fei-icon {
+	background-image: url('../img/polygon.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .lock-icon {
 	background-image: url('../img/lock.svg') !important;
 	background-repeat: no-repeat;

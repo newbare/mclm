@@ -10,8 +10,8 @@ Ext.define('MCLM.view.apolo.feicoes.AreasNotaveisWindow', {
 	id:'anWindow',    	
 	xtype: 'anWindow',
 	title : "Áreas Notáveis",
-	width : 550,
-	height: 400,
+	width : 750,
+	height: 450,
 	
 	resizable : false,
 	

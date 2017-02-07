@@ -47,7 +47,6 @@ public class ConfigService {
 			result = "{ \"error\": true, \"msg\": \"" + e.getMessage()+ ".\" }";
 			e.printStackTrace();
 		}
-		//System.out.println( result );
 		
 		return result;
 	}
@@ -87,6 +86,7 @@ public class ConfigService {
 		oldConfig.setRoutingUser( config.getRoutingUser() );
 		oldConfig.setRoutingDatabase( config.getRoutingDatabase() );
 		
+		oldConfig.setApoloServer( config.getApoloServer() );
 		
 		rep.newTransaction();
 		rep.updateConfig( oldConfig );

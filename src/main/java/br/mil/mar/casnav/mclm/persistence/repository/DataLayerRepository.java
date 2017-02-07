@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.FeatureStyle;
+import br.mil.mar.casnav.mclm.persistence.entity.Feicao;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.InsertException;
@@ -150,5 +151,21 @@ public class DataLayerRepository extends BasicRepository {
 		}
 		closeSession();
 		return styles;
+	}
+
+	public Feicao insertFeicao(Feicao feicao) throws Exception {
+		DaoFactory<Feicao> df = new DaoFactory<Feicao>();
+		IDao<Feicao> fm = df.getDao(this.session, Feicao.class);
+		
+		try {
+			fm.insertDO( feicao );
+			commit();
+		} catch (InsertException e) {
+			rollBack();
+			closeSession();
+			throw e;
+		}
+		closeSession();
+		return feicao;
 	}		
 }

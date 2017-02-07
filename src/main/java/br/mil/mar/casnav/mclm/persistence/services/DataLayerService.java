@@ -9,6 +9,7 @@ import br.mil.mar.casnav.mclm.misc.FeatureStylesCollection;
 import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.FeatureStyle;
+import br.mil.mar.casnav.mclm.persistence.entity.Feicao;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.entity.PostgresTable;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -214,6 +215,39 @@ public class DataLayerService {
 
 	private List<FeatureStyle> getStyleList() throws Exception {
 		return rep. getStyleList();
+	}
+
+	public String insertFeicao(String data) {
+		String result = "";
+		
+		try {
+			//System.out.println( data );
+		
+			JSONObject itemObj = new JSONObject( data );
+			JSONObject geometria = itemObj.getJSONObject("geometry") ; 
+			JSONObject propriedades = itemObj.getJSONObject("properties"); 
+			
+			String geomType = geometria.getString("type");  
+			String feicaoNome = propriedades.getString("feicaoNome");  
+			String feicaoDescricao = propriedades.getString("feicaoDescricao");  
+			
+			System.out.println( geomType + "  " + feicaoNome + "  " + feicaoDescricao );		
+	
+			
+			Feicao feicao = new Feicao( geomType, feicaoNome, feicaoDescricao, data );
+			
+			feicao = rep.insertFeicao( feicao );
+			
+			String layerAlias = feicaoNome + ":" + feicao.getIdFeicao();
+			
+			result = "{ \"success\": true, \"msg\": \"Feição criada com sucesso.\",\"layerAlias\":\""+ layerAlias+ "\"}";
+			
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			result = "{ \"error\": true, \"msg\": \""+e.getMessage()+".\" }";	
+		}
+
+		return result;
 	}
 
 	

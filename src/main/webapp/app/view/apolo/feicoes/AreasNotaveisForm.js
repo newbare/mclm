@@ -11,13 +11,21 @@ Ext.define('MCLM.view.apolo.feicoes.AreasNotaveisForm', {
     layout: {
         type: 'hbox',
         align: 'stretch'
-    },      
-  
+    },    
+    
     items: [{
     	xtype: 'container',
 		layout: 'vbox',    
 		padding: '5',
-
+        flex: 1,
+        
+        defaults: {
+            anchor: '100%',
+            msgTarget: 'under',
+            labelWidth: 150,
+            width: 350,
+        },
+        
 		items: [{
 			xtype: 'hidden',
 	    	fieldLabel: 'Json Data',
@@ -25,14 +33,16 @@ Ext.define('MCLM.view.apolo.feicoes.AreasNotaveisForm', {
 	    	id: 'anData',
 	    	allowBlank : false,
 	    },{
-			xtype: 'hidden',
-	    	fieldLabel: 'Código da Categoria', //INT - Interesse, END - Endemias ou Condições Sanitárias adversas, AGR - Agrícola, PEC - Produção Pecuária, BIO - Insumos de Biocombustíveis.
+	    	// INT - Interesse, END - Endemias ou Condições Sanitárias adversas, AGR - Agrícola, 
+	    	// PEC - Produção Pecuária, BIO - Insumos de Biocombustíveis.
+	    	xtype: 'hidden',
+	    	fieldLabel: 'Código da Categoria', 
 	    	name: 'cat_code',
 	    	id: 'cat_code',
 	    	allowBlank : false,
 	    },{
 			xtype: 'textfield',
-	    	fieldLabel: 'Código da Área Notável',
+	    	fieldLabel: 'Código',
 	    	name: 'codigo',
 	    	id: 'codigo',
 	    	allowBlank : false,
@@ -44,27 +54,31 @@ Ext.define('MCLM.view.apolo.feicoes.AreasNotaveisForm', {
 	    	allowBlank : false,
 	    },{
 			xtype: 'textfield',
-	    	fieldLabel: 'orgid_controladora',
-	    	name: 'orgid_controladora',
-	    	id: 'orgid_controladora',
-	    	allowBlank : false,
+	    	fieldLabel: 'Área Km2',
+	    	name: 'areakm2',
+	    	id: 'areakm2',
 	    },{
-			xtype: 'textfield',
-	    	fieldLabel: 'Contato',
+			xtype: 'textarea',
+	    	fieldLabel: 'Inf. Contato',
 	    	name: 'inf_contato',
 	    	id: 'inf_contato',
-	    	allowBlank : false,
 	    },{
-			xtype: 'textfield',
-	    	fieldLabel: 'Informações Adicionais',
+			xtype: 'textarea',
+	    	fieldLabel: 'Características Notáveis',
 	    	name: 'inf_adicionais',
 	    	id: 'inf_adicionais',
 	    	allowBlank : false,
 	    },{
 			xtype: 'textfield',
-	    	fieldLabel: 'Link WEB',
+	    	fieldLabel: 'Referência WEB',
 	    	name: 'link_web',
 	    	id: 'link_web',
+	    	allowBlank : false,
+	    },{
+			xtype: 'textfield',
+	    	fieldLabel: 'orgid_controladora',
+	    	name: 'orgid_controladora',
+	    	id: 'orgid_controladora',
 	    	allowBlank : false,
 	    },{
 			xtype: 'textfield',
@@ -73,7 +87,15 @@ Ext.define('MCLM.view.apolo.feicoes.AreasNotaveisForm', {
 	    	id: 'simb_poligono_id',
 	    	allowBlank : false,
 	    },{
-			xtype: 'textfield',
+			xtype: 'component',
+			autoEl: 'div',
+			width : 250,
+			height: 50,
+			id:'mappolycolorBoxContainer',
+			style : 'width:300px',
+			html : '<div style="line-height:25px;width:155px;float:left">Cor no Mapa:</div><div style="border:1px solid black;float:left;width:25px;height:25px" id="mappolycolorBox"></div>',
+	    },{
+			xtype: 'hidden',
 	    	fieldLabel: 'mappolycolor',
 	    	name: 'mappolycolor',
 	    	id: 'mappolycolor',
@@ -83,7 +105,15 @@ Ext.define('MCLM.view.apolo.feicoes.AreasNotaveisForm', {
     	xtype: 'container',
 		layout: 'vbox',    
 		padding: '5',
+		flex: 1,
 
+        defaults: {
+            anchor: '100%',
+            msgTarget: 'under',
+            labelWidth: 150,
+            width: 350,
+        },
+		
 		items: [{
 			xtype: 'textfield',
 	    	fieldLabel: 'Json Data 2',
@@ -98,5 +128,15 @@ Ext.define('MCLM.view.apolo.feicoes.AreasNotaveisForm', {
 	    	allowBlank : false,
 	    }]
 
-	}]
+	}],
+	
+    listeners: {
+
+		afterrender:function(){
+			//
+		}
+    
+    }
+    
+		
 });
