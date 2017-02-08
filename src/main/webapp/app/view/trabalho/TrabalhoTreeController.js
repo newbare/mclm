@@ -86,7 +86,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		root.removeAll();
 		MCLM.Globals.currentScenery = -1;
 		
-		var cloneSceneryButton = Ext.getCmp('id803'); 
+		var cloneSceneryButton = Ext.getCmp('svCenaryAsBtn'); 
 		cloneSceneryButton.disable();
 		
 		
@@ -225,7 +225,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     		node.set('checked', false );
     		me.toggleNode( node );
 		});			    	
-		// this.fireEvent( "clearMainTree");	    	
+			
 		
     	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
 		trabalhoTreeStore.load({
@@ -396,19 +396,30 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		var checked = node.get('checked');
 		var layerName = node.get('layerName');
 		var serialId = node.get('serialId' );
+		var layerType = node.get('layerType' );
 		
 		if ( layerName == "" ) return;
 		
 		if( checked == true ) {
-			// adiciona a camada no mapa
-			var layer = MCLM.Map.addLayer( node );
-			this.fireEvent('mountImagePreview');
+			if( layerType == "FEI") {
+				MCLM.Map.addFeicao( node.get("feicao"), node );
+			} else {
+				// adiciona a camada no mapa
+				var layer = MCLM.Map.addLayer( node );
+				this.fireEvent('mountImagePreview');
+			}
 		} else {
-			// Remove a camada do mapa
-			MCLM.Map.removeLayer( serialId );
-			// Interceptado por MCLM.view.stack.LayerStackController
-			this.fireEvent('mountImagePreview');
+			if( layerType == "FEI") {
+				MCLM.Map.removeFeicao( node.get("feicao"), node );
+			} else {
+				// Remove a camada do mapa
+				MCLM.Map.removeLayer( serialId );
+				// Interceptado por MCLM.view.stack.LayerStackController
+				this.fireEvent('mountImagePreview');
+			}
 		}	
+		
+		
 	},
 	
     viewready: function (tree) {

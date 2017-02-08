@@ -380,7 +380,6 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Converte uma String GeoJSON para uma camada Vector
 		createVectorLayerFromGeoJSON : function( geojsonStr, node ) {
-
         	var dataLayer = node.get("dataLayer");
         	var tableName = dataLayer.tableName;
         	var database = dataLayer.database;
@@ -389,8 +388,7 @@ Ext.define('MCLM.Map', {
 			var layerAlias = node.get( 'layerAlias' );	
 			var layerStyle = geojsonStr.featureStyle;
 			var clustered = false;
-
-			//console.log( layerStyle );
+		
 			
 			// Carregas as features
 	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr.data, {
@@ -430,11 +428,11 @@ Ext.define('MCLM.Map', {
 			// Estiliza as features baseado nos dados da tabela "FeatureStyle"
 			// que eh atributo da tabela "DataLayer", que eh atributo de "Node"
 			var customStyleFunction = function( feature, resolution ) {
-				
 				var featureGeomType = feature.getGeometry().getType();
 				var props = feature.getProperties();
 				var resultStyles = [];
 				
+				console.log( props.label ); <<< a feature esta vindo sem propriedade ....
 				
 				//console.log( me.replacePattern("A vaca caiu ${areakm2} e saiu voando até ${nome}...", props)  )
 
@@ -569,7 +567,6 @@ Ext.define('MCLM.Map', {
 		    	return resultStyles;
 			};
 
-			
 			
 			if ( clustered ) {
 				var vectorLayer = new ol.layer.Vector({
@@ -1088,13 +1085,46 @@ Ext.define('MCLM.Map', {
 			
 		},
 		// --------------------------------------------------------------------------------------------
+		// Adiciona uma feicao ao mapa
+		addFeicao : function( feicao, node ) {
+			var geomType = feicao.geomType;
+			var idFeicao = feicao.idFeicao;
+			var nome = feicao.nome;
+			var meta = Ext.decode( feicao.metadados );
+			var geometry = meta.features[0].geometry;
+			var properties = meta.features[0].properties;
+			var estilo = properties.feicaoEstilo;
+			var feicaoNome = properties.feicaoNome;
+			var circleCenter = properties.circleCenter;
+			var circleRadius = properties.circleRadius;
+			
+        	var dataLayer = {};
+        	dataLayer.tableName = feicaoNome ;
+        	dataLayer.database = geomType;
+        	node.set("dataLayer",dataLayer);
+        	
+			var jsonstr = {};
+			jsonstr.featureStyle = estilo;
+			jsonstr.data = Ext.encode( meta );
+			this.createVectorLayerFromGeoJSON( jsonstr, node );
+			
+		},
+		// --------------------------------------------------------------------------------------------
+		// Remove uma feicao do mapa
+		removeFeicao : function( feicao, node ) {
+			var geomType = feicao.geomType;
+			var idFeicao = feicao.idFeicao;
+			var nome = feicao.nome;
+
+			console.log("Remover feicao " + nome + " " + geomType + "-" + idFeicao);
+
+		},
 		
 		
 		
 		
-		
-		
-		
+		// --------------------------------------------------------------------------------------------
+		// TESTE - APAGAR
 		showLayers : function () {
 			var layers = this.map.getLayers();
 			var length = layers.getLength();

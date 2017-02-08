@@ -108,21 +108,18 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     
     saveDrawableLayer : function() {
     	var me = this;
-    	var data = MCLM.DrawHelper.asJson;
+    	var data = MCLM.DrawHelper.getAsJson();
+    	var obj = JSON.parse( data );
     	
-    	if ( !data ) {
+    	if ( !obj.features[0] ) {
     		Ext.Msg.alert('Erro','Não existem dados a serem salvos. Desenhe ao menos um objeto nesta Feição.' );
     		return true;
     	}
     	
     	console.log("Nota: Continuar a criação de areas de interesse pela feicao.");
     	console.log("MCLM.view.draw.DrawToolBarController : 119");
-    	//console.log( data );
 
-    	var obj = JSON.parse( data );
-    	
-    	
-    	switch ( obj.properties.feicaoDestinoId ) {
+    	switch ( obj.features[0].properties.feicaoDestinoId ) {
 	  	  case 'AN.A':
 	  		  Ext.Msg.alert('Erro','Não implementado ainda.' );
 	  		  //anWindow.setTitle( "Áreas Agrícolas" );
@@ -162,36 +159,47 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
 				    	   var respObj = Ext.decode( response.responseText );
 				    	   
 				    	   if( respObj.success ) {
-					    	   
+
+				    		   // A feicao foi gravada no banco. Cria um no para ela na arvore do cenario
 				    		   var layerAlias = respObj.layerAlias;
-				    		   
 				    		   var serialId = "FE" + MCLM.Functions.guid().substring(1, 8);
-					    	   
-				    	    	var trabalhoTree = Ext.getCmp('trabalhoTree');
-				    	    	var root = trabalhoTree.getRootNode();
-				    	    	
-				    	    	root.appendChild({
-				    			   'text' : obj.properties.feicaoNome,
+				    		   var trabalhoTree = Ext.getCmp('trabalhoTree');
+				    		   var root = trabalhoTree.getRootNode();
+				    		   var idLayer = respObj.idLayer;
+				    		   
+				    		   var newId = 0;
+				    		   root.cascadeBy( function(n) { 
+						    		var temp = n.get('id');
+						    		if ( temp > newId ) newId = temp;
+				    		   });
+				    		   newId++;
+				    		   
+				    		   newNode =  root.appendChild({
+				    			   'id' : newId,
+				    			   'text' : obj.features[0].properties.feicaoNome,
 				    			   'layerAlias' : layerAlias,
-				    			   'layerName' : obj.properties.feicaoNome,
+				    			   'layerName' : obj.features[0].properties.feicaoNome,
 				    			   'layerType' : 'FEI',
-				    			   'description' : obj.properties.feicaoDescricao,
+				    			   'description' : obj.features[0].properties.feicaoDescricao,
 				    			   'readOnly' : false,
-				    			   'checked' : true,
-				    			   'selected' : true,
-				    			   'institute' : obj.properties.feicaoTipo,
+				    			   'checked' : false,
+				    			   'selected' : false,
+				    			   'institute' : obj.features[0].properties.feicaoTipo,
 				    			   'indexOrder' : 0,
 				    			   'iconCls' : 'fei-icon',
 				    			   'leaf' : true,
 				    			   'idNodeParent' : 0,
 				    			   'serialId' : serialId,
-				    			   
-				    			   // PRECISA TER O IDLAYER.
-				    			   // 
-				    	    	});			    		   
+				    			   'idNodeData' : idLayer,
+				    			   'feicao' : obj.features[0]
+				    		   });			    		   
 				    		   
-					    	   
-					    	   Ext.Msg.alert('Sucesso','Feição gravada com sucesso.');
+				    		   // Torna a aba de cenario ativa, caso nao esteja
+				    		   var painelEsquerdo = Ext.getCmp("painelesquerdo");
+				    		   var tabTrabalho = Ext.getCmp("abaTrabalho"); 
+				    		   painelEsquerdo.setActiveTab(tabTrabalho);
+				    		   
+				    		   Ext.Msg.alert('Sucesso','Feição gravada com sucesso.');
 				    	   } else {
 					    	   Ext.Msg.alert('Erro','Erro ao gravar Feição: ' + respObj.msg );
 				    	   }

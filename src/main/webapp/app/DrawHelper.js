@@ -12,7 +12,6 @@ Ext.define('MCLM.DrawHelper', {
 		feicaoIdEstilo : null,
 		styleData : null,
 		lastCoordinates : 0,
-		asJson : null,
 		feicaoDestinoId : null,
 		feicaoDestino : null,
 		
@@ -63,6 +62,8 @@ Ext.define('MCLM.DrawHelper', {
 				var resultStyles = [];
 				var featureGeomType = feature.getGeometry().getType();
 				var props = feature.getProperties();
+				
+				feature.set( 'feicaoEstilo', me.styleData );
 				
 				// Circulo
 	        	var hexColor = me.styleData.iconColor;
@@ -245,6 +246,7 @@ Ext.define('MCLM.DrawHelper', {
 				    var geometry = me.drawedFeature.getGeometry();
 				    
 				    me.drawedFeature.set( 'feicaoDescricao', me.feicaoDescricao );
+				    me.drawedFeature.set( 'label', me.feicaoDescricao );
 				    me.drawedFeature.set( 'feicaoNome', me.feicaoNome );
 				    me.drawedFeature.set( 'feicaoTipo', me.feicaoTipo );
 				    me.drawedFeature.set( 'feicaoDestinoId', me.feicaoDestinoId );
@@ -259,13 +261,23 @@ Ext.define('MCLM.DrawHelper', {
 				    me.drawedFeature.set('circleCenter', center );
 				    me.drawedFeature.set('circleRadius', radius );
 				    
-				    me.asJson = geojson.writeFeature( me.drawedFeature );
-				    
 				});
 				
 				MCLM.Map.map.addInteraction( this.draw );
 			}
-		}		
+		},
+		
+		getAsJson : function() {
+			var geojson  = new ol.format.GeoJSON();
+		    var features = this.vectorSource.getFeatures();
+		    
+		    var jsonData = geojson.writeFeatures( features,{
+                featureProjection: ol.proj.get('EPSG:3857'),
+                dataProjection: ol.proj.get('EPSG:4326')
+            });
+		    
+		    return jsonData;
+		}
 
 		
 	}

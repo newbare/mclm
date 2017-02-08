@@ -35,7 +35,6 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 					// a mensagem de sucesso.
 					MCLM.Globals.currentScenery = action.result.idScenery;
 					
-					
 					var sceneryName = Ext.getCmp('nomeCenarioID').getValue();
 			    	var trabalhoTree = Ext.getCmp('trabalhoTree');
 			    	var root = trabalhoTree.getRootNode();
@@ -60,7 +59,6 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 					        var length = layers.getLength(); 
 					        	
 					        if ( (layerType != 'FDR') && serialId) {
-					        	
 								for (var i = 0; i < length; i++) {
 									var serial = layers.item(i).get('serialId');
 									var opacity = layers.item(i).getOpacity() * 10;
@@ -68,15 +66,12 @@ Ext.define('MCLM.view.cenarios.SaveCenarioController', {
 									if (serial === serialId) {
 							        	item.set("transparency", opacity );
 							        	item.set("layerStackIndex", i );
-							        	
 									}
 								}		        
-								
 					        }
-					        
 					    });	
 						
-						
+						// Grava as camadas...
 						trabalhoTreeStore.sync({
 							 params: {
 							 	cenario: MCLM.Globals.currentScenery

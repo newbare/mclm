@@ -2,6 +2,7 @@ package br.mil.mar.casnav.mclm.persistence.services;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import br.mil.mar.casnav.mclm.misc.DataLayersCollection;
@@ -46,6 +47,9 @@ public class DataLayerService {
 		return rep.getDataLayer(idDataLayer);
 	}
 
+	public Feicao getFeicao(int idFeicao) throws Exception{
+		return rep.getFeicao(idFeicao);
+	}
 
 	public void newTransaction() {
 		if ( !rep.isOpen() ) {
@@ -221,18 +225,17 @@ public class DataLayerService {
 		String result = "";
 		
 		try {
-			//System.out.println( data );
 		
 			JSONObject itemObj = new JSONObject( data );
-			JSONObject geometria = itemObj.getJSONObject("geometry") ; 
-			JSONObject propriedades = itemObj.getJSONObject("properties"); 
+			JSONArray featureColl = itemObj.getJSONArray("features");
+			
+			JSONObject feature0 = featureColl.getJSONObject(0); 
+			JSONObject geometria = feature0.getJSONObject("geometry") ; 
+			JSONObject propriedades = feature0.getJSONObject("properties"); 
 			
 			String geomType = geometria.getString("type");  
 			String feicaoNome = propriedades.getString("feicaoNome");  
 			String feicaoDescricao = propriedades.getString("feicaoDescricao");  
-			
-			System.out.println( geomType + "  " + feicaoNome + "  " + feicaoDescricao );		
-	
 			
 			Feicao feicao = new Feicao( geomType, feicaoNome, feicaoDescricao, data );
 			
@@ -240,7 +243,12 @@ public class DataLayerService {
 			
 			String layerAlias = feicaoNome + ":" + feicao.getIdFeicao();
 			
-			result = "{ \"success\": true, \"msg\": \"Feição criada com sucesso.\",\"layerAlias\":\""+ layerAlias+ "\"}";
+			NodeService ns = new NodeService();
+			NodeData node = new NodeData(0, "", feicaoDescricao, "Feição", layerAlias, feicaoNome, LayerType.FEI);
+			node.setReadOnly( false );
+			node = ns.addNode( node );					
+			
+			result = "{ \"success\": true, \"msg\": \"Feição criada com sucesso.\",\"layerAlias\":\""+ layerAlias+ "\",\"idLayer\":\""+node.getIdNodeData()+"\"}";
 			
 		} catch ( Exception e ) {
 			e.printStackTrace();

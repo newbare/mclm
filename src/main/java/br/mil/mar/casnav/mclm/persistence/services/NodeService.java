@@ -42,11 +42,11 @@ public class NodeService {
 		}
 	}	
 	
-	public void addNode( NodeData node ) throws Exception {
-        rep.insertNode( node );
-        
+	public NodeData addNode( NodeData node ) throws Exception {
+        node = rep.insertNode( node );
         DictionaryService ds = new DictionaryService();
         ds.updateDictionary( node );
+        return node;
 	}
 	
 	public void updateNode( NodeData node ) throws UpdateException, NotFoundException {
@@ -127,8 +127,11 @@ public class NodeService {
 		JSONArray arrayObj = new JSONArray();
 		for ( UserTableEntity ute : utes ) {
 			TreeNode tn = new TreeNode( ute, dss );
-			JSONObject itemObj = new JSONObject( tn );
-            arrayObj.put( itemObj );		
+			// Nao coloca feicao na arvore do catalogo...
+			if ( !tn.getLayerType().equals("FEI") ) {
+				JSONObject itemObj = new JSONObject( tn );
+	            arrayObj.put( itemObj );		
+			}
 		}
 		dss.closeSession();
 		rep.closeSession();

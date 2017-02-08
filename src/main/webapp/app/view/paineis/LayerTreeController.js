@@ -156,24 +156,35 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	var trabalhoTree = Ext.getCmp('trabalhoTree');
     	var root = trabalhoTree.getRootNode();
     	
-    	var copy = record.copy();    
+    	// clona o no da arvore
+    	var copy = record.copy();
+    	
     	var y = 0;
+    	// pega o maior id do cenario 
     	root.cascadeBy( function(n) { 
     		var temp = n.get('id');
     		if ( temp > y ) y = temp;
     	});
+    	// incrementa
     	y++;
+    	// troca o id que era da arvore pelo proximo id livre do cenario
     	copy.set('id', y);
+    	// o pai agora eh root
     	copy.set('idNodeParent', 0);
+    	// nao e somente leitura
     	copy.set('readOnly', false);
+    	// adiciona o novo no ao root do cenario
     	root.appendChild( copy );
-    	
+    	// se o novo no estava marcado na arvore principal, marca ele e o pai no cenario
     	if ( copy.get( 'checked' ) ) {
     		copy.set( 'selected', true );
     		root.set( 'checked', true );
     	}
+
+   	
     	
     },
+    
     // Adiciona uma nova pasta na arvore 
     addNewFolder : function( record ) {
 		var data = record.data;
