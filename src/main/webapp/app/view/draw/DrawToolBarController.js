@@ -109,6 +109,9 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     saveDrawableLayer : function() {
     	var me = this;
     	var data = MCLM.DrawHelper.getAsJson();
+    	var style = MCLM.DrawHelper.styleData;
+    	var idFeatureStyle = style.idFeatureStyle;
+    	
     	var obj = JSON.parse( data );
     	
     	if ( !obj.features[0] ) {
@@ -154,6 +157,7 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
 				       url: 'newFeicao',
 				       params: {
 				           'data': data,
+				           'idFeatureStyle' : idFeatureStyle
 				       },       
 				       success: function(response, opts) {
 				    	   var respObj = Ext.decode( response.responseText );

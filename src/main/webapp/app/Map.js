@@ -377,6 +377,30 @@ Ext.define('MCLM.Map', {
 			} catch ( err ) { }
 			return subject;
 		},
+		/*
+		formatRadius : function( Circle ) { 
+			var wgs84Sphere = new ol.Sphere(6378137);
+		    var radius; 
+		        if (true) { 
+		            var center = Circle.getCenter();
+		            var pointOnPerimeter = [center[0], center[1] + Circle.getRadius()]
+		            var sourceProj = this.map.getView().getProjection(); 
+		            var c1 = ol.proj.transform(center, sourceProj, 'EPSG:4326'); 
+		            var c2 = ol.proj.transform(pointOnPerimeter, sourceProj,'EPSG:4326'); 
+		            radius = wgs84Sphere.haversineDistance(c1, c2); 
+		        } else { 
+		             radius = Math.round(Circle.getRadius() * 100) / 100; 
+		        } 
+		        var output; 
+	            if (radius > 100) { 
+		            output = (Math.round(radius / 1000 * 100) / 100) + ' ' + 'km'; 
+		        } else { 
+		            output = (Math.round(radius * 100) / 100) + ' ' + 'm'; 
+		        } 
+		    return output; 
+		},		
+		*/
+		
 		// --------------------------------------------------------------------------------------------
 		// Converte uma String GeoJSON para uma camada Vector
 		createVectorLayerFromGeoJSON : function( geojsonStr, node ) {
@@ -414,7 +438,24 @@ Ext.define('MCLM.Map', {
 			    	clusterFeatureSource.addFeature(features[i]);
 			    	clustered = true;
 			    } else {
-			    	vectorSource.addFeature(features[i]);
+			    	var center = features[i].getProperties().circleCenter;
+			    	var radius = features[i].getProperties().circleRadius;
+			    	
+			    	if ( center != 0 && radius != 0 ) {
+			    		var theCircle = new ol.geom.Circle( center, radius );
+			    		var theFeature = new ol.Feature( theCircle );
+			    		
+			    		// Preciso levar as properiedades da feature antiga, mas manter a geometria da nova
+			    		var oldProperties = features[i].getProperties();
+			    		var newProperties = theFeature.getProperties();
+			    		
+			    		oldProperties.geometry = newProperties.geometry;
+			    		theFeature.setProperties( oldProperties, true );
+			    		
+			    		vectorSource.addFeature( theFeature );
+			    	} else {
+			    		vectorSource.addFeature( features[i] );
+			    	}
 			    }
 			}			
 			
@@ -428,11 +469,10 @@ Ext.define('MCLM.Map', {
 			// Estiliza as features baseado nos dados da tabela "FeatureStyle"
 			// que eh atributo da tabela "DataLayer", que eh atributo de "Node"
 			var customStyleFunction = function( feature, resolution ) {
+				
 				var featureGeomType = feature.getGeometry().getType();
 				var props = feature.getProperties();
 				var resultStyles = [];
-				
-				console.log( props.label ); <<< a feature esta vindo sem propriedade ....
 				
 				//console.log( me.replacePattern("A vaca caiu ${areakm2} e saiu voando até ${nome}...", props)  )
 
@@ -467,6 +507,26 @@ Ext.define('MCLM.Map', {
 				}
 				
 				// ------------------------------------------------------------------------------
+				if ( featureGeomType == 'Circle' )  {
+		        	var hexColor = layerStyle.iconColor;
+		        	var newColor = ol.color.asArray(hexColor);
+		        	newColor = newColor.slice();
+		        	newColor[3] = layerStyle.iconOpacity;	
+		        	
+		    		var circleStyle = new ol.style.Style({
+							fill: new ol.style.Fill({
+								color: newColor
+							}),
+							stroke: new ol.style.Stroke({
+								color: layerStyle.iconColor,
+								width: 2
+							})
+		    		});	
+		    		resultStyles.push( circleStyle );					
+				}
+		
+				
+				// ------------------------------------------------------------------------------
 		        if ( featureGeomType == 'MultiPolygon' || featureGeomType == 'Polygon' ) {
 
 		        	var hexColor = me.replacePattern(layerStyle.polygonFillColor, props);
@@ -490,8 +550,17 @@ Ext.define('MCLM.Map', {
 		        	
 				// ------------------------------------------------------------------------------
 		        // TEXT
-	        	var label = feature.getProperties().label;
+	        	var featureProperties = feature.getProperties();
+	        	if ( featureProperties.features ) {
+	        		// Eh um cluster de pontos...
+	        		if ( featureProperties.features.length > 0 ) {
+	        			featureProperties = featureProperties.features[0].getProperties();
+	        		}
+	        	}
+	        	
+	        	var label = featureProperties.label;
 	        	var font = layerStyle.textFont;
+	        	
 	        	if( label && font ) {
 	        		
 			        var featureText = new ol.style.Style({
@@ -1087,16 +1156,14 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Adiciona uma feicao ao mapa
 		addFeicao : function( feicao, node ) {
+			
+			
+			var estilo = feicao.style;
 			var geomType = feicao.geomType;
 			var idFeicao = feicao.idFeicao;
-			var nome = feicao.nome;
-			var meta = Ext.decode( feicao.metadados );
-			var geometry = meta.features[0].geometry;
-			var properties = meta.features[0].properties;
-			var estilo = properties.feicaoEstilo;
-			var feicaoNome = properties.feicaoNome;
-			var circleCenter = properties.circleCenter;
-			var circleRadius = properties.circleRadius;
+			var feicaoNome = feicao.nome;
+			var feicaoDescricao = feicao.descricao;
+			var featureCollection = Ext.decode( feicao.metadados );
 			
         	var dataLayer = {};
         	dataLayer.tableName = feicaoNome ;
@@ -1105,8 +1172,12 @@ Ext.define('MCLM.Map', {
         	
 			var jsonstr = {};
 			jsonstr.featureStyle = estilo;
-			jsonstr.data = Ext.encode( meta );
-			this.createVectorLayerFromGeoJSON( jsonstr, node );
+			jsonstr.data = feicao.metadados;	
+			
+//			console.log( feicao.metadados );
+
+			this.createVectorLayerFromGeoJSON( jsonstr, node );			
+			
 			
 		},
 		// --------------------------------------------------------------------------------------------

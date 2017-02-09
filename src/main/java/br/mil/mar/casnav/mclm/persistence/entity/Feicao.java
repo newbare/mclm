@@ -2,9 +2,12 @@ package br.mil.mar.casnav.mclm.persistence.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -28,15 +31,20 @@ public class Feicao {
 	@Column( columnDefinition="TEXT" )
 	private String metadados;
 	
+	@ManyToOne()
+	@JoinColumn(name="id_feature_style", foreignKey = @ForeignKey(name = "fk_datalayer_feature_style"))
+	private FeatureStyle style;	
+	
 	public Feicao() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Feicao( String geomType, String nome, String descricao, String metadados ) {
+	public Feicao( String geomType, String nome, String descricao, String metadados, FeatureStyle style ) {
 		this.nome = nome;
 		this.descricao = descricao;
 		this.metadados = metadados;
 		this.geomType = geomType;
+		this.style = style;
 	}
 
 	public int getIdFeicao() {
@@ -77,6 +85,14 @@ public class Feicao {
 
 	public void setGeomType(String geomType) {
 		this.geomType = geomType;
+	}
+
+	public FeatureStyle getStyle() {
+		return style;
+	}
+
+	public void setStyle(FeatureStyle style) {
+		this.style = style;
 	}
 	
 	

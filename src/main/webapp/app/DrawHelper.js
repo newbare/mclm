@@ -62,9 +62,7 @@ Ext.define('MCLM.DrawHelper', {
 				var resultStyles = [];
 				var featureGeomType = feature.getGeometry().getType();
 				var props = feature.getProperties();
-				
-				feature.set( 'feicaoEstilo', me.styleData );
-				
+								
 				// Circulo
 	        	var hexColor = me.styleData.iconColor;
 	        	var newColor = ol.color.asArray(hexColor);
@@ -169,7 +167,38 @@ Ext.define('MCLM.DrawHelper', {
 			    	  }
 				} catch ( err ) {
 		    		  
-		    	  }				
+		    	}		
+				
+				
+				// Texto
+	        	var label = feature.getProperties().label;
+	        	var font = me.styleData.textFont;
+	        	
+	        	if( label && font ) {
+	        		
+			        var featureText = new ol.style.Style({
+			            text: new ol.style.Text({
+			                text: label,
+			                offsetY: me.styleData.textOffsetY,
+			                offsetX: me.styleData.textOffsetX,
+			                font: me.styleData.textFont,
+			                scale : 1,
+			                //rotateWithView : true/false,
+			                //textAlign : '', // 'left', 'right', 'center', 'end' or 'start'. Default is 'start'.
+			                //textBaseline : '', //  'bottom', 'top', 'middle', 'alphabetic', 'hanging', 'ideographic'. Default is 'alphabetic'.
+			                stroke: new ol.style.Stroke({
+			                	color: me.styleData.textStrokeColor,
+			                	width: me.styleData.textStrokeWidth
+			                }),				                
+			                fill: new ol.style.Fill({
+			                    color: me.styleData.textFillColor
+			                }),
+			            })
+			        });		        	
+		        	resultStyles.push( featureText );
+	        	}				
+				
+				
 				
 				return resultStyles;
 			}
@@ -227,7 +256,7 @@ Ext.define('MCLM.DrawHelper', {
 						]);
 						return geometry;
 					};
-				}
+				} 
 				
 				this.draw = new ol.interaction.Draw({
 					source: this.vectorSource,
@@ -246,15 +275,15 @@ Ext.define('MCLM.DrawHelper', {
 				    var geometry = me.drawedFeature.getGeometry();
 				    
 				    me.drawedFeature.set( 'feicaoDescricao', me.feicaoDescricao );
-				    me.drawedFeature.set( 'label', me.feicaoDescricao );
+				    me.drawedFeature.set( 'label', me.feicaoNome );
 				    me.drawedFeature.set( 'feicaoNome', me.feicaoNome );
 				    me.drawedFeature.set( 'feicaoTipo', me.feicaoTipo );
 				    me.drawedFeature.set( 'feicaoDestinoId', me.feicaoDestinoId );
-				    me.drawedFeature.set( 'feicaoEstilo', me.styleData );
 				    
 				    var center = 0; var radius = 0;
 				    if ( me.feicaoTipo == 'Circle' ) {
-					    center = geometry.getCenter();
+				    	// center = ol.proj.transform( geometry.getCenter(), 'EPSG:3857', 'EPSG:4326' );
+				    	center = geometry.getCenter();
 					    radius = geometry.getRadius();
 				    }
 

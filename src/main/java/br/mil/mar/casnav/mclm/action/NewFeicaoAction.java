@@ -28,9 +28,10 @@ public class NewFeicaoAction extends BasicActionClass {
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
 
 			String data = request.getParameter("data");
+			int idFeatureStyle = Integer.valueOf( request.getParameter("idFeatureStyle") );
 			
 			DataLayerService dss = new DataLayerService();
-			String result = dss.insertFeicao( data );
+			String result = dss.insertFeicao( data, idFeatureStyle );
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

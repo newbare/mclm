@@ -221,11 +221,13 @@ public class DataLayerService {
 		return rep. getStyleList();
 	}
 
-	public String insertFeicao(String data) {
+	public String insertFeicao(String data, int idFeatureStyle) {
 		String result = "";
 		
 		try {
 		
+			FeatureStyle style = getFeatureStyle( idFeatureStyle );
+			
 			JSONObject itemObj = new JSONObject( data );
 			JSONArray featureColl = itemObj.getJSONArray("features");
 			
@@ -237,8 +239,9 @@ public class DataLayerService {
 			String feicaoNome = propriedades.getString("feicaoNome");  
 			String feicaoDescricao = propriedades.getString("feicaoDescricao");  
 			
-			Feicao feicao = new Feicao( geomType, feicaoNome, feicaoDescricao, data );
+			Feicao feicao = new Feicao( geomType, feicaoNome, feicaoDescricao, data, style );
 			
+			newTransaction();
 			feicao = rep.insertFeicao( feicao );
 			
 			String layerAlias = feicaoNome + ":" + feicao.getIdFeicao();
