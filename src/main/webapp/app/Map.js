@@ -1148,8 +1148,6 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Adiciona uma feicao ao mapa
 		addFeicao : function( feicao, node ) {
-			
-			
 			var estilo = feicao.style;
 			var geomType = feicao.geomType;
 			var idFeicao = feicao.idFeicao;
@@ -1166,11 +1164,8 @@ Ext.define('MCLM.Map', {
 			jsonstr.featureStyle = estilo;
 			jsonstr.data = feicao.metadados;	
 			
-//			console.log( feicao.metadados );
-
 			this.createVectorLayerFromGeoJSON( jsonstr, node );			
-			
-			
+		
 		},
 		// --------------------------------------------------------------------------------------------
 		// Remove uma feicao do mapa
@@ -1178,13 +1173,10 @@ Ext.define('MCLM.Map', {
 			var geomType = feicao.geomType;
 			var idFeicao = feicao.idFeicao;
 			var nome = feicao.nome;
-
-			console.log("Remover feicao " + nome + " " + geomType + "-" + idFeicao);
-
+			var serialId = node.get('serialId' );
+			
+			MCLM.Map.removeLayer( serialId );
 		},
-		
-		
-		
 		
 		// --------------------------------------------------------------------------------------------
 		// TESTE - APAGAR
