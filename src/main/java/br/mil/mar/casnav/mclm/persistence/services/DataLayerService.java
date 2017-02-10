@@ -251,6 +251,8 @@ public class DataLayerService {
 			newTransaction();
 			feicao = rep.insertFeicao( feicao );
 			
+			String jsonFeicao = new JSONObject( feicao ).toString();
+			
 			String layerAlias = feicaoNome + ":" + feicao.getIdFeicao();
 			
 			NodeService ns = new NodeService();
@@ -258,7 +260,7 @@ public class DataLayerService {
 			node.setReadOnly( false );
 			node = ns.addNode( node );					
 			
-			result = "{ \"success\": true, \"msg\": \"Feição criada com sucesso.\",\"layerAlias\":\""+ layerAlias+ "\",\"idLayer\":\""+node.getIdNodeData()+"\"}";
+			result = "{ \"success\": true, \"msg\": \"Feição criada com sucesso.\",\"feicao\":" + jsonFeicao + ",\"layerAlias\":\""+ layerAlias+ "\",\"idLayer\":\""+node.getIdNodeData()+"\"}";
 			
 		} catch ( Exception e ) {
 			e.printStackTrace();

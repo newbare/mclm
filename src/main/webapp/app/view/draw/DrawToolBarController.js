@@ -120,7 +120,7 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     	}
     	
     	console.log("Nota: Continuar a criação de areas de interesse pela feicao.");
-    	console.log("MCLM.view.draw.DrawToolBarController : 119");
+    	console.log("MCLM.view.draw.DrawToolBarController : saveDrawableLayer");
 
     	switch ( obj.features[0].properties.feicaoDestinoId ) {
 	  	  case 'AN.A':
@@ -160,6 +160,9 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
 				           'idFeatureStyle' : idFeatureStyle
 				       },       
 				       success: function(response, opts) {
+				    	   
+				    	   console.log( response.responseText );
+				    	   
 				    	   var respObj = Ext.decode( response.responseText );
 				    	   
 				    	   if( respObj.success ) {
@@ -170,6 +173,7 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
 				    		   var trabalhoTree = Ext.getCmp('trabalhoTree');
 				    		   var root = trabalhoTree.getRootNode();
 				    		   var idLayer = respObj.idLayer;
+				    		   var newFeicao = respObj.feicao;
 				    		   
 				    		   var newId = 0;
 				    		   root.cascadeBy( function(n) { 
@@ -195,7 +199,7 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
 				    			   'idNodeParent' : 0,
 				    			   'serialId' : serialId,
 				    			   'idNodeData' : idLayer,
-				    			   'feicao' : obj.features[0]
+				    			   'feicao' : newFeicao
 				    		   });			    		   
 				    		   
 				    		   // Torna a aba de cenario ativa, caso nao esteja

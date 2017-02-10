@@ -402,7 +402,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		
 		if( checked == true ) {
 			if( layerType == "FEI") {
-				MCLM.Map.addFeicao( node.get("feicao"), node );
+				MCLM.Map.addFeicao( node );
 			} else {
 				// adiciona a camada no mapa
 				var layer = MCLM.Map.addLayer( node );
@@ -410,7 +410,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 			}
 		} else {
 			if( layerType == "FEI") {
-				MCLM.Map.removeFeicao( node.get("feicao"), node );
+				MCLM.Map.removeFeicao( node );
 			} else {
 				// Remove a camada do mapa
 				MCLM.Map.removeLayer( serialId );

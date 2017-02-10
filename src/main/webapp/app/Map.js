@@ -1147,13 +1147,16 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Adiciona uma feicao ao mapa
-		addFeicao : function( feicao, node ) {
+		addFeicao : function( node ) {
+			var feicao = node.get("feicao");
 			var estilo = feicao.style;
 			var geomType = feicao.geomType;
 			var idFeicao = feicao.idFeicao;
 			var feicaoNome = feicao.nome;
 			var feicaoDescricao = feicao.descricao;
 			var featureCollection = Ext.decode( feicao.metadados );
+			
+			console.log( feicao );
 			
         	var dataLayer = {};
         	dataLayer.tableName = feicaoNome ;
@@ -1169,7 +1172,8 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Remove uma feicao do mapa
-		removeFeicao : function( feicao, node ) {
+		removeFeicao : function(  node ) {
+			var feicao = node.get("feicao");
 			var geomType = feicao.geomType;
 			var idFeicao = feicao.idFeicao;
 			var nome = feicao.nome;
