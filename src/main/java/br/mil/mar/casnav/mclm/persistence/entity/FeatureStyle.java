@@ -25,7 +25,7 @@ public class FeatureStyle {
 			String textOffsetY, String textOffsetX, String textFont, String textFillColor, String textStrokeColor,
 			String textStrokeWidth, String polygonFillColor, String polygonFillPattern, String polygonStrokeColor, String polygonStrokeWidth,
 			String polygonLineDash, String polygonStrokeLinecap, String polygonFillOpacity, String lineFillColor, String lineStrokeColor, 
-			String lineStrokeWidth, String lineLineDash) {
+			String lineStrokeWidth, String lineLineDash, String ptrHDist, String ptrVDist, String ptrLength, String ptrHeight, String ptrWidth ) {
 		super();
 
 		this.idFeatureStyle = idFeatureStyle;
@@ -53,6 +53,12 @@ public class FeatureStyle {
 		this.polygonStrokeWidth = polygonStrokeWidth;
 		this.polygonLineDash = polygonLineDash;
 		this.polygonStrokeLinecap = polygonStrokeLinecap;
+		
+		this.ptrHDist = ptrHDist;
+		this.ptrVDist = ptrVDist;
+		this.ptrLength = ptrLength;
+		this.ptrHeight = ptrHeight;
+		this.ptrWidth = ptrWidth;
 		
 		this.lineFillColor = lineFillColor;
 		this.lineStrokeColor = lineStrokeColor;
@@ -89,6 +95,12 @@ public class FeatureStyle {
 	@Column(length=25) private String polygonStrokeWidth;
 	@Column(length=25) private String polygonLineDash;
 	@Column(length=25) private String polygonStrokeLinecap;
+	
+	@Column(length=25) private String ptrHDist;
+	@Column(length=25) private String ptrVDist;
+	@Column(length=25) private String ptrLength;
+	@Column(length=25) private String ptrHeight;
+	@Column(length=25) private String ptrWidth;	
 	
 	public int getIdFeatureStyle() {
 		return idFeatureStyle;
@@ -304,6 +316,47 @@ public class FeatureStyle {
 
 	public void setPolygonFillOpacity(String polygonFillOpacity) {
 		this.polygonFillOpacity = polygonFillOpacity;
+	}
+
+	public String getPtrHDist() {
+		return ptrHDist;
+	}
+
+	public void setPtrHDist(String ptrHDist) {
+		this.ptrHDist = ptrHDist;
+	}
+
+	public String getPtrVDist() {
+		return ptrVDist;
+	}
+
+	public void setPtrVDist(String ptrVDist) {
+		this.ptrVDist = ptrVDist;
+	}
+
+	
+	public String getPtrLength() {
+		return ptrLength;
+	}
+
+	public void setPtrLength(String ptrLength) {
+		this.ptrLength = ptrLength;
+	}
+
+	public String getPtrHeight() {
+		return ptrHeight;
+	}
+
+	public void setPtrHeight(String ptrHeight) {
+		this.ptrHeight = ptrHeight;
+	}
+
+	public String getPtrWidth() {
+		return ptrWidth;
+	}
+
+	public void setPtrWidth(String ptrWidth) {
+		this.ptrWidth = ptrWidth;
 	}
 	
 	

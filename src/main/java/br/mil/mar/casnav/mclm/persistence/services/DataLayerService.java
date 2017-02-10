@@ -163,6 +163,12 @@ public class DataLayerService {
 		newStyle.setTextStrokeColor( style.getTextStrokeColor() );
 		newStyle.setTextStrokeWidth( style.getTextStrokeWidth() );
 		
+		newStyle.setPtrHDist( style.getPtrHDist() );
+		newStyle.setPtrHeight( style.getPtrHeight() );
+		newStyle.setPtrVDist( style.getPtrVDist() );
+		newStyle.setPtrLength( style.getPtrLength() );
+		newStyle.setPtrWidth( style.getPtrWidth() );
+		
 		newTransaction();
 		rep.updateFeatureStyle(newStyle);
 	}
@@ -172,7 +178,7 @@ public class DataLayerService {
 			String iconSrc, String textOffsetY, String textOffsetX, String textFont, String textFillColor,
 			String textStrokeColor, String textStrokeWidth, String polygonFillColor, String polygonFillPattern, String polygonStrokeColor, 
 			String polygonStrokeWidth, String polygonLineDash, String polygonStrokeLinecap, String polygonFillOpacity, String lineFillColor, 
-			String lineStrokeColor, String lineStrokeWidth, String lineLineDash) {
+			String lineStrokeColor, String lineStrokeWidth, String lineLineDash, String ptrHDist, String ptrVDist, String ptrLength, String ptrHeight, String ptrWidth ) {
 		
 		String result = "{ \"success\": true, \"msg\": \"Estilo criado com sucesso.\" }";
 		
@@ -181,7 +187,8 @@ public class DataLayerService {
 					iconAnchorYUnits, iconOpacity, iconColor, iconRotation, iconSrc,
 					textOffsetY, textOffsetX, textFont, textFillColor, textStrokeColor,
 					textStrokeWidth, polygonFillColor, polygonFillPattern, polygonStrokeColor, polygonStrokeWidth,
-					polygonLineDash, polygonStrokeLinecap, polygonFillOpacity, lineFillColor, lineStrokeColor, lineStrokeWidth, lineLineDash);
+					polygonLineDash, polygonStrokeLinecap, polygonFillOpacity, lineFillColor, lineStrokeColor, lineStrokeWidth, lineLineDash,
+					ptrHDist, ptrVDist, ptrLength, ptrHeight, ptrWidth);
 			
 			
 			if ( style.getIdFeatureStyle() > -1 ) {

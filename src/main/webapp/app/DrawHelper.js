@@ -39,7 +39,7 @@ Ext.define('MCLM.DrawHelper', {
 				});
 			} catch ( err ) { }
 			return subject;
-		},		
+		},	
 		
 		init : function(feicaoNome, feicaoDescricao,idEstilo,feicaoDestinoId, feicaoDestino) {
 			this.feicaoNome = feicaoNome;
@@ -152,9 +152,23 @@ Ext.define('MCLM.DrawHelper', {
 				        	newColor = newColor.slice();
 				        	newColor[3] =  me.styleData.polygonFillOpacity;
 				        	
+				        	var polFill = newColor;
+				        	
+				        	var ptrHDist = me.styleData.ptrHDist;
+				        	var ptrVDist = me.styleData.ptrVDist;
+				        	var ptrLength = me.styleData.ptrLength;
+				        	var ptrHeight = me.styleData.ptrHeight;
+				        	var ptrWidth = me.styleData.ptrWidth;
+				        	
+				        	if ( ptrHDist && ptrVDist )
+				        		polFill = MCLM.Functions.makePattern( newColor, ptrHDist, ptrVDist, ptrLength, ptrHeight, ptrWidth );
+				        					        	
+				        	
+				        	
+				        	
 				        	var polygonStyle = new ol.style.Style({
 								fill: new ol.style.Fill({
-									color: newColor,
+									color: polFill,
 								}),
 								stroke: new ol.style.Stroke({
 									color:  me.styleData.polygonStrokeColor,

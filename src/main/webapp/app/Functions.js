@@ -12,6 +12,33 @@ Ext.define('MCLM.Functions', {
 			    s4() + '-' + s4() + s4() + s4();
 		},
 		
+		makePattern : function( color, ptrHDist, ptrVDist, ptrLength, ptrHeight, ptrWidth ) {
+			
+			var newColor = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] +  ')';
+			
+			var cnv = document.createElement('canvas');
+			var ctx = cnv.getContext('2d');
+			cnv.width = ptrHDist;
+			cnv.height = ptrVDist;
+			
+			ctx.globalAlpha = color[3];
+			ctx.fillStyle = newColor;
+		  
+			// Comprimento nao pode ser maior que a dist H ou V.
+			/*
+			if ( (ptrLength > ptrHDist) || (ptrLength > ptrVDist) ) {
+				// Iguala o comprimento a maior distancia
+				if ( (ptrVDist > ptrHDist) ) ptrLength = prtVDist;
+				if ( (ptrHDist > ptrVDist) ) ptrLength = prtHDist;
+			}
+			*/
+			
+			for(var i = 0; i < ptrLength; ++i) {
+				ctx.fillRect(i, i, ptrWidth, ptrHeight);
+			}
+			return ctx.createPattern(cnv, 'repeat');
+		},			
+		
 		showMainLoadingIcon : function( action ) {
     		$("#mainLoadingIcon").css('display','block');
     		$("#mainLoadingInfo").text( action );

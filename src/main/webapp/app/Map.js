@@ -377,30 +377,6 @@ Ext.define('MCLM.Map', {
 			} catch ( err ) { }
 			return subject;
 		},
-		/*
-		formatRadius : function( Circle ) { 
-			var wgs84Sphere = new ol.Sphere(6378137);
-		    var radius; 
-		        if (true) { 
-		            var center = Circle.getCenter();
-		            var pointOnPerimeter = [center[0], center[1] + Circle.getRadius()]
-		            var sourceProj = this.map.getView().getProjection(); 
-		            var c1 = ol.proj.transform(center, sourceProj, 'EPSG:4326'); 
-		            var c2 = ol.proj.transform(pointOnPerimeter, sourceProj,'EPSG:4326'); 
-		            radius = wgs84Sphere.haversineDistance(c1, c2); 
-		        } else { 
-		             radius = Math.round(Circle.getRadius() * 100) / 100; 
-		        } 
-		        var output; 
-	            if (radius > 100) { 
-		            output = (Math.round(radius / 1000 * 100) / 100) + ' ' + 'km'; 
-		        } else { 
-		            output = (Math.round(radius * 100) / 100) + ' ' + 'm'; 
-		        } 
-		    return output; 
-		},		
-		*/
-		
 		// --------------------------------------------------------------------------------------------
 		// Converte uma String GeoJSON para uma camada Vector
 		createVectorLayerFromGeoJSON : function( geojsonStr, node ) {
@@ -438,10 +414,14 @@ Ext.define('MCLM.Map', {
 			    	clusterFeatureSource.addFeature(features[i]);
 			    	clustered = true;
 			    } else {
+			    	
 			    	var center = features[i].getProperties().circleCenter;
 			    	var radius = features[i].getProperties().circleRadius;
 			    	
-			    	if ( center != 0 && radius != 0 ) {
+			    	if ( center && radius ) {
+			    		// Trata-se de um circulo. Preciso criar uma Feature "na mao"
+			    		// pois o GeoJSON nao especifica circulos e substituir a atual
+			    		// ( features[i] ) pela nova ( theFeature ).
 			    		var theCircle = new ol.geom.Circle( center, radius );
 			    		var theFeature = new ol.Feature( theCircle );
 			    		
@@ -534,9 +514,21 @@ Ext.define('MCLM.Map', {
 		        	newColor = newColor.slice();
 		        	newColor[3] = layerStyle.polygonFillOpacity;
 		        	
+		        	var polFill = newColor;
+		        	
+		        	var ptrHDist = layerStyle.ptrHDist;
+		        	var ptrVDist = layerStyle.ptrVDist;
+		        	var ptrLength = layerStyle.ptrLength;
+		        	var ptrHeight = layerStyle.ptrHeight;
+		        	var ptrWidth = layerStyle.ptrWidth;
+		        	
+		        	if ( ptrHDist && ptrVDist )
+		        		polFill = MCLM.Functions.makePattern( newColor, ptrHDist, ptrVDist, ptrLength, ptrHeight, ptrWidth );
+		        	
+		        	
 		        	var polygonStyle = new ol.style.Style({
 						fill: new ol.style.Fill({
-							color: newColor,
+							color: polFill,
 						}),
 						stroke: new ol.style.Stroke({
 							color: me.replacePattern(layerStyle.polygonStrokeColor),
@@ -549,7 +541,7 @@ Ext.define('MCLM.Map', {
 		        }		        	
 		        	
 				// ------------------------------------------------------------------------------
-		        // TEXT
+		        // TEXT (Para todos)
 	        	var featureProperties = feature.getProperties();
 	        	if ( featureProperties.features ) {
 	        		// Eh um cluster de pontos...

@@ -469,6 +469,59 @@ Ext.define('MCLM.view.style.StyleEditorTabContainer', {
 		        id : 'polyClrPickerHolder',
 		    }]
 		}]    
+	}, {
+		// ========================= PADRAO DE PREENCHIMENTO ====================================
+		title:'Padrão de Preenchimento',
+	    layout: {
+	        type: 'hbox',
+	        align: 'stretch'
+	    },  		
+	    bodyPadding: '0',
+	    defaultType: 'textfield',
+	    defaults: {
+	        anchor: '100%',
+	        msgTarget: 'under',
+	        labelWidth: 90
+	    },	    
+
+		items:[{
+	        xtype: 'container',
+	        padding: '10, 30, 10, 10',
+	        layout: 'vbox', 	    
+	    
+			items:[{ 
+				xtype: 'textfield',
+				fieldLabel: 'Dist. Horizontal',
+				name: 'ptrHDist',
+				id: 'ptrHDist',
+				value: '',
+			},{ 
+				xtype: 'textfield',
+				fieldLabel: 'Dist. Vertical',
+				name: 'ptrVDist',
+				id: 'ptrVDist',
+				value: '',
+			},{ 
+				xtype: 'textfield',
+				fieldLabel: 'Comprimento',
+				name: 'ptrLength',
+				id: 'ptrLength',
+				emptyText: '6',
+			},{ 
+				xtype: 'textfield',
+				fieldLabel: 'Largura do Risco',
+				name: 'ptrWidth',
+				id: 'ptrWidth',
+				emptyText: '1',
+			},{ 
+				xtype: 'textfield',
+				fieldLabel: 'Altura do Risco',
+				name: 'ptrHeight',
+				id: 'ptrHeight',
+				emptyText: '1',
+			}]
+		}]
+	    
 	}],
 
     listeners: {

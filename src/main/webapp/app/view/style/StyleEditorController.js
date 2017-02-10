@@ -37,7 +37,6 @@ Ext.define('MCLM.view.style.StyleEditorController', {
     },
     
     handleOnChange:function(textfield,newValue,oldValue){
-        //console.log( textfield.name + " = " + newValue  );
         this.updatePreviewMap();
 	},    
     
@@ -185,9 +184,22 @@ Ext.define('MCLM.view.style.StyleEditorController', {
 			        	newColor = newColor.slice();
 			        	newColor[3] = Ext.getCmp("polygonFillOpacity").getValue();
 			        	
+			        	var polFill = newColor;
+			        	
+			        	
+			        	var ptrHDist = Ext.getCmp("ptrHDist").getValue();
+			        	var ptrVDist = Ext.getCmp("ptrVDist").getValue();
+			        	var ptrLength = Ext.getCmp("ptrLength").getValue();
+			        	var ptrHeight = Ext.getCmp("ptrHeight").getValue();
+			        	var ptrWidth = Ext.getCmp("ptrWidth").getValue();
+			        	
+			        	if ( ptrHDist && ptrVDist ) {
+			        		polFill = MCLM.Functions.makePattern( newColor, ptrHDist, ptrVDist, ptrLength, ptrHeight, ptrWidth );
+			        	}
+			        	
 			        	var polygonStyle = new ol.style.Style({
 							fill: new ol.style.Fill({
-								color: newColor,
+								color: polFill,
 							}),
 							stroke: new ol.style.Stroke({
 								color: Ext.getCmp("polygonStrokeColor").getValue(),
@@ -199,7 +211,7 @@ Ext.define('MCLM.view.style.StyleEditorController', {
 			        	resultStyles.push( polygonStyle );
 		    	  }
 	    	  } catch ( err ) {
-	    		  
+	    		  console.log( err );
 	    	  }
 	    	  
 	    	  if ( Ext.getCmp("textFont").getValue() ) {
