@@ -7,7 +7,9 @@ Ext.define('MCLM.Application', {
        'MCLM.view.main.TelaPrincipal',
        'MCLM.Globals',
        'MCLM.Functions',
-       'MCLM.DrawHelper'
+       'MCLM.DrawHelper',
+       'MCLM.RouteHelper',
+       
     ],
     
     stores: [

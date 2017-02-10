@@ -138,8 +138,6 @@ Ext.define('MCLM.Map', {
 			
 			this.openSeaMapLayer = this.createOpenSeaMapLayer();
 			this.baseLayer = this.createBaseLayer();
-			
-			
 		},
 		// --------------------------------------------------------------------------------------------
 		// Gera a Camada do OpenSeaMap
@@ -562,9 +560,6 @@ Ext.define('MCLM.Map', {
 			                offsetX: layerStyle.textOffsetX,
 			                font: layerStyle.textFont,
 			                scale : 1,
-			                //rotateWithView : true/false,
-			                //textAlign : '', // 'left', 'right', 'center', 'end' or 'start'. Default is 'start'.
-			                //textBaseline : '', //  'bottom', 'top', 'middle', 'alphabetic', 'hanging', 'ideographic'. Default is 'alphabetic'.
 			                stroke: new ol.style.Stroke({
 			                	color: layerStyle.textStrokeColor,
 			                	width: layerStyle.textStrokeWidth
@@ -652,50 +647,6 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.map.addLayer( vectorLayer );
 			
 			MCLM.Functions.hideMainLoadingIcon();
-		},
-		// --------------------------------------------------------------------------------------------
-		// Carrega as Features de uma String para a camada de Rotas.
-		loadRouteDataToRouteLayer : function( routeData ) {
-	    	
-	    	var features = new ol.format.GeoJSON().readFeatures( routeData, {
-	    	    featureProjection: 'EPSG:3857'
-	    	});		   	
-		   	
-			var vectorSource = new ol.source.Vector({
-			     features: features,
-			});			
-			
-	    	var featureStyle = new ol.style.Style({
-	    		stroke: new ol.style.Stroke({
-	    			color: 'red',
-	    			width: 3
-	    		})
-	    	});
-	    	
-			var routeLayer = new ol.layer.Vector({
-			      source: vectorSource,
-			      style : featureStyle
-			});
-			
-			
-			routeLayer.set('alias', 'routeLayer');
-			routeLayer.set('name', 'routeLayer');
-			routeLayer.set('serialId', 'routeLayer');
-			routeLayer.set('ready', false);
-			routeLayer.set('baseLayer', false);	        
-	        
-			this.removeLayerByName( 'routeLayer' );
-			
-			this.map.addLayer( routeLayer );
-		},
-		// --------------------------------------------------------------------------------------------
-		// Converte as Features da camada de Rotas para uma String GeoJSON
-		convertRouteLayerToJson : function() {
-			var routeLayer = MCLM.Map.getLayerByName("routeLayer");
-			var source = routeLayer.getSource();
-			var writer = new ol.format.GeoJSON();
-			var geojsonStr = writer.writeFeatures( source.getFeatures() );
-			return geojsonStr; 
 		},
 		// --------------------------------------------------------------------------------------------
 		// Remove uma camada do mapa
@@ -881,14 +832,13 @@ Ext.define('MCLM.Map', {
 		           'coordinate': coordinate
 		       },       
 		       success: function(response, opts) {
-		    	   
-		    	   var respText = Ext.decode(response.responseText); //JSON.parse(response.responseText);
+		    	   var respText = Ext.decode(response.responseText);
+		    	  
 		    	   var jsonObj = respText[0];
-		    	   var osmName = "<Sem Nome>";
+		    	   var osmName = "<Rua Sem Nome>";
 		    	   if ( jsonObj.osm_name != null ) osmName = jsonObj.osm_name;
 		    	   var source = jsonObj.source;
 		    	   var target = jsonObj.target;
-		    	   
 		    	   if( type == 'S' ) {
 		    		   $("#sourceAddrText").text( osmName );
 		    		   $("#sourceValue").val( source );
@@ -897,6 +847,7 @@ Ext.define('MCLM.Map', {
 		    		   $("#targetAddrText").text( osmName );
 		    		   $("#targetValue").val( target );
 		    	   }
+		    	   
 		       },
 		       failure: function(response, opts) {
 		    	   Ext.Msg.alert('Erro','Erro ao receber os dados da coordenada selecionada.' );
@@ -910,6 +861,7 @@ Ext.define('MCLM.Map', {
 			this.unbindMapClick();
 			this.onClickBindKey = this.map.on('click', function(event) {
 				me.getNearestRoads( event.coordinate, 'S' );
+				MCLM.RouteHelper.putStartIcon( event.coordinate );
 			});
 		},
 		// --------------------------------------------------------------------------------------------
@@ -919,6 +871,7 @@ Ext.define('MCLM.Map', {
 			this.unbindMapClick();
 			this.onClickBindKey = this.map.on('click', function(event) {
 				me.getNearestRoads( event.coordinate, 'T' );
+				MCLM.RouteHelper.putEndIcon( event.coordinate );
 			});
 		},
 		// --------------------------------------------------------------------------------------------
@@ -1155,8 +1108,6 @@ Ext.define('MCLM.Map', {
 			var feicaoNome = feicao.nome;
 			var feicaoDescricao = feicao.descricao;
 			var featureCollection = Ext.decode( feicao.metadados );
-			
-			console.log( feicao );
 			
         	var dataLayer = {};
         	dataLayer.tableName = feicaoNome ;

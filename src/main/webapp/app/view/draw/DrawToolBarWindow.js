@@ -169,7 +169,7 @@ Ext.define('MCLM.view.draw.DrawToolBarWindow', {
 		    
 		},
 		
-		 close : function() {
+		close : function() {
 			 // Remove o registro de balao de dicas (hints) dos botoes da janela.
 			 // meramente preventivo para evitar erros de javascript mas nao interfere no sistema.
 		 	 Ext.tip.QuickTipManager.unregister('addDrawableLayerBtn');
@@ -180,11 +180,8 @@ Ext.define('MCLM.view.draw.DrawToolBarWindow', {
 		 	 Ext.tip.QuickTipManager.unregister('drawSquareBtn');
 		 	 Ext.tip.QuickTipManager.unregister('drawCircleBtn');
 		 	 Ext.tip.QuickTipManager.unregister('saveDrawableBtn');
-		 	 
 		 	 MCLM.DrawHelper.finish();
-		 	 
-		 	 
-		 },	
+		},	
     }
 	
 });

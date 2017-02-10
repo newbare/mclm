@@ -49,11 +49,38 @@ public class RouteService {
 			result = ute.getData("result");
 		}
 		
-		System.out.println( result );
-		
 		return result;
 	}
 	
+	/*
+	
+		CREATE OR REPLACE FUNCTION public.calc_rotas_v3(
+			source integer,
+			target integer,
+			k integer,
+			directed boolean)
+		    RETURNS SETOF "TABLE(seq integer, path_id integer, path_seq integer, node bigint, edge bigint, cost double precision, agg_cost double precision)"
+		    LANGUAGE 'sql'
+		    COST 100.0
+		    STABLE NOT LEAKPROOF 
+		    ROWS 1500.0
+		AS $function$
+		
+		SELECT 
+		    *
+		FROM 
+		    pgr_ksp(
+		     'SELECT id, source, target, cost, reverse_cost FROM osm_2po_4pgr as r, 
+		             (SELECT st_buffer(st_envelope(st_collect(geom_way)), 0.5) as box FROM osm_2po_4pgr as l1 
+		            WHERE l1.source = ' || $1 || ' OR l1.target = ' || $2 || ') as box
+		            WHERE r.geom_way && box.box',$1, $2, $3, directed:=$4
+		    )  
+		 
+		$function$;
+		
+		ALTER FUNCTION public.calc_rotas_v3(integer, integer, integer, boolean)
+		    OWNER TO postgres;
 	
 	
+	*/
 }

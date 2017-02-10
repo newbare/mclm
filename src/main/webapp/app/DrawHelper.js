@@ -18,10 +18,10 @@ Ext.define('MCLM.DrawHelper', {
 		finish : function() {
 			if ( this.draw ) MCLM.Map.map.removeInteraction( this.draw );
 			MCLM.Map.removeLayerByName('drawableLayer');
-			drawedFeature = [];
-			draw = null;
-			vectorSource = null;
-			activeDrawableLayer = null;
+			this.drawedFeature = [];
+			this.draw = null;
+			this.vectorSource = null;
+			this.activeDrawableLayer = null;
 		},
 		
 		updateStyle : function( styleData ) {

@@ -13,7 +13,17 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
             	click: this.closeWindow 
             },
             
+            '#clearRoutes' : {
+            	click: this.clearRoutes 
+            },
         })
+    },
+    
+    clearRoutes : function() {
+    	MCLM.RouteHelper.clear();
+    	MCLM.RouteHelper.init();
+    	MCLM.Globals.selectRouteActiveIcon = 'selectSourceIcon';
+    	$("#selectTargetIcon").css("display","none");      	
     },
     
     addRouteToCurrentScenery : function() {
@@ -26,22 +36,25 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 			return true;
 		}
 		
-		var geoJsonData = MCLM.Map.convertRouteLayerToJson();
-		//console.log( geoJsonData );
-
-		Ext.Msg.alert('Não Implementado Ainda','MCLM.views.rotas.CalcRotaController :: 32' );
+		var geoJsonData = MCLM.RouteHelper.getAsJson();
+		Ext.Msg.alert('Não Implementado Ainda','MCLM.views.rotas.CalcRotaController :: addRouteToCurrentScenery' );
 
     },
     
     closeWindow : function() {
+    	MCLM.RouteHelper.clear();
+    	
     	var rotaWindow = Ext.getCmp('rotaWindow');
     	rotaWindow.close();
     	MCLM.Globals.routeBlinkEnabled = false;
     	MCLM.Map.unbindMapClick();
     	
     	MCLM.Globals.selectRouteActiveIcon = 'selectSourceIcon';
-    	$("#selectTargetIcon").css("display","none");    	
+    	$("#selectTargetIcon").css("display","none");  
+    	
     },
+    
+
     
     submitForm : function( ) {
     	var me = this;
@@ -61,7 +74,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 	       params: {
 	           'source': source,
 	           'target' : target,
-	           'kpaths' : 1,
+	           'kpaths' : 5,
 	           'directed' : true
 	       },       
 	       success: function(response, opts) {
@@ -74,8 +87,6 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 	    	   Ext.Msg.alert('Erro','Erro ao calcular a rota.' );
 	       }
 		});
-    	
-        
     	return true;
     },
     
@@ -93,8 +104,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	
     	geojsonObject = geojsonObject + "]}";
 
-    	MCLM.Map.loadRouteDataToRouteLayer( geojsonObject );
-		
+    	MCLM.RouteHelper.loadRoute( geojsonObject );
     }
 
     

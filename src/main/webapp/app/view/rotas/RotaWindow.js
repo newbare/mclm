@@ -51,16 +51,27 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
 	
     buttons: [{
 		  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
-        text: 'Fechar',
-        id : 'closeRotaWindow'
-    },{
-		  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
         text: 'Calcular Rota',
         id : 'calcRotaFormSubmit'
+    },{
+		  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
+        text: 'Limpar Tudo',
+        id : 'clearRoutes'
+    },{
+		  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
+        text: 'Fechar',
+        id : 'closeRotaWindow'
     }],
     
 	listeners: {
+		
+		close : function() {
+			Ext.tip.QuickTipManager.unregister('idAddRoute');
+		},
+		
 		afterrender: function(component, eOpts) {
+			
+			MCLM.RouteHelper.init();
 			
 		    Ext.tip.QuickTipManager.register({
 		        target: 'idAddRoute',
