@@ -74,7 +74,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 	       params: {
 	           'source': source,
 	           'target' : target,
-	           'kpaths' : 5,
+	           'kpaths' : 1,
 	           'directed' : true
 	       },       
 	       success: function(response, opts) {
