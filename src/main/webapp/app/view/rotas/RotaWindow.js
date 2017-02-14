@@ -14,7 +14,7 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
 	],	    
     controller : 'calcRota',	
 	
-	width : 450,
+	width : 300,
 	height: 400,
     scrollable: false,
     frame : false,

@@ -70,6 +70,13 @@ public class RouteService {
 			result = ute.getData("result");
 		}
 		
+		
+		// TESTE !!!!
+			getPointsNearRoute( source, target, kpaths, directed, 100 );
+		// ---------------------
+		
+		
+		
 		return result;
 		
 	}
@@ -193,5 +200,58 @@ public class RouteService {
 		  (geom);                 
 		ALTER TABLE hh_2po_4pgr CLUSTER ON idx_hh_2po_4pgr_geom;	
 	
+	*/
+	
+	public String getPointsNearRoute( String source, String target, Integer kpaths, String directed, Integer limit ) throws Exception {
+		Config cfg = Configurator.getInstance().getConfig();
+		
+		String sql = "SELECT array_to_json( array_agg( t ) ) as result "
+				+ "FROM ( select r.name,r.distance,r.operator, ST_AsGeoJSON(r.way)::json as geometry from pointscanner(" + source + ", " + target + ", " 
+				+ kpaths + ", " + directed + ", " + limit + ") as r ) as t";
+		String result = "";
+		
+		System.out.println( sql );
+		
+		String connectionString = "jdbc:postgresql://" + cfg.getRoutingServer() +
+				":" + cfg.getRoutingPort() + "/" + cfg.getRoutingDatabase();
+		GenericService gs = new GenericService( connectionString, cfg.getRoutingUser(), cfg.getRoutingPassword()  );
+		
+		List<UserTableEntity> utes = gs.genericFetchList( sql );
+		
+		if ( utes.size() > 0 ) {
+			UserTableEntity ute = utes.get(0);
+			result = ute.getData("result");
+		}
+		
+		return result;		
+	}
+	
+	/*
+	
+		--drop function pointscanner(int,int,int,boolean,int,text)
+		CREATE or replace FUNCTION pointscanner(
+		    IN source integer,
+		    IN target integer,
+		    IN k integer,
+		    IN directed boolean,
+		    IN quant integer
+		) 
+		RETURNS table(way geometry, name text, distance double precision, tags hstore, "operator" text, admin_level text, z_order integer) AS $$
+		DECLARE 
+			geomRoute geometry;
+			routeBB box2d;
+		BEGIN
+			SELECT INTO geomRoute ST_Union(geom) from route_agg($1, $2, $3, $4);
+			routeBB := ST_Extent(geomRoute);
+			
+			RETURN QUERY
+			SELECT pt.way, pt.name, ST_Distance( rt.geom, ST_Transform(pt.way,4326) ) as distance, pt.tags, pt.operator, pt.admin_level, pt.z_order FROM planet_osm_point pt, route_agg($1, $2, $3, $4) rt
+				where routeBB && ST_Transform(pt.way,4326)
+				order by distance asc limit $5;
+		
+		END; $$  
+		LANGUAGE 'plpgsql' VOLATILE;	
+		--select * from pointscanner(1358812, 18854, 1, true, 200)
+			
 	*/
 }
