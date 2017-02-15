@@ -10,6 +10,7 @@ Ext.define('MCLM.RouteHelper', {
 		endIcon : null,
 		lastEndPosition : null,
 		swapped : false,
+		routeAsWKT : null,
 		
 		clear : function() {
 			MCLM.Map.removeLayerByName('routeLayer');
@@ -114,13 +115,16 @@ Ext.define('MCLM.RouteHelper', {
 		},
 		
 		
-		loadRoute : function( route ) {
+		loadRoute : function( route, completeGeometry ) {
+			var myMls = new ol.geom.MultiLineString( completeGeometry.coordinates );
+			var format =  new ol.format.WKT();
+			this.routeAsWKT = format.writeGeometry ( myMls );
+
 	    	var features = new ol.format.GeoJSON().readFeatures( route , {
 	    	    featureProjection: 'EPSG:3857'
 	    	});	
 	    	
 	    	for (var i = 0; i < features.length; i++) {
-	    		//console.log( features[i] );
 	    		this.vectorSource.addFeature( features[i] );
 	    	}
 	    	
@@ -134,16 +138,40 @@ Ext.define('MCLM.RouteHelper', {
 			this.dirty = false;
 			this.vectorSource = new ol.source.Vector();
 			
-	    	var routeStyle = new ol.style.Style({
-	    		stroke: new ol.style.Stroke({
-	    			color: 'red',
-	    			width: 3
-	    		})
-	    	});
+	    	
+			var customStyleFunction = function( feature, resolution ) {
+				
+				var featureGeomType = feature.getGeometry().getType();
+				var props = feature.getProperties();
+				var resultStyles = [];
+
+				
+		    	var routeStyle = new ol.style.Style({
+		    		stroke: new ol.style.Stroke({
+		    			color: 'red',
+		    			width: 3
+		    		})
+		    	});	
+		    	resultStyles.push( routeStyle );
+		    	
+		    	var pointStyle = new ol.style.Style({
+					image: new ol.style.Icon(({
+						scale : 0.6,
+						anchor: [0.5, 35],
+						anchorXUnits: 'fraction',
+						anchorYUnits: 'pixels',
+						opacity: 0.75,
+						src: 'img/police-pin.png'
+					}))
+		    	});	    	
+		    	resultStyles.push( pointStyle );
+				
+				return resultStyles;
+			};
 			
 			this.activeRouteLayer = new ol.layer.Vector({
 				source: this.vectorSource,
-				style: routeStyle
+				style: customStyleFunction
 			});			
 			
 			
@@ -170,6 +198,42 @@ Ext.define('MCLM.RouteHelper', {
 			MCLM.Map.map.addLayer( this.vectorLayerMarker );			
 		    				
 		},
+		
+	    locatePois : function( button ) {
+	    	var me = MCLM.RouteHelper;
+	    	var featureId = button.id;
+	    	
+	    	if ( !button.pressed ) {
+	    		// remove camada
+	    	} else {
+	    		
+	    		if ( !me.routeAsWKT ) return true;
+	    		
+	    		Ext.Ajax.request({
+	    		       url: 'getPointsNearRoute',
+	    		       params: {
+	    		           'route': me.routeAsWKT,
+	    		       },       
+	    		       success: function(response, opts) {
+	    		    	   var respText = Ext.decode(response.responseText);
+	    		    	   
+	    		    	   var features = new ol.format.GeoJSON().readFeatures( respText , {
+	    			    	    featureProjection: 'EPSG:3857'
+	    		    	   });	
+	    			    	
+	    		    	   for (var i = 0; i < features.length; i++) {
+	    		    		   features[i].set("featureId", featureId );
+	    		    		   me.vectorSource.addFeature( features[i] );
+	    		    	   }	    		    	   
+	    		    	   
+	    		       },
+	    		       failure: function(response, opts) {
+	    		    	   Ext.Msg.alert('Erro','Erro ao calcular a rota.' );
+	    		       }
+	    		});	    		
+	    		
+	    	}
+	    },		
 
 		getAsJson : function() {
 			var geojson  = new ol.format.GeoJSON();

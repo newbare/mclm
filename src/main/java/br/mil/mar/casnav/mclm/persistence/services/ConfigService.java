@@ -34,6 +34,7 @@ public class ConfigService {
 				cfg.setMapZoom(5);
 				cfg.setProxyPort(8080);
 				cfg.setUseProxy(false);
+				cfg.setDistanceFromRoute( 1000 ); // Metros
 				newTransaction();
 				insertConfig(cfg);
 				
@@ -87,6 +88,7 @@ public class ConfigService {
 		oldConfig.setRoutingDatabase( config.getRoutingDatabase() );
 		
 		oldConfig.setApoloServer( config.getApoloServer() );
+		oldConfig.setDistanceFromRoute( config.getDistanceFromRoute() );
 		
 		rep.newTransaction();
 		rep.updateConfig( oldConfig );

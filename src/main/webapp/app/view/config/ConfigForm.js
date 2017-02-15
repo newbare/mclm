@@ -57,6 +57,14 @@ Ext.define('MCLM.view.config.ConfigForm', {
             invalidText: 'Apenas números'
         },
         {
+            fieldLabel: 'Distância dos POI da Rota',
+            id : 'distanceFromRoute',
+            width: 150,
+            maskRe: /[0-9.]/, 
+            name: 'distanceFromRoute',
+            allowBlank : false,
+            invalidText: 'Apenas números'
+        },        {
             fieldLabel: 'Usuário do GeoServer',
             width: 350,
             name: 'geoserverUser',

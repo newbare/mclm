@@ -272,3 +272,69 @@
 	background-image: url('../img/polygon.svg') !important;
 	background-repeat: no-repeat;
 }
+
+/*
+	Botoes do seletor de Pontos de Interesse da Rota
+*/
+
+.police-button {
+	background-image: url('../img/police-pin.png') !important;
+	background-repeat: no-repeat;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.toll-button {
+	background-image: url('../img/pedagio-pin.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.prf-button {
+	background-image: url('../img/prf-pin.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.estadio-button {
+	background-image: url('../img/estadio-pin.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.hospital-button {
+	background-image: url('../img/hospital-pin.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.obras-button {
+	background-image: url('../img/obras-pin.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.rodoviaria-button {
+	background-image: url('../img/rodoviaria-pin.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}

@@ -49,7 +49,8 @@ public class SaveConfigAction extends BasicActionClass {
 				int idConfig = Integer.valueOf( request.getParameter("idConfig") );
 
 				int routingPort = Integer.valueOf( request.getParameter("routingPort") );
-
+				int distanceFromRoute = Integer.valueOf( request.getParameter("distanceFromRoute") );
+				
 				String routingServer = request.getParameter("routingServer");
 				String routingUser = request.getParameter("routingUser");
 				String routingPassword = request.getParameter("routingPassword");
@@ -62,14 +63,15 @@ public class SaveConfigAction extends BasicActionClass {
 							proxyHost, nonProxyHosts, proxyUser, proxyPassword, proxyPort, geoserverUser, 
 							geoserverPassword, mapZoom, queryFactorRadius, mapCenter, shapeFileTargetPath, 
 							routingServer, routingUser, routingPassword, routingPort, routingDatabase,	
-							apoloServer);	
+							apoloServer, distanceFromRoute);	
 				
 				
 				ConfigService cs = new ConfigService();
 				cs.updateConfig(config);
 				
 			} catch ( Exception e ) {
-				result = "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
+				result = "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";
+				e.printStackTrace();
 			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);

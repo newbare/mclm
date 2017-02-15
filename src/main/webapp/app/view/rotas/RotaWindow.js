@@ -14,8 +14,12 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
 	],	    
     controller : 'calcRota',	
 	
-	width : 300,
-	height: 400,
+	width : 350,
+	height: 500,
+	
+	minWidth : 300, 
+	minHeight : 500,
+	
     scrollable: false,
     frame : false,
     
@@ -27,6 +31,8 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
     
     dockedItems: [{
         xtype: 'toolbar',
+        frame : false,
+        border : false,
         items: [{
         	iconCls: 'save-icon',
         	id: 'idAddRoute',

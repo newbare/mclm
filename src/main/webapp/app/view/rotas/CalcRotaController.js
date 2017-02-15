@@ -4,6 +4,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
    
     init : function(app) {
         this.control({
+        	
         	// Intercepta o evento 'click' do botao 'Enviar' do painel 'MCLM.view.addfolder.NewFolderForm' 
             '#calcRotaFormSubmit' : {
             	click: this.submitForm 
@@ -23,7 +24,8 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	MCLM.RouteHelper.clear();
     	MCLM.RouteHelper.init();
     	MCLM.Globals.selectRouteActiveIcon = 'selectSourceIcon';
-    	$("#selectTargetIcon").css("display","none");      	
+    	$("#selectTargetIcon").css("display","none");
+    	this.disableButtons();
     },
     
     addRouteToCurrentScenery : function() {
@@ -53,8 +55,25 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	$("#selectTargetIcon").css("display","none");  
     	
     },
-    
 
+    disableButtons : function() {
+    	var poiPanel = Ext.getCmp("routePoi");
+		var buttons = poiPanel.query('button');
+		Ext.Array.each(buttons, function(button) {
+		    button.setDisabled(true);
+		    button.toggle(false);
+		})
+    },
+    
+    
+    enableButtons : function() {
+    	var poiPanel = Ext.getCmp("routePoi");
+		var buttons = poiPanel.query('button');
+		Ext.Array.each(buttons, function(button) {
+		    button.setDisabled(false);
+		    button.toggle(false);
+		})
+    },
     
     submitForm : function( ) {
     	var me = this;
@@ -82,6 +101,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 	    	   var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
 	    	   routeResultStore.loadData( respText );
 	    	   me.getFeaturesFromRouteData( respText );
+	    	   me.enableButtons();
 	       },
 	       failure: function(response, opts) {
 	    	   Ext.Msg.alert('Erro','Erro ao calcular a rota.' );
@@ -92,19 +112,34 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     
     
     getFeaturesFromRouteData : function( routeData ) {
-    	
-    	var geojsonObject = "{\"type\": \"FeatureCollection\",\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"} },\"features\": ["; 
+    	var geojsonObject = '{"type": "FeatureCollection","crs": {"type": "name","properties": {"name": "EPSG:4326"} },"features": ['; 
     	var prefix = "";
+    	
+		var newMultiline = {};
+		newMultiline.type = 'MultiLineString';
+		var newCoordinates = [];
+    	
+    	
     	for(x=0; x < routeData.length; x++ ) {
-    		var featureProperties = "{\"osm_name\":\""+ routeData[x].osm_name +"\", \"osm_id\":\""+ routeData[x].osm_id + "\"}";
-    		geojsonObject = geojsonObject + prefix + "{\"type\": \"Feature\",\"properties\": "+featureProperties+
-    			",\"geometry\":" +JSON.stringify( routeData[x].geometry ) + "}";
+    		var featureProperties = '{"way_name":"'+ routeData[x].way_name +'", "km":"'+ routeData[x].km + '"}';
+    		
+    		geojsonObject = geojsonObject + prefix + '{"type": "Feature","properties": '+featureProperties+
+    			',"geometry":' +JSON.stringify( routeData[x].geometry ) + '}';
     		prefix = ",";
+    		
+    		var geom = routeData[x].geometry;
+    		for (z=0; z<geom.coordinates.length; z++   ) {
+    			newCoordinates.push( geom.coordinates[z] )
+    		}
+ 
     	}
+		newMultiline.coordinates = newCoordinates;
+
     	
     	geojsonObject = geojsonObject + "]}";
 
-    	MCLM.RouteHelper.loadRoute( geojsonObject );
+    	MCLM.RouteHelper.loadRoute( geojsonObject, newMultiline );
+    	
     }
 
     

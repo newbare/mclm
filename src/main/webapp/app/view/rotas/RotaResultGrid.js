@@ -6,7 +6,7 @@ Ext.define('MCLM.view.rotas.RotaResultGrid', {
 	title : '',
 	store : 'store.RouteResult',
     frame: false,
-    flex : 3,
+    flex : 1,
     
     features: [{
         ftype: 'summary'
@@ -14,12 +14,14 @@ Ext.define('MCLM.view.rotas.RotaResultGrid', {
     
     listeners: {
         rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
+        	/*
         	var osmName = record.get('way_name');
         	var osmId = record.get('seq');
+        	var leng = record.get('km');
         	if ( osmName == 'null' ) osmName = "(Sem Nome)";
         	var roadDetailPanel = Ext.getCmp('roadDetailPanel');
-        	roadDetailPanel.update( osmId + ": " + osmName );
-        	
+        	roadDetailPanel.update( osmId + ": " + osmName + " (" + leng + " Km)");
+        	*/
         }
     },	    
     

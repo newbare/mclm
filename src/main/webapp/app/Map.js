@@ -835,7 +835,7 @@ Ext.define('MCLM.Map', {
 		    	   var respText = Ext.decode(response.responseText);
 		    	  
 		    	   var jsonObj = respText[0];
-		    	   var osmName = "<Rua Sem Nome>";
+		    	   var osmName = "(Rua Sem Nome)";
 		    	   if ( jsonObj.osm_name != null ) osmName = jsonObj.osm_name;
 		    	   var source = jsonObj.source;
 		    	   var target = jsonObj.target;
