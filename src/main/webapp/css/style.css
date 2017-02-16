@@ -278,7 +278,7 @@
 */
 
 .police-button {
-	background-image: url('../img/police-pin.png') !important;
+	background-image: url('../img/police-button.png') !important;
 	background-repeat: no-repeat;
 	background-size: 25px 30px;
 	width : 28px;
@@ -286,7 +286,7 @@
 }
 
 .toll-button {
-	background-image: url('../img/pedagio-pin.png') !important;
+	background-image: url('../img/toll-button.png') !important;
 	background-repeat: no-repeat;
 	background-size: 33px 33px;
 	background-size: 25px 30px;
@@ -295,7 +295,7 @@
 }
 
 .prf-button {
-	background-image: url('../img/prf-pin.png') !important;
+	background-image: url('../img/prf-button.png') !important;
 	background-repeat: no-repeat;
 	background-size: 33px 33px;
 	background-size: 25px 30px;
@@ -304,7 +304,7 @@
 }
 
 .estadio-button {
-	background-image: url('../img/estadio-pin.png') !important;
+	background-image: url('../img/estadio-button.png') !important;
 	background-repeat: no-repeat;
 	background-size: 33px 33px;
 	background-size: 25px 30px;
@@ -313,7 +313,7 @@
 }
 
 .hospital-button {
-	background-image: url('../img/hospital-pin.png') !important;
+	background-image: url('../img/hospital-button.png') !important;
 	background-repeat: no-repeat;
 	background-size: 33px 33px;
 	background-size: 25px 30px;
@@ -322,7 +322,7 @@
 }
 
 .obras-button {
-	background-image: url('../img/obras-pin.png') !important;
+	background-image: url('../img/obras-button.png') !important;
 	background-repeat: no-repeat;
 	background-size: 33px 33px;
 	background-size: 25px 30px;
@@ -331,10 +331,20 @@
 }
 
 .rodoviaria-button {
-	background-image: url('../img/rodoviaria-pin.png') !important;
+	background-image: url('../img/rodoviaria-button.png') !important;
 	background-repeat: no-repeat;
 	background-size: 33px 33px;
 	background-size: 25px 30px;
 	width : 28px;
 	height : 32px; 
 }
+
+.helipad-button {
+	background-image: url('../img/helipad-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+

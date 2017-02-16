@@ -144,7 +144,7 @@ Ext.define('MCLM.RouteHelper', {
 				var featureGeomType = feature.getGeometry().getType();
 				var props = feature.getProperties();
 				var resultStyles = [];
-
+				var featureId = props.featureId; 
 				
 		    	var routeStyle = new ol.style.Style({
 		    		stroke: new ol.style.Stroke({
@@ -154,14 +154,14 @@ Ext.define('MCLM.RouteHelper', {
 		    	});	
 		    	resultStyles.push( routeStyle );
 		    	
-		    	var pointStyle = new ol.style.Style({
+	        	var pointStyle = new ol.style.Style({
 					image: new ol.style.Icon(({
 						scale : 0.6,
 						anchor: [0.5, 35],
 						anchorXUnits: 'fraction',
 						anchorYUnits: 'pixels',
 						opacity: 0.75,
-						src: 'img/police-pin.png'
+						src: 'img/' + featureId + '.png'
 					}))
 		    	});	    	
 		    	resultStyles.push( pointStyle );
@@ -207,12 +207,64 @@ Ext.define('MCLM.RouteHelper', {
 	    		// remove camada
 	    	} else {
 	    		
-	    		if ( !me.routeAsWKT ) return true;
+	    		if ( !me.routeAsWKT ) {
+	    			Ext.Msg.alert('Erro','Não existem dados de rota armazenados.' );
+	    			return true;
+	    		}
+
+    		
+	    		var criteria = '';
+	    		var source = '';
+	    		switch( featureId ) {
+		    	    case 'estadio-button':
+		    	    	criteria = '';
+		    	    	source = 'planet_osm_point';
+		    	        break;
+		    	    case 'hospital-button':
+		    	    	criteria = '';
+		    	    	source = 'planet_osm_point';
+		    	        break;
+		    	    case 'obras-button':
+		    	    	criteria = '';
+		    	    	source = 'planet_osm_line';
+		    	        break;
+		    	    case 'rodoviaria-button':
+		    	    	criteria = "amenity = 'bus_station'";
+		    	    	source = 'planet_osm_point';
+		    	        break;
+		    	    case 'estadio-button':
+		    	    	criteria = "leisure='stadium'";
+		    	    	source = 'planet_osm_point';
+		    	        break;
+		    	    case 'police-button':
+		    	    	criteria = "amenity='police'";
+		    	    	source = 'planet_osm_point';
+		    	        break;
+		    	    case 'prf-button':
+		    	    	criteria = "amenity='police'";
+		    	    	source = 'planet_osm_point';
+		    	        break;
+		    	    case 'toll-button':
+		    	    	criteria = "barrier='toll_booth'";
+		    	    	source = 'planet_osm_point';
+		    	        break;
+		    	    case 'helipad-button':
+		    	    	criteria = "aeroway='helipad'";
+		    	    	source = 'planet_osm_polygon';
+		    	        break;
+	    		}	 	    		
+	    		
+	    		if ( criteria == '' ) {
+	    			Ext.Msg.alert('Erro','Tipo de elemento desconhecido: "' + featureId + '"' );
+	    			return true; 
+	    		}
 	    		
 	    		Ext.Ajax.request({
 	    		       url: 'getPointsNearRoute',
 	    		       params: {
 	    		           'route': me.routeAsWKT,
+	    		           'criteria' : criteria,
+	    		           'source' : source,
 	    		       },       
 	    		       success: function(response, opts) {
 	    		    	   var respText = Ext.decode(response.responseText);
@@ -223,7 +275,28 @@ Ext.define('MCLM.RouteHelper', {
 	    			    	
 	    		    	   for (var i = 0; i < features.length; i++) {
 	    		    		   features[i].set("featureId", featureId );
-	    		    		   me.vectorSource.addFeature( features[i] );
+	    		    		   
+	    		    		   // Transforma poligono em ponto
+	    		    		   var featureGeomType = features[i].getGeometry().getType();
+	    		    		   if ( featureGeomType == 'Polygon' ) {
+	    		    			   var polyGeom = features[i].getGeometry().getExtent();
+	    		    			   var props = features[i].getProperties();
+	    		    			   
+	    		    			   var center = ol.extent.getCenter( polyGeom );
+	    		    			   var point = new ol.geom.Point( center );
+	    		    			   var feature = new ol.Feature({
+	    		    				   geometry: point,
+	    		    			   });
+	    		    			   
+	    		    			   // Set properties !!!!
+	    		    			   
+	    		    			   
+	    		    			   me.vectorSource.addFeature( feature );
+	    		    		   } else {
+	    		    			   me.vectorSource.addFeature( features[i] );
+	    		    		   }
+	    		    		   // ----
+	    		    		   
 	    		    	   }	    		    	   
 	    		    	   
 	    		       },

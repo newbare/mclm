@@ -20,6 +20,8 @@ import br.mil.mar.casnav.mclm.persistence.services.RouteService;
 @ParentPackage("default")
 public class GetPointsNearRouteAction {
 	private String route;
+	private String criteria;
+	private String source;
 	
 	public String execute(){
 
@@ -27,7 +29,7 @@ public class GetPointsNearRouteAction {
 			String result = "";
 			
 			RouteService rs = new RouteService();
-			result = rs.getPointsNearRoute( route );
+			result = rs.getPointsNearRoute( route, criteria, source );
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
@@ -39,9 +41,16 @@ public class GetPointsNearRouteAction {
 		return "ok";
 	}
 
+	public void setCriteria(String criteria) {
+		this.criteria = criteria;
+	}
+	
 	public void setRoute(String route) {
 		this.route = route;
 	}
 
+	public void setSource(String source) {
+		this.source = source;
+	}
 	
 }

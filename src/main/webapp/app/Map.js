@@ -39,32 +39,8 @@ Ext.define('MCLM.Map', {
 			me = this;
 			this.init();
 			
-			
-			// ===================================================
-			/*
-			var draw = new ol.interaction.Draw({
-			  source: vectorSource,
-			  type: ('Polygon')
-			});
-			var select = new ol.interaction.Select();
-			select.setActive(false);
-			var selected = select.getFeatures();
-			var modify = new ol.interaction.Modify({
-			  features: selected
-			});
-			modify.setActive(false);
-			*/
-			// ===================================================
-			
-			
-			
-			
 			this.map = new ol.Map({
 				layers: [ this.baseLayer ],
-				
-				//interactions: ol.interaction.defaults().extend([draw, select, modify]),
-				
-				
 				target: container,
 				renderer: 'canvas',
 			    loadTilesWhileAnimating: true,

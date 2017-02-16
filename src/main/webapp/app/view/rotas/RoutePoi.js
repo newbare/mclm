@@ -51,6 +51,11 @@ Ext.define('MCLM.view.rotas.RoutePoi', {
             	cls: 'rodoviaria-button',
             	id: 'rodoviaria-button',
             	enableToggle: true,
+            },{
+            	xtype : "button",
+            	cls: 'helipad-button',
+            	id: 'helipad-button',
+            	enableToggle: true,
             }]
         }],	        
     }, {
@@ -133,6 +138,7 @@ Ext.define('MCLM.view.rotas.RoutePoi', {
 			Ext.tip.QuickTipManager.unregister('rodoviaria-button');
 			Ext.tip.QuickTipManager.unregister('police-button');
 			Ext.tip.QuickTipManager.unregister('prf-button');
+			Ext.tip.QuickTipManager.unregister('helipad-button');
 		},
 		
 		afterrender: function(component, eOpts) {
@@ -153,6 +159,24 @@ Ext.define('MCLM.view.rotas.RoutePoi', {
 		        target: 'police-button',
 		        title: 'Delegacias de Polícia',
 		        text: 'Localiza Delegacias de Polícia no trajeto da rota selecionada.',
+		        width: 190,
+		        dismissDelay: 5000 
+		    },{
+		        target: 'estadio-button',
+		        title: 'Estádios',
+		        text: 'Localiza Estádios no trajeto da rota selecionada.',
+		        width: 190,
+		        dismissDelay: 5000 
+		    },{
+		        target: 'rodoviaria-button',
+		        title: 'Rodoviária',
+		        text: 'Localiza Rodoviárias no trajeto da rota selecionada.',
+		        width: 190,
+		        dismissDelay: 5000 
+		    },{
+		        target: 'helipad-button',
+		        title: 'Pouso de Helicópteros',
+		        text: 'Localiza Pontos de Pouso de Helicóptero no trajeto da rota selecionada.',
 		        width: 190,
 		        dismissDelay: 5000 
 		    });

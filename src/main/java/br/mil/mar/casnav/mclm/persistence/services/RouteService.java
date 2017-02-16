@@ -216,7 +216,7 @@ public class RouteService {
 	
 	*/
 	
-	public String getPointsNearRoute( String routeGeometryText ) throws Exception {
+	public String getPointsNearRoute( String routeGeometryText, String criteria, String source ) throws Exception {
 		Config cfg = Configurator.getInstance().getConfig();
 		
 		int distanceLimitMeters = cfg.getDistanceFromRoute();
@@ -227,13 +227,7 @@ public class RouteService {
 				     "FROM (SELECT 'Feature' As type, " + 
 				     "ST_AsGeoJSON( ST_Transform(way,4326) )::json As geometry, " +  
 				     "row_to_json((SELECT l FROM (SELECT name,distance,operator) As l)) As properties " +  
-					 "FROM pointscanner('" + routeGeometryText + "') As l where round(distance::numeric, 5) < " + distanceLimitMeters + ") As f) as fc; ";
-		
-		/*
-		String sql = "SELECT array_to_json( array_agg( t ) ) as result "
-				+ "FROM ( select r.name,r.distance,r.operator, ST_AsGeoJSON(r.way)::json as geometry from pointscanner('" + routeGeometryText  +
-				"') as r where round(r.distance::numeric, 5) < " + distanceLimitMeters + ") as t";
-		*/
+					 "FROM pointscanner('" + routeGeometryText + "','" + criteria.replace("'", "''") +"','"+source+"') As l where round(distance::numeric, 5) < " + distanceLimitMeters + ") As f) as fc; ";
 		
 		String result = "";
 		
@@ -255,25 +249,25 @@ public class RouteService {
 	
 	/*
 	
-		CREATE OR REPLACE FUNCTION public.pointscanner(IN routegeometry text)
+		CREATE OR REPLACE FUNCTION public.pointscanner(IN routegeometry text, IN criteria text, IN source text)
 		  RETURNS TABLE(way geometry, name text, distance double precision, tags hstore, operator text, admin_level text, z_order integer) AS
 		$BODY$
 		DECLARE 
 			geomRoute geometry;
 			routeBB box2d;
+			sql text;
 		BEGIN
 			geomRoute = ST_GeomFromText( $1 ,4326);
-		
 			routeBB := ST_Extent(geomRoute);
-			
-			RETURN QUERY
-			SELECT pt.way, pt.name, ST_Distance( geomRoute, ST_Transform(pt.way,4326) ) * 111195 as distance, 
-				pt.tags, pt.operator, pt.admin_level, pt.z_order 
-			FROM planet_osm_point pt
-			where routeBB && ST_Transform(pt.way,4326);
 		
+			sql := 'SELECT pt.way, pt.name, ST_Distance( $1, ST_Transform(pt.way,4326) ) * 111195 as distance, pt.tags, pt.operator, pt.admin_level, pt.z_order '
+			 || ' FROM ' || source || ' pt where $2 && ST_Transform(pt.way,4326) and ' || criteria;
+		
+			RETURN QUERY EXECUTE sql USING geomRoute, routeBB;
 		END; $BODY$
-		  LANGUAGE plpgsql VOLATILE		
+		  LANGUAGE plpgsql VOLATILE
+		
+			
 		
 		
 		select * from pointscanner('MULTILINESTRING( 
