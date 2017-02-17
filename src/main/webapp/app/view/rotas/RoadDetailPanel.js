@@ -2,7 +2,7 @@ Ext.define('MCLM.view.rotas.RoadDetailPanel', {
 	extend: 'Ext.Panel',
 	xtype: 'roadDetailPanel',
 	id: 'roadDetailPanel',
-	height: 167,
+	height: 175,
 
 	autoScroll : true,
 	

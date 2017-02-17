@@ -25,6 +25,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	MCLM.RouteHelper.init();
     	MCLM.Globals.selectRouteActiveIcon = 'selectSourceIcon';
     	$("#selectTargetIcon").css("display","none");
+    	$('#mainLoadingInfo').text("");
     	this.disableButtons();
     },
     
@@ -49,10 +50,10 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	var rotaWindow = Ext.getCmp('rotaWindow');
     	rotaWindow.close();
     	MCLM.Globals.routeBlinkEnabled = false;
-    	MCLM.Map.unbindMapClick();
     	
-    	MCLM.Globals.selectRouteActiveIcon = 'selectSourceIcon';
     	$("#selectTargetIcon").css("display","none");  
+    	MCLM.Map.unbindMapClick();
+    	MCLM.Globals.selectRouteActiveIcon = 'selectSourceIcon';
     	
     },
 
@@ -135,10 +136,12 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	}
 		newMultiline.coordinates = newCoordinates;
 
-    	
     	geojsonObject = geojsonObject + "]}";
-
     	MCLM.RouteHelper.loadRoute( geojsonObject, newMultiline );
+    	
+    	$("#selectTargetIcon").css("display","none");
+    	MCLM.Globals.routeBlinkEnabled = false;
+    	MCLM.Map.unbindMapClick();
     	
     }
 

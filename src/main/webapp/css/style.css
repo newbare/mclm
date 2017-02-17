@@ -348,3 +348,74 @@
 	height : 32px; 
 }
 
+.blood-button {
+	background-image: url('../img/blood-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.clinic-button {
+	background-image: url('../img/clinic-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.ponte-button {
+	background-image: url('../img/ponte-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.gasolina-button {
+	background-image: url('../img/gasolina-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.prison-button {
+	background-image: url('../img/prison-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.airport-button {
+	background-image: url('../img/airport-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.levelcrossing-button {
+	background-image: url('../img/levelcrossing-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.school-button {
+	background-image: url('../img/school-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}

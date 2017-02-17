@@ -854,7 +854,10 @@ Ext.define('MCLM.Map', {
 		// Libera o click do mouse no mapa da ultima ferramenta ligada
 		unbindMapClick : function () {
 			if ( this.onClickBindKey ) {
-				this.map.unByKey( this.onClickBindKey );
+				// Removido por ser especifico do OL3
+				//this.map.unByKey( this.onClickBindKey );
+				// Novo metodo do OL4:
+				ol.Observable.unByKey( this.onClickBindKey );
 			}
 		},		
 		// --------------------------------------------------------------------------------------------
