@@ -100,7 +100,8 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 	       success: function(response, opts) {
 	    	   var respText = Ext.decode(response.responseText);
 	    	   var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
-	    	   routeResultStore.loadData( respText );
+	    	   	    	   
+	    	   routeResultStore.loadData( respText, true );
 	    	   me.getFeaturesFromRouteData( respText );
 	    	   me.enableButtons();
 	       },

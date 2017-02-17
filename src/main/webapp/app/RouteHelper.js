@@ -3,7 +3,7 @@ Ext.define('MCLM.RouteHelper', {
 	statics: {
 		activeRouteLayer: null,
 		poiLayer: null,
-		
+		oldCoordinates : [],
 		dirty : false,
 		vectorSource : null,
 		poiSource : null,
@@ -29,6 +29,8 @@ Ext.define('MCLM.RouteHelper', {
 			this.endIcon = null;
 			this.lastEndPosition = null;
 			this.swapped = false;
+			this.routeAsWKT = null;
+			this.oldCoordinates = [];
 			
 			var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
 			routeResultStore.load( [] );	
@@ -121,7 +123,15 @@ Ext.define('MCLM.RouteHelper', {
 		
 		
 		loadRoute : function( route, completeGeometry ) {
-			var myMls = new ol.geom.MultiLineString( completeGeometry.coordinates );
+			var geomCoordinates = completeGeometry.coordinates;
+			var newCoordinates = this.oldCoordinates;
+			
+    		for (z = 0; z < geomCoordinates.length; z++  ) {
+    			newCoordinates.push( geomCoordinates[z] )
+    		}			
+    		
+    		this.oldCoordinates = newCoordinates;			
+			var myMls = new ol.geom.MultiLineString( newCoordinates );
 			var format =  new ol.format.WKT();
 			this.routeAsWKT = format.writeGeometry ( myMls );
 
@@ -221,7 +231,7 @@ Ext.define('MCLM.RouteHelper', {
 	    	var featureId = button.id;
 	    	
 	    	if ( !button.pressed ) {
-	    		// remove camada
+	    		me.deletePois( featureId );
 	    	} else {
 	    		
 	    		if ( !me.routeAsWKT ) {
@@ -296,7 +306,7 @@ Ext.define('MCLM.RouteHelper', {
 		    	    	source.push('planet_osm_point');
 		    	        break;
 		    	    case 'school-button':
-		    	    	criteria = "amenity='college'";
+		    	    	criteria = "amenity='college' or amenity='university' or amenity='school'";
 		    	    	source.push('planet_osm_point');
 		    	    	source.push('planet_osm_polygon');
 		    	        break;
@@ -337,10 +347,7 @@ Ext.define('MCLM.RouteHelper', {
  		           'source' : source,
  		       },       
  		       success: function(response, opts) {
- 		    	   me.deletePois( featureId );
- 		    	   
  		    	   var respText = Ext.decode(response.responseText);
- 		    	   
  		    	   var tabela = 'pontos';
  		    	   if ( source == 'planet_osm_polygon' ) tabela = 'polígonos';
  		    	   if ( source == 'planet_osm_line' ) tabela = 'linhas';
