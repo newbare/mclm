@@ -7,11 +7,11 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
 	
     requires: [
         'MCLM.view.rotas.CalcRotaController',
-        /*'MCLM.view.rotas.PainelOrigem',
+        'MCLM.view.rotas.PainelOrigem',
         'MCLM.view.rotas.PainelDestino',
         'MCLM.view.rotas.RotaResultGrid',
-        'MCLM.view.rotas.RoadDetailPanel'*/
-	],	    
+        'MCLM.view.rotas.RoadDetailPanel'
+    ],	    
     controller : 'calcRota',	
 	
 	width : 300,
@@ -26,8 +26,21 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
     layout: {
         type: 'vbox',
         align: 'stretch'
-    },    
-    
+    },  
+
+    buttons: [{
+		  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
+	      text: 'Calcular Rota',
+	      id : 'calcRotaFormSubmit'
+		},{
+			  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
+	      text: 'Limpar Tudo',
+	      id : 'clearRoutes'
+		},{
+			  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
+	      text: 'Fechar',
+	      id : 'closeRotaWindow'
+	}],    
     
     dockedItems: [{
         xtype: 'toolbar',
@@ -36,15 +49,18 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
         items: [{
         	iconCls: 'save-icon',
         	id: 'idAddRoute',
-        	// Processado por 'MCLM.view.rotas.CalcRotaController'
             handler : 'addRouteToCurrentScenery'
+        },{
+        	iconCls: 'query-icon',
+        	id: 'idQueryFeature',
+            handler : 'bindMapToInspectFeature'
         }]
     }],	    
 	
 	constrain: true,
 	bodyStyle:"background:#FFFFFF;",
 	renderTo: Ext.getBody(),
-	/*
+    
 	items: [{
 		xtype: 'painelOrigem'
 	}, {
@@ -53,26 +69,11 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
 		xtype: 'roadDetailPanel'
 	},{
 		xtype: 'rotaResultGrid'
-	}],
-	*/
-    buttons: [{
-		  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
-        text: 'Calcular Rota',
-        id : 'calcRotaFormSubmit'
-    },{
-		  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
-        text: 'Limpar Tudo',
-        id : 'clearRoutes'
-    },{
-		  // Interceptado pelo controller 'MCLM.view.rotas.CalcRotaController'	
-        text: 'Fechar',
-        id : 'closeRotaWindow'
-    }],
-    
+	}],	
+	
 	listeners: {
 		
 		close : function() {
-			/*
 			Ext.tip.QuickTipManager.unregister('idQueryFeature');
 			Ext.tip.QuickTipManager.unregister('idAddRoute');
 			
@@ -101,11 +102,9 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
 	    	$("#selectTargetIcon").css("display","none");  
 	    	MCLM.Map.unbindMapClick();
 	    	MCLM.Globals.selectRouteActiveIcon = 'selectSourceIcon';
-			*/
 		},
 		
 		afterrender: function(component, eOpts) {
-			/*
 			MCLM.RouteHelper.init();
 		    Ext.tip.QuickTipManager.register({
 		        target: 'idAddRoute',
@@ -248,7 +247,7 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
 		    	$("#selectTargetIcon").css("display","block");
 		    	MCLM.Map.bindMapToGetTargetAddress();
 		    });			
-			*/
+			
 		}           
 	},    
     

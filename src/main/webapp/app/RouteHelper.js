@@ -20,6 +20,7 @@ Ext.define('MCLM.RouteHelper', {
 		clear : function() {
 			MCLM.Map.removeLayerByName('routeLayer');
 			MCLM.Map.removeLayerByName('routeMarker');
+			MCLM.Map.interrogatingFeatures = false;
 			this.activeRouteLayer = null;
 			this.poiLayer = null;
 			this.dirty = false;
@@ -260,7 +261,28 @@ Ext.define('MCLM.RouteHelper', {
 	        	features.push(feature);
 	        });
 	        
-	        console.log( features );
+	        if( features.length > 0 ) {
+	        	featDetailWindow = Ext.getCmp("featDetailWindow");
+	        	if ( !featDetailWindow ) featDetailWindow = Ext.create('MCLM.view.rotas.FeatDetailWindow');
+	        	featDetailWindow.show();
+	        	
+	        	$('#poiDetails tbody').empty();
+	        	for( x=0; x < features.length; x++ ) {
+	        		var keys = features[x].getKeys();
+	        		var iconSrc = features[x].get("iconName");
+	        		if ( iconSrc )
+	        			$("<tr style='border-top:1px solid black'><td style='border-bottom:1px solid black'><img style='width:30px;height:35px' src='img/" + iconSrc + ".png'></td><td>&nbsp;</td></tr>").appendTo('#poiDetails tbody');
+	        		
+	        		for( y=0; y < keys.length; y++ ) {
+	        			var value = features[x].get( keys[y] );
+	        			if( (value) && (keys[y] != 'geometry') && (keys[y] != 'iconName') && (keys[y] != 'featureId')  ) {
+		        			$("<tr><td style='background-color:#cacaca'>" + keys[y] + "</td><td>" + value + "</td></tr>").appendTo('#poiDetails tbody');
+	        			}
+	        		}
+	        	}
+	        	
+	        }
+	        
 	        
 		},
 	    locatePois : function( button ) {

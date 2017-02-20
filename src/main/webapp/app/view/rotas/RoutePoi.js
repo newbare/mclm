@@ -13,7 +13,7 @@ Ext.define('MCLM.view.rotas.RoutePoi', {
     },
     
     height: 200,
-    /*
+    
     items: [{
         title: 'Órgãos Policiais',
         dockedItems: [{
@@ -181,9 +181,9 @@ Ext.define('MCLM.view.rotas.RoutePoi', {
             }]
         }],	        
     }],
-    */
+    
 	listeners: {
-		/*
+		
 		afterrender: function(component, eOpts) {
 			
 			var buttons = this.query('button');
@@ -193,7 +193,7 @@ Ext.define('MCLM.view.rotas.RoutePoi', {
 			});			
 			
 		}
-    */
+    
 	}	
 });
     

@@ -14,7 +14,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
             	click: this.closeWindow 
             },
             
-            '# Routes' : {
+            '#clearRoutes' : {
             	click: this.clearRoutes 
             },
         })
@@ -29,58 +29,10 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	this.disableButtons();
     },
     
-    addRouteToCurrentScenery : function() {
-    	aler("adffds");
-    	/*
-		var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
-		var routeData = routeResultStore.getRange();
-		var count = routeData.length;    	
-		   
-		if ( count == 0 ) {
-			Ext.Msg.alert('Rota Inexistente','Calcule uma rota antes de efetuar esta operação.' );
-			return true;
-		}
-		
-		var geoJsonData = MCLM.RouteHelper.getAsJson();
-		Ext.Msg.alert('Não Implementado Ainda','MCLM.views.rotas.CalcRotaController :: addRouteToCurrentScenery' );
-    	*/
-    },
-    /*
-    bindMapToInspectFeature : function() {
-    	alert("dfdfd");
-    	var features = this.poiSource.getFeatures();
-    	
-    	if( features.length == 0 ) {
-    		Ext.Msg.alert('Nada Para Interrogar','Selecione alguns pontos de interresse antes.' );
-    		return true;
-    	}
-    	
-    	MCLM.Map.bindMapToInspectFeature();
-    },
-    */
     closeWindow : function() {
     	var rotaWindow = Ext.getCmp('rotaWindow');
     	rotaWindow.close();
     },
-
-    disableButtons : function() {
-    	var poiPanel = Ext.getCmp("routePoi");
-		var buttons = poiPanel.query('button');
-		Ext.Array.each(buttons, function(button) {
-		    button.setDisabled(true);
-		    button.toggle(false);
-		});
-    },
-    
-    
-    enableButtons : function() {
-    	var poiPanel = Ext.getCmp("routePoi");
-		var buttons = poiPanel.query('button');
-		Ext.Array.each(buttons, function(button) {
-		    button.setDisabled(false);
-		    button.toggle(false);
-		});
-	},
     
     submitForm : function( ) {
     	var me = this;
@@ -114,8 +66,52 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 		});
     	return true;
     },
+        
+    
+    addRouteToCurrentScenery : function() {
+		var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
+		var routeData = routeResultStore.getRange();
+		var count = routeData.length;    	
+		   
+		if ( count == 0 ) {
+			Ext.Msg.alert('Rota Inexistente','Calcule uma rota antes de efetuar esta operação.' );
+			return true;
+		}
+		
+		var geoJsonData = MCLM.RouteHelper.getAsJson();
+		Ext.Msg.alert('Não Implementado Ainda','MCLM.views.rotas.CalcRotaController :: addRouteToCurrentScenery' );
+    },
+    
+    bindMapToInspectFeature : function() {
+    	var features = MCLM.RouteHelper.poiSource.getFeatures();
+    	
+    	if( features.length == 0 ) {
+    		Ext.Msg.alert('Nada Para Interrogar','Selecione alguns pontos de interresse antes.' );
+    		return true;
+    	}
+    	
+    	MCLM.Map.bindMapToInspectFeature();
+    },
+    
+    disableButtons : function() {
+    	var poiPanel = Ext.getCmp("routePoi");
+		var buttons = poiPanel.query('button');
+		Ext.Array.each(buttons, function(button) {
+		    button.setDisabled(true);
+		    button.toggle(false);
+		});
+    },
     
     
+    enableButtons : function() {
+    	var poiPanel = Ext.getCmp("routePoi");
+		var buttons = poiPanel.query('button');
+		Ext.Array.each(buttons, function(button) {
+		    button.setDisabled(false);
+		    button.toggle(false);
+		});
+	},    
+
     getFeaturesFromRouteData : function( routeData ) {
     	var geojsonObject = '{"type": "FeatureCollection","crs": {"type": "name","properties": {"name": "EPSG:4326"} },"features": ['; 
     	var prefix = "";
@@ -161,7 +157,6 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	MCLM.Globals.routeBlinkEnabled = false;
     	MCLM.Map.unbindMapClick();
     	
-    }
+    }	
 
-    
 });

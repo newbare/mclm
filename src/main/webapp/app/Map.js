@@ -21,6 +21,7 @@ Ext.define('MCLM.Map', {
 		graticule: null,
 		geoserverUrl: '',
 		highlight : null,
+		interrogatingFeatures : false,
 		
 		
 		getBaseMapName : function() {
@@ -73,18 +74,19 @@ Ext.define('MCLM.Map', {
 				}
 			});	
 			
-			
-			/*
 			this.map.on('pointermove', function(evt) {
 				if (evt.dragging) {
 					return;
 				}
-				var pixel = me.map.getEventPixel( evt.originalEvent );
-				// Do something
+			    var hit = this.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+			        return true;
+			    });
+			    if ( hit && interrogatingFeatures ) {
+			        this.getTargetElement().style.cursor = 'pointer';
+			    } else {
+			        this.getTargetElement().style.cursor = '';
+			    }			    
 			});
-			*/
-			
-			
 			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -854,9 +856,10 @@ Ext.define('MCLM.Map', {
 			var me = this;
 			this.unbindMapClick();
 			this.onClickBindKey = this.map.on('click', function(event) {
-				var pixel = evt.pixel;
-				MCLM.RouterHelper.inspectFeature( pixel );
+				var pixel = event.pixel;
+				MCLM.RouteHelper.inspectFeature( pixel );
 			});
+			interrogatingFeatures = true;
 		},
 		// --------------------------------------------------------------------------------------------
 		// Libera o click do mouse no mapa da ultima ferramenta ligada
@@ -1018,8 +1021,8 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Exibe uma mensagem de erro da rotina "queryLayer"
 		queryLayerError : function( response, layerName ) {
-			//Ext.Msg.alert('Não é possível interrogar a camada de base','Não existem camadas a serem interrogadas.' );
-			console.log( "queryLayerError Error: " + response + " " + layerName );
+			// Ext.Msg.alert('Não é possível interrogar a camada de base','Não existem camadas a serem interrogadas.' );
+			// console.log( "queryLayerError Error: " + response + " " + layerName );
 		},
 		// --------------------------------------------------------------------------------------------
 		// Solicita uma camada do GeoServer em formato GeoJSON (Features)
