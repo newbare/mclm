@@ -850,6 +850,14 @@ Ext.define('MCLM.Map', {
 				MCLM.RouteHelper.putEndIcon( event.coordinate );
 			});
 		},
+		bindMapToInspectFeature : function() {
+			var me = this;
+			this.unbindMapClick();
+			this.onClickBindKey = this.map.on('click', function(event) {
+				var pixel = evt.pixel;
+				MCLM.RouterHelper.inspectFeature( pixel );
+			});
+		},
 		// --------------------------------------------------------------------------------------------
 		// Libera o click do mouse no mapa da ultima ferramenta ligada
 		unbindMapClick : function () {

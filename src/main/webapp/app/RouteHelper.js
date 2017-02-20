@@ -14,6 +14,8 @@ Ext.define('MCLM.RouteHelper', {
 		lastEndPosition : null,
 		swapped : false,
 		routeAsWKT : null,
+		maxRouteSeq : 0,
+		poiStyles : [],
 		
 		clear : function() {
 			MCLM.Map.removeLayerByName('routeLayer');
@@ -154,6 +156,7 @@ Ext.define('MCLM.RouteHelper', {
 			this.vectorSource = new ol.source.Vector();
 			this.poiSource = new ol.source.Vector();
 			
+			// Estilo da rota
 	    	var routeStyle = new ol.style.Style({
 	    		stroke: new ol.style.Stroke({
 	    			color: 'red',
@@ -162,24 +165,50 @@ Ext.define('MCLM.RouteHelper', {
 	    	});	
 	    	
 			var customStyleFunction = function( feature, resolution ) {
+				var me = MCLM.RouteHelper;
 				
 				var featureGeomType = feature.getGeometry().getType();
 				var props = feature.getProperties();
 				var resultStyles = [];
 				var featureId = props.featureId; 
+				var iconName = props.iconName; 
 				
-	        	var pointStyle = new ol.style.Style({
-					image: new ol.style.Icon(({
-						scale : 0.6,
-						anchor: [0.5, 35],
-						anchorXUnits: 'fraction',
-						anchorYUnits: 'pixels',
-						opacity: 0.75,
-						src: 'img/' + featureId + '.png'
-					}))
-		    	});	    	
-		    	resultStyles.push( pointStyle );
+				if ( featureGeomType == 'Point') {
+					// Estilo dos simbolos dos POI
+					var pointStyle = me.poiStyles[featureId];
+					if ( !pointStyle ) {
+			        	pointStyle = new ol.style.Style({
+							image: new ol.style.Icon(({
+								scale : 0.6,
+								anchor: [0.5, 35],
+								anchorXUnits: 'fraction',
+								anchorYUnits: 'pixels',
+								opacity: 0.75,
+								src: 'img/' + iconName + '.png'
+							}))
+				    	});
+			        	me.poiStyles[featureId] = pointStyle;
+					}
+			    	resultStyles.push( pointStyle );
+				}
 				
+				
+				if ( featureGeomType == 'LineString') {
+			    	// Estilo das linhas dos POI
+					var lineStyle = me.poiStyles[featureId];
+					if( !lineStyle ) {
+				    	lineStyle = new ol.style.Style({
+				    		stroke: new ol.style.Stroke({
+				    			color: 'blue',
+				    			width: 3
+				    		})
+				    	});
+				    	me.poiStyles[featureId] = lineStyle;
+					} 
+			    	resultStyles.push( lineStyle );
+				}	
+			    
+		    	
 				return resultStyles;
 			};
 			
@@ -225,7 +254,15 @@ Ext.define('MCLM.RouteHelper', {
 			MCLM.Map.map.addLayer( this.vectorLayerMarker );			
 		    				
 		},
-		
+		inspectFeature : function( pixel ) {
+	        var features = [];
+	        MCLM.Map.map.forEachFeatureAtPixel( pixel, function(feature, layer) {
+	        	features.push(feature);
+	        });
+	        
+	        console.log( features );
+	        
+		},
 	    locatePois : function( button ) {
 	    	var me = MCLM.RouteHelper;
 	    	var featureId = button.id;
@@ -310,6 +347,19 @@ Ext.define('MCLM.RouteHelper', {
 		    	    	source.push('planet_osm_point');
 		    	    	source.push('planet_osm_polygon');
 		    	        break;
+		    	    case 'railway-button':
+		    	    	criteria = "railway='rail'";
+		    	    	source.push('planet_osm_line');
+		    	        break;
+		    	    case 'port-button':
+		    	    	criteria = "(landuse='industrial' and tags->'industrial'='port') or landuse='harbour' or landuse='port'";
+		    	    	source.push('planet_osm_polygon');
+		    	    	break;
+		    	    case 'trainstation-button':
+		    	    	criteria = "railway='station'";
+		    	    	source.push('planet_osm_polygon');
+		    	    	source.push('planet_osm_point');
+		    	    	break;
 	    		}	 	    		
 	    		
 	    		if ( criteria == '' ) {
@@ -328,8 +378,8 @@ Ext.define('MCLM.RouteHelper', {
 	    	for ( x=0; x < features.length; x++ ) {
 	    		var feature = features[x];
 	    		var featId = feature.get("featureId");
-	    		console.log( featId );
-	    		if ( featId == featureId ) {
+	    		// Quando tem o "P_" eh pq tem uma linha E um ponto representando a mesma coisa (linhas de trem por exemplo)
+	    		if ( (featId == featureId) || (featId == 'P_' + featureId) ) {
 	    			this.poiSource.removeFeature( feature );
 	    		}
 	    	}
@@ -353,10 +403,10 @@ Ext.define('MCLM.RouteHelper', {
  		    	   if ( source == 'planet_osm_line' ) tabela = 'linhas';
  		    	   
  		    	   if ( !respText.features ) {
- 		    		   Ext.Msg.alert('Nada Encontrado','Nenhum resultado foi encontrado na tabela de '+tabela+' próximo à rota atual para o tipo de objeto selecionado.' );
+ 		    		   MCLM.Functions.mainLog( "Nenhum elemento encontrado na tabela de " + tabela + ".");
  		    		   return true;
  		    	   } else {
- 		    		   $('#mainLoadingInfo').text("Foram encontrados " + respText.features.length + " objetos na tabela de " + tabela + '.' );
+ 		    		   MCLM.Functions.mainLog( "Foram encontrados " + respText.features.length + " elementos na tabela de " + tabela + ".");
  		    	   }
  		    	   
  		    	   var features = new ol.format.GeoJSON().readFeatures( respText , {
@@ -365,17 +415,23 @@ Ext.define('MCLM.RouteHelper', {
  			    	
  		    	   for (var i = 0; i < features.length; i++) {
  		    		   features[i].set("featureId", featureId );
- 		    		   
- 		    		   console.log("RouteHelper::locatePois :");
- 		    		   console.log("  > " + featureGeomType );
+ 		    		   features[i].set("iconName", featureId );
  		    		   
  		    		   // Transforma poligono e linha em ponto -------------------------------
  		    		   var featureGeomType = features[i].getGeometry().getType();
  		    		   if ( featureGeomType == 'Polygon' || featureGeomType == 'LineString' ) {
- 		    			   var oldGeom = features[i].getGeometry().getExtent();
+ 		    			   var oldGeom = features[i].getGeometry()
+ 		    			   var oldExtent = oldGeom.getExtent();
  		    			   var props = features[i].getProperties();
  		    			   
- 		    			   var center = ol.extent.getCenter( oldGeom );
+ 		    			   // Poligonos: Coloca o icone no centro do poligono
+	    				   var center = ol.extent.getCenter( oldExtent );
+	    				   // Lilnhas: coloca o icone no inicio da linha
+ 		    			   if ( featureGeomType == 'LineString' ) {
+ 		    				   center = oldGeom.getFirstCoordinate();
+ 		    				   me.poiSource.addFeature( features[i] );
+ 		    			   }
+ 		    			   
  		    			   var point = new ol.geom.Point( center );
  		    			   var feature = new ol.Feature({
  		    				   geometry: point,
@@ -383,7 +439,7 @@ Ext.define('MCLM.RouteHelper', {
  		    			   
  		    			   props.geometry = feature.getProperties().geometry;
  		    			   feature.setProperties( props );
- 		    			   
+ 		    			   feature.set("featureId", "P_" + featureId );
  		    			   
  		    			   me.poiSource.addFeature( feature );
  		    		   } else {

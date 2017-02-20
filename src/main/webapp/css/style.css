@@ -1,3 +1,19 @@
+#mainLogDisplayContainer {
+	width:350px;
+	height:65px;
+	position:absolute;
+	bottom:7px;
+	right:5px;
+	cursor : pointer;
+	display : none;
+	/*border:1px solid black;*/
+	background: rgba(255, 255, 255, 0.4); 	
+}
+
+#mainLogDisplayTable td {
+	font-size:9px;	
+	 text-align: right;
+}
 
 #colorpickerHolder { 
 	width: 356px;
@@ -413,6 +429,33 @@
 
 .school-button {
 	background-image: url('../img/school-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.railway-button {
+	background-image: url('../img/railway-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.port-button {
+	background-image: url('../img/port-button.png') !important;
+	background-repeat: no-repeat;
+	background-size: 33px 33px;
+	background-size: 25px 30px;
+	width : 28px;
+	height : 32px; 
+}
+
+.trainstation-button {
+	background-image: url('../img/trainstation-button.png') !important;
 	background-repeat: no-repeat;
 	background-size: 33px 33px;
 	background-size: 25px 30px;

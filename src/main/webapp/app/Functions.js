@@ -1,6 +1,7 @@
 Ext.define('MCLM.Functions', {
 	
 	statics: {
+		countLog : 0,
 		
 		guid : function() {
 			  function s4() {
@@ -11,7 +12,21 @@ Ext.define('MCLM.Functions', {
 			  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
 			    s4() + '-' + s4() + s4() + s4();
 		},
+		hideMainLog : function () {
+			$('#mainLogDisplayContainer').css('display','none');
+			$('#mainLogDisplayTable tbody').empty();
+		},
 		
+		mainLog : function ( message ) {
+			$('#mainLogDisplayContainer').fadeIn(2000);
+			this.countLog++;
+			if ( this.countLog == 5 ) {
+				this.countLog--;
+				$('#mainLogDisplayTable tr:first').remove();
+			}
+			$("<tr><td>" + message + "</td></tr>").appendTo('#mainLogDisplayTable tbody').hide().fadeIn(2000);
+		},
+
 		makePattern : function( color, ptrHDist, ptrVDist, ptrLength, ptrHeight, ptrWidth ) {
 			
 			var newColor = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] +  ')';

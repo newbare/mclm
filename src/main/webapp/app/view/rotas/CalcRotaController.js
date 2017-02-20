@@ -14,7 +14,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
             	click: this.closeWindow 
             },
             
-            '#clearRoutes' : {
+            '# Routes' : {
             	click: this.clearRoutes 
             },
         })
@@ -30,6 +30,8 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     },
     
     addRouteToCurrentScenery : function() {
+    	aler("adffds");
+    	/*
 		var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
 		var routeData = routeResultStore.getRange();
 		var count = routeData.length;    	
@@ -41,20 +43,24 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 		
 		var geoJsonData = MCLM.RouteHelper.getAsJson();
 		Ext.Msg.alert('Não Implementado Ainda','MCLM.views.rotas.CalcRotaController :: addRouteToCurrentScenery' );
-
+    	*/
     },
-    
-    closeWindow : function() {
-    	MCLM.RouteHelper.clear();
+    /*
+    bindMapToInspectFeature : function() {
+    	alert("dfdfd");
+    	var features = this.poiSource.getFeatures();
     	
+    	if( features.length == 0 ) {
+    		Ext.Msg.alert('Nada Para Interrogar','Selecione alguns pontos de interresse antes.' );
+    		return true;
+    	}
+    	
+    	MCLM.Map.bindMapToInspectFeature();
+    },
+    */
+    closeWindow : function() {
     	var rotaWindow = Ext.getCmp('rotaWindow');
     	rotaWindow.close();
-    	MCLM.Globals.routeBlinkEnabled = false;
-    	
-    	$("#selectTargetIcon").css("display","none");  
-    	MCLM.Map.unbindMapClick();
-    	MCLM.Globals.selectRouteActiveIcon = 'selectSourceIcon';
-    	
     },
 
     disableButtons : function() {
@@ -63,7 +69,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 		Ext.Array.each(buttons, function(button) {
 		    button.setDisabled(true);
 		    button.toggle(false);
-		})
+		});
     },
     
     
@@ -73,8 +79,8 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 		Ext.Array.each(buttons, function(button) {
 		    button.setDisabled(false);
 		    button.toggle(false);
-		})
-    },
+		});
+	},
     
     submitForm : function( ) {
     	var me = this;
@@ -99,9 +105,6 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 	       },       
 	       success: function(response, opts) {
 	    	   var respText = Ext.decode(response.responseText);
-	    	   var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
-	    	   	    	   
-	    	   routeResultStore.loadData( respText, true );
 	    	   me.getFeaturesFromRouteData( respText );
 	    	   me.enableButtons();
 	       },
@@ -123,19 +126,33 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	
     	
     	for(x=0; x < routeData.length; x++ ) {
+    		var routeSeq = routeData[x].seq;
+    		var maxSeq = routeSeq + MCLM.RouteHelper.maxRouteSeq;
+    		routeData[x].seq = maxSeq; 
+    		
     		var featureProperties = '{"way_name":"'+ routeData[x].way_name +'", "km":"'+ routeData[x].km + '"}';
     		
     		geojsonObject = geojsonObject + prefix + '{"type": "Feature","properties": '+featureProperties+
-    			',"geometry":' +JSON.stringify( routeData[x].geometry ) + '}';
+    			',"geometry":' + JSON.stringify( routeData[x].geometry ) + '}';
     		prefix = ",";
     		
     		var geom = routeData[x].geometry;
-    		for (z=0; z<geom.coordinates.length; z++   ) {
-    			newCoordinates.push( geom.coordinates[z] )
+    		if ( geom ) {
+	    		for (z=0; z < geom.coordinates.length; z++   ) {
+	    			newCoordinates.push( geom.coordinates[z] )
+	    		}
+    		} else {
+    			//
     		}
  
     	}
+    	
+    	var routeResultStore = Ext.data.StoreManager.lookup('store.RouteResult');
+    	routeResultStore.loadData( routeData, true );
+    	
 		newMultiline.coordinates = newCoordinates;
+		
+		MCLM.RouteHelper.maxRouteSeq = maxSeq + 1;
 
     	geojsonObject = geojsonObject + "]}";
     	MCLM.RouteHelper.loadRoute( geojsonObject, newMultiline );

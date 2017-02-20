@@ -242,8 +242,6 @@ public class RouteService {
 			result = ute.getData("featurecollection");
 		}
 		
-		System.out.println( result );
-		
 		return result;		
 	}
 	
