@@ -81,7 +81,7 @@ Ext.define('MCLM.Map', {
 			    var hit = this.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
 			        return true;
 			    });
-			    if ( hit && interrogatingFeatures ) {
+			    if ( hit && me.interrogatingFeatures ) {
 			        this.getTargetElement().style.cursor = 'pointer';
 			    } else {
 			        this.getTargetElement().style.cursor = '';
@@ -859,7 +859,7 @@ Ext.define('MCLM.Map', {
 				var pixel = event.pixel;
 				MCLM.RouteHelper.inspectFeature( pixel );
 			});
-			interrogatingFeatures = true;
+			this.interrogatingFeatures = true;
 		},
 		// --------------------------------------------------------------------------------------------
 		// Libera o click do mouse no mapa da ultima ferramenta ligada

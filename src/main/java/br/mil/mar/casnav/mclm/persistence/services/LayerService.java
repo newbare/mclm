@@ -147,16 +147,16 @@ public class LayerService {
 	
 	public String deleteLayer( int idNode ) throws Exception {
 		
-		String result = "{ \"success\": true, \"msg\": \"Opera��o efetuada com sucesso.\" }";
+		String result = "{ \"success\": true, \"msg\": \"Operação efetuada com sucesso.\" }";
 		
 		try {
 			NodeService ns = new NodeService();
 			NodeData node = ns.getNode(idNode);
 			
 			if ( node.getLayerType() == LayerType.FDR ) {
-				// � uma pasta. Apaga somente o n� SE ESTIVER VAZIO.
+				// É uma pasta. Apaga somente o nó SE ESTIVER VAZIO.
 				if ( node.getChildren() > 0 ) {
-					throw new Exception("A pasta n�o est� vazia.");
+					throw new Exception("A pasta não está vazia.");
 				} else {
 					ns.newTransaction();
 					ns.deleteNode(node);
@@ -167,14 +167,13 @@ public class LayerService {
 			
 			String layerName = node.getLayerName();
 			String workspaceName = "";
-			
+			boolean splited = false;
 			if ( layerName.contains(":") ) {
 				String[] workspaceAndLayer = layerName.split(":");
 				workspaceName = workspaceAndLayer[0];
 				layerName = workspaceAndLayer[1];
-			} else {
-				throw new Exception("Nome da camada malformado. Deve ser no padr�o 'workspace:layer' e est� '" + layerName + "'");
-			}
+				splited = true;
+			} 
 			
 			Configurator cfg = Configurator.getInstance();
 			String geoUser = cfg.getGeoserverUser();
@@ -185,9 +184,6 @@ public class LayerService {
 				String filePath = node.getServiceUrl();
 				String saveDirectory = PathFinder.getInstance().getPath() + "/" + filePath;
 				File fil = new File( saveDirectory );
-				
-				System.out.println( saveDirectory );
-				
 				fil.delete();
 			}
 				
@@ -206,15 +202,22 @@ public class LayerService {
 				
 			}
 
+			
 			if ( node.getLayerType() == LayerType.SHP ) {
+				if ( !splited ){
+					throw new Exception("Nome da camada malformado. Deve ser no padrão 'workspace:layer' e está '" + layerName + "'");
+				}
 				// http://localhost:8080/geoserver/rest/workspaces/<ws>/datastores/<ds>?recurse=true
 				serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/datastores/" + layerName + "?recurse=true";
 			}
-				
 			if ( node.getLayerType() == LayerType.TIF ) { 
+				if ( !splited ){
+					throw new Exception("Nome da camada malformado. Deve ser no padrão 'workspace:layer' e está '" + layerName + "'");
+				}
 				// http://localhost:8080/geoserver/rest/workspaces/my_ws/coveragestores/my_cover?recurse=true
 				serverRESTAPI = geoserverURL + "rest/workspaces/" + workspaceName + "/coveragestores/" + layerName + "?recurse=true";
 			}
+			
 		
 			ns.newTransaction();
 			ns.deleteNode(node);
@@ -227,15 +230,16 @@ public class LayerService {
 				if ( !serverRESTAPILayerGroup.equals("") ) {
 					res = wc.doRESTRequest( "DELETE", serverRESTAPI, "", geoUser, geoPassword );
 				} else {
-					// É um grupo de camadas...
+					// Ã‰ um grupo de camadas...
 					res = wc.doRESTRequest( "DELETE", serverRESTAPILayerGroup, "", geoUser, geoPassword );
 				}
-				
-				
+
 				
 				if ( res != 0 ) {
-					throw new Exception("Erro ao remover camada '" + layerName + "': Código " + res );
+					result = "{ \"success\": true, \"msg\": \"Sucesso, mas a camada original não foi removida do servidor de origem ('" + geoserverURL+ "').\" }";
+					//throw new Exception("Erro ao remover camada '" + layerName + "': Código " + res );
 				}
+				
 			}
 
 		} catch (Exception e) {
@@ -344,8 +348,8 @@ public class LayerService {
 		int res = createStoreFromWMSService( newStoreName, externalWorkspaceName, serverUrl );
 		
 		if ( res != RESTResponse.CREATED ) {
-			System.out.println( "Erro " + res + " recebido pelo GeoServer ao criar novo Store '"+newStoreName+"' para o serviço externo WMS." );
-			//throw new Exception( "Erro " + res + " recebido pelo GeoServer ao criar novo Store '"+newStoreName+"' para o serviço externo WMS." );
+			System.out.println( "Erro " + res + " recebido pelo GeoServer ao criar novo Store '"+newStoreName+"' para o serviÃ§o externo WMS." );
+			//throw new Exception( "Erro " + res + " recebido pelo GeoServer ao criar novo Store '"+newStoreName+"' para o serviÃ§o externo WMS." );
 		} else {
 			System.out.println( "Store '"+newStoreName+"' criado no Workspace " + externalWorkspaceName );
 		}

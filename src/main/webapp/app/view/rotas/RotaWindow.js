@@ -98,10 +98,11 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
 			Ext.tip.QuickTipManager.unregister('trainstation-button');
 			
 	    	MCLM.Globals.routeBlinkEnabled = false;
-	    	MCLM.RouteHelper.clear();
 	    	$("#selectTargetIcon").css("display","none");  
 	    	MCLM.Map.unbindMapClick();
 	    	MCLM.Globals.selectRouteActiveIcon = 'selectSourceIcon';
+	    	
+	    	MCLM.RouteHelper.clear();
 		},
 		
 		afterrender: function(component, eOpts) {

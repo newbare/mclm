@@ -20,6 +20,7 @@ Ext.define('MCLM.RouteHelper', {
 		clear : function() {
 			MCLM.Map.removeLayerByName('routeLayer');
 			MCLM.Map.removeLayerByName('routeMarker');
+			MCLM.Map.removeLayerByName('poiLayer');
 			MCLM.Map.interrogatingFeatures = false;
 			this.activeRouteLayer = null;
 			this.poiLayer = null;
