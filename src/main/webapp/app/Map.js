@@ -78,13 +78,13 @@ Ext.define('MCLM.Map', {
 				if (evt.dragging) {
 					return;
 				}
-			    var hit = MCLM.Map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+			    var hit = MCLM.Map.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
 			        return true;
 			    });
 			    if ( hit && me.interrogatingFeatures ) {
-			        MCLM.Map.getTargetElement().style.cursor = 'pointer';
+			        MCLM.Map.map.getTargetElement().style.cursor = 'pointer';
 			    } else {
-			        MCLM.Map.getTargetElement().style.cursor = '';
+			        MCLM.Map.map.getTargetElement().style.cursor = '';
 			    }			    
 			});
 			
@@ -927,8 +927,49 @@ Ext.define('MCLM.Map', {
 		bindMapToQueryTool : function () {
 			MCLM.Map.unbindMapClick();
 			var me = MCLM.Map;
-			MCLM.Map.onClickBindKey = MCLM.Map.map.on('click', function(event) {
+			me.onClickBindKey = me.map.on('click', function(event) {
 				me.queryMap( event.coordinate );
+
+				
+				var data = [];	
+				var externalLayerName = "";
+				me.map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
+					var att = feature.getProperties();
+					
+					var columnRefs = {};
+					var layerName = layer.get("name");
+					externalLayerName = layerName;
+
+			        att.features.forEach( function( feature ) {
+
+			        	// Zera os valores de todas as colunas
+			        	for(var p in columnRefs) {
+			        	    if(columnRefs.hasOwnProperty(p)) columnRefs[p] = '';
+			        	}
+			        	
+			        	var keys = feature.getKeys();
+		        		for( y=0; y < keys.length; y++ ) {
+		        			var value = feature.get( keys[y] );
+		        			if( (keys[y] != 'geometry') ) {
+		        				// Seta o valor para a coluna
+		        				columnRefs[ keys[y] ] = value;
+				        		
+		        			}
+		        		}
+		        		
+		        		// Passa para a verdadeira. Isso tudo é para manter o numero de colunas igual
+		        		// caso uma feature venha com uma coluna e outra não.
+		        		var tempData = JSON.parse( JSON.stringify( columnRefs ) );
+		        		data.push( tempData );
+
+			        });
+			        			        
+		        	
+			        
+			    });				
+				
+	    	    me.addGrid( externalLayerName, data );
+				
 			});
 			
 		}, 		

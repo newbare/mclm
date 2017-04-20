@@ -37,6 +37,7 @@ public class DictionaryRepository extends BasicRepository {
 		DaoFactory<DictionaryItem> df = new DaoFactory<DictionaryItem>();
 		IDao<DictionaryItem> fm = df.getDao(this.session, DictionaryItem.class);
 		
+		item.setVisible( true );
 		if ( item.getNode() != null ) {
 			// Coloca o Node no contexto de persistencia
 			DaoFactory<NodeData> dfnd = new DaoFactory<NodeData>();

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayerAttribute;
 
@@ -37,6 +38,9 @@ public class DictionaryItem {
 	@Column(length=80)
 	private String dataType;	
 
+    @Column(name="visible")
+	private Boolean visible;		
+	
 	public DictionaryItem( GeoserverLayerAttribute attribute, NodeData node ) {
 		this.node = node;
 		this.originalName = attribute.getName();
@@ -99,6 +103,19 @@ public class DictionaryItem {
 	
 	public String getDescription() {
 		return description;
+	}
+
+	public Boolean getVisible() {
+		return visible;
+	}
+
+	public void setVisible(Boolean visible) {
+		this.visible = visible;
+	}
+	
+	@Transient
+	public Boolean isVisible() {
+		return visible;
 	}
 	
 }

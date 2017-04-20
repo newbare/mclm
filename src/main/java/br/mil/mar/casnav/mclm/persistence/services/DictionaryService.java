@@ -118,7 +118,7 @@ public class DictionaryService {
 					}
 					
 					DictionaryItem di = new DictionaryItem( columnName, dataType, node );
-					//System.out.println( ">>> " + di.getOriginalName() + " : " + di.getDataType() );
+					
 					newTransaction();
 					rep.insertItem( di );				
 				}
@@ -234,11 +234,13 @@ public class DictionaryService {
 				String description = jo.getString("description" );
 				String translatedName = jo.getString("translatedName" );
 				int idDictionaryItem = jo.getInt("idDictionaryItem" );
+				boolean visible = jo.getBoolean("visible");
 				
 				newTransaction();
 				DictionaryItem item = rep.getItem( idDictionaryItem );
 				item.setTranslatedName( translatedName );
 				item.setDescription( description );
+				item.setVisible(visible);
 				
 				rep.newTransaction();
 				rep.updateItem( item );
