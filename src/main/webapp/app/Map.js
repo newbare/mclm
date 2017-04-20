@@ -269,7 +269,14 @@ Ext.define('MCLM.Map', {
 			var data = node.data;
 			var serialId = node.get('serialId');
 			var version = node.get('version');
-			var layerType = node.get('layerType');		
+			var layerType = node.get('layerType');
+			
+			var filter = node.get("filter");
+			var cql = null;
+			if( filter ) {
+				cql = filter.filter;
+			}
+			
 			
             var transparency = node.get('transparency') / 10;
             var layerStackIndex = node.get('layerStackIndex');			
@@ -293,22 +300,31 @@ Ext.define('MCLM.Map', {
 				
 			} else {
 				
+				var paramsRel = {
+	    	        	tiled: true,
+	    	            'layers': layerName,
+	    	            'VERSION': '1.1.1', 
+	    	            'format': 'image/png8'
+	    	    }
+				if ( cql ) {
+					paramsRel = {
+		    	        	tiled: true,
+		    	            'layers': layerName,
+		    	            'cql_filter': cql,
+		    	            'VERSION': '1.1.1', 
+		    	            'format': 'image/png8'
+		    	    }					
+				}
 				
 		    	var newLayer = new ol.layer.Tile({
 		    	    source: new ol.source.TileWMS({
 		    	        url: serverUrl,
 		    	        isBaseLayer : false,
-		    	        params: {
-		    	        	tiled: true,
-		    	            'layers': layerName,
-		    	            'VERSION': '1.1.1', 
-		    	            'format': 'image/png8'
-		    	        },
+		    	        params: paramsRel,
 		    	        projection: ol.proj.get('EPSG:4326')
 		    	    })
 		    	});	
 				
-				//newLayer = MCLM.Map.testeApagar(serverUrl, layerName);
 			}
 			
 			if ( transparency == 0 ) transparency = 1;

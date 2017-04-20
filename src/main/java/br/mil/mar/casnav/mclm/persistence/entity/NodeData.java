@@ -6,9 +6,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -60,6 +63,10 @@ public class NodeData {
 	
 	@Column(name = "read_only")
 	private boolean readOnly;
+	
+	@ManyToOne()
+	@JoinColumn(name="id_filter_item", foreignKey = @ForeignKey(name = "fk_node_data_filter_item"))
+	private FilterItem filter;	
 
 	public NodeData() {
 		// TODO Auto-generated constructor stub

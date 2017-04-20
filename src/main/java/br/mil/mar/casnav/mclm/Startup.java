@@ -14,6 +14,7 @@ import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
 import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
+import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 import br.mil.mar.casnav.mclm.persistence.services.DictionaryService;
 import br.mil.mar.casnav.mclm.persistence.services.NodeService;
 
@@ -73,17 +74,18 @@ public class Startup implements ServletContextListener {
     		NodeService ns = new NodeService();
     		Set<NodeData> nodes = ns.getList();
     		DictionaryService ds = new DictionaryService();
+    		DataLayerService dss = new DataLayerService();
 			for( NodeData node : nodes ) {
 				ds.newTransaction();
 				try {
 					ds.getDictionary( node.getIdNodeData() );
 				} catch ( NotFoundException nfe ) {
-					System.out.println("Atualizando dicionário para [" + node.getLayerType() + "] " + node.getLayerAlias() + "..." );
-					int quant = ds.updateDictionary( node );
-					System.out.println("Concluido com " + quant + " itens.");
+					int quant = ds.updateDictionary( node, dss );
+					System.out.println(" > concluido com " + quant + " itens.");
 				}
 				
 			}
+			dss.closeSession();
 			
     		
 		} catch (Exception e) { 

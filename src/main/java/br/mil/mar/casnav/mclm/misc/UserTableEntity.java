@@ -9,6 +9,7 @@ public class UserTableEntity {
 	private Map data;
 	
 	public UserTableEntity( Map data ) {
+		//System.out.println("    NEW UTE : " + data.toString() );
 		this.data = data;
 	}
 	

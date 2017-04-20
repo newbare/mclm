@@ -47,6 +47,12 @@ public class DictionaryItem {
 		// 
 	}
 
+	public DictionaryItem(String columnName, String dataType, NodeData node) {
+		this.node = node;
+		this.originalName = columnName;
+		this.dataType = dataType;
+	}
+
 	public int getIdDictionaryItem() {
 		return idDictionaryItem;
 	}

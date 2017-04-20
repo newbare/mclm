@@ -11,11 +11,13 @@ import com.google.gson.GsonBuilder;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.LayerType;
+import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.misc.WebClient;
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayer;
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayerAttribute;
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayersSchema;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
+import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.DictionaryItem;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -69,20 +71,79 @@ public class DictionaryService {
 		return result;
 	}
 	
-	public int updateDictionary( NodeData node ) throws Exception {
+	public int updateDictionary( NodeData node, DataLayerService dss ) throws Exception {
 		String layerName = node.getLayerName();
 		String serviceUrl = node.getServiceUrl();
 		int result = 0;
-		GeoserverLayersSchema schema = null;
+		
+		if ( node.getLayerType() == LayerType.DTA ) {
+			System.out.println("Atualizando dicionário para [" + node.getLayerType() + "] " + node.getLayerAlias() + "..." );
+						
+			try {
+				dss.newTransaction();
+				String dssData[] = layerName.split(":");
+				Integer idDataLayer = Integer.valueOf( dssData[1] );
+				DataLayer dl = dss.getDataLayer( idDataLayer );			
+				 
+				int serverPort = dl.getTable().getServer().getServerPort();
+				String serverAddress = dl.getTable().getServer().getServerAddress();
+				String databaseName = dl.getTable().getServer().getServerDatabase();
+				String password = dl.getTable().getServer().getServerPassword();
+				String user = dl.getTable().getServer().getServerUser();
+				String connectionString = "jdbc:postgresql://" + serverAddress + ":" + serverPort + "/" + databaseName;
+				String tableName = dl.getTable().getName();
+				
+				// Tenta remover o nome do esquema
+				if ( tableName.contains(".") ) {
+					String data1[] = tableName.split("\\.");
+					tableName = data1[1];
+				}
+				
+				System.out.println(" > lendo esquema da tabela tabela '" + tableName + " em " + serverAddress + ":" + serverPort + "/" + databaseName );
+
+				String query = "SELECT column_name,data_type FROM information_schema.columns WHERE table_name = '"+tableName+"' order by column_name"; // table_schema = 'public' 
+
+				GenericService gs = new GenericService( connectionString, user,	password  );
+				List<UserTableEntity> utes = gs.genericFetchList( query );
+				result = utes.size();
+				
+				for( UserTableEntity ute : utes ) {
+					String columnName = "";
+					String dataType = "";
+					
+					for( String key : ute.getColumnNames() ) {
+						String value = ute.getData( key );
+						if( key.equals("column_name") ) columnName = value;
+						if( key.equals("data_type") ) dataType = value;						
+					}
+					
+					DictionaryItem di = new DictionaryItem( columnName, dataType, node );
+					//System.out.println( ">>> " + di.getOriginalName() + " : " + di.getDataType() );
+					newTransaction();
+					rep.insertItem( di );				
+				}
+				
+				
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		} else
 		
 		if ( node.getLayerType() == LayerType.WMS ) {
+			//System.out.println("Atualizando dicionário para [" + node.getLayerType() + "] " + node.getLayerAlias() + "..." );
+			GeoserverLayersSchema schema = null;
 			try {
 				schema = getLayerAttributeSchema( layerName, serviceUrl );
 			} catch ( HttpHostConnectException ex ) {
-				System.out.println("Conexao com '" + serviceUrl + "' excedeu o tempo limite");
+				//System.out.println(" > conexao com '" + serviceUrl + "' excedeu o tempo limite");
 			}
 			
-			if ( schema == null ) return 0;
+			if ( schema == null ) {
+				//System.out.println(" > impossivel obter esquema de '" + serviceUrl );
+				return 0;
+			}
 			
 			if ( schema.getFeatureTypes().size() > 0 ) {
 				// Especifiquei a camada, entao so virah um layer no resultado
@@ -96,8 +157,9 @@ public class DictionaryService {
 				}
 			}
 		} else {
-			System.out.println("Tipo de Camada '" + node.getLayerType() + "' não suporta dicionário.");
+			//System.out.println(" > tipo de Camada '" + node.getLayerType() + "' não suporta dicionário.");
 		}
+		
 		return result;
 	}
 	

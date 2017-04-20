@@ -1,7 +1,9 @@
 package br.mil.mar.casnav.mclm.misc;
 
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
+import br.mil.mar.casnav.mclm.persistence.entity.FilterItem;
 import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
+import br.mil.mar.casnav.mclm.persistence.services.FilterService;
 
 /*
  * Se mexer nesta estrutura, altere também 
@@ -32,8 +34,9 @@ public class TreeNode {
 	private int childrenCount;
 	private boolean readOnly = false;
 	private DataLayer dataLayer;
+	private FilterItem filter;
 	
-	public TreeNode( UserTableEntity ute, DataLayerService dss ) {
+	public TreeNode( UserTableEntity ute, DataLayerService dss, FilterService fs ) {
 		this.childrenCount = Integer.valueOf( ute.getData("children") );
 
 		this.idNodeParent = Integer.valueOf( ute.getData("id_node_parent") );
@@ -58,7 +61,23 @@ public class TreeNode {
 			this.leaf = false;
 		} else {
 			if ( this.layerType.equals("KML") ) this.iconCls = "kml-icon";
-			if ( this.layerType.equals("WMS") ) this.iconCls = "wms-icon";
+			// ====================================================================================
+
+			if ( this.layerType.equals("WMS") ) {
+				this.iconCls = "wms-icon";
+				String filterId = ute.getData("id_filter_item");
+			
+				if( filterId != null && !filterId.equals("") ) {
+					try {
+						int idFilterItem = Integer.valueOf( ute.getData("id_filter_item") );
+						this.filter = fs.getFilter( idFilterItem );
+					} catch ( Exception e ) {
+							
+					}
+				}
+				
+			}
+			// ====================================================================================
 			if ( this.layerType.equals("SHP") ) this.iconCls = "shp-icon";
 			if ( this.layerType.equals("TIF") ) this.iconCls = "tif-icon";
 			if ( this.layerType.equals("DTA") ) {
@@ -235,6 +254,14 @@ public class TreeNode {
 
 	public void setDataLayer(DataLayer dataLayer) {
 		this.dataLayer = dataLayer;
+	}
+
+	public FilterItem getFilter() {
+		return filter;
+	}
+
+	public void setFilter(FilterItem filter) {
+		this.filter = filter;
 	}
 	
 	

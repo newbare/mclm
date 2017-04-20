@@ -29,7 +29,8 @@ public class GenericService {
 			rep.newTransaction();
 		}
 		List<UserTableEntity> result = new ArrayList<UserTableEntity>();
-		for ( Object obj : rep.genericFetchList(query) ) {
+		List<?> objs = rep.genericFetchList(query);
+		for ( Object obj : objs ) {
 			UserTableEntity ut = new UserTableEntity( (Map)obj );
 			result.add(ut);
 		}
@@ -38,3 +39,4 @@ public class GenericService {
 	}	
 	
 }
+

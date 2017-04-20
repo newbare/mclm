@@ -45,7 +45,6 @@ public class GenericRepository  {
 	
 	public GenericRepository( String connectionString, String user, String password ) throws DatabaseConnectException {
 		try {
-			// "jdbc:postgresql://127.0.0.1:5432/testdb", "mkyong", "123456"
 			this.connection = DriverManager.getConnection(connectionString, user, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -77,21 +76,19 @@ public class GenericRepository  {
 		
 		List< Map<String,Object> > retorno = new ArrayList< Map<String,Object> >();
 		Statement stmt = this.connection.createStatement();
-		ResultSet rs = stmt.executeQuery( query );
+		ResultSet objs = stmt.executeQuery( query );
 		
-		ResultSetMetaData rsmd = rs.getMetaData();
+		ResultSetMetaData rsmd = objs.getMetaData();
 		int count = rsmd.getColumnCount();
 		
-		while ( rs.next() ) {
-		
+		while ( objs.next() ) {
+			Map<String,Object> obj = new HashMap<String,Object>();
 			for (int i = 1; i <= count; i++) {
 				String columnName = rsmd.getColumnName( i );
-				String columnData = rs.getString( columnName );
-				Map<String,Object> returnMap = new HashMap<String,Object>();
-				returnMap.put(columnName, columnData);
-				retorno.add( returnMap );
+				String columnData = objs.getString( columnName );
+				obj.put(columnName, columnData);
 			}
-		
+			retorno.add( obj );
 		}
 		
 		this.connection.close();		

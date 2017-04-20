@@ -45,7 +45,9 @@ public class NodeService {
 	public NodeData addNode( NodeData node ) throws Exception {
         node = rep.insertNode( node );
         DictionaryService ds = new DictionaryService();
-        ds.updateDictionary( node );
+        DataLayerService dss = new DataLayerService();
+        ds.updateDictionary( node, dss );
+        dss.closeSession();
         return node;
 	}
 	
@@ -124,9 +126,11 @@ public class NodeService {
 		List<UserTableEntity> utes = gs.genericFetchList( sql );
 		
 		DataLayerService dss = new DataLayerService();
+		FilterService fs = new FilterService();
+		
 		JSONArray arrayObj = new JSONArray();
 		for ( UserTableEntity ute : utes ) {
-			TreeNode tn = new TreeNode( ute, dss );
+			TreeNode tn = new TreeNode( ute, dss, fs );
 			// Nao coloca feicao na arvore do catalogo...
 			if ( !tn.getLayerType().equals("FEI") ) {
 				JSONObject itemObj = new JSONObject( tn );
