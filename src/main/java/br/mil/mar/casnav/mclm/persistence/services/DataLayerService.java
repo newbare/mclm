@@ -75,10 +75,7 @@ public class DataLayerService {
 		String result = "{ \"success\": true, \"msg\": \"Camada de Dados criada com sucesso.\" }";
 		
 		try {
-			
-			
 			FeatureStyle style = getFeatureStyle( idFeatureStyle );
-			
 			
 			ServerService ss = new ServerService();
 			PostgresTable table = ss.getTable( idTable );
@@ -92,7 +89,7 @@ public class DataLayerService {
 			String layerAlias = table.getName() + ":" + dataLayer.getIdDataLayer();
 			
 			NodeService ns = new NodeService();
-			NodeData node = new NodeData(layerFolderID, "", hint, institute, layerAlias, dataLayerName, LayerType.DTA);
+			NodeData node = new NodeData(layerFolderID, "", hint, institute, layerAlias, dataLayer, LayerType.DTA);
 			node.setReadOnly( true );
 			ns.addNode( node );				
 			

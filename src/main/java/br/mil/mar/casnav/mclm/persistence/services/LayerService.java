@@ -43,36 +43,41 @@ public class LayerService {
 	}
 	*/
 	
-	public String getAsFeatures( int idDataLayer ) throws Exception {
-
-		DataLayerService dls = new DataLayerService();
-		DataLayer dl = dls.getDataLayer( idDataLayer );
+	public String getAsFeatures( int idDataLayer ) {
+		String result = "";
+		try {
+			DataLayerService dls = new DataLayerService();
+			DataLayer dl = dls.getDataLayer( idDataLayer );
+				
+			String sql = "SELECT row_to_json( fc )::text As featurecollection " +  
+				"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) ) As features " + 
+				     "FROM (SELECT 'Feature' As type, " + 
+				     "ST_AsGeoJSON( ST_Transform("+ dl.getTable().getGeometryColumnName() + ",4326) )::json As geometry, " +  
+				     "row_to_json((SELECT l FROM (SELECT " + dl.getTable().getIdColumnName() + ", " +  dl.getDataWindow().getIdDataWindow() + " as datawindow, " + dl.getPropertiesColumns() + "," + dl.getLabelColumn() + " as label) As l)) As properties " +  
+					 "FROM " + dl.getTable().getName() + " As l where " + dl.getWhereClause() + ") As f) as fc; ";
+	
+			String jsonData = "";
 			
-		String sql = "SELECT row_to_json( fc )::text As featurecollection " +  
-			"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) ) As features " + 
-			     "FROM (SELECT 'Feature' As type, " + 
-			     "ST_AsGeoJSON( ST_Transform("+ dl.getTable().getGeometryColumnName() + ",4326) )::json As geometry, " +  
-			     "row_to_json((SELECT l FROM (SELECT " + dl.getPropertiesColumns() + "," + dl.getLabelColumn() + " as label) As l)) As properties " +  
-				 "FROM " + dl.getTable().getName() + " As l where " + dl.getWhereClause() + ") As f) as fc; ";
-
-		String jsonData = "";
-		
-		String connectionString = "jdbc:postgresql://" + dl.getTable().getServer().getServerAddress() +
-				":" + dl.getTable().getServer().getServerPort() + "/" + dl.getTable().getServer().getServerDatabase();
-		GenericService gs = new GenericService( connectionString, dl.getTable().getServer().getServerUser(), 
-				dl.getTable().getServer().getServerPassword()  );
-		
-		List<UserTableEntity> utes = gs.genericFetchList( sql );
-		
-		if ( utes.size() > 0 ) {
-			UserTableEntity ute = utes.get(0);
-			jsonData = ute.getData("featurecollection");
+			String connectionString = "jdbc:postgresql://" + dl.getTable().getServer().getServerAddress() +
+					":" + dl.getTable().getServer().getServerPort() + "/" + dl.getTable().getServer().getServerDatabase();
+			GenericService gs = new GenericService( connectionString, dl.getTable().getServer().getServerUser(), 
+					dl.getTable().getServer().getServerPassword()  );
+			
+			List<UserTableEntity> utes = gs.genericFetchList( sql );
+			
+			if ( utes.size() > 0 ) {
+				UserTableEntity ute = utes.get(0);
+				jsonData = ute.getData("featurecollection");
+			}
+			
+			DataLayerStylized dlsty = new DataLayerStylized( dl.getStyle(), jsonData );
+			JSONObject itemObj = new JSONObject( dlsty );
+			
+			result = itemObj.toString();
+		} catch ( Exception e ) {
+			result = e.getMessage().replace("\"", "'");
 		}
-		
-		DataLayerStylized dlsty = new DataLayerStylized( dl.getStyle(), jsonData );
-		JSONObject itemObj = new JSONObject( dlsty );
-		
-		return itemObj.toString();
+		return result;
 	}
 	
 	public String queryLayer( String targetUrl, String layerName ) throws Exception {

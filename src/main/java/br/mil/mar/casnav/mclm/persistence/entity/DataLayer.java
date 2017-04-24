@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -33,7 +34,11 @@ public class DataLayer {
 	
 	@Column(length=250)
 	private String propertiesColumns;	
-    
+
+	@OneToOne()
+	@JoinColumn(name="id_data_window", foreignKey = @ForeignKey(name = "fk_datalayer_data_window"))
+	private DataWindow dataWindow;		
+	
 	@ManyToOne()
 	@JoinColumn(name="id_table", foreignKey = @ForeignKey(name = "fk_datalayer_tables"))
 	private PostgresTable table;	
@@ -120,5 +125,15 @@ public class DataLayer {
 	public FeatureStyle getStyle() {
 		return style;
 	}
+
+	public DataWindow getDataWindow() {
+		return dataWindow;
+	}
+
+	public void setDataWindow(DataWindow dataWindow) {
+		this.dataWindow = dataWindow;
+	}
+	
+	
     
 }

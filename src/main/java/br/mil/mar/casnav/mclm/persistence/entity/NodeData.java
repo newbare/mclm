@@ -11,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -64,15 +64,19 @@ public class NodeData {
 	@Column(name = "read_only")
 	private boolean readOnly;
 	
-	@ManyToOne()
+	@OneToOne()
 	@JoinColumn(name="id_filter_item", foreignKey = @ForeignKey(name = "fk_node_data_filter_item"))
 	private FilterItem filter;	
+	
+	@OneToOne()
+	@JoinColumn(name="id_data_layer", foreignKey = @ForeignKey(name = "fk_node_data_layer"))
+	private DataLayer dataLayer;		
 
 	public NodeData() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public NodeData(int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, 
+	private void init(int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, 
 			String layerAlias, LayerType layerType ) {
 		this.idNodeParent = idNodeParent;
 		this.originalServiceUrl = originalServiceUrl;
@@ -84,7 +88,22 @@ public class NodeData {
 		this.readOnly = false;
 		this.serialId = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
 	}
+	
+	public NodeData(int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, 
+			String layerAlias, LayerType layerType ) {
+		
+		init( idNodeParent, originalServiceUrl, description, institute, layerName, layerAlias, layerType);
+		
+	}
 
+	
+	public NodeData(int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, 
+			DataLayer dataLayer, LayerType layerType ) {
+		
+		init( idNodeParent, originalServiceUrl, description, institute, layerName, dataLayer.getDataLayerName(), layerType);
+		this.dataLayer = dataLayer;
+		
+	}	
 	public int getIdNodeData() {
 		return idNodeData;
 	}
@@ -187,6 +206,22 @@ public class NodeData {
 	
 	public void setSerialId(String serialId) {
 		this.serialId = serialId;
+	}
+
+	public DataLayer getDataLayer() {
+		return dataLayer;
+	}
+
+	public void setDataLayer(DataLayer dataLayer) {
+		this.dataLayer = dataLayer;
+	}
+
+	public FilterItem getFilter() {
+		return filter;
+	}
+
+	public void setFilter(FilterItem filter) {
+		this.filter = filter;
 	}
 
 	

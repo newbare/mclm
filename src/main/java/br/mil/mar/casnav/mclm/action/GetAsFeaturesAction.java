@@ -24,22 +24,21 @@ public class GetAsFeaturesAction {
 	
 	public String execute(){
 
-		try { 
-			String result = "";
+		String result = "{ \"error\": true, \"msg\": \"Camada não informada.\" }";
+		
+		if ( idDataLayer != null ) {
 			
-			if ( idDataLayer != null ) {
-				
-				LayerService ls = new LayerService();
-				result = ls.getAsFeatures(  idDataLayer );
-				
-			}
+			LayerService ls = new LayerService();
+			result = ls.getAsFeatures(  idDataLayer );
 			
+		};
+		
+		try {
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.getWriter().write( result );  
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			
+		} catch ( Exception e ) {
+			//
 		}
 		return "ok";
 	}

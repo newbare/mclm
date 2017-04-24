@@ -118,12 +118,13 @@ public class ServerService {
 		return rep.getTable( idTable );
 	}
 	
-	public String addTable( String tableName, String geometryColumnName, int idServer ) throws Exception {
+	public String addTable( String tableName, String geometryColumnName, String idColumnName, int idServer ) throws Exception {
 		Postgres server = getServerPGR( idServer );
 		
 		String result = "{ \"success\": true, \"msg\": \"Tabela " + tableName + " adicionada com sucesso ao servidor " + server.getName() + "\" }";
 		try {
-			PostgresTable table = new PostgresTable(tableName, geometryColumnName, server);
+			PostgresTable table = new PostgresTable(tableName, geometryColumnName, idColumnName, server);
+			
 			newTransaction();
 			rep.addTable( table );
 		} catch ( Exception ex ) {

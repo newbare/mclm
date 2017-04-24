@@ -51,7 +51,6 @@ public class TreeNode {
 		this.readOnly = Boolean.valueOf( ute.getData("read_only") );
 		this.iconCls = "";
 		this.idNodeData = Integer.valueOf( ute.getData("id_node_data") );
-		
 		this.serialId = ute.getData("serialid");
 		
 		this.id = ute.getData("id_node_data");
@@ -84,11 +83,10 @@ public class TreeNode {
 				// Anexa um DataLayer ao no com os dados da camada de banco e seu estilo
 				try {
 					dss.newTransaction();
-					String[] dssData = this.layerName.split(":");
-					Integer idDataLayer = Integer.valueOf( dssData[1] );
+					Integer idDataLayer = Integer.valueOf( ute.getData("id_data_layer") );
 					this.dataLayer = dss.getDataLayer( idDataLayer );
-					//this.dataLayer.setStyle( null );
 					this.dataLayer.getTable().getServer().setTables( null );
+					this.dataLayer.setDataWindow( null );
 				} catch ( Exception e ) {
 					//e.printStackTrace();
 				}

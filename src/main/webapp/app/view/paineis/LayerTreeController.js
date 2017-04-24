@@ -50,10 +50,9 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     onLayerTreeItemClick : function( view, record, item, index, e ) {
 		var tempData = [];
 		tempData.push( record.data );
-
 		var layerDetailStore = Ext.data.StoreManager.lookup('store.LayerDetail');
 		layerDetailStore.loadData( tempData );
-		
+    	
 		if( record.data.readOnly ) {
 			$("#id_lock_icon").css("display","block");
 		}
@@ -138,7 +137,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	var dictionaryStore = Ext.data.StoreManager.lookup('store.dictionary');
     	dictionaryStore.load({
     			params:{
-    				'layerName': layerName,
+    				'layerName' : layerName,
     				'serviceUrl' : serviceUrl,
     				'idNodeData' : idNodeData
     			},

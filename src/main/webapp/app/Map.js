@@ -928,18 +928,18 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.unbindMapClick();
 			var me = MCLM.Map;
 			me.onClickBindKey = me.map.on('click', function(event) {
+
 				me.queryMap( event.coordinate );
 
-				
-				var data = [];	
 				var externalLayerName = "";
 				me.map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
 					var att = feature.getProperties();
 					
 					var columnRefs = {};
-					var layerName = layer.get("name");
+					var layerName = layer.get("alias");
+					
 					externalLayerName = layerName;
-
+					var data = [];
 			        att.features.forEach( function( feature ) {
 
 			        	// Zera os valores de todas as colunas
@@ -964,11 +964,11 @@ Ext.define('MCLM.Map', {
 
 			        });
 			        			        
-		        	
+			        me.addGrid( externalLayerName, data );
 			        
 			    });				
 				
-	    	    me.addGrid( externalLayerName, data );
+	    	    
 				
 			});
 			
@@ -984,14 +984,21 @@ Ext.define('MCLM.Map', {
 			var queryFactorRadius = MCLM.Map.queryFactorRadius;
 			var featureCount = MCLM.Map.featureCount;
 			var me = MCLM.Map;
+			
+			// coloquei aqui
+			var queryResultWindow = Ext.getCmp('queryResultWindow');
+			if ( !queryResultWindow ) queryResultWindow = Ext.create('MCLM.view.paineis.QueryResultWindow');
+			queryResultWindow.removeAll();
+			// ------------------
+			
+			
 			MCLM.Map.map.getLayers().forEach( function (layer) {
 				var layerName = layer.get("name");
+				var layerAlias = layer.get("alias");
 				var baseLayer = layer.get("baseLayer");
 				var found = false;
 				
-				var queryResultWindow = Ext.getCmp('queryResultWindow');
-				if ( !queryResultWindow ) queryResultWindow = Ext.create('MCLM.view.paineis.QueryResultWindow');
-				queryResultWindow.removeAll();
+				// Tirei daqui
 				
 				
 				if ( layerName && ( !baseLayer ) ) {
@@ -1001,7 +1008,7 @@ Ext.define('MCLM.Map', {
 					        {'buffer':queryFactorRadius, 'QUERY_LAYERS': layerName,  'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': featureCount} 
 						);
 						found = true;
-						me.queryLayer( layerName, urlFeatureInfo );
+						me.queryLayer( layerName, urlFeatureInfo, layerAlias );
 					} catch ( err ) { me.queryLayerError("Erro ao interrogar camada", layerName);  }
 				}				
 				//if( !found ) {
@@ -1014,8 +1021,9 @@ Ext.define('MCLM.Map', {
 		
 		// --------------------------------------------------------------------------------------------
 		// Interroga uma camada dada uma URL do tipo "REQUEST=GetFeatureInfo"
-		queryLayer : function( layerName, urlFeatureInfo ) {
+		queryLayer : function( layerName, urlFeatureInfo, layerAlias ) {
 			
+			MCLM.Functions.mainLog("Interrogando " + layerAlias + "...");
 			var encodedUrl = encodeURIComponent( urlFeatureInfo );
 			var me = MCLM.Map;
 			Ext.Ajax.request({
@@ -1025,24 +1033,26 @@ Ext.define('MCLM.Map', {
 		           'layerName' : layerName 
 		       },       
 		       success: function(response, opts) {
-		    	  
-		    	   var jsonObj = JSON.parse(response.responseText);
+		    	  MCLM.Functions.mainLog("[OK] " + layerAlias);
+		    	  var jsonObj = JSON.parse(response.responseText);
 		    	   
-		    	   var rawData = [];
-		    	   for ( x=0; x<jsonObj.features.length;x++ ) {
+		    	  var rawData = [];
+		    	  for ( x=0; x<jsonObj.features.length;x++ ) {
 		    		   rawData.push( jsonObj.features[x].properties );
-		    	   }
+		    	  }
 		    	   
-		    	   if ( rawData.length > 0 ) {
-		    		  me.addGrid( layerName, rawData );
-		    	   }
+		    	  if ( rawData.length > 0 ) {
+		    		 me.addGrid( layerAlias, rawData );
+		    	  }
 
 		       },
 		       failure: function(response, opts) {
+		    	   MCLM.Functions.mainLog("[ERRO] " + layerAlias);
 		    	   me.queryLayerError( response, layerName );
 		       }
 			});				
 		},
+		
 		getStoreColumnsFromJson : function ( obj ) {
 		    var keys = [];
 		    for (var key in obj) {
@@ -1052,23 +1062,32 @@ Ext.define('MCLM.Map', {
 		    }
 		    return keys;	
 		},
-
+		
+		renderIcon : function( val ) {
+			return '<a href="'+val+'"><img style="width:20px;height:20px" src="img/filter.svg"></a>';
+		},
+		
 		getGridColumnsFromJson : function( obj ) {
 		    var keys = [];
 		    for (var key in obj) {
 		        if ( obj.hasOwnProperty(key) ) {
-		            keys.push({text: key, dataIndex: key});
+		        	if( key == 'datawindow') {
+		        		keys.push({text: 'Detalhes', width:70, renderer: MCLM.Map.renderIcon, dataIndex: key});
+		        	} else {
+		        		keys.push({text: key, dataIndex: key});
+		        	}
 		        }
 		    }
 		    return keys;	
-		},		
+		},
+		
 		createGrid : function( layerName, store, columnNames ) {
 			var dummyGrid = Ext.create('Ext.grid.Panel', {
 				border: false,
 				title : layerName,
 				store : store,
 			    frame: false,
-			    margin: "10 0 0 0", 
+			    margin: "0 0 0 0", 
 			    flex:1,
 			    loadMask: true,
 			    columns:columnNames,
@@ -1139,8 +1158,14 @@ Ext.define('MCLM.Map', {
 				success: function(response, opts) {
 			    	MCLM.Functions.showMainLoadingIcon( 'Carregando Camada...');
 
-					var respText = Ext.decode(response.responseText);
-					var layer = me.createVectorLayerFromGeoJSON( respText, node );
+			    	try {
+						var respText = Ext.decode(response.responseText);
+						var layer = me.createVectorLayerFromGeoJSON( respText, node );
+			    	} catch ( error ) {
+						MCLM.Functions.hideMainLoadingIcon();
+						Ext.Msg.alert('Erro','Erro ao receber dados: ' + response.responseText );
+						return true;
+			    	} 
 		    	   
 					//Adiciona ao Layer Stack
 					var layerStackStore = Ext.getStore('store.layerStack');

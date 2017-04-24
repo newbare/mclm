@@ -32,8 +32,7 @@ public class GetDictionaryAction {
 			
 			DictionaryService ds = new DictionaryService();
 			String result = ds.getListAsJson( idNodeData, layerName, serviceUrl );
-
-	
+			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.getWriter().write( result );  

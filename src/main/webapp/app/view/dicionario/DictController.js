@@ -16,7 +16,7 @@ Ext.define('MCLM.view.dicionario.DictController', {
     	var dictionaryStore = Ext.data.StoreManager.lookup('store.dictionary');
     	dictionaryStore.sync({
 			 params: {
-				 	//cenario: MCLM.Globals.currentScenery
+				//cenario: MCLM.Globals.currentScenery
 			 },
 			 success: function (batch, options) {
 				 Ext.Msg.alert('Sucesso', 'Dicionário gravado.' /*, me.onCloseMessage */ );

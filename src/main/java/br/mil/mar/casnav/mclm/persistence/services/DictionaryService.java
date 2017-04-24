@@ -20,6 +20,7 @@ import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.DictionaryItem;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
+import br.mil.mar.casnav.mclm.persistence.entity.PostgresTable;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.repository.DictionaryRepository;
 
@@ -57,8 +58,19 @@ public class DictionaryService {
 		
 	public String getListAsJson( int idNodeData, String layerName, String serviceUrl ) throws Exception {
 		List<DictionaryItem> items = getDictionary( idNodeData );
-		Gson gson = new GsonBuilder().create();
-		String result = gson.toJson( items ); 
+		String result = "";
+		
+		for ( DictionaryItem item : items ) {
+			item.getNode().setDataLayer( null );
+		}
+		
+		try {
+			JSONArray arrayObj = new JSONArray( items );
+			result = arrayObj.toString();
+		} catch ( Exception e  ) {
+			e.printStackTrace();
+		}
+		
 		return result;
 	}	
 	
@@ -71,7 +83,7 @@ public class DictionaryService {
 		return result;
 	}
 	
-	public int updateDictionary( NodeData node, DataLayerService dss ) throws Exception {
+	public int updateDictionary( NodeData node ) throws Exception {
 		String layerName = node.getLayerName();
 		String serviceUrl = node.getServiceUrl();
 		int result = 0;
@@ -80,17 +92,13 @@ public class DictionaryService {
 			System.out.println("Atualizando dicionário para [" + node.getLayerType() + "] " + node.getLayerAlias() + "..." );
 						
 			try {
-				dss.newTransaction();
-				String dssData[] = layerName.split(":");
-				Integer idDataLayer = Integer.valueOf( dssData[1] );
-				DataLayer dl = dss.getDataLayer( idDataLayer );			
-				 
+				DataLayer dl = node.getDataLayer();
+				
 				int serverPort = dl.getTable().getServer().getServerPort();
 				String serverAddress = dl.getTable().getServer().getServerAddress();
 				String databaseName = dl.getTable().getServer().getServerDatabase();
 				String password = dl.getTable().getServer().getServerPassword();
 				String user = dl.getTable().getServer().getServerUser();
-				String connectionString = "jdbc:postgresql://" + serverAddress + ":" + serverPort + "/" + databaseName;
 				String tableName = dl.getTable().getName();
 				
 				// Tenta remover o nome do esquema
@@ -99,12 +107,7 @@ public class DictionaryService {
 					tableName = data1[1];
 				}
 				
-				System.out.println(" > lendo esquema da tabela tabela '" + tableName + " em " + serverAddress + ":" + serverPort + "/" + databaseName );
-
-				String query = "SELECT column_name,data_type FROM information_schema.columns WHERE table_name = '"+tableName+"' order by column_name"; // table_schema = 'public' 
-
-				GenericService gs = new GenericService( connectionString, user,	password  );
-				List<UserTableEntity> utes = gs.genericFetchList( query );
+				List<UserTableEntity> utes = getSchema( tableName, serverAddress, serverPort, databaseName, user, password  );
 				result = utes.size();
 				
 				for( UserTableEntity ute : utes ) {
@@ -161,6 +164,40 @@ public class DictionaryService {
 		}
 		
 		return result;
+	}
+	
+	public List<UserTableEntity> getSchema( String tableName, String serverAddress, int serverPort, String databaseName, String user, String password  )  throws Exception {
+		System.out.println(" > lendo esquema da tabela tabela '" + tableName + " em " + serverAddress + ":" + serverPort + "/" + databaseName );
+
+		String query = "SELECT column_name,data_type FROM information_schema.columns WHERE table_name = '"+tableName+"' order by column_name"; // table_schema = 'public' 
+
+		String connectionString = "jdbc:postgresql://" + serverAddress + ":" + serverPort + "/" + databaseName;
+		GenericService gs = new GenericService( connectionString, user,	password  );
+		return  gs.genericFetchList( query );
+		
+	}
+	
+	public void listSchema( PostgresTable table) throws Exception {
+		int serverPort = table.getServer().getServerPort();
+		String serverAddress = table.getServer().getServerAddress();
+		String databaseName = table.getServer().getServerDatabase();
+		String password = table.getServer().getServerPassword();
+		String user = table.getServer().getServerUser();
+		String tableName = table.getName();
+		
+		DictionaryService ds = new DictionaryService();
+		List<UserTableEntity> utes = ds.getSchema( tableName, serverAddress, serverPort, databaseName, user, password  );
+		for( UserTableEntity ute : utes ) {
+			String columnName = "";
+			String dataType = "";
+			for( String key : ute.getColumnNames() ) {
+				String value = ute.getData( key );
+				if( key.equals("column_name") ) columnName = value;
+				if( key.equals("data_type") ) dataType = value;						
+			}
+			System.out.println( columnName + "  " + dataType);
+		}
+		
 	}
 	
 	public GeoserverLayersSchema getAllGeoserverAttributeSchema( ) throws Exception {

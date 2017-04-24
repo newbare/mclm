@@ -45,9 +45,7 @@ public class NodeService {
 	public NodeData addNode( NodeData node ) throws Exception {
         node = rep.insertNode( node );
         DictionaryService ds = new DictionaryService();
-        DataLayerService dss = new DataLayerService();
-        ds.updateDictionary( node, dss );
-        dss.closeSession();
+        ds.updateDictionary( node );
         return node;
 	}
 	
@@ -61,6 +59,17 @@ public class NodeService {
 		oldNode.setOriginalServiceUrl( node.getOriginalServiceUrl() );
 		oldNode.setServiceUrl( node.getServiceUrl() );
 		oldNode.setSerialId( node.getSerialId() );
+
+		/*
+		try {
+			Integer idDataLayer = node.getDataLayer().getIdDataLayer();
+			DataLayerService dss = new DataLayerService();
+			DataLayer dl = dss.getDataLayer( idDataLayer );			
+			oldNode.setDataLayer( dl );
+		} catch ( Exception ex ) {
+			throw new UpdateException( ex.getMessage() );
+		}
+		*/
 		
 		rep.newTransaction();
 		rep.updateNode( oldNode );
@@ -134,7 +143,7 @@ public class NodeService {
 			// Nao coloca feicao na arvore do catalogo...
 			if ( !tn.getLayerType().equals("FEI") ) {
 				JSONObject itemObj = new JSONObject( tn );
-	            arrayObj.put( itemObj );		
+	            arrayObj.put( itemObj );	
 			}
 		}
 		dss.closeSession();

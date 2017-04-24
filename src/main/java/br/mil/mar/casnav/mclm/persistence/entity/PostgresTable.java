@@ -14,8 +14,9 @@ import javax.persistence.Table;
 @Table(name="postgres_tables") 
 public class PostgresTable {
 
-	public PostgresTable( String name, String geometryColumnName, Postgres server ) {
+	public PostgresTable( String name, String geometryColumnName, String idColumnName, Postgres server ) {
 		this.name = name;
+		this.idColumnName = idColumnName;
 		this.geometryColumnName = geometryColumnName;
 		this.server = server;
 		
@@ -35,6 +36,9 @@ public class PostgresTable {
 
 	@Column(length=250)
 	private String geometryColumnName;
+	
+	@Column(length=250)
+	private String idColumnName;
 	
 	@ManyToOne()
 	@JoinColumn(name="id_server", foreignKey = @ForeignKey(name = "fk_postgres_tables"))
@@ -70,6 +74,14 @@ public class PostgresTable {
 
 	public void setGeometryColumnName(String geometryColumnName) {
 		this.geometryColumnName = geometryColumnName;
+	}
+
+	public String getIdColumnName() {
+		return idColumnName;
+	}
+
+	public void setIdColumnName(String idColumnName) {
+		this.idColumnName = idColumnName;
 	}
 	
 	

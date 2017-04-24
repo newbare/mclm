@@ -4,10 +4,10 @@ Ext.define('MCLM.view.paineis.QueryResultWindow', {
 	id:'queryResultWindow',    	
 	xtype: 'queryResultWindow',
 	title : "Dados das Camadas",
-	width : 550,
+	width : 850,
 	height: 550,
 	bodyStyle:{"background-color":"white"},
-	
+	autoScroll: true,
 	constrain: true,
 	renderTo: Ext.getBody(),
 

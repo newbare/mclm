@@ -28,12 +28,13 @@ public class NewTableAction extends BasicActionClass {
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
 			String tableName = request.getParameter("tableName");
 			String geometryColumnName = request.getParameter("geometryColumnName");
+			String idColumnName = request.getParameter("idColumnName");
 			int idServer = Integer.valueOf( request.getParameter("idServer") );
 
 			
 			String result = "";
 			ServerService ss = new ServerService();
-			result = ss.addTable(tableName, geometryColumnName, idServer);
+			result = ss.addTable(tableName, geometryColumnName, idColumnName, idServer);
 
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
