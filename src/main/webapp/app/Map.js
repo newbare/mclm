@@ -252,16 +252,15 @@ Ext.define('MCLM.Map', {
 	    	
 	    	return newLayer;
 	    },		
-		
-		
-		
-		
-		
-		
+
 		
 		// --------------------------------------------------------------------------------------------
 		// Adiciona uma nova camada ao mapa
 		addLayer : function( node ) {
+			
+			var idDataWindow = node.get('idDataWindow');
+			var idNodeData = node.get('idNodeData');
+			
 			var serverUrl = node.get('serviceUrl');
 			var layerName = node.get('layerName');
 			
@@ -277,7 +276,6 @@ Ext.define('MCLM.Map', {
 				cql = filter.filter;
 			}
 			
-			
             var transparency = node.get('transparency') / 10;
             var layerStackIndex = node.get('layerStackIndex');			
 			
@@ -291,10 +289,10 @@ Ext.define('MCLM.Map', {
 				var kmlFileUrl = window.location + "/" + serverUrl; 
 				var newLayer = new ol.layer.Vector({
 					  source: new ol.source.Vector({
-						    url: kmlFileUrl,
-						    isBaseLayer : false,
-						    projection: ol.proj.get('EPSG:4326'),
-						    format: new ol.format.KML()
+						  url: kmlFileUrl,
+						  isBaseLayer : false,
+						  projection: ol.proj.get('EPSG:4326'),
+						  format: new ol.format.KML()
 					  })
 				});				
 				
@@ -331,9 +329,11 @@ Ext.define('MCLM.Map', {
 			newLayer.setOpacity( transparency );
 			newLayer.set('name', layerName);
 			newLayer.set('alias', layerAlias);
+			newLayer.set('idNodeData', idNodeData);
 			newLayer.set('serverUrl', serverUrl);
 			newLayer.set('serialId', serialId);
 			newLayer.set('layerType', layerType);
+			newLayer.set('idDataWindow', idDataWindow);
 			newLayer.set('ready', false);
 			newLayer.set('baseLayer', false);
 			
@@ -643,7 +643,6 @@ Ext.define('MCLM.Map', {
 						
 					}
 			    	resultStyles.push( pointStyle );
-			    	//if ( resolution < 150 ) resultStyles.push( featureText );
 				}			        
 				// ------------------------------------------------------------------------------
 		        
@@ -996,6 +995,9 @@ Ext.define('MCLM.Map', {
 				var layerName = layer.get("name");
 				var layerAlias = layer.get("alias");
 				var baseLayer = layer.get("baseLayer");
+				
+				var idNodeData = layer.get("idNodeData");
+				var idDataWindow = layer.get("idDataWindow");
 				var found = false;
 				
 				// Tirei daqui
@@ -1008,7 +1010,7 @@ Ext.define('MCLM.Map', {
 					        {'buffer':queryFactorRadius, 'QUERY_LAYERS': layerName,  'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': featureCount} 
 						);
 						found = true;
-						me.queryLayer( layerName, urlFeatureInfo, layerAlias );
+						me.queryLayer( layerName, urlFeatureInfo, layerAlias, idNodeData, idDataWindow  );
 					} catch ( err ) { me.queryLayerError("Erro ao interrogar camada", layerName);  }
 				}				
 				//if( !found ) {
@@ -1021,7 +1023,7 @@ Ext.define('MCLM.Map', {
 		
 		// --------------------------------------------------------------------------------------------
 		// Interroga uma camada dada uma URL do tipo "REQUEST=GetFeatureInfo"
-		queryLayer : function( layerName, urlFeatureInfo, layerAlias ) {
+		queryLayer : function( layerName, urlFeatureInfo, layerAlias, idNodeData, idDataWindow ) {
 			
 			MCLM.Functions.mainLog("Interrogando " + layerAlias + "...");
 			var encodedUrl = encodeURIComponent( urlFeatureInfo );
@@ -1030,7 +1032,9 @@ Ext.define('MCLM.Map', {
 		       url: 'queryLayer',
 		       params: {
 		           'targetUrl': encodedUrl,
-		           'layerName' : layerName 
+		           'layerName' : layerName, 
+		           'idNodeData' : idNodeData, 
+		           'idDataWindow' : idDataWindow
 		       },       
 		       success: function(response, opts) {
 		    	  MCLM.Functions.mainLog("[OK] " + layerAlias);
@@ -1063,19 +1067,13 @@ Ext.define('MCLM.Map', {
 		    return keys;	
 		},
 		
-		renderIcon : function( val ) {
-			return '<a href="'+val+'"><img style="width:20px;height:20px" src="img/filter.svg"></a>';
-		},
-		
 		getGridColumnsFromJson : function( obj ) {
 		    var keys = [];
 		    for (var key in obj) {
 		        if ( obj.hasOwnProperty(key) ) {
-		        	if( key == 'datawindow') {
-		        		keys.push({text: 'Detalhes', width:70, renderer: MCLM.Map.renderIcon, dataIndex: key});
-		        	} else {
-		        		keys.push({text: key, dataIndex: key});
-		        	}
+		        	if ( key == 'node_data' ) { keys.push({text: 'Node Data', width:150, dataIndex: key, hidden : true}) } else
+		        	if ( key == 'data_window' ) { keys.push({text: 'Data Window', width:150, dataIndex: key, hidden : true}) } else
+		        		keys.push({text: key, width:150, dataIndex: key}); 
 		        }
 		    }
 		    return keys;	
@@ -1091,10 +1089,23 @@ Ext.define('MCLM.Map', {
 			    flex:1,
 			    loadMask: true,
 			    columns:columnNames,
-			    autoHeight:true
+			    autoHeight:true,
+			    
+			    listeners: {
+			    	itemclick: function(dv, record, item, index, e) {
+			    		var selectedRec = dv.getSelectionModel().getSelection()[0];  
+			    		var nodeData = selectedRec.get('node_data');
+			    		var dataWindow = selectedRec.get('data_window');
+			    		alert( nodeData + " == " + dataWindow );
+			    		console.log( selectedRec.data );
+			    	}
+			    }
+			    
 			});
 			return dummyGrid;
-		},		
+		},
+		
+		
 		createStore : function ( storeData, columns ) {
 			var arrData = [];
 			var theData = storeData;
@@ -1142,17 +1153,18 @@ Ext.define('MCLM.Map', {
 			var me = MCLM.Map;
         	var dataLayer = node.get("dataLayer");
 			var serialId = node.get('serialId' );
-
+			var idNodeData = node.get('idNodeData' );
+			var idDataWindow = node.get('idDataWindow' );
 			var idDataLayer = dataLayer.idDataLayer;
-
 			var	bbox = MCLM.Map.getMapCurrentBbox();
 
 	    	Ext.Ajax.setTimeout(120000);
-	    	
 			Ext.Ajax.request({
 				url: 'getAsFeatures',
 				params: {
 					'idDataLayer': idDataLayer,
+					'idDataWindow': idDataWindow,
+					'idNodeData': idNodeData,
 					'bbox' : bbox
 				},       
 				success: function(response, opts) {

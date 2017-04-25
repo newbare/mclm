@@ -69,6 +69,10 @@ public class NodeData {
 	private FilterItem filter;	
 	
 	@OneToOne()
+	@JoinColumn(name="id_data_window", foreignKey = @ForeignKey(name = "fk_datalayer_data_window"))
+	private DataWindow dataWindow;		
+	
+	@OneToOne()
 	@JoinColumn(name="id_data_layer", foreignKey = @ForeignKey(name = "fk_node_data_layer"))
 	private DataLayer dataLayer;		
 
@@ -223,6 +227,14 @@ public class NodeData {
 	public void setFilter(FilterItem filter) {
 		this.filter = filter;
 	}
+	
+	public DataWindow getDataWindow() {
+		return dataWindow;
+	}
+
+	public void setDataWindow(DataWindow dataWindow) {
+		this.dataWindow = dataWindow;
+	}	
 
 	
 }

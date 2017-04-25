@@ -21,6 +21,8 @@ import br.mil.mar.casnav.mclm.persistence.services.LayerService;
 public class QueryLayersAction {
 	private String targetUrl;
 	private String layerName;
+	private String idDataWindow;
+	private String idNodeData;
 	
 	public String execute(){
 
@@ -30,7 +32,7 @@ public class QueryLayersAction {
 			if ( targetUrl != null ) {
 
 				LayerService ls = new LayerService();
-				result = ls.queryLayer( targetUrl, layerName );
+				result = ls.queryLayer( targetUrl, layerName, idDataWindow, idNodeData );
 				
 				System.out.println("Resposta queryLayers ("+layerName+"): " + result );
 			}
@@ -51,6 +53,14 @@ public class QueryLayersAction {
 	
 	public void setLayerName(String layerName) {
 		this.layerName = layerName;
+	}
+	
+	public void setIdDataWindow(String idDataWindow) {
+		this.idDataWindow = idDataWindow;
+	}
+	
+	public void setIdNodeData(String idNodeData) {
+		this.idNodeData = idNodeData;
 	}
 	
 }

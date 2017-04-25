@@ -62,6 +62,7 @@ public class DictionaryService {
 		
 		for ( DictionaryItem item : items ) {
 			item.getNode().setDataLayer( null );
+			item.getNode().setDataWindow( null );
 		}
 		
 		try {

@@ -35,6 +35,7 @@ public class TreeNode {
 	private boolean readOnly = false;
 	private DataLayer dataLayer;
 	private FilterItem filter;
+	private int idDataWindow;
 	
 	public TreeNode( UserTableEntity ute, DataLayerService dss, FilterService fs ) {
 		this.childrenCount = Integer.valueOf( ute.getData("children") );
@@ -51,8 +52,14 @@ public class TreeNode {
 		this.readOnly = Boolean.valueOf( ute.getData("read_only") );
 		this.iconCls = "";
 		this.idNodeData = Integer.valueOf( ute.getData("id_node_data") );
-		this.serialId = ute.getData("serialid");
 		
+		try {
+			this.idDataWindow = Integer.valueOf( ute.getData("id_data_window") );
+		} catch ( Exception ignored ) {
+			this.idDataWindow = -1;	
+		}
+
+		this.serialId = ute.getData("serialid");
 		this.id = ute.getData("id_node_data");
 		this.leaf = ( this.childrenCount == 0 );
 		
@@ -86,7 +93,6 @@ public class TreeNode {
 					Integer idDataLayer = Integer.valueOf( ute.getData("id_data_layer") );
 					this.dataLayer = dss.getDataLayer( idDataLayer );
 					this.dataLayer.getTable().getServer().setTables( null );
-					this.dataLayer.setDataWindow( null );
 				} catch ( Exception e ) {
 					//e.printStackTrace();
 				}
@@ -260,6 +266,14 @@ public class TreeNode {
 
 	public void setFilter(FilterItem filter) {
 		this.filter = filter;
+	}
+
+	public int getIdDataWindow() {
+		return idDataWindow;
+	}
+
+	public void setIdDataWindow(int idDataWindow) {
+		this.idDataWindow = idDataWindow;
 	}
 	
 	

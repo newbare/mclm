@@ -6,6 +6,7 @@ import java.net.URLDecoder;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
@@ -43,19 +44,22 @@ public class LayerService {
 	}
 	*/
 	
-	public String getAsFeatures( int idDataLayer ) {
+	public String getAsFeatures( int idDataLayer, int idDataWindow, int idNodeData ) {
 		String result = "";
+		
 		try {
 			DataLayerService dls = new DataLayerService();
 			DataLayer dl = dls.getDataLayer( idDataLayer );
 				
-			String sql = "SELECT row_to_json( fc )::text As featurecollection " +  
-				"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) ) As features " + 
+			String sql = "SELECT row_to_json( fc )::json As featurecollection " +  
+				"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) )::json As features " + 
 				     "FROM (SELECT 'Feature' As type, " + 
 				     "ST_AsGeoJSON( ST_Transform("+ dl.getTable().getGeometryColumnName() + ",4326) )::json As geometry, " +  
-				     "row_to_json((SELECT l FROM (SELECT " + dl.getTable().getIdColumnName() + ", " +  dl.getDataWindow().getIdDataWindow() + " as datawindow, " + dl.getPropertiesColumns() + "," + dl.getLabelColumn() + " as label) As l)) As properties " +  
+				     "row_to_json((SELECT l FROM (SELECT '" + idNodeData + "'::text as node_data, '" + idDataWindow + "'::text as data_window, " + dl.getTable().getIdColumnName() + ", " + dl.getPropertiesColumns() + "," + dl.getLabelColumn() + " as label) As l))::json As properties " +  
 					 "FROM " + dl.getTable().getName() + " As l where " + dl.getWhereClause() + ") As f) as fc; ";
 	
+			***
+			
 			String jsonData = "";
 			
 			String connectionString = "jdbc:postgresql://" + dl.getTable().getServer().getServerAddress() +
@@ -72,42 +76,56 @@ public class LayerService {
 			
 			DataLayerStylized dlsty = new DataLayerStylized( dl.getStyle(), jsonData );
 			JSONObject itemObj = new JSONObject( dlsty );
-			
 			result = itemObj.toString();
+			
+			
+			System.out.println( result );
+			
+			try {
+				DictionaryService ds = new DictionaryService();
+				List<DictionaryItem> dictItems = ds.getDictionary( idNodeData );
+				for ( DictionaryItem item : dictItems ) {
+					if ( item.getTranslatedName()!= null && !item.getTranslatedName().equals("") )
+						result = result.replace( "\"" + item.getOriginalName() + "\":", "\"" + item.getTranslatedName() + "\":" );
+				}
+			} catch ( NotFoundException nfe ) {
+				// Ignored
+			}
+			
+			
 		} catch ( Exception e ) {
 			result = e.getMessage().replace("\"", "'");
 		}
 		return result;
 	}
 	
-	public String queryLayer( String targetUrl, String layerName ) throws Exception {
+	public String queryLayer( String targetUrl, String layerName, String idDataWindow, String idNodeData ) throws Exception {
 		String result = "";
 		WebClient wc = new WebClient();
 		result = wc.doGet(  URLDecoder.decode( targetUrl, "UTF-8")   ); 
+
 		
-		/*
-		JSONObject layerDetail = new JSONObject( result );
-		JSONArray features = layerDetail.getJSONArray("features");
-		JSONObject featureZero = features.getJSONObject(0);
-		JSONObject properties = featureZero.getJSONObject("properties");
-		*/
+		JSONObject queryResult = new JSONObject( result );
+		JSONArray features = queryResult.getJSONArray("features");
+		
+		for( int x=0; x < features.length(); x++ ) {
+			JSONObject obj = features.getJSONObject( x );
+			JSONObject properties = obj.getJSONObject("properties");
+			properties.put("data_window", idDataWindow);
+			properties.put("node_data", idNodeData);
+		}
+		result = queryResult.toString();
 		
 		try {
 			DictionaryService ds = new DictionaryService();
 			List<DictionaryItem> dictItems = ds.getListByLayer( layerName );
-			
 			for ( DictionaryItem item : dictItems ) {
 				if ( item.getTranslatedName()!= null && !item.getTranslatedName().equals("") )
 					result = result.replace( "\"" + item.getOriginalName() + "\":", "\"" + item.getTranslatedName() + "\":" );
 			}
-			
-			
 		} catch ( NotFoundException nfe ) {
 			// Ignored
 		}
-		
-		
-		
 		
 		return result;
 	}

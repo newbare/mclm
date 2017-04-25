@@ -20,6 +20,8 @@ import br.mil.mar.casnav.mclm.persistence.services.LayerService;
 @ParentPackage("default")
 public class GetAsFeaturesAction {
 	private Integer idDataLayer;
+	private Integer idDataWindow;
+	private Integer idNodeData;
 	//private String bbox;
 	
 	public String execute(){
@@ -29,7 +31,7 @@ public class GetAsFeaturesAction {
 		if ( idDataLayer != null ) {
 			
 			LayerService ls = new LayerService();
-			result = ls.getAsFeatures(  idDataLayer );
+			result = ls.getAsFeatures(  idDataLayer, idDataWindow, idNodeData );
 			
 		};
 		
@@ -51,6 +53,14 @@ public class GetAsFeaturesAction {
 	
 	public void setIdDataLayer(Integer idDataLayer) {
 		this.idDataLayer = idDataLayer;
+	}
+	
+	public void setIdDataWindow(Integer idDataWindow) {
+		this.idDataWindow = idDataWindow;
+	}
+	
+	public void setIdNodeData(Integer idNodeData) {
+		this.idNodeData = idNodeData;
 	}
 
 	
