@@ -577,14 +577,14 @@ Ext.define('MCLM.Map', {
 	        		}
 	        	}
 	        	
-	        	var label = featureProperties.label;
+	        	var mclm_label_column = featureProperties.mclm_label_column;
 	        	var font = layerStyle.textFont;
 	        	
-	        	if( label && font ) {
+	        	if( mclm_label_column && font ) {
 	        		
 			        var featureText = new ol.style.Style({
 			            text: new ol.style.Text({
-			                text: label,
+			                text: mclm_label_column,
 			                offsetY: layerStyle.textOffsetY,
 			                offsetX: layerStyle.textOffsetX,
 			                font: layerStyle.textFont,
@@ -1071,8 +1071,10 @@ Ext.define('MCLM.Map', {
 		    var keys = [];
 		    for (var key in obj) {
 		        if ( obj.hasOwnProperty(key) ) {
-		        	if ( key == 'node_data' ) { keys.push({text: 'Node Data', width:150, dataIndex: key, hidden : true}) } else
-		        	if ( key == 'data_window' ) { keys.push({text: 'Data Window', width:150, dataIndex: key, hidden : true}) } else
+		        	if ( key.startsWith("mclm_pk_")  ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
+		        	if ( key == 'mclm_label_column' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
+		        	if ( key == 'node_data' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
+		        	if ( key == 'data_window' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        		keys.push({text: key, width:150, dataIndex: key}); 
 		        }
 		    }
@@ -1094,10 +1096,7 @@ Ext.define('MCLM.Map', {
 			    listeners: {
 			    	itemclick: function(dv, record, item, index, e) {
 			    		var selectedRec = dv.getSelectionModel().getSelection()[0];  
-			    		var nodeData = selectedRec.get('node_data');
-			    		var dataWindow = selectedRec.get('data_window');
-			    		alert( nodeData + " == " + dataWindow );
-			    		console.log( selectedRec.data );
+			    		MCLM.Functions.openWindowData( selectedRec.data );
 			    	}
 			    }
 			    

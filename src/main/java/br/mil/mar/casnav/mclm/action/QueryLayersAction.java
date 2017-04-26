@@ -30,11 +30,8 @@ public class QueryLayersAction {
 			String result = "";
 			
 			if ( targetUrl != null ) {
-
 				LayerService ls = new LayerService();
-				result = ls.queryLayer( targetUrl, layerName, idDataWindow, idNodeData );
-				
-				System.out.println("Resposta queryLayers ("+layerName+"): " + result );
+				result = ls.queryLayer( targetUrl, layerName, Integer.valueOf(idDataWindow), Integer.valueOf(idNodeData) );
 			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);

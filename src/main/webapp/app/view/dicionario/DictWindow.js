@@ -21,6 +21,12 @@ Ext.define('MCLM.view.dicionario.DictWindow', {
 	
     items : [{
         xtype: 'dictGrid',
-    }]
+    }],
+    
+    listeners: {
+		close : function() {
+			Ext.tip.QuickTipManager.unregister('saveDictionaryID');
+		}
+    }
     
 });

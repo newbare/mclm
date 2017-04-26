@@ -145,6 +145,8 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     				if ( records.length > 0 ) {
     					var dictWindow = Ext.create('MCLM.view.dicionario.DictWindow');
     					dictWindow.show();		            	   
+    				}  else {
+    					Ext.Msg.alert('Dicionário não encontrado','Não foi possível encontrar os dados de dicionário para esta camada.' );
     				}
     			}
     	});    	

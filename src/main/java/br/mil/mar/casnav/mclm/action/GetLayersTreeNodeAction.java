@@ -32,9 +32,6 @@ public class GetLayersTreeNodeAction extends BasicActionClass {
 				idParent = Integer.valueOf( node );
 				NodeService ns = new NodeService();
 				resp = ns.getNodesAsJSON( idParent );
-
-				System.out.println( resp );
-				
 			} catch ( Exception e ) {
 				e.printStackTrace();
 			}

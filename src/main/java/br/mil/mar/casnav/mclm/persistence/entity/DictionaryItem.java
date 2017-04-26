@@ -40,11 +40,16 @@ public class DictionaryItem {
 
     @Column(name="visible")
 	private Boolean visible;		
-	
+
+    @Column(name="primary_key")
+	private Boolean primaryKey;    
+    
 	public DictionaryItem( GeoserverLayerAttribute attribute, NodeData node ) {
 		this.node = node;
 		this.originalName = attribute.getName();
 		this.dataType = attribute.getLocalType();
+		this.visible = true;
+		this.primaryKey = false;
 	}
 	
 	public DictionaryItem( ) {
@@ -113,9 +118,22 @@ public class DictionaryItem {
 		this.visible = visible;
 	}
 	
+	public void setPrimaryKey(Boolean primaryKey) {
+		this.primaryKey = primaryKey;
+	}
+	
+	public Boolean getPrimaryKey() {
+		return primaryKey;
+	}
+	
 	@Transient
 	public Boolean isVisible() {
 		return visible;
 	}
+
+	@Transient
+	public Boolean isPrimaryKey() {
+		return primaryKey;
+	}	
 	
 }

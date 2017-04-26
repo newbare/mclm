@@ -52,7 +52,41 @@ Ext.define('MCLM.Functions', {
 				ctx.fillRect(i, i, ptrWidth, ptrHeight);
 			}
 			return ctx.createPattern(cnv, 'repeat');
-		},			
+		},	
+		
+		openWindowData : function( record ) {
+			
+			if ( record.data_window == -1 ) {
+				Ext.Msg.alert('Janela de Dados não encontrada','Não há janela de dados cadastrada para esta camada.' );
+				return true;
+			}
+			
+			MCLM.Functions.showMainLoadingIcon();
+			
+			Ext.Ajax.request({
+				url: 'getDataWindow',
+				params: {
+					'data': Ext.encode( record ),
+				},       
+				success: function(response, opts) {
+					MCLM.Functions.hideMainLoadingIcon();
+					var respText = Ext.decode(response.responseText);
+					
+					if ( respText.error ) {
+						Ext.Msg.alert('Erro', respText.msg );
+					} else {
+						// OK ! Mostrar a Janela
+					}
+					
+				},
+				failure: function(response, opts) {
+					MCLM.Functions.hideMainLoadingIcon();
+					Ext.Msg.alert('Erro','Erro ao receber dados.' );
+				}
+				
+			});			
+			
+		},		
 		
 		showMainLoadingIcon : function( action ) {
     		$("#mainLoadingIcon").css('display','block');

@@ -24,24 +24,6 @@ import br.mil.mar.casnav.mclm.persistence.entity.PostgresTable;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.repository.DictionaryRepository;
 
-/*
-
-	Exemplo de resposta do Geoserver:
-	
-	{"elementFormDefault":"qualified","targetNamespace":"http://openstreetmap.org","targetPrefix":"osm","featureTypes":[
-		{"typeName":"admin0","properties":[
-			{"name":"fid_ne_10m","maxOccurs":1,"minOccurs":0,"nillable":true,"type":"xsd:int","localType":"int"},
-			{"name":"scalerank","maxOccurs":1,"minOccurs":0,"nillable":true,"type":"xsd:number","localType":"number"},
-			{"name":"adm0_a3_l","maxOccurs":1,"minOccurs":0,"nillable":true,"type":"xsd:string","localType":"string"},
-			{"name":"type","maxOccurs":1,"minOccurs":0,"nillable":true,"type":"xsd:string","localType":"string"},
-			{"name":"labelrank","maxOccurs":1,"minOccurs":0,"nillable":true,"type":"xsd:int","localType":"int"},
-			{"name":"geom","maxOccurs":1,"minOccurs":0,"nillable":true,"type":"gml:MultiLineString","localType":"MultiLineString"}
-		]}
-	]}	
-
- */
-
-
 public class DictionaryService {
 	
 	private DictionaryRepository rep;
@@ -273,12 +255,14 @@ public class DictionaryService {
 				String translatedName = jo.getString("translatedName" );
 				int idDictionaryItem = jo.getInt("idDictionaryItem" );
 				boolean visible = jo.getBoolean("visible");
+				boolean primaryKey = jo.getBoolean("primaryKey");
 				
 				newTransaction();
 				DictionaryItem item = rep.getItem( idDictionaryItem );
 				item.setTranslatedName( translatedName );
 				item.setDescription( description );
 				item.setVisible(visible);
+				item.setPrimaryKey(primaryKey);
 				
 				rep.newTransaction();
 				rep.updateItem( item );
