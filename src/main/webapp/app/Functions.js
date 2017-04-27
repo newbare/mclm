@@ -75,6 +75,9 @@ Ext.define('MCLM.Functions', {
 					if ( respText.error ) {
 						Ext.Msg.alert('Erro', respText.msg );
 					} else {
+						
+						console.log( respText );
+						
 						// OK ! Mostrar a Janela
 					}
 					

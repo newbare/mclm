@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -68,7 +69,7 @@ public class NodeData {
 	@JoinColumn(name="id_filter_item", foreignKey = @ForeignKey(name = "fk_node_data_filter_item"))
 	private FilterItem filter;	
 	
-	@OneToOne()
+	@ManyToOne()
 	@JoinColumn(name="id_data_window", foreignKey = @ForeignKey(name = "fk_datalayer_data_window"))
 	private DataWindow dataWindow;		
 	

@@ -60,6 +60,8 @@ public class DictionaryItem {
 		this.node = node;
 		this.originalName = columnName;
 		this.dataType = dataType;
+		this.visible = true;
+		this.primaryKey = false;
 	}
 
 	public int getIdDictionaryItem() {

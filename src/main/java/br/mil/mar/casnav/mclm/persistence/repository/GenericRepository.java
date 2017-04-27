@@ -26,6 +26,9 @@ public class GenericRepository  {
 	private Transaction tx = null;
 	private boolean external;
 	private Connection connection = null;
+	private String connectionString;
+	private String user;
+	private String password;
 	
 	public GenericRepository() throws DatabaseConnectException {
 		try {
@@ -41,16 +44,26 @@ public class GenericRepository  {
 		}
 		this.external = false;
 	}
-	
-	
-	public GenericRepository( String connectionString, String user, String password ) throws DatabaseConnectException {
+
+	private void reopen() throws DatabaseConnectException {
 		try {
 			this.connection = DriverManager.getConnection(connectionString, user, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DatabaseConnectException( "Cannot open External Database Connection" );
 		}	
-		
+	}
+	
+	public GenericRepository( String connectionString, String user, String password ) throws DatabaseConnectException {
+		this.connectionString = connectionString;
+		this.user = user;
+		this.password = password;
+		try {
+			this.connection = DriverManager.getConnection(connectionString, user, password);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseConnectException( "Cannot open External Database Connection" );
+		}	
 		this.external = true;
 	}
 	
@@ -69,6 +82,22 @@ public class GenericRepository  {
 		}
 		closeSession();
 		return retorno;
+	}
+	
+	
+	public List<String> getColumnNames( String query ) throws Exception {
+		List<String> result = new ArrayList<String>();
+		
+		Statement stmt = this.connection.createStatement();
+		ResultSet objs = stmt.executeQuery( query );
+		ResultSetMetaData rsmd = objs.getMetaData();
+		int count = rsmd.getColumnCount();
+		for (int i = 1; i <= count; i++) {
+			String columnName = rsmd.getColumnName( i );
+			result.add( columnName );
+		}
+		this.connection.close();
+		return result;
 	}
 	
 	private List<?> externalGenericFetchList( String query ) throws Exception {
@@ -107,7 +136,14 @@ public class GenericRepository  {
 	
 	public void newTransaction() {
 		
-		if( external ) return;
+		try {
+			if( external ) {
+				reopen();
+				return;
+			}
+		} catch ( Exception e ) {
+			//
+		}
 		
 		if ( !session.isOpen() ) {
 			session = ConnFactory.getSession();
@@ -123,9 +159,13 @@ public class GenericRepository  {
 	}
 	
 	public boolean isOpen() {
-		if( external ) return ( this.connection != null );
-		
-		return session.isOpen();
+		if( external ) {
+			try {
+				return ( !this.connection.isClosed() );
+			} catch ( Exception e ) {
+				return false;
+			}
+		} else return session.isOpen();
 	}
 	
 	public void closeSession() {

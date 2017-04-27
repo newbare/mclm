@@ -932,39 +932,44 @@ Ext.define('MCLM.Map', {
 
 				var externalLayerName = "";
 				me.map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
-					var att = feature.getProperties();
-					
 					var columnRefs = {};
 					var layerName = layer.get("alias");
 					
-					externalLayerName = layerName;
-					var data = [];
-			        att.features.forEach( function( feature ) {
-
-			        	// Zera os valores de todas as colunas
-			        	for(var p in columnRefs) {
-			        	    if(columnRefs.hasOwnProperty(p)) columnRefs[p] = '';
-			        	}
-			        	
-			        	var keys = feature.getKeys();
-		        		for( y=0; y < keys.length; y++ ) {
-		        			var value = feature.get( keys[y] );
-		        			if( (keys[y] != 'geometry') ) {
-		        				// Seta o valor para a coluna
-		        				columnRefs[ keys[y] ] = value;
-				        		
-		        			}
-		        		}
-		        		
-		        		// Passa para a verdadeira. Isso tudo é para manter o numero de colunas igual
-		        		// caso uma feature venha com uma coluna e outra não.
-		        		var tempData = JSON.parse( JSON.stringify( columnRefs ) );
-		        		data.push( tempData );
-
-			        });
-			        			        
-			        me.addGrid( externalLayerName, data );
-			        
+					var att = feature.getProperties();
+					if ( !att.features ) {
+						MCLM.Functions.mainLog("Não existem dados na camada " + layerName );
+					} else {
+					
+						
+						externalLayerName = layerName;
+						var data = [];
+				        att.features.forEach( function( feature ) {
+	
+				        	// Zera os valores de todas as colunas
+				        	for(var p in columnRefs) {
+				        	    if(columnRefs.hasOwnProperty(p)) columnRefs[p] = '';
+				        	}
+				        	
+				        	var keys = feature.getKeys();
+			        		for( y=0; y < keys.length; y++ ) {
+			        			var value = feature.get( keys[y] );
+			        			if( (keys[y] != 'geometry') ) {
+			        				// Seta o valor para a coluna
+			        				columnRefs[ keys[y] ] = value;
+					        		
+			        			}
+			        		}
+			        		
+			        		// Passa para a verdadeira. Isso tudo é para manter o numero de colunas igual
+			        		// caso uma feature venha com uma coluna e outra não.
+			        		var tempData = JSON.parse( JSON.stringify( columnRefs ) );
+			        		data.push( tempData );
+	
+				        });
+				        			        
+				        me.addGrid( externalLayerName, data );
+					}
+					
 			    });				
 				
 	    	    

@@ -38,5 +38,14 @@ public class GenericService {
 		return result;
 	}	
 	
+	
+	public List<String> getColumnNames(String query) throws Exception {
+		if ( !rep.isOpen() ) {
+			rep.newTransaction();
+		}
+		List<String> result = rep.getColumnNames(query);
+		rep.closeSession();
+		return result;
+	}		
 }
 

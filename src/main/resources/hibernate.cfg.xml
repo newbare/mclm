@@ -41,6 +41,7 @@
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.FilterItem"/>		
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.DataWindow"/>		
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.DataPanel"/>		
+		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.DataField"/>		
 		
 	</session-factory> 
 </hibernate-configuration>

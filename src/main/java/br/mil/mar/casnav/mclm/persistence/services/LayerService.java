@@ -54,7 +54,7 @@ public class LayerService {
 				"FROM ( SELECT 'FeatureCollection' As type, array_to_json( array_agg( f ) )::json As features " + 
 				     "FROM (SELECT 'Feature' As type, " + 
 				     "ST_AsGeoJSON( ST_Transform("+ dl.getTable().getGeometryColumnName() + ",4326) )::json As geometry, " +  
-				     "row_to_json((SELECT l FROM (SELECT " + dl.getTable().getIdColumnName() + ", " + dl.getPropertiesColumns() + "," + dl.getLabelColumn() + " as mclm_label_column) As l))::json As properties " +  
+				     "row_to_json((SELECT l FROM (SELECT " + dl.getPropertiesColumns() + "," + dl.getLabelColumn() + " as mclm_label_column) As l))::json As properties " +  
 					 "FROM " + dl.getTable().getName() + " As l where " + dl.getWhereClause() + ") As f) as fc; ";
 	
 			String jsonData = "";
@@ -71,10 +71,6 @@ public class LayerService {
 				jsonData = ute.getData("featurecollection");
 			}
 
-			/*
-			 * O resultado JSON estah vindo com \" ao inves de " em jsonData
-			 * o que impede o dicionário de substituir as palavras.
-			 */
 
 			JSONObject jsonTmpStyle = new JSONObject( dl.getStyle() );
 			JSONObject jsonTmpData = new JSONObject( jsonData );
@@ -129,6 +125,7 @@ public class LayerService {
 			result = jsonTmpResult.toString();
 			
 		} catch ( Exception e ) {
+			e.printStackTrace();
 			result = e.getMessage().replace("\"", "'");
 		}
 		return result;

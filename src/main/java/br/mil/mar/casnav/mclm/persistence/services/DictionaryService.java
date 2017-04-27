@@ -1,5 +1,6 @@
 package br.mil.mar.casnav.mclm.persistence.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.conn.HttpHostConnectException;
@@ -20,7 +21,6 @@ import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.DictionaryItem;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
-import br.mil.mar.casnav.mclm.persistence.entity.PostgresTable;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.repository.DictionaryRepository;
 
@@ -83,14 +83,18 @@ public class DictionaryService {
 				String password = dl.getTable().getServer().getServerPassword();
 				String user = dl.getTable().getServer().getServerUser();
 				String tableName = dl.getTable().getName();
+				String whereClause = dl.getWhereClause();
+				String columns = dl.getPropertiesColumns();
+				String schemaName = "";
 				
 				// Tenta remover o nome do esquema
 				if ( tableName.contains(".") ) {
 					String data1[] = tableName.split("\\.");
+					schemaName = data1[0];
 					tableName = data1[1];
 				}
 				
-				List<UserTableEntity> utes = getSchema( tableName, serverAddress, serverPort, databaseName, user, password  );
+				List<UserTableEntity> utes = getSchema( schemaName, tableName, serverAddress, serverPort, databaseName, user, password, whereClause, columns  );
 				result = utes.size();
 				
 				for( UserTableEntity ute : utes ) {
@@ -149,18 +153,42 @@ public class DictionaryService {
 		return result;
 	}
 	
-	public List<UserTableEntity> getSchema( String tableName, String serverAddress, int serverPort, String databaseName, String user, String password  )  throws Exception {
-		System.out.println(" > lendo esquema da tabela tabela '" + tableName + " em " + serverAddress + ":" + serverPort + "/" + databaseName );
+	public List<UserTableEntity> getSchema( String schemaName, String tableName, String serverAddress, int serverPort, String databaseName, 
+			String user, String password, String whereClause, String columns  )  throws Exception {
+		System.out.println("Lendo esquema da tabela tabela '" + tableName + "' em " + serverAddress + ":" + serverPort + "/" + databaseName );
 
-		String query = "SELECT column_name,data_type FROM information_schema.columns WHERE table_name = '"+tableName+"' order by column_name"; // table_schema = 'public' 
+		String query = "SELECT column_name,data_type FROM information_schema.columns WHERE table_name = '"+tableName+"' order by column_name"; // table_schema = 'public'
 
 		String connectionString = "jdbc:postgresql://" + serverAddress + ":" + serverPort + "/" + databaseName;
 		GenericService gs = new GenericService( connectionString, user,	password  );
-		return  gs.genericFetchList( query );
+
+		List<UserTableEntity> schma = gs.genericFetchList(query);
+		List<UserTableEntity> result = new ArrayList<UserTableEntity>();
+
+		columns = " " + columns.replace("\"", " ").replace(",", " ") + " ";
 		
+		for( UserTableEntity ute : schma ) {
+			
+			String columnName = "";
+			String dataType = "";
+			for( String key : ute.getColumnNames() ) {
+				String value = ute.getData( key );
+				if( key.equals("column_name") ) columnName = value;
+				if( key.equals("data_type") ) dataType = value;						
+			}
+			if ( columns.contains( " " + columnName + " " ) ) {
+				System.out.println( "      >>> " + columnName + "  " + dataType);
+				result.add( ute );
+			}
+			
+		}		
+		
+		return result;
+	
 	}
 	
-	public void listSchema( PostgresTable table) throws Exception {
+	/*
+	public void listSchema( PostgresTable table, String whereClause, String columns ) throws Exception {
 		int serverPort = table.getServer().getServerPort();
 		String serverAddress = table.getServer().getServerAddress();
 		String databaseName = table.getServer().getServerDatabase();
@@ -169,7 +197,7 @@ public class DictionaryService {
 		String tableName = table.getName();
 		
 		DictionaryService ds = new DictionaryService();
-		List<UserTableEntity> utes = ds.getSchema( tableName, serverAddress, serverPort, databaseName, user, password  );
+		List<UserTableEntity> utes = ds.getSchema( tableName, serverAddress, serverPort, databaseName, user, password, whereClause, columns  );
 		for( UserTableEntity ute : utes ) {
 			String columnName = "";
 			String dataType = "";
@@ -182,6 +210,7 @@ public class DictionaryService {
 		}
 		
 	}
+	*/
 	
 	public GeoserverLayersSchema getAllGeoserverAttributeSchema( ) throws Exception {
 		String jsonSchema = getAllGeoserverAttributeSchemaAsJson( );

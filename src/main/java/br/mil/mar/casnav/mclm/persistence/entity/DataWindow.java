@@ -1,6 +1,6 @@
 package br.mil.mar.casnav.mclm.persistence.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +24,7 @@ public class DataWindow {
 	
     @OneToMany(orphanRemoval=true,  mappedBy="dataWindow", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private List<DataPanel> dataPanels;		
+    private Set<DataPanel> dataPanels;		
 	
 	@Column(length=250, name="name")
 	private String dataWindowName;	
@@ -59,11 +59,11 @@ public class DataWindow {
 		this.idDataWindow = idDataWindow;
 	}
 
-	public List<DataPanel> getDataPanels() {
+	public Set<DataPanel> getDataPanels() {
 		return dataPanels;
 	}
 
-	public void setDataPanels(List<DataPanel> dataPanels) {
+	public void setDataPanels(Set<DataPanel> dataPanels) {
 		this.dataPanels = dataPanels;
 	}
 
