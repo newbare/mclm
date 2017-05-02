@@ -2,7 +2,7 @@ Ext.define('MCLM.Map', {
 	
 	statics: {
 		map: null,
-		featureCount : 100,
+		featureCount : 500,
 		queryToolEnabled : false,
 		mousePosition: null,
 		selectedLayer: null,
@@ -22,7 +22,6 @@ Ext.define('MCLM.Map', {
 		geoserverUrl: '',
 		highlight : null,
 		interrogatingFeatures : false,
-		
 		
 		getBaseMapName : function() {
 			return MCLM.Map.baseLayerName;
@@ -81,11 +80,16 @@ Ext.define('MCLM.Map', {
 			    var hit = MCLM.Map.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
 			        return true;
 			    });
+			    
+			    MCLM.Map.map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+			    
+			    /*
 			    if ( hit && me.interrogatingFeatures ) {
 			        MCLM.Map.map.getTargetElement().style.cursor = 'pointer';
 			    } else {
 			        MCLM.Map.map.getTargetElement().style.cursor = '';
-			    }			    
+			    }
+			    */			    
 			});
 			
 		},
@@ -301,7 +305,7 @@ Ext.define('MCLM.Map', {
 				var paramsRel = {
 	    	        	tiled: true,
 	    	            'layers': layerName,
-	    	            'VERSION': '1.1.1', 
+	    	            //'VERSION': '1.1.1', 
 	    	            'format': 'image/png8'
 	    	    }
 				if ( cql ) {
@@ -309,7 +313,7 @@ Ext.define('MCLM.Map', {
 		    	        	tiled: true,
 		    	            'layers': layerName,
 		    	            'cql_filter': cql,
-		    	            'VERSION': '1.1.1', 
+		    	            //'VERSION': '1.1.1', 
 		    	            'format': 'image/png8'
 		    	    }					
 				}
@@ -319,7 +323,8 @@ Ext.define('MCLM.Map', {
 		    	        url: serverUrl,
 		    	        isBaseLayer : false,
 		    	        params: paramsRel,
-		    	        projection: ol.proj.get('EPSG:4326')
+		    	        projection: ol.proj.get('EPSG:4326'),
+		    	        
 		    	    })
 		    	});	
 				
@@ -989,7 +994,7 @@ Ext.define('MCLM.Map', {
 			var featureCount = MCLM.Map.featureCount;
 			var me = MCLM.Map;
 			
-			// coloquei aqui
+		
 			var queryResultWindow = Ext.getCmp('queryResultWindow');
 			if ( !queryResultWindow ) queryResultWindow = Ext.create('MCLM.view.paineis.QueryResultWindow');
 			queryResultWindow.removeAll();
@@ -1005,14 +1010,11 @@ Ext.define('MCLM.Map', {
 				var idDataWindow = layer.get("idDataWindow");
 				var found = false;
 				
-				// Tirei daqui
-				
-				
 				if ( layerName && ( !baseLayer ) ) {
 					try {
 						urlFeatureInfo = layer.getSource().getGetFeatureInfoUrl(
-							coordinate, viewResolution, projection,
-					        {'buffer':queryFactorRadius, 'QUERY_LAYERS': layerName,  'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': featureCount} 
+							coordinate, viewResolution, projection,  
+							{'buffer':queryFactorRadius, 'QUERY_LAYERS': layerName,  'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': featureCount} 
 						);
 						found = true;
 						me.queryLayer( layerName, urlFeatureInfo, layerAlias, idNodeData, idDataWindow  );

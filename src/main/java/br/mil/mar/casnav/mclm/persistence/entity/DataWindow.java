@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
@@ -24,6 +25,7 @@ public class DataWindow {
 	
     @OneToMany(orphanRemoval=true,  mappedBy="dataWindow", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OrderBy("panel_order ASC")
     private Set<DataPanel> dataPanels;		
 	
 	@Column(length=250, name="name")
@@ -40,12 +42,15 @@ public class DataWindow {
 	
 	@Column(length=100, name = "source_database")
 	private String sourceDatabase;
+	
+	@Column(length=100, name = "source_table")
+	private String sourceTable;
 
 	@Column(name = "source_port")
 	private Integer sourcePort; 
 	
-	@Column(length=100, name = "source_table")
-	private String sourceTable;	
+	@Column(columnDefinition="TEXT", name = "sql_data_acquisition")
+	private String sqlDataAcquisition;
 	
     public DataWindow() {
     	
@@ -115,6 +120,14 @@ public class DataWindow {
 		this.sourcePort = sourcePort;
 	}
 
+	public String getSqlDataAcquisition() {
+		return sqlDataAcquisition;
+	}
+
+	public void setSqlDataAcquisition(String sqlDataAcquisition) {
+		this.sqlDataAcquisition = sqlDataAcquisition;
+	}
+
 	public String getSourceTable() {
 		return sourceTable;
 	}
@@ -122,6 +135,7 @@ public class DataWindow {
 	public void setSourceTable(String sourceTable) {
 		this.sourceTable = sourceTable;
 	}
+
     
     
 }

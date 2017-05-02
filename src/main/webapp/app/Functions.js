@@ -2,6 +2,15 @@ Ext.define('MCLM.Functions', {
 	
 	statics: {
 		countLog : 0,
+
+		shortGuid : function() {
+			  function s4() {
+			    return Math.floor((1 + Math.random()) * 0x10000)
+			      .toString(16)
+			      .substring(1);
+			  }
+			  return "f" + s4() + s4();
+		},		
 		
 		guid : function() {
 			  function s4() {
@@ -12,6 +21,7 @@ Ext.define('MCLM.Functions', {
 			  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
 			    s4() + '-' + s4() + s4() + s4();
 		},
+		
 		hideMainLog : function () {
 			$('#mainLogDisplayContainer').css('display','none');
 			$('#mainLogDisplayTable tbody').empty();
@@ -75,10 +85,7 @@ Ext.define('MCLM.Functions', {
 					if ( respText.error ) {
 						Ext.Msg.alert('Erro', respText.msg );
 					} else {
-						
-						console.log( respText );
-						
-						// OK ! Mostrar a Janela
+						MCLM.Functions.createDataWindow( respText );
 					}
 					
 				},
@@ -90,6 +97,49 @@ Ext.define('MCLM.Functions', {
 			});			
 			
 		},		
+		
+		createDataWindow( windowData ) {
+			console.log( windowData );
+			var windowName = windowData.windowName;
+			var windowPanels = windowData.panels;
+			var windowId = MCLM.Functions.shortGuid();
+			
+			var	dataWindow = Ext.create('Ext.Window', {
+					id: windowId,    	
+					xtype: windowId,
+					title : windowName,
+					width : 550,
+					height: 500,
+					bodyStyle:{"background-color":"white"},
+					autoScroll: true,
+					constrain: true,
+					renderTo: Ext.getBody(),
+			});			
+			
+			var dataTabPanel = Ext.create('Ext.tab.Panel', {
+                layout: 'card',
+            });
+			
+			for (var i = 0; i < windowPanels.length; i++) {
+				var fields = windowPanels[i].fields;
+				
+				var content = "<table class='dataWindow'>";
+				for (var x = 0; x < fields.length; x++) {
+					content = content + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + fields[x].fieldCaption + 
+					"</td><td class='dataWindowMiddle'>" + fields[x].fieldValue + "</td></tr>";
+				}
+				content = content + "</table>";
+				
+				dataTabPanel.add({
+				    title : windowPanels[i].panelName,
+				    html  : content
+				});
+			}
+			
+			dataWindow.show();
+			dataWindow.add( dataTabPanel );			
+			
+		},
 		
 		showMainLoadingIcon : function( action ) {
     		$("#mainLoadingIcon").css('display','block');

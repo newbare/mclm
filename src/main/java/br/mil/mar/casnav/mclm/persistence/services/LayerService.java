@@ -92,29 +92,35 @@ public class LayerService {
 						properties.put("data_window", idDataWindow);
 						properties.put("node_data", idNodeData);
 
-						// Adiciona as chaves primarias com o nome do campo sem traducao.
-						if ( item.isPrimaryKey() ) {
-							
-							if( !properties.has( originalName ) ) {
-								// Lanca erro caso a coluna PK escolhida pelo usuario nao exista no resultset
-								// vindo do banco. Nesse caso o usuario devera adicionar a PK como coluna de retorno
-								// na consulta SQL acima para que ela venha no resultado.
-								throw new Exception("A coluna definida como chave primária (" + originalName + ") não foi encontrada entre as colunas resultantes da consulta efetuada. Adicione esta coluna na camada '" + dl.getDataLayerName() + "'" );
+						
+						if ( !item.isVisible() ) {
+							properties.remove( originalName );
+						} else {
+						
+							// Adiciona as chaves primarias com o nome do campo sem traducao.
+							if ( item.isPrimaryKey() ) {
+								
+								if( !properties.has( originalName ) ) {
+									// Lanca erro caso a coluna PK escolhida pelo usuario nao exista no resultset
+									// vindo do banco. Nesse caso o usuario devera adicionar a PK como coluna de retorno
+									// na consulta SQL acima para que ela venha no resultado.
+									throw new Exception("A coluna definida como chave primária (" + originalName + ") não foi encontrada entre as colunas resultantes da consulta efetuada. Adicione esta coluna na camada '" + dl.getDataLayerName() + "'" );
+								}
+								
+								Object value = properties.get( originalName );
+								String primaryColumnName = "mclm_pk_" + originalName;
+								properties.put(primaryColumnName, value);
+								
 							}
 							
-							Object value = properties.get( originalName );
-							String primaryColumnName = "mclm_pk_" + originalName;
-							properties.put(primaryColumnName, value);
+							// Troca o nome original pelo traduzido no dicionario
+							if ( translatedName != null && !translatedName.equals("") && properties.has( originalName ) ) {
+								Object value = properties.get( originalName );
+								properties.remove( originalName );
+								properties.put( translatedName, value );
+							}
 							
 						}
-						
-						// Troca o nome original pelo traduzino no dicionario
-						if ( translatedName != null && !translatedName.equals("") && properties.has( originalName ) ) {
-							Object value = properties.get( originalName );
-							properties.remove( originalName );
-							properties.put( translatedName, value );
-						}
-						
 					}
 					
 				}
@@ -151,28 +157,33 @@ public class LayerService {
 					properties.put("data_window", idDataWindow);
 					properties.put("node_data", idNodeData);
 					
-					// Adiciona as chaves primarias com o nome do campo sem traducao.
-					if ( item.isPrimaryKey() ) {
-						
-						if( !properties.has( originalName ) ) {
-							// Lanca erro caso a coluna PK escolhida pelo usuario nao exista no resultset
-							// vindo do banco. Nesse caso o usuario devera adicionar a PK como coluna de retorno
-							// na consulta SQL acima para que ela venha no resultado.
-							throw new Exception("A coluna definida como chave primária (" + originalName + ") não foi encontrada entre as colunas resultantes da consulta efetuada. Adicione esta coluna na camada '" + layerName + "'" );
+					if ( !item.isVisible() ) {
+						properties.remove( originalName );
+					} else {					
+					
+						// Adiciona as chaves primarias com o nome do campo sem traducao.
+						if ( item.isPrimaryKey() ) {
+							
+							if( !properties.has( originalName ) ) {
+								// Lanca erro caso a coluna PK escolhida pelo usuario nao exista no resultset
+								// vindo do banco. Nesse caso o usuario devera adicionar a PK como coluna de retorno
+								// na consulta SQL acima para que ela venha no resultado.
+								throw new Exception("A coluna definida como chave primária (" + originalName + ") não foi encontrada entre as colunas resultantes da consulta efetuada. Adicione esta coluna na camada '" + layerName + "'" );
+							}
+							
+							Object value = properties.get( originalName );
+							String primaryColumnName = "mclm_pk_" + originalName;
+							properties.put(primaryColumnName, value);
 						}
 						
-						Object value = properties.get( originalName );
-						String primaryColumnName = "mclm_pk_" + originalName;
-						properties.put(primaryColumnName, value);
+						// Troca o nome original pelo traduzido no dicionario
+						if ( translatedName != null && !translatedName.equals("") && properties.has( originalName ) ) {
+							Object value = properties.get( originalName );
+							properties.remove( originalName );
+							properties.put( translatedName, value );
+						}					
+						
 					}
-					
-					// Troca o nome original pelo traduzino no dicionario
-					if ( translatedName != null && !translatedName.equals("") && properties.has( originalName ) ) {
-						Object value = properties.get( originalName );
-						properties.remove( originalName );
-						properties.put( translatedName, value );
-					}					
-					
 
 				}
 			}	

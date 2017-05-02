@@ -462,3 +462,31 @@
 	width : 28px;
 	height : 32px; 
 }
+
+.dataWindow {
+	width: 900px;
+	height: 100%;
+	padding : 0px;
+	margin : 0px;
+}
+
+.dataWindow .dataWindowLine {
+	
+}
+
+.dataWindow .dataWindowLeft {
+	width: 20%;
+	padding-right: 5px;
+	border-right: 1px solid #cacaca;
+	border-bottom : 1px dotted #ebebeb;
+}
+
+.dataWindow .dataWindowMiddle {
+	width: 80%;
+	border-bottom : 1px dotted #ebebeb;
+}
+
+.dataWindow .dataWindowRight {
+	width: 30%;
+}
+

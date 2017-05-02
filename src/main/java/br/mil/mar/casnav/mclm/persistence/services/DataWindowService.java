@@ -112,7 +112,7 @@ public class DataWindowService {
 		
 		result = window.toString();
 		
-		System.out.println( result );
+		System.out.println("Janela criada: " + result );
 		
 		return result;
 	}

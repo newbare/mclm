@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
@@ -32,9 +33,12 @@ public class DataPanel {
 	@Column(length=250, name="name")
 	private String dataPanelName;	
 	
+	@Column(name="panel_order")
+	private Integer order;	
 	
     @OneToMany(orphanRemoval=true,  mappedBy="dataPanel", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OrderBy("field_order ASC")
     private Set<DataField> fields;		
 	
     public DataPanel() {
@@ -73,5 +77,14 @@ public class DataPanel {
 		this.fields = fields;
 	}
 
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
+	}
+
+	
     
 }

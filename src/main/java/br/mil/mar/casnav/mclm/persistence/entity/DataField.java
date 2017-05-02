@@ -30,7 +30,10 @@ public class DataField {
 	private String caption;		
 	
 	@Column(length=250 )
-	private String description;		
+	private String description;	
+	
+	@Column(name="field_order")
+	private Integer order;
 	
     public DataField() {
     	
@@ -74,6 +77,14 @@ public class DataField {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
 	}
 
     
