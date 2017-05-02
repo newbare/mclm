@@ -104,6 +104,9 @@ Ext.define('MCLM.Functions', {
 			var windowPanels = windowData.panels;
 			var windowId = MCLM.Functions.shortGuid();
 			
+			
+			// Usar a mesma janela !!!!
+			
 			var	dataWindow = Ext.create('Ext.Window', {
 					id: windowId,    	
 					xtype: windowId,
@@ -136,11 +139,32 @@ Ext.define('MCLM.Functions', {
 				});
 			}
 			
+			dataWindow.addDocked({
+	            xtype: 'toolbar',
+	            dock: 'top',
+	            items: [{
+	                text: 'user 1',
+	                handler: function(event, toolEl, panel){
+	                    MCLM.Functions.processCustomButton( toolEl );
+	                }	                
+	            }, {
+	                text: 'user 2',
+	                handler: function(event, toolEl, panel){
+	                    MCLM.Functions.processCustomButton( toolEl );
+	                }	                
+	            }]
+	        });
+			
+			//var toolbar = dataWindow.down('toolbar');
+			//toolbar.add('<div>Hi</div>');
+			
 			dataWindow.show();
 			dataWindow.add( dataTabPanel );			
 			
 		},
-		
+		processCustomButton : function( data ) {
+			alert( data );
+		},
 		showMainLoadingIcon : function( action ) {
     		$("#mainLoadingIcon").css('display','block');
     		$("#mainLoadingInfo").text( action );

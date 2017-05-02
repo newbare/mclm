@@ -50,7 +50,7 @@ public class DataWindowService {
 		    
 			String connectionString = "jdbc:postgresql://" + databaseConn;
 
-			System.out.println("Recuperando dados da tabela " + dataWindow.getSourceTable() + " em " + databaseConn );
+			//System.out.println("Recuperando dados da tabela " + dataWindow.getSourceTable() + " em " + databaseConn );
 			
 			GenericService gs = new GenericService( connectionString, dataWindow.getSourceUser(), 
 					dataWindow.getSourcePassword()  );
@@ -112,7 +112,7 @@ public class DataWindowService {
 		
 		result = window.toString();
 		
-		System.out.println("Janela criada: " + result );
+		//System.out.println("Janela criada: " + result );
 		
 		return result;
 	}
