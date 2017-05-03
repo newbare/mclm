@@ -72,6 +72,7 @@ Ext.define('MCLM.Functions', {
 			}
 			
 			MCLM.Functions.showMainLoadingIcon();
+			MCLM.Functions.mainLog("Requisitando dados complementares da janela...");
 			
 			Ext.Ajax.request({
 				url: 'getDataWindow',
@@ -85,7 +86,8 @@ Ext.define('MCLM.Functions', {
 					if ( respText.error ) {
 						Ext.Msg.alert('Erro', respText.msg );
 					} else {
-						MCLM.Functions.createDataWindow( respText );
+						MCLM.Functions.createDataWindow( respText, record );
+						MCLM.Functions.mainLog("Janela recebida: " + respText.windowName);
 					}
 					
 				},
@@ -98,26 +100,34 @@ Ext.define('MCLM.Functions', {
 			
 		},		
 		
-		createDataWindow( windowData ) {
-			console.log( windowData );
+		createDataWindow( windowData, record ) {
+			
 			var windowName = windowData.windowName;
 			var windowPanels = windowData.panels;
-			var windowId = MCLM.Functions.shortGuid();
 			
 			
-			// Usar a mesma janela !!!!
+			var	dataWindow = Ext.getCmp('dataWindow');
+			if ( dataWindow ) {
+				MCLM.Functions.removeDataWindowTooltip();
+				dataWindow.destroy();
+			} 
 			
-			var	dataWindow = Ext.create('Ext.Window', {
-					id: windowId,    	
-					xtype: windowId,
-					title : windowName,
-					width : 550,
-					height: 500,
-					bodyStyle:{"background-color":"white"},
-					autoScroll: true,
-					constrain: true,
-					renderTo: Ext.getBody(),
-			});			
+			dataWindow = Ext.create('Ext.Window', {
+						id: 'dataWindow',    	
+						xtype: 'dataWindow',
+						title : windowName,
+						width : 550,
+						height: 500,
+						bodyStyle:{"background-color":"white"},
+						autoScroll: true,
+						constrain: true,
+						renderTo: Ext.getBody(),
+						listeners : {
+							 close : function() {
+								 MCLM.Functions.removeDataWindowTooltip();
+							 },
+						}
+			});
 			
 			var dataTabPanel = Ext.create('Ext.tab.Panel', {
                 layout: 'card',
@@ -143,14 +153,16 @@ Ext.define('MCLM.Functions', {
 	            xtype: 'toolbar',
 	            dock: 'top',
 	            items: [{
-	                text: 'user 1',
+	            	iconCls: 'scenery-icon',
+	            	id: 'cloneToSceneryBtn',
 	                handler: function(event, toolEl, panel){
-	                    MCLM.Functions.processCustomButton( toolEl );
+	                    MCLM.Functions.cloneToScenery( windowData,record );
 	                }	                
 	            }, {
-	                text: 'user 2',
+	            	iconCls: 'clima-icon',
+	            	id: 'showWeatherBtn',
 	                handler: function(event, toolEl, panel){
-	                    MCLM.Functions.processCustomButton( toolEl );
+	                    MCLM.Functions.exibeClima( windowData, record );
 	                }	                
 	            }]
 	        });
@@ -160,11 +172,55 @@ Ext.define('MCLM.Functions', {
 			
 			dataWindow.show();
 			dataWindow.add( dataTabPanel );			
+			MCLM.Functions.bindDataWindowTooltips();
 			
 		},
-		processCustomButton : function( data ) {
-			alert( data );
+		cloneToScenery : function( data, record ) {
+			var feicao = {};
+			var windowName = data.windowName;
+			
+			feicao["features"] = Ext.decode( record.mclm_metadata_property ).features;
+			feicao.features[0].properties.feicaoNome = windowName;
+			feicao.features[0].properties.feicaoDescricao = windowName;
+			feicao["type"] = "FeatureCollection";
+			
+			Ext.Ajax.request({
+			       url: 'newFeicao',
+			       params: {
+			           'data': Ext.encode( feicao ),
+			           'idFeatureStyle' : '21'
+			       },       
+			       success: function(response, opts) {
+			    	   console.log( response.responseText );
+			    	   var respObj = Ext.decode( response.responseText );
+			       }
+	  		});
+			
 		},
+		
+		exibeClima : function( data ) {
+			console.log( data );
+		},
+		removeDataWindowTooltip : function() {
+		 	 Ext.tip.QuickTipManager.unregister('cloneToSceneryBtn');
+		 	 Ext.tip.QuickTipManager.unregister('showWeatherBtn');
+		},
+		bindDataWindowTooltips : function() {
+		    Ext.tip.QuickTipManager.register({
+		        target: 'cloneToSceneryBtn',
+		        title: 'Copiar para o Cenário',
+		        text: 'Copia os dados do elemento para o Cenário como uma Feição.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    }, {
+		        target: 'showWeatherBtn',
+		        title: 'Exibir Previsão',
+		        text: 'Consulta a previsão do tempo para o local deste elemento.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    });			
+		},
+		
 		showMainLoadingIcon : function( action ) {
     		$("#mainLoadingIcon").css('display','block');
     		$("#mainLoadingInfo").text( action );

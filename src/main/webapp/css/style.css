@@ -259,6 +259,11 @@
 	background-repeat: no-repeat;
 }
 
+.clima-icon {
+	background-image: url('../img/clima.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .circle-tool {
 	background-image: url('../img/circle.svg') !important;
 	background-repeat: no-repeat;

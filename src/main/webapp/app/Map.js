@@ -1045,11 +1045,24 @@ Ext.define('MCLM.Map', {
 		       },       
 		       success: function(response, opts) {
 		    	  MCLM.Functions.mainLog("[OK] " + layerAlias);
+		    	  
 		    	  var jsonObj = JSON.parse(response.responseText);
 		    	   
 		    	  var rawData = [];
 		    	  for ( x=0; x<jsonObj.features.length;x++ ) {
-		    		   rawData.push( jsonObj.features[x].properties );
+		    		  var tempObj = jsonObj.features[x].properties;
+		    		 
+		    		  var feicaoMeta = {};
+		    		  var feicaoMetaFeatures = [];
+		    		  feicaoMetaFeatures.push( jsonObj.features[x] );
+		    		  feicaoMeta["features"] = feicaoMetaFeatures;
+		    		  feicaoMeta["type"] = "FeatureCollection";
+		    		  
+		    		  tempObj["mclm_metadata_property"] = Ext.encode( feicaoMeta );
+		    		  rawData.push( tempObj );
+		    		  
+		    		  console.log( tempObj );
+		    		  
 		    	  }
 		    	   
 		    	  if ( rawData.length > 0 ) {
