@@ -2,7 +2,6 @@ package br.mil.mar.casnav.mclm.persistence.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -107,9 +106,18 @@ public class SceneryNodeService {
 		}
 	}
 
+	/*
 	public Set<SceneryNode> getList( ) throws Exception {
 		return rep.getList( );
 	}
+	*/
+	
+	public SceneryNode getSceneryNode(int idSceneryNode) throws Exception {
+		return rep.getSceneryNode( idSceneryNode );
+	}
 
+	public SceneryNode getSceneryNodeByNodeData( int idNodeData ) throws Exception  {
+		return rep.getSceneryNodeByNodeData( idNodeData );
+	}
 	
 }

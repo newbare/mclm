@@ -15,6 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
+import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 
 
 
@@ -27,7 +28,16 @@ public class Configurator {
 	private String databaseAddr;
 	private String databasePort;
 	private Config config;
+	private NodeData feicaoRootNode;
 	
+	public NodeData getFeicaoRootNode() {
+		return feicaoRootNode;
+	}
+
+	public void setFeicaoRootNode(NodeData feicaoRootNode) {
+		this.feicaoRootNode = feicaoRootNode;
+	}
+
 	public void setJavaProxy() throws Exception {
 		if ( !useProxy() ) return;		
 		String proxyHost = getProxyHost();

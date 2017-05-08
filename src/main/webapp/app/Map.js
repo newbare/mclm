@@ -680,6 +680,8 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.map.addLayer( vectorLayer );
 			
 			MCLM.Functions.hideMainLoadingIcon();
+			
+			return vectorLayer;
 		},
 		// --------------------------------------------------------------------------------------------
 		// Remove uma camada do mapa
@@ -1256,7 +1258,7 @@ Ext.define('MCLM.Map', {
 			jsonstr.featureStyle = estilo;
 			jsonstr.data = feicao.metadados;	
 			
-			MCLM.Map.createVectorLayerFromGeoJSON( jsonstr, node );			
+			return MCLM.Map.createVectorLayerFromGeoJSON( jsonstr, node );			
 		
 		},
 		// --------------------------------------------------------------------------------------------
@@ -1270,6 +1272,17 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.removeLayer( serialId );
 		},
+		
+		getLayerByAlias : function ( layerAlias ) {
+			var me = MCLM.Map;
+			var result = null;
+			MCLM.Map.map.getLayers().forEach( function ( layer ) {
+				if( layer.get("alias") == layerAlias ) {
+					result = layer;
+				}
+			});
+			return result;
+		},		
 		
 		// --------------------------------------------------------------------------------------------
 		// TESTE - APAGAR

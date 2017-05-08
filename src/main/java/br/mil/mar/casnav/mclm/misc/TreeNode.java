@@ -1,6 +1,7 @@
 package br.mil.mar.casnav.mclm.misc;
 
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
+import br.mil.mar.casnav.mclm.persistence.entity.Feicao;
 import br.mil.mar.casnav.mclm.persistence.entity.FilterItem;
 import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 import br.mil.mar.casnav.mclm.persistence.services.FilterService;
@@ -36,6 +37,7 @@ public class TreeNode {
 	private DataLayer dataLayer;
 	private FilterItem filter;
 	private int idDataWindow;
+	private Feicao feicao;
 	
 	public TreeNode( UserTableEntity ute, DataLayerService dss, FilterService fs ) {
 		this.childrenCount = Integer.valueOf( ute.getData("children") );
@@ -84,6 +86,21 @@ public class TreeNode {
 				
 			}
 			// ====================================================================================
+			if ( this.layerType.equals("FEI") ) {
+				try {
+					dss.newTransaction();
+					String[] dssData = this.layerName.split(":");
+					Integer idFeicao = Integer.valueOf( dssData[1] );
+					this.feicao = dss.getFeicao( idFeicao );
+					
+					this.institute = "Feição '" + this.feicao.getGeomType() + "' estilo '" + this.feicao.getStyle().getFeatureStyleName() +"'" ;
+					
+				} catch ( Exception e ) {
+					e.printStackTrace();
+				}
+				this.iconCls = "fei-icon";
+			}
+			
 			if ( this.layerType.equals("SHP") ) this.iconCls = "shp-icon";
 			if ( this.layerType.equals("TIF") ) this.iconCls = "tif-icon";
 			if ( this.layerType.equals("DTA") ) {
@@ -276,6 +293,8 @@ public class TreeNode {
 		this.idDataWindow = idDataWindow;
 	}
 	
-	
+	public Feicao getFeicao() {
+		return feicao;
+	}	
 	
 }

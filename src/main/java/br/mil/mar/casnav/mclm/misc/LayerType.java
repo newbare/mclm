@@ -7,9 +7,10 @@ package br.mil.mar.casnav.mclm.misc;
 // TIF : GeoTIFF
 // FDR : Pasta na Árvore
 // FEI : Feicao
+// CRN : Root Node para os Cenários / Feições
 
 public enum LayerType {
-	SHP, WMS, KML, FTR, TIF, FDR, DTA, FEI;
+	SHP, WMS, KML, FTR, TIF, FDR, DTA, FEI, CRN;
 
 	public String getLayerType() {
 		return this.name();

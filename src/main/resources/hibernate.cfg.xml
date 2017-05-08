@@ -11,6 +11,12 @@
 
 		<property name="show_sql">false</property>
 		<property name="format_sql">true</property>
+
+
+		<!-- 		
+		<property name="hibernate.default_schema">mclm</property>
+ 		-->
+
 		
 		<property name="hibernate.id.new_generator_mappings">true</property>
 
@@ -25,7 +31,7 @@
 
 		<property name="hibernate.c3p0.autoCommitOnClose">true</property>
 		<!-- <property name="hibernate.c3p0.debugUnreturnedConnectionStackTraces">false</property> --> 
-		<!--  <property name="hibernate.c3p0.unreturnedConnectionTimeout">20</property>   -->
+		<!-- <property name="hibernate.c3p0.unreturnedConnectionTimeout">20</property> -->
 		                                
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.Config"/>
 		<mapping class="br.mil.mar.casnav.mclm.persistence.entity.NodeData"/>

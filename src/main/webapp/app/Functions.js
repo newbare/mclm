@@ -167,35 +167,24 @@ Ext.define('MCLM.Functions', {
 	            }]
 	        });
 			
-			//var toolbar = dataWindow.down('toolbar');
-			//toolbar.add('<div>Hi</div>');
-			
 			dataWindow.show();
 			dataWindow.add( dataTabPanel );			
 			MCLM.Functions.bindDataWindowTooltips();
 			
 		},
+		
 		cloneToScenery : function( data, record ) {
 			var feicao = {};
 			var windowName = data.windowName;
-			
 			feicao["features"] = Ext.decode( record.mclm_metadata_property ).features;
 			feicao.features[0].properties.feicaoNome = windowName;
 			feicao.features[0].properties.feicaoDescricao = windowName;
 			feicao["type"] = "FeatureCollection";
 			
-			Ext.Ajax.request({
-			       url: 'newFeicao',
-			       params: {
-			           'data': Ext.encode( feicao ),
-			           'idFeatureStyle' : '21'
-			       },       
-			       success: function(response, opts) {
-			    	   console.log( response.responseText );
-			    	   var respObj = Ext.decode( response.responseText );
-			       }
-	  		});
-			
+			var cloneToCenarioWindow = Ext.getCmp('cloneToCenarioWindow');
+			if ( !cloneToCenarioWindow ) cloneToCenarioWindow = Ext.create('MCLM.view.datawindow.CloneToCenarioWindow');
+			cloneToCenarioWindow.show();
+			cloneToCenarioWindow.feicao = feicao;
 		},
 		
 		exibeClima : function( data ) {

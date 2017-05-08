@@ -112,14 +112,29 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		        ]
 		    });
 		} else {
-		    var menu_grid = new Ext.menu.Menu({ 
-		    	items: [
-				  { iconCls: 'add-scenery-icon', text: 'Copiar para Área de Trabalho', handler: function() { me.addToScenery(record); } },
-				  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
-				  { xtype: 'menuseparator' },
-		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
-		        ]
-		    });
+			var data = record.data;
+			if ( data.layerType == 'FEI' ) {
+
+			    var menu_grid = new Ext.menu.Menu({ 
+			    	items: [
+			    	  { iconCls: 'goto-icon', text: 'Ir para...', handler: function() { me.goToFeicao( record ); } },
+					  { xtype: 'menuseparator' },
+			          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
+			        ]
+			    });
+				
+				
+			} else {
+			
+			    var menu_grid = new Ext.menu.Menu({ 
+			    	items: [
+					  { iconCls: 'add-scenery-icon', text: 'Copiar para Área de Trabalho', handler: function() { me.addToScenery(record); } },
+					  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
+					  { xtype: 'menuseparator' },
+			          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
+			        ]
+			    });
+			}
 		}
 	    var position = [e.getX()-10, e.getY()-10];
 	    menu_grid.showAt( position );
@@ -209,6 +224,25 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		trabalhoAddFolder.setValue( 'false' );      
 		
     	Ext.getCmp('newFolderName').focus(true, 100);    	
+    },
+    
+    goToFeicao : function ( record ) {
+		var parentNode = record.parentNode;
+		var data = record.data;
+		var alias = data.layerAlias;
+		var checked = record.get('checked');
+		
+		if ( !checked ) {
+			Ext.Msg.alert('Zoom em Feição', 'Marque a Feição para que ela apareça no mapa antes.');
+			return true;
+			
+		} 
+		
+		var layer = MCLM.Map.getLayerByAlias( alias );
+		var source = layer.getSource();
+		//MCLM.Map.map.getView().fit( source.getExtent(), MCLM.Map.map.getSize() );
+		MCLM.Map.theView.fit( source.getExtent(), {duration: 2000, maxZoom: 12});
+		
     },
     
     // Pergunta se quer deletar uma camada / no da arvore
@@ -423,17 +457,27 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var checked = node.get('checked');
 		var layerName = node.get('layerName');
 		var serialId = node.get('serialId');
+		var layerType = node.get('layerType' );
 		
 		if ( layerName == "" ) return;
 		
 		if( checked == true ) {
-			// adiciona a camada no mapa
-			var layer = MCLM.Map.addLayer( node );
-			this.fireEvent('mountImagePreview');
+			if( layerType == "FEI") {
+				var layer = MCLM.Map.addFeicao( node );
+			} else {
+				// adiciona a camada no mapa
+				var layer = MCLM.Map.addLayer( node );
+				this.fireEvent('mountImagePreview');
+			}
 		} else {
-			// Remove a camada do mapa
-			MCLM.Map.removeLayer( serialId );
-			this.fireEvent('mountImagePreview');
+			if( layerType == "FEI") {
+				MCLM.Map.removeFeicao( node );
+			} else {
+				// Remove a camada do mapa
+				MCLM.Map.removeLayer( serialId );
+				// Interceptado por MCLM.view.stack.LayerStackController
+				this.fireEvent('mountImagePreview');
+			}
 		}	
 	},
 	

@@ -88,7 +88,6 @@ public class NodeRepository extends BasicRepository {
 		} catch (DeleteException e) {
 			rollBack();
 			closeSession();
-
 			throw e;			
 		}
 		closeSession();

@@ -80,6 +80,12 @@ Ext.define('MCLM.view.config.ConfigForm', {
             invalidText: 'Teste'
         },
         {
+            fieldLabel: 'Serviços de Clima do CPTEC',
+            width: 350,
+            allowBlank : false,
+            name: 'servicosCptecUrl',
+        },
+        {
             fieldLabel: 'End. do Servidor de Rotas',
             width: 350,
             allowBlank : false,

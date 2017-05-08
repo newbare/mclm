@@ -141,10 +141,10 @@ public class NodeService {
 		for ( UserTableEntity ute : utes ) {
 			TreeNode tn = new TreeNode( ute, dss, fs );
 			// Nao coloca feicao na arvore do catalogo...
-			if ( !tn.getLayerType().equals("FEI") ) {
+			//if ( !tn.getLayerType().equals("FEI") ) {
 				JSONObject itemObj = new JSONObject( tn );
 	            arrayObj.put( itemObj );	
-			}
+			//}
 		}
 		dss.closeSession();
 		rep.closeSession();
@@ -156,15 +156,22 @@ public class NodeService {
 	public String createFolder(String newFolderName, int layerFolderID) {
 		
 		try {
-			NodeService ns = new NodeService();
 			NodeData node = new NodeData( layerFolderID, "", "", "", "", newFolderName, LayerType.FDR );
-			
-			ns.addNode( node );			
+			addNode( node );			
 			return "{ \"success\": true, \"msg\": \"Pasta " + newFolderName + " criada com sucesso.\" }";
 		} catch ( Exception e ) {
 			return "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";	
 		}
 		
 	}
+
+	public NodeData createCRN() throws Exception {
+		NodeData node = new NodeData( 0, "", "", "", "", "Feições", LayerType.CRN );
+		node.setReadOnly( true );
+		NodeData result = addNode( node );
+		return result;
+	}
+
+
 	
 }

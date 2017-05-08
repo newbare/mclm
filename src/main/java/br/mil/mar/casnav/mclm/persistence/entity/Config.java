@@ -39,6 +39,9 @@ public class Config {
 	
 	@Column(length=100, name = "non_proxy_hosts")
 	private String nonProxyHosts;
+
+	@Column(length=100, name = "servicos_cptec_inpe")
+	private String servicosCptecUrl;	
 	
 	@Column(length=100, name = "shape_file_target_path")
 	private String shapeFileTargetPath;
@@ -335,5 +338,12 @@ public class Config {
 		this.distanceFromRoute = distanceFromRoute;
 	}
 
+	public String getServicosCptecUrl() {
+		return servicosCptecUrl;
+	}
+	
+	public void setServicosCptecUrl(String servicosCptecUrl) {
+		this.servicosCptecUrl = servicosCptecUrl;
+	}
 	
 }

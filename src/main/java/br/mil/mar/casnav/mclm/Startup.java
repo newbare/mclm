@@ -9,6 +9,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
+import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
@@ -76,6 +77,8 @@ public class Startup implements ServletContextListener {
 
     		
     		for( NodeData node : nodes ) {
+    			if ( node.getLayerType() == LayerType.CRN) Configurator.getInstance().setFeicaoRootNode( node );
+    			
 				ds.newTransaction();
 				try {
 					ds.getDictionary( node.getIdNodeData() );
@@ -86,7 +89,10 @@ public class Startup implements ServletContextListener {
 				
 			}
 			
-			
+			if ( Configurator.getInstance().getFeicaoRootNode() == null ) {
+				ns.newTransaction();
+				Configurator.getInstance().setFeicaoRootNode( ns.createCRN() );
+			} 
 			
 			
 			// TEMP!

@@ -94,13 +94,13 @@ public class SceneryNodeRepository extends BasicRepository {
 		
 	}
 	
-	
+	/*
 	public Set<SceneryNode> getList() throws Exception {
 		DaoFactory<SceneryNode> df = new DaoFactory<SceneryNode>();
 		IDao<SceneryNode> fm = df.getDao(this.session, SceneryNode.class);
 		Set<SceneryNode> SceneryNode = null;
 		try {
-			SceneryNode = new HashSet<SceneryNode>( fm.getList("select * from scenery_layer") );
+			SceneryNode = new HashSet<SceneryNode>( fm.getList("select * from scenery_node") );
 		} catch ( Exception e ) {
 			closeSession();
 			throw e;
@@ -108,6 +108,7 @@ public class SceneryNodeRepository extends BasicRepository {
 		closeSession();
 		return SceneryNode;
 	}
+	*/
 	
 	public void deleteSceneryNode(SceneryNode SceneryNode) throws DeleteException {
 		DaoFactory<SceneryNode> df = new DaoFactory<SceneryNode>();
@@ -135,5 +136,25 @@ public class SceneryNodeRepository extends BasicRepository {
 		} 
 		closeSession();		
 		return sceneryNode;
+	}
+
+	public SceneryNode getSceneryNodeByNodeData(int idNodeData) throws Exception {
+		DaoFactory<SceneryNode> df = new DaoFactory<SceneryNode>();
+		IDao<SceneryNode> fm = df.getDao(this.session, SceneryNode.class);
+		Set<SceneryNode> sceneryNodes = null;
+		try {
+			sceneryNodes = new HashSet<SceneryNode>( fm.getList("select * from scenery_node where id_layer = " + idNodeData) );
+		} catch ( Exception e ) {
+			closeSession();
+			throw e;
+		}
+		closeSession();
+		
+		for ( SceneryNode sn : sceneryNodes ) {
+			if ( sn.getLayer().getIdNodeData() == idNodeData ) return sn;
+		}
+		
+		
+		return null;
 	}		
 }

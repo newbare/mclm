@@ -8,6 +8,15 @@ import br.mil.mar.casnav.mclm.persistence.entity.Config;
 
 public class RouteService {
 
+	/*
+	
+	Para pegar a parcial do nó da linha (start ou end point) até o ponto realmente clicado pelo usuário tentar isso:
+	SELECT ST_LineSubstring(geom, ST_LineLocatePoint(ST_LineMerge(geom), ST_SetSRID(ST_MakePoint(-90, 30),4326)),1)
+	FROM roads
+	WHERE id=1234
+	
+	*/
+	
 	public String getNearestRoads( String coordinate ) throws Exception {
 
 		Config cfg = Configurator.getInstance().getConfig();

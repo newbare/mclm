@@ -18,6 +18,7 @@ import br.mil.mar.casnav.mclm.misc.WebClient;
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.DictionaryItem;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
+import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 
 public class LayerService {
@@ -243,6 +244,25 @@ public class LayerService {
 		try {
 			NodeService ns = new NodeService();
 			NodeData node = ns.getNode(idNode);
+			
+			if ( node.getLayerType() == LayerType.FEI ) {
+				Integer idNodeData = node.getIdNodeData();
+
+				try {
+					SceneryNodeService sns = new SceneryNodeService(); 
+					SceneryNode sn = sns.getSceneryNodeByNodeData( idNodeData );
+					// Se achou eh pq pertence a um cenario
+					throw new Exception("Esta Feição pertence à um Cenário.");
+					
+				} catch ( NotFoundException nfe ) {
+					// Nao achou ... apaga!
+					ns.newTransaction();
+					ns.deleteNode(node);
+					return result;
+				}
+				
+				
+			}			
 			
 			if ( node.getLayerType() == LayerType.FDR ) {
 				// É uma pasta. Apaga somente o nó SE ESTIVER VAZIO.

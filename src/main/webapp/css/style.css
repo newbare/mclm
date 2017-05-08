@@ -73,6 +73,11 @@
 	background-repeat: no-repeat;
 }
 
+.goto-icon {
+	background-image: url('../img/goto.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .query-icon {
 	background-image: url('../img/query.svg') !important;
 	background-repeat: no-repeat;
