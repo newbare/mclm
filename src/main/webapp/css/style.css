@@ -58,6 +58,11 @@
 	background-repeat: no-repeat;
 }
 
+.datawindow-icon {
+	background-image: url('../img/datawindow.svg') !important;
+	background-repeat: no-repeat;	
+}
+	
 .forecast-icon {
 	background-image: url('../img/fogg.svg') !important;
 	background-repeat: no-repeat;

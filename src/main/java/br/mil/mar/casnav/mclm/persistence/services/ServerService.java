@@ -147,10 +147,6 @@ public class ServerService {
 	}	
 
 	public String getPGRAsJson() throws Exception {
-		/*
-		{"servers":[{"serverDatabase":"siglmd","tables":[{"idTable":1,"geometryColumnName":"geom","name":"servicos.view_cidades_brasil"},{"idTable":2,"geometryColumnName":"geom","name":"servicos.view_bacias_hidrograficas"}],"serverUser":"geoserver","name":"Apolo","serverAddress":"10.5.115.21","serverPort":5432,"serverPassword":"G305erV31","idServer":3}],"totalCount":1}
-		*/
-		
 		List<Postgres> servers = getPGRList( );
 		PostgresSourcesCollection esc = new PostgresSourcesCollection( servers );
 		

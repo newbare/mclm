@@ -122,8 +122,20 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		    });
 		} else {
 			var data = record.data;
+			/*
+			if ( data.layerType == 'WMS' ) {
+			    var menu_grid = new Ext.menu.Menu({ 
+			    	items: [
+					  { iconCls: 'add-scenery-icon', text: 'Copiar para Área de Trabalho', handler: function() { me.addToScenery(record); } },
+					  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
+					  { iconCls: 'datawindow-icon', text: 'Criar Janela de Dados', handler: function() { me.configDataWindow(record); } },
+					  { xtype: 'menuseparator' },
+			          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
+			        ]
+			    });
+			} else
+			*/
 			if ( data.layerType == 'FEI' ) {
-
 			    var menu_grid = new Ext.menu.Menu({ 
 			    	items: [
 			    	  { iconCls: 'goto-icon', text: 'Ir para...', handler: function() { me.goToFeicao( record ); } },
@@ -131,14 +143,13 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
 			        ]
 			    });
-				
-				
 			} else {
 			
 			    var menu_grid = new Ext.menu.Menu({ 
 			    	items: [
 					  { iconCls: 'add-scenery-icon', text: 'Copiar para Área de Trabalho', handler: function() { me.addToScenery(record); } },
 					  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
+					  { iconCls: 'datawindow-icon', text: 'Criar Janela de Dados', handler: function() { me.configDataWindow(record); } },
 					  { xtype: 'menuseparator' },
 			          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
 			        ]
@@ -149,6 +160,14 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	    menu_grid.showAt( position );
 		e.stopEvent();    	
     },
+    
+    // Configura / Cria Janela de Dados
+    configDataWindow : function(record) {
+		var configDataWindow = Ext.create('MCLM.view.datawindow.ConfigDataWindow');
+		configDataWindow.nodeData = record.data; 
+		configDataWindow.show();	
+    },
+    
     // Edita o dicionario de dados para uma camada
     configDictionary : function(record) {
     	var data = record.data;

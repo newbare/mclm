@@ -83,18 +83,18 @@ public class DictionaryService {
 				String password = dl.getTable().getServer().getServerPassword();
 				String user = dl.getTable().getServer().getServerUser();
 				String tableName = dl.getTable().getName();
-				String whereClause = dl.getWhereClause();
+				//String whereClause = dl.getWhereClause();
 				String columns = dl.getPropertiesColumns();
-				String schemaName = "";
+				//String schemaName = "";
 				
 				// Tenta remover o nome do esquema
 				if ( tableName.contains(".") ) {
 					String data1[] = tableName.split("\\.");
-					schemaName = data1[0];
+					//schemaName = data1[0];
 					tableName = data1[1];
 				}
 				
-				List<UserTableEntity> utes = getSchema( schemaName, tableName, serverAddress, serverPort, databaseName, user, password, whereClause, columns  );
+				List<UserTableEntity> utes = getSchema( tableName, serverAddress, serverPort, databaseName, user, password,  columns  );
 				result = utes.size();
 				
 				for( UserTableEntity ute : utes ) {
@@ -153,8 +153,22 @@ public class DictionaryService {
 		return result;
 	}
 	
-	public List<UserTableEntity> getSchema( String schemaName, String tableName, String serverAddress, int serverPort, String databaseName, 
-			String user, String password, String whereClause, String columns  )  throws Exception {
+	public String getSchemaAsJson ( String tableName, String serverAddress, int serverPort, String databaseName, 
+			String user, String password )  throws Exception {
+	
+		if ( tableName.contains(".") ) {
+			String data1[] = tableName.split("\\.");
+			tableName = data1[1];
+		}		
+		
+		List<UserTableEntity> utes = getSchema( tableName, serverAddress, serverPort, databaseName,  user, password, "*" );
+		
+		JSONArray arr = new JSONArray( utes );
+		return arr.toString();
+	}
+	
+	public List<UserTableEntity> getSchema( String tableName, String serverAddress, int serverPort, String databaseName, 
+			String user, String password, String columns  )  throws Exception {
 		System.out.println("Lendo esquema da tabela tabela '" + tableName + "' em " + serverAddress + ":" + serverPort + "/" + databaseName );
 
 		String query = "SELECT column_name,data_type FROM information_schema.columns WHERE table_name = '"+tableName+"' order by column_name"; // table_schema = 'public'
@@ -170,19 +184,23 @@ public class DictionaryService {
 		for( UserTableEntity ute : schma ) {
 			
 			String columnName = "";
-			String dataType = "";
+			//String dataType = "";
 			for( String key : ute.getColumnNames() ) {
 				String value = ute.getData( key );
 				if( key.equals("column_name") ) columnName = value;
-				if( key.equals("data_type") ) dataType = value;						
+				//if( key.equals("data_type") ) dataType = value;						
 			}
-			if ( columns.contains( " " + columnName + " " ) ) {
-				System.out.println( "      >>> " + columnName + "  " + dataType);
-				result.add( ute );
-			}
+			
+			if ( columns.equals("*") ) {
+				result.add( ute );				
+			} else
+				if ( columns.contains( " " + columnName + " " ) ) {
+					result.add( ute );
+				}
 			
 		}		
 		
+		System.out.println(">> Resultado: " + result.size() + " elementos.");
 		return result;
 	
 	}

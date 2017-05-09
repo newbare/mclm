@@ -2,11 +2,7 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.cloneToCenario',
 
-    onCloseWindow : function() {
-    	var saveCenarioWindow = Ext.getCmp('saveCenarioWindow');
-    	saveCenarioWindow.close();
-    },
-    
+   
     doClone : function( ) {
     	var styleCombo = Ext.getCmp("idFeicaoStyle").getValue();
     	var feicaoNome = Ext.getCmp("feicaoNome").getValue();
