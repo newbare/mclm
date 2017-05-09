@@ -88,6 +88,7 @@ public class DataWindowService {
 			for ( DataField dataField : dataPanel.getFields() ) {
 				String fieldName = dataField.getFieldName();
 				String fieldCaption = dataField.getCaption();
+				String fieldType = dataField.getFieldType().name();
 				String fieldDescription = dataField.getDescription();
 				
 
@@ -97,6 +98,7 @@ public class DataWindowService {
 						String value = record.getData( key );
 						field.put("fieldValue", value);
 						field.put("fieldName", key);
+						field.put("fieldType", fieldType);
 						field.put("fieldCaption", fieldCaption);
 						field.put("fieldDescription", fieldDescription);
 					}

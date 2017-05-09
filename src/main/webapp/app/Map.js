@@ -1062,9 +1062,6 @@ Ext.define('MCLM.Map', {
 		    		  
 		    		  tempObj["mclm_metadata_property"] = Ext.encode( feicaoMeta );
 		    		  rawData.push( tempObj );
-		    		  
-		    		  console.log( tempObj );
-		    		  
 		    	  }
 		    	   
 		    	  if ( rawData.length > 0 ) {

@@ -138,8 +138,32 @@ Ext.define('MCLM.Functions', {
 				
 				var content = "<table class='dataWindow'>";
 				for (var x = 0; x < fields.length; x++) {
+					var fieldValue = fields[x].fieldValue;
+					var fieldType = fields[x].fieldType;
+
+					if( fieldType == 'SYMBOL' ) {
+						var imageLink = "http://10.5.115.136/SvgService/?symbol=" + fieldValue;
+						var fieldValue = '<div style="width:52px;height:52px;border:1px solid #cacaca"><object id="iconPreview" style="width:50px;height:50px" type="image/svg+xml" data="'+imageLink+'"></object></div>';
+						// http://10.5.115.136/SvgService/?symbol=500&color=_FF0000
+					}
+					
+					
+					if( fieldType == 'URL' ) {
+						fieldValue = "<a target='__NEWWINDOW' href='"+fieldValue+"'>Link Externo</a>";
+					}
+					
+					
+					if( fieldType == 'COLOR' ) {
+						fieldValue = "<div style='width:40px;height:20px;border:1px solid #cacaca;background-color:"+fieldValue+"'></div>";
+					}
+					
+					
+					if( fieldType == 'IMAGE' ) {
+						fieldValue = "<img style='border:1px solid #cacaca;width:100px;height:100px' src='" + fieldValue + "'>";
+					}
+					
 					content = content + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + fields[x].fieldCaption + 
-					"</td><td class='dataWindowMiddle'>" + fields[x].fieldValue + "</td></tr>";
+					"</td><td class='dataWindowMiddle'>" + fieldValue + "</td></tr>";
 				}
 				content = content + "</table>";
 				

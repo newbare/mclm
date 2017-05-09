@@ -2,6 +2,8 @@ package br.mil.mar.casnav.mclm.persistence.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import br.mil.mar.casnav.mclm.misc.DataFieldType;
 
 @Entity
 @Table(name="data_field") 
@@ -22,6 +26,10 @@ public class DataField {
 	@ManyToOne()
 	@JoinColumn(name="id_data_panel", foreignKey = @ForeignKey(name = "fk_datafield_datapanel"))
 	private DataPanel dataPanel;	
+	
+	@Column(length=15)
+	@Enumerated(EnumType.STRING)
+	DataFieldType fieldType;
 	
 	@Column(length=250, name="name")
 	private String fieldName;	
@@ -87,5 +95,14 @@ public class DataField {
 		this.order = order;
 	}
 
+	public DataFieldType getFieldType() {
+		return fieldType;
+	}
+
+	public void setFieldType(DataFieldType fieldType) {
+		this.fieldType = fieldType;
+	}
+
+	
     
 }
