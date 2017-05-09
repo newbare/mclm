@@ -88,9 +88,9 @@ public class TreeNode {
 			// ====================================================================================
 			if ( this.layerType.equals("FEI") ) {
 				try {
+					
 					dss.newTransaction();
-					String[] dssData = this.layerName.split(":");
-					Integer idFeicao = Integer.valueOf( dssData[1] );
+					Integer idFeicao = Integer.valueOf( ute.getData("id_feicao") );
 					this.feicao = dss.getFeicao( idFeicao );
 					
 					this.institute = "Feição '" + this.feicao.getGeomType() + "' estilo '" + this.feicao.getStyle().getFeatureStyleName() +"'" ;

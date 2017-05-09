@@ -411,7 +411,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     goToFeicao : function ( record ) {
 		var parentNode = record.parentNode;
 		var data = record.data;
-		var alias = data.layerAlias;
+		var layerName = data.layerName;
 		var checked = record.get('checked');
 		
 		if ( !checked ) {
@@ -420,7 +420,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 			
 		} 
 		
-		var layer = MCLM.Map.getLayerByAlias( alias );
+		var layer = MCLM.Map.getLayerByName( layerName );
 		var source = layer.getSource();
 		MCLM.Map.theView.fit( source.getExtent(), {duration: 2000, maxZoom: 14});
 		

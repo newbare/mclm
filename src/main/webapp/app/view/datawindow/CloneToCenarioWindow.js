@@ -2,53 +2,65 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioWindow', {
 	extend: 'Ext.Window',
 	xtype : 'view.cloneToCenarioWindow',
 	id : 'cloneToCenarioWindow',
-
+	title : "Copiar para o Cenário",
+	bodyPadding: 10,
+	
+	width : 400,
+	height: 200,
 	
     requires: [
         'MCLM.view.datawindow.CloneToCenarioController',
-        /*'MCLM.view.cenarios.SaveCenarioForm',*/
 	],	
-	    
     controller : 'cloneToCenario',	
-	
-	feicao : null,
-	
-	width : 410,
-	height: 150,
-    scrollable: false,
-	resizable: false,
-    frame : false,
-	layout : 'border',
-	title : "Copiar para o Cenário",
-	constrain: true,
-	
-	renderTo: Ext.getBody(),
 
-	html : '<div style="padding:5px">Selecione um estilo para ser aplicado neste elemento.</div>',
+    scrollable: false,
+    frame : false,
+    
+    constrain: true,
+    bodyStyle:"background:#FFFFFF;",
+    renderTo: Ext.getBody(),
+    
+	feicao : null,
+	resizable: false,
+	
+
+    items : [{
+			xtype: 'combobox',
+			editable : false,
+			name: 'idFeicaoStyle',
+			width: 350,
+			fieldLabel: 'Estilo',
+			displayField: 'featureStyleName',	    	
+			id: 'idFeicaoStyle',
+			store: 'store.styles',	    	
+		    forceSelection: true,
+		    allowBlank: false,
+		    valueField: 'idFeatureStyle',
+		    matchFieldWidth: false,
+		    listeners : {
+		    	select : function( ele, rec, idx ) {
+		    		Ext.getCmp('doCloneBtn').enable();
+		    	}
+		    } 
+    	},{
+	    	xtype : 'textfield',
+	        fieldLabel: 'Nome da Feição',
+	        width: 350,
+	        id: 'feicaoNome',
+	        allowBlank : false,
+	    },{
+	    	xtype : 'textareafield',
+	        fieldLabel: 'Descrição',
+	        width: 350,
+	        id: 'feicaoDescricao',
+	        allowBlank : false,
+	    }],	
+	
 	
     dockedItems: [{
         xtype: 'toolbar',
         border: false,
         items: [{
-    		xtype: 'combobox',
-    		editable : false,
-    		name: 'idFeicaoStyle',
-    		labelWidth: 30,
-    		fieldLabel: 'Estilo:',
-    		displayField: 'featureStyleName',	    	
-    		id: 'idFeicaoStyle',
-    		store: 'store.styles',	    	
-    	    forceSelection: true,
-    	    allowBlank: false,
-    	    valueField: 'idFeatureStyle',
-    	    listeners : {
-    	    	select : function( ele, rec, idx ) {
-    	        	// console.log( rec.data );
-    	    		Ext.getCmp('doCloneBtn').enable();
-    	    	}
-    	    } 
-        
-        },{
         	iconCls: 'save-icon',
         	id: 'doCloneBtn',
             handler : 'doClone',

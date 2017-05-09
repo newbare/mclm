@@ -45,6 +45,15 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	var tree = Ext.getCmp('layerTree');
     	tree.collapseAll();
     },
+
+    onReloadTree : function( button ) {
+    	var layerTree = Ext.getCmp('layerTree');
+		var rootMaintree = layerTree.getRootNode();
+		
+  		var layerTreeStore = Ext.getStore('store.layerTree');
+  		layerTreeStore.load( { node: rootMaintree } );		
+    },
+    
     
     // Responde ao clique em um no. Mostra os detalhes do no painel abaixo da arvore
     onLayerTreeItemClick : function( view, record, item, index, e ) {
@@ -229,7 +238,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     goToFeicao : function ( record ) {
 		var parentNode = record.parentNode;
 		var data = record.data;
-		var alias = data.layerAlias;
+		var layerName = data.layerName;
 		var checked = record.get('checked');
 		
 		if ( !checked ) {
@@ -238,9 +247,8 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			
 		} 
 		
-		var layer = MCLM.Map.getLayerByAlias( alias );
+		var layer = MCLM.Map.getLayerByName( layerName );
 		var source = layer.getSource();
-		//MCLM.Map.map.getView().fit( source.getExtent(), MCLM.Map.map.getSize() );
 		MCLM.Map.theView.fit( source.getExtent(), {duration: 2000, maxZoom: 12});
 		
     },

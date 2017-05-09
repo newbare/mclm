@@ -33,6 +33,10 @@ public class NodeData {
 
 	@Column(name="index_order")
 	private int indexOrder;	
+
+	@OneToOne()
+	@JoinColumn(name="id_feicao", foreignKey = @ForeignKey(name = "fk_node_data_feicao"))
+	private Feicao feicao;	
 	
 	@Column(length=5)
 	@Enumerated(EnumType.STRING)
@@ -235,7 +239,17 @@ public class NodeData {
 
 	public void setDataWindow(DataWindow dataWindow) {
 		this.dataWindow = dataWindow;
+	}
+
+	public Feicao getFeicao() {
+		return feicao;
+	}
+
+	public void setFeicao(Feicao feicao) {
+		this.feicao = feicao;
 	}	
 
+
+	
 	
 }

@@ -98,10 +98,15 @@ public class Startup implements ServletContextListener {
 			// TEMP!
     		/*
 			for( NodeData node : nodes ) {
-				if ( node.getLayerType() == LayerType.DTA ) {
+				if ( node.getLayerType() == LayerType.FEI ) {
 					String layerName = node.getLayerName();
-					System.out.println("Processando Layer: " + layerName);
-					System.out.println("  > " + node.getDataLayer().getDataLayerName() );
+					
+					System.out.println("Processando Layer: " + layerName );
+					
+					//ns.newTransaction();
+					//ns.updateNode(node);
+					
+					
 				}
 			}
 			*/

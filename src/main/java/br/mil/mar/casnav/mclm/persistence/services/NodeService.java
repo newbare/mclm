@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.misc.TreeNode;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
+import br.mil.mar.casnav.mclm.persistence.entity.Feicao;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
@@ -51,6 +52,14 @@ public class NodeService {
 	
 	public void updateNode( NodeData node ) throws UpdateException, NotFoundException {
 		NodeData oldNode = rep.getNode( node.getIdNodeData() );
+
+		try {
+			DataLayerService dls = new DataLayerService();
+			Feicao feicao = dls.getFeicao( node.getFeicao().getIdFeicao() );
+			oldNode.setFeicao( feicao );
+		} catch ( Exception e ) {
+			// Sem feicao para este node...
+		}
 		
 		oldNode.setChildren( node.getChildren() );
 		oldNode.setIdNodeParent( node.getIdNodeParent() );

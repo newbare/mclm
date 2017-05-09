@@ -314,6 +314,12 @@ Ext.define('MCLM.Functions', {
 		        text: 'Exibe a barra de ferramentas de desenho de feições.',
 		        width: 150,
 		        dismissDelay: 5000 
+		    }, {
+		        target: 'reloadTreeBtn',
+		        title: 'Atualizar a Árvore',
+		        text: 'Atualiza toda a árvore carregando os dados do servidor novamente.',
+		        width: 150,
+		        dismissDelay: 5000 
 		    }); 	
 		},
 

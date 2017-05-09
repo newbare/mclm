@@ -84,10 +84,7 @@ public class SceneryTreeNode {
 			
 			if ( this.layerType.equals("FEI") ) {
 				try {
-					dss.newTransaction();
-					String[] dssData = this.layerName.split(":");
-					Integer idFeicao = Integer.valueOf( dssData[1] );
-					this.feicao = dss.getFeicao( idFeicao );
+					this.feicao = sn.getLayer().getFeicao();
 				} catch ( Exception e ) {
 					e.printStackTrace();
 				}

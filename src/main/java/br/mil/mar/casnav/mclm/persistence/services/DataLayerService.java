@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.DataLayersCollection;
 import br.mil.mar.casnav.mclm.misc.FeatureStylesCollection;
 import br.mil.mar.casnav.mclm.misc.LayerType;
@@ -252,8 +253,18 @@ public class DataLayerService {
 			
 			String layerAlias = feicaoNome + ":" + feicao.getIdFeicao();
 			
+			
+			//----------------------------------------------------------------
+			layerAlias = layerAlias.replace(" ", "_");
+			//----------------------------------------------------------------
+
+			int feicaoRootNodeId = Configurator.getInstance().getFeicaoRootNode().getIdNodeData();
+			
 			NodeService ns = new NodeService();
-			NodeData node = new NodeData(0, "", feicaoDescricao, "Feição", layerAlias, feicaoNome, LayerType.FEI);
+			NodeData node = new NodeData(feicaoRootNodeId, "", feicaoDescricao, "Feição", layerAlias, feicaoNome, LayerType.FEI);
+			
+			node.setFeicao( feicao );
+			
 			node.setReadOnly( false );
 			node = ns.addNode( node );					
 			

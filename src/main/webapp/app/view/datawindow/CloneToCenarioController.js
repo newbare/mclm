@@ -9,9 +9,23 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
     
     doClone : function( ) {
     	var styleCombo = Ext.getCmp("idFeicaoStyle").getValue();
+    	var feicaoNome = Ext.getCmp("feicaoNome").getValue();
+    	var feicaoDescricao = Ext.getCmp("feicaoDescricao").getValue();
+    	
+    	if ( !feicaoNome || !feicaoDescricao ) {
+    		Ext.Msg.alert('Erro','Preencha todos os campos solicitados.');
+    		return true;
+    	}
+    	
+    	
     	var cloneToCenarioWindow = Ext.getCmp('cloneToCenarioWindow');
-    	var feicao = Ext.encode( cloneToCenarioWindow.feicao );
     	var obj = cloneToCenarioWindow.feicao;
+
+    	obj.features[0].properties.feicaoNome = feicaoNome;
+    	obj.features[0].properties.feicaoDescricao = feicaoDescricao;
+    	
+    	
+    	var feicao = Ext.encode( obj );
     	
 		Ext.Ajax.request({
 		       url: 'newFeicao',
@@ -20,7 +34,7 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
 		           'idFeatureStyle' : styleCombo
 		       },       
 		       success: function(response, opts) {
-		    	   console.log( response.responseText );
+		    	   
 		    	   var respObj = Ext.decode( response.responseText );
 		    	   
 		    	   if( respObj.success ) {
@@ -30,21 +44,28 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
 		    		   var layerAlias = respObj.layerAlias;
 		    		   var serialId = "FE" + MCLM.Functions.guid().substring(1, 8);
 		    		   var trabalhoTree = Ext.getCmp('trabalhoTree');
-		    		   
-		    		   
 		    		   var root = trabalhoTree.getRootNode();
-		    		   var feiRootNode = null;
-		    		   root.cascadeBy( function(n) { 
-				    		var layertype = n.get('layertype');
-				    		if ( layertype == 'CRN' ) feiRootNode = n;
-		    		   });
-		    		   
-		    		   if ( !feiRootNode ) {
-		    			   alert("Pasta de Feições não encontrada!");
-		    		   }
 		    		   
 		    		   var idLayer = respObj.idLayer;
 		    		   var newFeicao = respObj.feicao;
+		    		   
+		    		   // **************************************************
+	                	var layerTree = Ext.getCmp('layerTree');
+			    		var rootMaintree = layerTree.getRootNode();
+			    		var feicaoRootNode = null;
+			    		
+			    		rootMaintree.cascadeBy( function(n) { 
+			    			if ( n.get('layerType') == 'CRN' ) {
+			    				feicaoRootNode = n;
+			    			}
+			    		});					    		
+			    		
+			    		if ( feicaoRootNode.get('expanded')  ) {
+					  		var layerTreeStore = Ext.getStore('store.layerTree');
+					  		layerTreeStore.load( { node: feicaoRootNode } );
+			    		}
+		    		   // **************************************************		    		   
+		    		   
 		    		   
 		    		   var newId = 0;
 		    		   root.cascadeBy( function(n) { 
@@ -53,7 +74,7 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
 		    		   });
 		    		   newId++;
 		    		   
-		    		   newNode =  feiRootNode.appendChild({
+		    		   newNode =  root.appendChild({
 		    			   'id' : newId,
 		    			   'text' : obj.features[0].properties.feicaoNome,
 		    			   'layerAlias' : layerAlias,
