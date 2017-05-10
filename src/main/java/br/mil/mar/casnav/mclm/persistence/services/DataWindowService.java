@@ -45,13 +45,13 @@ public class DataWindowService {
 			
 		    String sql = "select * from " + dataWindow.getSourceTable() + " where " + whereClause;
 		    
+		    //System.out.println("Criando Janela com os dados de: " + sql );
+		    
 		    String databaseConn = dataWindow.getSourceServer() +
 					":" + dataWindow.getSourcePort() + "/" + dataWindow.getSourceDatabase();
 		    
 			String connectionString = "jdbc:postgresql://" + databaseConn;
 
-			//System.out.println("Recuperando dados da tabela " + dataWindow.getSourceTable() + " em " + databaseConn );
-			
 			GenericService gs = new GenericService( connectionString, dataWindow.getSourceUser(), 
 					dataWindow.getSourcePassword()  );
 			

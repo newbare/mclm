@@ -153,24 +153,44 @@ public class DictionaryService {
 		return result;
 	}
 	
-	public String getSchemaAsJson ( String tableName, String serverAddress, int serverPort, String databaseName, 
-			String user, String password )  throws Exception {
+	public String getSchemaAsJson ( String tableName, String serverAddress, int serverPort, String databaseName, String user, String password )  throws Exception {
 	
 		if ( tableName.contains(".") ) {
 			String data1[] = tableName.split("\\.");
 			tableName = data1[1];
 		}		
 		
-		List<UserTableEntity> utes = getSchema( tableName, serverAddress, serverPort, databaseName,  user, password, "*" );
+		String query = "SELECT column_name,data_type FROM information_schema.columns WHERE table_name = '"+tableName+"' order by column_name"; // table_schema = 'public'
+
+		String connectionString = "jdbc:postgresql://" + serverAddress + ":" + serverPort + "/" + databaseName;
+		GenericService gs = new GenericService( connectionString, user,	password  );
+
+		JSONArray arr = new JSONArray();
+		List<UserTableEntity> schma = gs.genericFetchList(query);		
+		for( UserTableEntity ute : schma ) {
+			
+			
+			JSONObject obj = new JSONObject();
+			for( String key : ute.getColumnNames() ) {
+				String value = ute.getData( key );
+				if( key.equals("column_name") ) {
+					obj.put("columnName", value);
+				}
+				if( key.equals("data_type") ) {
+					obj.put("dataType", value);
+				}
+			}
+			arr.put( obj );
+			
+		}
 		
-		JSONArray arr = new JSONArray( utes );
-		return arr.toString();
+		String res = arr.toString();
+		return res;
 	}
 	
 	public List<UserTableEntity> getSchema( String tableName, String serverAddress, int serverPort, String databaseName, 
 			String user, String password, String columns  )  throws Exception {
-		System.out.println("Lendo esquema da tabela tabela '" + tableName + "' em " + serverAddress + ":" + serverPort + "/" + databaseName );
-
+		
 		String query = "SELECT column_name,data_type FROM information_schema.columns WHERE table_name = '"+tableName+"' order by column_name"; // table_schema = 'public'
 
 		String connectionString = "jdbc:postgresql://" + serverAddress + ":" + serverPort + "/" + databaseName;
@@ -179,28 +199,24 @@ public class DictionaryService {
 		List<UserTableEntity> schma = gs.genericFetchList(query);
 		List<UserTableEntity> result = new ArrayList<UserTableEntity>();
 
-		columns = " " + columns.replace("\"", " ").replace(",", " ") + " ";
-		
 		for( UserTableEntity ute : schma ) {
 			
 			String columnName = "";
-			//String dataType = "";
 			for( String key : ute.getColumnNames() ) {
 				String value = ute.getData( key );
 				if( key.equals("column_name") ) columnName = value;
-				//if( key.equals("data_type") ) dataType = value;						
 			}
 			
 			if ( columns.equals("*") ) {
 				result.add( ute );				
 			} else
+				columns = " " + columns.replace("\"", " ").replace(",", " ") + " ";
 				if ( columns.contains( " " + columnName + " " ) ) {
 					result.add( ute );
 				}
 			
 		}		
 		
-		System.out.println(">> Resultado: " + result.size() + " elementos.");
 		return result;
 	
 	}

@@ -1,7 +1,9 @@
 package br.mil.mar.casnav.mclm;
 
 import java.util.Set;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -36,11 +38,11 @@ public class Startup implements ServletContextListener {
     	try {
        
     		// Isso inicia o monitor de conexoes. Serve para verificar connection leaks
-    		/*
+    		
     		ScheduledExecutorService  scheduler = Executors.newSingleThreadScheduledExecutor();
     		Cron cron = new Cron();
     		scheduler.scheduleAtFixedRate( cron , 0, 1, TimeUnit.MINUTES);
-    		*/
+    		
     		
     		
     		String configFile = path + "WEB-INF/classes/config.xml";

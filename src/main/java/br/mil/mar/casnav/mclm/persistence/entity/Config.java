@@ -43,6 +43,9 @@ public class Config {
 	@Column(length=100, name = "servicos_cptec_inpe")
 	private String servicosCptecUrl;	
 	
+	@Column(length=250, name = "symbol_server_url")
+	private String symbolServerURL;	
+	
 	@Column(length=100, name = "shape_file_target_path")
 	private String shapeFileTargetPath;
 
@@ -346,4 +349,11 @@ public class Config {
 		this.servicosCptecUrl = servicosCptecUrl;
 	}
 	
+	public String getSymbolServerURL() {
+		return symbolServerURL;
+	}
+	
+	public void setSymbolServerURL(String symbolServerURL) {
+		this.symbolServerURL = symbolServerURL;
+	}
 }

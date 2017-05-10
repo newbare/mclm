@@ -53,6 +53,21 @@
 	background-repeat: no-repeat; 
 }
 
+.next-icon {
+	background-image: url('../img/next.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.field-icon {
+	background-image: url('../img/field.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.panel-icon {
+	background-image: url('../img/panel.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .server-icon {
 	background-image: url('../img/servers.svg') !important;
 	background-repeat: no-repeat;

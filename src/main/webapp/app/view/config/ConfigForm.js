@@ -126,6 +126,12 @@ Ext.define('MCLM.view.config.ConfigForm', {
             allowBlank : false,
             name: 'apoloServer',
         },
+        {
+        	fieldLabel: 'Endereço Serv. Símbolos',
+        	width: 350,
+        	allowBlank : false,
+        	name: 'symbolServerURL',
+        },
         
         {
             fieldLabel: 'Fator de Busca da Interrogação',

@@ -25,48 +25,62 @@ Ext.define('MCLM.view.datawindow.ConfigDataWindow', {
 	
 
     items : [{
-	    	xtype : 'textfield',
-	        fieldLabel: 'Tabela de Aquisição',
-	        width: 350,
-	        id: 'tableName',
-	        allowBlank : false,
+    	xtype : 'textfield',
+        fieldLabel: 'Nome da Janela',
+        width: 350,
+        id: 'dataWindowName',
+        allowBlank : false,
+    },{
+    	xtype : 'textfield',
+        fieldLabel: 'Tabela de Aquisição',
+        width: 350,
+        id: 'tableName',
+        allowBlank : false,
+        value : 'servicos.view_org_mil',
 	},{
     	xtype : 'textfield',
         fieldLabel: 'Endereço do Servidor',
         width: 350,
         id: 'serverAddress',
         allowBlank : false,
+        value : '10.5.115.21',
 	},{
     	xtype : 'textfield',
         fieldLabel: 'Nome do Banco de Dados',
         width: 350,
         id: 'databaseName',
         allowBlank : false,
+        value : 'siglmd',
 	},{
     	xtype : 'textfield',
         fieldLabel: 'Usuário do Banco de Dados',
         width: 350,
         id: 'user',
         allowBlank : false,
+        value : 'geoserver',
+        
 	},{
     	xtype : 'textfield',
         fieldLabel: 'Senha do Banco de Dados',
         width: 350,
         id: 'password',
         allowBlank : false,
+        value : 'G305erV31',
+        inputType: 'password'
 	},{
     	xtype : 'textfield',
         fieldLabel: 'Porta do Banco de Dados',
         width: 350,
         id: 'serverPort',
         allowBlank : false,
+        value : '5432',
 	}],	
 	
     dockedItems: [{
         xtype: 'toolbar',
         border: false,
         items: [{
-        	iconCls: 'save-icon',
+        	iconCls: 'next-icon',
         	id: 'getTableSchemaBtn',
             handler : 'getTableSchema',
         }]
