@@ -3,19 +3,23 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanels', {
 	xtype : 'view.configDataPanels',
 	id : 'configDataPanels',
 	title : "Configurar / Criar Painéis da Janela de Dados",
-	bodyPadding: 10,
+	bodyPadding: 0,
 	
 	width : 800,
-	height: 450,
+	height: 500,
 	
     requires: [
         'MCLM.view.datawindow.ConfigDataPanelsController',
         'MCLM.view.datawindow.ConfigDataPanelsTree',
+        'MCLM.view.datawindow.DataPanelsDetails'
 	],	
     controller : 'configDataPanels',	
 
+    layout: 'border',	
+    
 	items: [{
-		flex:1,
+		xtype: 'dataPanelsDetails'
+	},{
 		xtype: 'view.configDataPanelsTree'
 	}],    
     
@@ -25,7 +29,7 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanels', {
     constrain: true,
     bodyStyle:"background:#FFFFFF;",
     renderTo: Ext.getBody(),
-    
+
     dataWindowData : null,
 	resizable: false,
 	

@@ -21,6 +21,12 @@ Ext.define('MCLM.view.datawindow.ConfigDataWindowController', {
     	var dataWindowData = {};
     	dataWindowData.nodeData = configDataWindow.nodeData; 
     	
+    	var idNodeData = configDataWindow.nodeData.idNodeData;
+    	
+   	
+    	var layerType = configDataWindow.nodeData.layerType;
+    	var layerAlias = configDataWindow.nodeData.layerAlias;
+    	
     	var windowData = {};
     	windowData.tableName = tableName;
     	windowData.dataWindowName = dataWindowName;
@@ -41,14 +47,27 @@ Ext.define('MCLM.view.datawindow.ConfigDataWindowController', {
 		           'databaseName' : databaseName,
 		           'password' : password,
 		           'user' : user,
-		           'serverPort' : serverPort
+		           'serverPort' : serverPort,
+		           'idNodeData' : idNodeData,
 		       },       
 		       success: function(response, opts) {
 		    	   var respObj = Ext.decode( response.responseText );
-		    	   dataWindowData.fields = respObj;
+		    	   
+		    	   if ( respObj.error ) {
+		    		   Ext.Msg.alert('Erro', respObj.msg );
+		    		   return false;
+		    	   }
+		    	   
+		    	   
+		    	   var attributes = respObj.attributes;
+		    	   var dictionaryIds = respObj.dictionaryIds;
+		    	   
+		    	   dataWindowData.fields = attributes;
+		    	   dataWindowData.dictionaryIds = dictionaryIds;
 
 		    	   var dataPanelsStore = Ext.getStore('store.DataPanels');
 		    	   dataPanelsStore.load([{}]);		    	   
+
 		    	   
 		    	   var configDataPanels = Ext.getCmp('configDataPanels');
 		    	   if ( configDataPanels ) {
@@ -65,37 +84,57 @@ Ext.define('MCLM.view.datawindow.ConfigDataWindowController', {
 		    	   root.set('text', dataWindowName);
 
 		    	   var firstFolder = {
-	    		        'text': 'Painel 01',
-	    		        'id': 1,
-	    		        'index' : 1,
+	    		        'text': 'Painel 1',
+	    		        'id': 'panel1',
 	    		        'leaf' : false,
 	    		        'iconCls': 'panel-icon'
 	    		   };
-		    	   
 		    	   root.appendChild( firstFolder );
+		    	   firstFolder = dataPanelsStore.getNodeById('panel1');
 		    	   
-		    	   firstFolder = dataPanelsStore.getNodeById(1);
-		    	   
-		    	   
-		     	   for(var i = 0; i < respObj.length; i++) { 
-		     		  var columnName = respObj[i].columnName;
-		     		  var dataType = respObj[i].dataType;
+		    	   var count = 0;
+		    	   var targetFolder = firstFolder;
+		     	   for(var i = 0; i < attributes.length; i++) { 
+		     		  var columnName = attributes[i].columnName;
+		     		  var dataType = attributes[i].dataType;
+		     		  var translatedName = attributes[i].translatedName;
+		     		  
+		     		  if( count == 5 ) {
+		     			  count = 0;
+		     			  var idNumber = root.childNodes.length + 1;
+		     			  targetFolder = {
+     				        'text' : 'Painel ' + idNumber,
+     				        'id'   : 'panel' + idNumber,   
+							'leaf' : false,
+							'iconCls': 'panel-icon'
+		     			  };
+		     			  root.appendChild( targetFolder );
+		     			  targetFolder = dataPanelsStore.getNodeById('panel' + idNumber);		     			  
+		     		  }
 		     		  
 		     		  var newNode = {
-		    		        'text': columnName,
-		    		        'id': 'id_' + columnName,
-		    		        'leaf' : true,
+		    		        'text'		 : columnName,
+		    		        'id'		 : 'id_' + columnName,
+		    		        'leaf' 		 : true,
 		    		        'columnName' : columnName,
-		    		        'dataType' : dataType,
-		    		        'newName' : '',
-		    		        'newType' : '',
-		    		        'iconCls': 'field-icon'
+		    		        'dataType'   : dataType,
+		    		        'newName'    : translatedName,
+		    		        'newType'    : 'TEXT',
+		    		        'isId'     : 'Não',
+		    		        'iconCls'    : 'field-icon'
 		    		  };
 		     		  
-		     		 firstFolder.appendChild( newNode );
-		     		   
+		     		  targetFolder.appendChild( newNode );
+		     		  count++;  
 		     	   }		    	   
-		    	   
+		     	   root.expand();
+		     	   
+		    	   var dataPanelsDetails = Ext.getCmp('dataPanelsDetails');
+		    	   dataPanelsDetails.update('<table class="dataWindow" style="border:0px;width:100%;height:30px">' + 
+		    			   '<tr class="dataWindowLine"> <td class="dataWindowLeft">'+databaseName+'@'+serverAddress+'</td><td class="dataWindowMiddle">('+layerType + ') ' + layerAlias + ' <<->> ' + tableName + '</td></tr>' + 
+		    			   '<tr class="dataWindowLine"> <td class="dataWindowLeft">&nbsp;</td><td class="dataWindowMiddle">'+ Ext.encode(dictionaryIds)  +'</td></tr>' + 
+		    			   '</table>');		     	   
+	     	   
 		       },
 		       failure: function(response, opts) {
 		    	   Ext.Msg.alert('Erro','Erro ao receber dados da Tabela "' + tableName + '".' );

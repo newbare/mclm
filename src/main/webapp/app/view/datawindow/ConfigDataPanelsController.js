@@ -6,10 +6,11 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsController', {
     	var configDataPanelsTree = Ext.getCmp('configDataPanelsTree');
     	var root = configDataPanelsTree.getRootNode();
 	   
+    	var idNumber = root.childNodes.length + 1;
+    	
     	var anotherFolder = {
-		        'text': 'Painel 02',
-		        'id': 'newFolder',           // <<<------- CHANGE !!
-		        'index' : 1,
+		        'text': 'Painel ' + idNumber,
+		        'id': 'panel' + idNumber,         
 		        'leaf' : false,
 		        'iconCls': 'panel-icon'
     	};
@@ -22,7 +23,13 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsController', {
     	var configDataPanels = Ext.getCmp('configDataPanels');
     	var dataWindowData = configDataPanels.dataWindowData;    	
     	
-    	alert("sdsas");
+    	var dataPanelsStore = Ext.getStore('store.DataPanels');
+    	
+    	var configDataPanelsTree = Ext.getCmp('configDataPanelsTree');
+    	//var root = configDataPanelsTree.getRootNode();    	
+    	configDataPanelsTree.expandAll();
+    	
+    	console.log(  dataPanelsStore.getRange()  );
     	
     	
     },

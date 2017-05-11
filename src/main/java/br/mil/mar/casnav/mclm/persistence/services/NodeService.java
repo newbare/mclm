@@ -156,6 +156,7 @@ public class NodeService {
 			//}
 		}
 		dss.closeSession();
+		fs.closeSession();
 		rep.closeSession();
 		
 		return arrayObj.toString();

@@ -26,11 +26,6 @@ Ext.define('MCLM.view.dicionario.DictController', {
 			 	Ext.Msg.alert('Falha ao gravar Dicionário', 'Erro desconhecido ao gravar dicionário' /*, me.onCloseMessage */ );
 			 }						 
     	});
-    	
-    	
-    	
-    	Ext.Msg.alert('Funcionalidade não implementada','Não implementado ainda.' );
-        
 	}
     
     

@@ -7,6 +7,10 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsTree', {
     rootVisible: true,
     animate : false,
     
+	width : 800,
+	height: 350,
+    
+    region:'south',
     
 	requires: [
 	   'MCLM.view.datawindow.ConfigDataPanelsTreeController'
@@ -52,12 +56,21 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsTree', {
 			xtype: 'combobox',
 			store:['TEXT','COLOR','URL','SYMBOL'],	
         }        
+    },{
+        text: 'Identificador', 
+        dataIndex: 'isId', 
+        sortable: false,
+        editor: {
+			xtype: 'combobox',
+			store:['Sim','Não'],	
+        }        
     }],
-    
     
     scrollable: true,
     scroll: 'both',
 
+    tempParent : null,
+    
     viewConfig: {
     	markDirty:false,
     	id:'configDataPanelsView',
@@ -65,18 +78,36 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsTree', {
             ptype: 'treeviewdragdrop'
         },
         listeners: {   
+        	
+        	/*
+            nodedragover: function( targetNode, position, dragData ){
+                var rec = dragData.records[0];
+                var canDrop = ( targetNode.parentNode != null );
+                return canDrop;
+            },
+            */        	
+        	
+       
         	beforedrop: function(node, data, overModel, dropPosition, dropHandlers) {
         		dropHandlers.wait = true;
-        		var target = overModel.data;
-        		
-        		//if ( target.parentId == 0 ) dropHandlers.cancelDrop(); else
+        		// console.log( "FROM : " + data.records[0].parentNode.data.text );
+        		var configDataPanelsTree = Ext.getCmp('configDataPanelsTree');
+        		configDataPanelsTree.tempParent = data.records[0].parentNode;
         		dropHandlers.processDrop();
-        		
         	},
         	
         	drop: function (node, data, overModel, dropPosition) {
-        		//alert("owch");
+        		var me = data.records[0];
+        		var configDataPanelsTree = Ext.getCmp('configDataPanelsTree');
+        		var oldParent = configDataPanelsTree.tempParent;
+        		var currentParent = data.records[0].parentNode;
+        		// console.log( "TO : " + currentParent.data.text );
+        		if ( !currentParent.parentNode ) {
+            		me.remove();
+            		oldParent.appendChild( me );          		
+        		}
         	},
+        	
         } 
     },        
     useArrows: true,

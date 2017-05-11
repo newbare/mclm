@@ -18,6 +18,7 @@ public class DataWindowService {
 		String result = "{ \"error\": true, \"msg\": \"Camada não informada.\" }";
 		
 		try {
+			
 			JSONObject jsonData = new JSONObject( data );
 			int idNodeData = jsonData.getInt("node_data" );
 			

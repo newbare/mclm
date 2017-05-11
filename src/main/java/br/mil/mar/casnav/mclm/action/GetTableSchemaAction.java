@@ -32,9 +32,10 @@ public class GetTableSchemaAction {
 			String password = request.getParameter("password");			
 			String user = request.getParameter("user");			
 			int serverPort = Integer.valueOf( request.getParameter("serverPort") );			
+			int idNodeData = Integer.valueOf( request.getParameter("idNodeData") );			
 			
 			DictionaryService ds = new DictionaryService();
-			String result = ds.getSchemaAsJson( tableName, serverAddress, serverPort, databaseName, user, password);
+			String result = ds.getSchemaAsJson( idNodeData, "", tableName, serverAddress, serverPort, databaseName, user, password);
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

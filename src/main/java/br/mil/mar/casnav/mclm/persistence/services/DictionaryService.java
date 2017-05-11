@@ -153,38 +153,83 @@ public class DictionaryService {
 		return result;
 	}
 	
-	public String getSchemaAsJson ( String tableName, String serverAddress, int serverPort, String databaseName, String user, String password )  throws Exception {
+	public String getSchemaAsJson ( int idNodeData, String tableSchema, String tableName, String serverAddress, int serverPort, String databaseName, 
+			String user, String password )  throws Exception {
+
+		String res = "";
+		try {
+			if ( tableName.contains(".") ) {
+				String data1[] = tableName.split("\\.");
+				tableSchema = data1[0];
+				tableName = data1[1];
+			}		
 	
-		if ( tableName.contains(".") ) {
-			String data1[] = tableName.split("\\.");
-			tableName = data1[1];
-		}		
-		
-		String query = "SELECT column_name,data_type FROM information_schema.columns WHERE table_name = '"+tableName+"' order by column_name"; // table_schema = 'public'
-
-		String connectionString = "jdbc:postgresql://" + serverAddress + ":" + serverPort + "/" + databaseName;
-		GenericService gs = new GenericService( connectionString, user,	password  );
-
-		JSONArray arr = new JSONArray();
-		List<UserTableEntity> schma = gs.genericFetchList(query);		
-		for( UserTableEntity ute : schma ) {
 			
+			DictionaryService ds = new DictionaryService();
+			List<DictionaryItem> dictItems  = ds.getDictionary(idNodeData);
+	
 			
-			JSONObject obj = new JSONObject();
-			for( String key : ute.getColumnNames() ) {
-				String value = ute.getData( key );
-				if( key.equals("column_name") ) {
-					obj.put("columnName", value);
+			String query = "SELECT column_name,data_type,ordinal_position FROM information_schema.columns WHERE table_schema = '"+tableSchema+"' and table_name = '"+tableName+"' order by ordinal_position"; 
+	
+			String connectionString = "jdbc:postgresql://" + serverAddress + ":" + serverPort + "/" + databaseName;
+			GenericService gs = new GenericService( connectionString, user,	password  );
+	
+			JSONArray arr = new JSONArray();
+			List<UserTableEntity> schma = gs.genericFetchList(query);		
+			for( UserTableEntity ute : schma ) {
+				
+				JSONObject obj = new JSONObject();
+				for( String key : ute.getColumnNames() ) {
+					String value = ute.getData( key );
+					
+					if( key.equals("column_name") ) {
+						obj.put("columnName", value);
+	
+						String translatedName = "";
+						for ( DictionaryItem item : dictItems ) {
+							String originalName = item.getOriginalName();
+							if ( value.equals( originalName ) ) {
+								translatedName = item.getTranslatedName();
+								System.out.println(" Traduzi " + value + " para " + translatedName );
+							}
+						}				
+						obj.put("translatedName", translatedName);					
+						
+					}
+					if( key.equals("data_type") ) {
+						obj.put("dataType", value);
+					}
 				}
-				if( key.equals("data_type") ) {
-					obj.put("dataType", value);
+				arr.put( obj );
+				
+			}
+			
+			
+			JSONObject result = new JSONObject();
+			result.put("attributes", arr);
+			
+			boolean foundSomeId = false;
+			JSONArray dictIds = new JSONArray();
+			for ( DictionaryItem item : dictItems ) {
+				if( item.isPrimaryKey() ) {
+					JSONObject obj = new JSONObject();
+					String fieldName = item.getOriginalName();
+					obj.put("fieldName", fieldName);
+					dictIds.put( obj );
+					foundSomeId = true;
 				}
 			}
-			arr.put( obj );
+			result.put("dictionaryIds", dictIds);
 			
+			if ( !foundSomeId ) throw new Exception("Não existem atributos identificadores configurados no dicionário para esta camada. Impossível estabelecer relação entre a camada e a tabela '" + 
+			tableName + "'. Configure o Dicionário corretamente.");
+			res = result.toString();
+			
+		} catch ( Exception e ) {
+			res = "{ \"error\": true, \"msg\": \""+ e.getMessage()+"\" }";
 		}
 		
-		String res = arr.toString();
+		rep.closeSession();
 		return res;
 	}
 	

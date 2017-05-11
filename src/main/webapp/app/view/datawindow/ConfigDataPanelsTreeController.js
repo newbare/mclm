@@ -6,14 +6,12 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsTreeController', {
     	
         var view = tree.getView();
         var dd = view.findPlugin('treeviewdragdrop');
-        
+
         dd.dragZone.onBeforeDrag = function (data, e) {
             var rec = view.getRecord( e.getTarget( view.itemSelector ) );
-            
+            // Will not drag folders !
             return rec.isLeaf();
         };
-        
-   
         
     },
     

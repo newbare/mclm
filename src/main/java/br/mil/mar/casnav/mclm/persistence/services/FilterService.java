@@ -16,5 +16,9 @@ public class FilterService {
 		return rep.getFilter( idFilterItem );
 		
 	}
+	
+	public void closeSession() {
+		rep.closeSession();
+	}	
 
 }
