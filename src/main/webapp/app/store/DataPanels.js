@@ -3,9 +3,9 @@ Ext.define('MCLM.store.DataPanels', {
     storeId:'store.DataPanels',
     requires: ['Ext.data.proxy.Memory'],
 
-    proxy: { type: 'memory' },
+    proxy: { type: 'memory', autoSync:true },
     
-    autoSync: false,
+    autoSync: true,
     requires: [
        'MCLM.model.DataWindowFieldModel'
     ],	     

@@ -1,5 +1,6 @@
 package br.mil.mar.casnav.mclm.persistence.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 
@@ -36,13 +38,16 @@ public class DataPanel {
 	@Column(name="panel_order")
 	private Integer order;	
 	
+	@Transient
+	private String alias;
+	
     @OneToMany(orphanRemoval=true,  mappedBy="dataPanel", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @OrderBy("field_order ASC")
     private Set<DataField> fields;		
 	
     public DataPanel() {
-    	
+    	this.fields = new HashSet<DataField>();
     }
 
 	public int getIdDataPanel() {
@@ -85,6 +90,12 @@ public class DataPanel {
 		this.order = order;
 	}
 
+	public String getAlias() {
+		return alias;
+	}
 	
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
     
 }

@@ -62,7 +62,7 @@ Ext.define('MCLM.view.datawindow.ConfigDataWindowController', {
 		    	   var attributes = respObj.attributes;
 		    	   var dictionaryIds = respObj.dictionaryIds;
 		    	   
-		    	   dataWindowData.fields = attributes;
+		    	   //dataWindowData.fields = attributes;
 		    	   dataWindowData.dictionaryIds = dictionaryIds;
 
 		    	   var dataPanelsStore = Ext.getStore('store.DataPanels');
@@ -129,10 +129,24 @@ Ext.define('MCLM.view.datawindow.ConfigDataWindowController', {
 		     	   }		    	   
 		     	   root.expand();
 		     	   
+		     	   var ids = "";
+		     	   for ( var zz = 0; zz < dictionaryIds.length; zz++ ) {
+		     		   ids = ids + dictionaryIds[zz].fieldName;
+		     		   if ( zz < dictionaryIds.length -1 ) ids = ids + ", ";
+		     	   }
+		     	   
 		    	   var dataPanelsDetails = Ext.getCmp('dataPanelsDetails');
 		    	   dataPanelsDetails.update('<table class="dataWindow" style="border:0px;width:100%;height:30px">' + 
-		    			   '<tr class="dataWindowLine"> <td class="dataWindowLeft">'+databaseName+'@'+serverAddress+'</td><td class="dataWindowMiddle">('+layerType + ') ' + layerAlias + ' <<->> ' + tableName + '</td></tr>' + 
-		    			   '<tr class="dataWindowLine"> <td class="dataWindowLeft">&nbsp;</td><td class="dataWindowMiddle">'+ Ext.encode(dictionaryIds)  +'</td></tr>' + 
+		    			   '<tr class="dataWindowLine">' +
+		    			   		'<td class="dataWindowLeft">'+ tableName + '</td>' + 
+		    			   		'<td class="dataWindowLeft">'+ ids  +'</td>' + 
+		    			   		'<td class="dataWindowLeft">'+databaseName+'@'+serverAddress+'</td>'+
+		    			   	'</tr>' +	
+		    			   '<tr class="dataWindowLine">' +
+		    			   		'<td class="dataWindowLeft">('+layerType + ') ' + layerAlias + '</td>' +
+		    			   		'<td id="dataWindowIdAttrs" class="dataWindowLeft">&nbsp;</td>' +
+		    			   		'<td class="dataWindowLeft">&nbsp;</td>' + 
+		    			   		'</tr>' +
 		    			   '</table>');		     	   
 	     	   
 		       },

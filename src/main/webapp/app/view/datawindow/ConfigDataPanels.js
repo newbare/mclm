@@ -38,8 +38,8 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanels', {
         border: false,
         items: [{
         	iconCls: 'save-icon',
-        	id: 'doNextBtn',
-            handler : 'doSomething',
+        	id: 'saveWindow',
+            handler : 'saveWindow',
         },{
         	iconCls: 'add-icon',
         	id: 'doAddFoldertBtn',
@@ -50,13 +50,13 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanels', {
 
     listeners: {
 		close : function() {
-		 	 Ext.tip.QuickTipManager.unregister('doNextBtn');
+		 	 Ext.tip.QuickTipManager.unregister('saveWindow');
 		},
 		
 		afterrender:function(){
 			
 		    Ext.tip.QuickTipManager.register({
-		        target: 'doNextBtn',
+		        target: 'saveWindow',
 		        title: 'Salvar Janela',
 		        text: 'Salva a Janela de Dados com os dados abaixo.',
 		        width: 190,

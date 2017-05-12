@@ -190,7 +190,6 @@ public class DictionaryService {
 							String originalName = item.getOriginalName();
 							if ( value.equals( originalName ) ) {
 								translatedName = item.getTranslatedName();
-								System.out.println(" Traduzi " + value + " para " + translatedName );
 							}
 						}				
 						obj.put("translatedName", translatedName);					

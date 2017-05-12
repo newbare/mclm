@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.misc.TreeNode;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
+import br.mil.mar.casnav.mclm.persistence.entity.DataWindow;
 import br.mil.mar.casnav.mclm.persistence.entity.Feicao;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
@@ -60,6 +61,15 @@ public class NodeService {
 		} catch ( Exception e ) {
 			// Sem feicao para este node...
 		}
+
+		
+		try {
+			DataWindowService dws = new DataWindowService();
+			DataWindow dw = dws.getDataWindow( node.getDataWindow().getIdDataWindow() );
+			oldNode.setDataWindow( dw );
+		} catch ( Exception e ) {
+			throw new UpdateException( e.getMessage() );
+		}		
 		
 		oldNode.setChildren( node.getChildren() );
 		oldNode.setIdNodeParent( node.getIdNodeParent() );

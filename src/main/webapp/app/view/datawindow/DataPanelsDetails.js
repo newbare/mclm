@@ -6,7 +6,7 @@ Ext.define('MCLM.view.datawindow.DataPanelsDetails', {
 
 	bodyPadding: 0,
 	width : 800,
-	height: 80,
+	height: 50,
 	
 	region:'north',
 	

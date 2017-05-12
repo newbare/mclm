@@ -8,7 +8,7 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsTree', {
     animate : false,
     
 	width : 800,
-	height: 350,
+	height: 400,
     
     region:'south',
     
@@ -28,7 +28,8 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsTree', {
             }
         }        
     },
-             
+    
+    
     columns: [{
         xtype: 'treecolumn', 
         text: 'Nome',
@@ -62,37 +63,67 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsTree', {
         sortable: false,
         editor: {
 			xtype: 'combobox',
-			store:['Sim','Não'],	
+			store:['Sim','Não'],
+			listeners : {
+			    change : function(field, newVal, oldVal) {
+			    	var configDataPanelsTree = Ext.getCmp('configDataPanelsTree');
+			    	var selectedNode = configDataPanelsTree.getSelectionModel().getSelection()[0];
+			    	
+			    	configDataPanelsTree.fieldsId = [];
+			    	var fieldsId = "";
+			    	var virgula = "";
+			    	var fieldName = selectedNode.get("text");
+			    	var root = configDataPanelsTree.getRootNode();
+			    	root.cascadeBy( function( currentChild ) {
+			    		var fieldIsId = currentChild.get("isId");			    		
+			    		var currentFieldName = currentChild.get("text");
+			    		
+				    	if ( (currentFieldName == fieldName )  && newVal == 'Sim')  {
+				    		var obj = {'fieldName': currentFieldName};
+				    		configDataPanelsTree.fieldsId.push( obj );
+				    		fieldsId = fieldsId + virgula + currentFieldName;
+				    		virgula = ", ";
+			    		}
+			    		
+				    	if ( (currentFieldName != fieldName )  && fieldIsId == 'Sim')  {
+				    		var obj = {'fieldName': currentFieldName};
+				    		configDataPanelsTree.fieldsId.push( obj );
+				    		fieldsId = fieldsId + virgula + currentFieldName;
+				    		virgula = ", ";
+				    	}
+				    	
+			    	});
+			    	
+			    	var dataWindowIdAttrs =  Ext.get('dataWindowIdAttrs');
+			    	dataWindowIdAttrs.update( fieldsId );
+			    	
+			    }
+			}			
         }        
     }],
     
     scrollable: true,
     scroll: 'both',
 
+    // Custom fields
     tempParent : null,
+    tempIndex : 0,
+    fieldsId : [],
+    // -----------------
     
     viewConfig: {
-    	markDirty:false,
+    	//markDirty:false,
     	id:'configDataPanelsView',
         plugins: {
             ptype: 'treeviewdragdrop'
         },
         listeners: {   
         	
-        	/*
-            nodedragover: function( targetNode, position, dragData ){
-                var rec = dragData.records[0];
-                var canDrop = ( targetNode.parentNode != null );
-                return canDrop;
-            },
-            */        	
-        	
-       
         	beforedrop: function(node, data, overModel, dropPosition, dropHandlers) {
         		dropHandlers.wait = true;
-        		// console.log( "FROM : " + data.records[0].parentNode.data.text );
         		var configDataPanelsTree = Ext.getCmp('configDataPanelsTree');
         		configDataPanelsTree.tempParent = data.records[0].parentNode;
+        		configDataPanelsTree.tempIndex = data.records[0].data.index;
         		dropHandlers.processDrop();
         	},
         	
@@ -100,12 +131,13 @@ Ext.define('MCLM.view.datawindow.ConfigDataPanelsTree', {
         		var me = data.records[0];
         		var configDataPanelsTree = Ext.getCmp('configDataPanelsTree');
         		var oldParent = configDataPanelsTree.tempParent;
+        		var oldIndex = configDataPanelsTree.tempIndex;
         		var currentParent = data.records[0].parentNode;
-        		// console.log( "TO : " + currentParent.data.text );
         		if ( !currentParent.parentNode ) {
             		me.remove();
-            		oldParent.appendChild( me );          		
+            		oldParent.insertChild( oldIndex, me);
         		}
+
         	},
         	
         } 
