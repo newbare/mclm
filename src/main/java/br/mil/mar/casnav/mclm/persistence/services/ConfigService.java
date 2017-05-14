@@ -92,6 +92,9 @@ public class ConfigService {
 		oldConfig.setApoloServer( config.getApoloServer() );
 		oldConfig.setDistanceFromRoute( config.getDistanceFromRoute() );
 		
+		oldConfig.setServicosCptecUrl( config.getServicosCptecUrl() );
+		oldConfig.setSymbolServerURL( config.getSymbolServerURL() );
+		
 		rep.newTransaction();
 		rep.updateConfig( oldConfig );
 		

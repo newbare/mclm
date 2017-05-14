@@ -77,6 +77,8 @@ public class DictionaryService {
 			try {
 				DataLayer dl = node.getDataLayer();
 				
+				System.out.println(" > Tabela " + dl.getTable().getName() );
+				
 				int serverPort = dl.getTable().getServer().getServerPort();
 				String serverAddress = dl.getTable().getServer().getServerAddress();
 				String databaseName = dl.getTable().getServer().getServerDatabase();

@@ -186,7 +186,7 @@ public class NodeService {
 	}
 
 	public NodeData createCRN() throws Exception {
-		NodeData node = new NodeData( 0, "", "", "", "", "Feições", LayerType.CRN );
+		NodeData node = new NodeData( 0, "", "", "", "", "FeiÃ§Ãµes", LayerType.CRN );
 		node.setReadOnly( true );
 		NodeData result = addNode( node );
 		return result;

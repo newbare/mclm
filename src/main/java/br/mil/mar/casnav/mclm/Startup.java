@@ -60,15 +60,15 @@ public class Startup implements ServletContextListener {
 				Config cfg = cs.getConfig();  
 				Configurator.getInstance().updateConfiguration( cfg );
     		} catch ( NotFoundException e ) {
-    			System.out.println("Nenhum registro encontrado na tabela de configuração.");
+    			System.out.println("Nenhum registro encontrado na tabela de configuraÃ§Ã£o.");
     		}
     		
 
     		 
     		
-    		// Verifica novamente se todas as camadas estão com o dicionário carregado.
+    		// Verifica novamente se todas as camadas estao com o dicionorio carregado.
     		// Pode acontecer de no momento do cadastro da camada o link WMS esteja 
-    		// fora do ar e não seja possivel buscar os atributos, entao tentamos novamente agora
+    		// fora do ar e nï¿½o seja possivel buscar os atributos, entao tentamos novamente agora
     		// O ideal seria deixar para o usuario atualizar isso quando necessario.
     		
     		NodeService ns = new NodeService();

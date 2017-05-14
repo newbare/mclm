@@ -7,7 +7,7 @@ import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 import br.mil.mar.casnav.mclm.persistence.services.FilterService;
 
 /*
- * Se mexer nesta estrutura, altere também 
+ * Se mexer nesta estrutura, altere tambï¿½m 
  * em SceneryTreeNode
  * 
  */
@@ -93,7 +93,7 @@ public class TreeNode {
 					Integer idFeicao = Integer.valueOf( ute.getData("id_feicao") );
 					this.feicao = dss.getFeicao( idFeicao );
 					
-					this.institute = "Feição '" + this.feicao.getGeomType() + "' estilo '" + this.feicao.getStyle().getFeatureStyleName() +"'" ;
+					this.institute = "FeiÃ§Ã£o '" + this.feicao.getGeomType() + "' estilo '" + this.feicao.getStyle().getFeatureStyleName() +"'" ;
 					
 				} catch ( Exception e ) {
 					e.printStackTrace();
