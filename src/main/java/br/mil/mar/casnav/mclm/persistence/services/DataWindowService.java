@@ -41,20 +41,19 @@ public class DataWindowService {
 				return "{ \"error\": true, \"msg\": \"Não há janela de dados cadastrada para esta camada.\" }";
 			}
 			
-		    String whereClause = "";
-		    String andParam = "";
+			String relationShip = dataWindow.getSqlDataAcquisition();
+			
 			Iterator<?> iterator = jsonData.keys();
 		    while (iterator.hasNext()) {
 		        String obj = iterator.next().toString();
 		        if ( obj.startsWith("mclm_pk_") ) {
 		        	String pk = obj.substring(8);
-		        	whereClause = whereClause + andParam + pk + "='" + jsonData.get(obj).toString() + "'"; 
-		        	andParam = "and ";
+		        	relationShip = relationShip.replace("$%"+ pk +"%$", "'" + jsonData.get(obj).toString() + "'");
 		        }
 		        
 		    }    
 			
-		    String sql = "select * from " + dataWindow.getSourceTable() + " where " + whereClause;
+		    String sql = "select * from " + dataWindow.getSourceTable() + " where " + relationShip;
 		    
 		    System.out.println("Criando Janela com os dados de: " + sql );
 		    
@@ -72,11 +71,12 @@ public class DataWindowService {
 				result = createWindow( dataWindow, record );
 			} else {
 				throw new Exception("Não foi encontrada correspondência entre os dados da camada " + nodeData.getLayerAlias() +
-						" e a tabela " + dataWindow.getSourceTable() + " no banco " + databaseConn + " usando o critério [" + whereClause + "]");
+						" e a tabela " + dataWindow.getSourceTable() + " no banco " + databaseConn + " usando o critério [" + relationShip + "]");
 			}
 			
 			
 		} catch ( Exception e ) {	
+			e.printStackTrace();
 			result = "{ \"error\": true, \"msg\": \""+ e.getMessage() + ".\" }";
 		}
 		
@@ -159,8 +159,8 @@ public class DataWindowService {
 			StringBuilder sb = new StringBuilder();
 			String andClause = "";
 			for( int x=0; x< dictionaryIds.length(); x++ ) {
-				String dictionaryId = "$%" + dictionaryIds.getJSONObject(x).getString("fieldName") + "%$";
-				String windowId = windowIds.getJSONObject(x).getString("fieldName");
+				String dictionaryId = dictionaryIds.getJSONObject(x).getString("fieldName") ;
+				String windowId = "$%" + windowIds.getJSONObject(x).getString("fieldName") + "%$";
 				sb.append( andClause + dictionaryId + "=" + windowId );
 				andClause = " and ";
 			}

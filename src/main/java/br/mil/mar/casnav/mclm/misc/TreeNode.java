@@ -7,7 +7,7 @@ import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 import br.mil.mar.casnav.mclm.persistence.services.FilterService;
 
 /*
- * Se mexer nesta estrutura, altere tamb�m 
+ * Se mexer nesta estrutura, altere tambï¿½m 
  * em SceneryTreeNode
  * 
  */
