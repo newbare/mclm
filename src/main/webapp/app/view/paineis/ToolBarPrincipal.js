@@ -44,9 +44,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'forecast-icon',
-        handler: function() {
-        	//showTemperatureMap();
-        }
+        handler: 'showForecast'
     }, 
     {
     	// OpenSeaMap

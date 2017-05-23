@@ -13,6 +13,21 @@ Ext.define('MCLM.view.main.MainController', {
 	toggleMapGrid : function( button ) {
 		MCLM.Map.toggleMapGrid();
 	},
+	
+	// --------------------------------------------------------------------------------------------
+	showForecast : function( button ) {
+		
+    	var config = MCLM.Globals.config;
+		var geoserverUrl = config.geoserverUrl;
+		var baseLayerName = config.baseLayer;    
+		
+		
+		var geoCodeHelper = Ext.create('MCLM.view.geocode.GeoCodeHelper');
+		geoCodeHelper.init( geoserverUrl, baseLayerName, "Leite Ribeiro", "Fonseca", "Niterói", "Rio de Janeiro", "Brasil", "-55.37109375,-17.39257927105777" );
+    	
+    	
+	},
+	
 	// --------------------------------------------------------------------------------------------
 	manageServers : function( button ) {
     	var serversWindow = Ext.getCmp('serversWindow');

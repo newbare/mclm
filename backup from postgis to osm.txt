@@ -1,0 +1,1 @@
+osmosis --read-pgsql database=egypt-osm user=gisuser password='test0199' outPipe.0=pg --dataset-bounding-box inPipe.0=pg top=30.1332509 left=31.1400604 bottom=29.9400604 right=31.3220215 outPipe.0=dd --write-xml inPipe.0=dd file=- | bzip2 > cairo.osm.bz2
