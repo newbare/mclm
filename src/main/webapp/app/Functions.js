@@ -137,12 +137,25 @@ Ext.define('MCLM.Functions', {
 				var fields = windowPanels[i].fields;
 				
 				var content = "<table class='dataWindow'>";
+				var theColor = "000000";
+				
+				for (var x = 0; x < fields.length; x++) {
+					var fieldValue = fields[x].fieldValue;
+					var fieldType = fields[x].fieldType;
+					if( fieldType == 'COLOR' ) {
+						theColor = fieldValue.replace('#','');;
+					}
+				}
+
+				
+				console.log( MCLM.Globals.config );
+				
 				for (var x = 0; x < fields.length; x++) {
 					var fieldValue = fields[x].fieldValue;
 					var fieldType = fields[x].fieldType;
 
 					if( fieldType == 'SYMBOL' ) {
-						var imageLink = "http://10.5.115.136/SvgService/?symbol=" + fieldValue;
+						var imageLink = "http://10.5.115.136/SvgService/?symbol=" + fieldValue + "&color=_" + theColor;
 						var fieldValue = '<div style="width:52px;height:52px;border:1px solid #cacaca"><object id="iconPreview" style="width:50px;height:50px" type="image/svg+xml" data="'+imageLink+'"></object></div>';
 						// http://10.5.115.136/SvgService/?symbol=500&color=_FF0000
 					}

@@ -1092,6 +1092,7 @@ Ext.define('MCLM.Map', {
 		        if ( obj.hasOwnProperty(key) ) {
 		        	if ( key.startsWith("mclm_pk_")  ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        	if ( key == 'mclm_label_column' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
+	        		if ( key == 'mclm_metadata_property' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        	if ( key == 'node_data' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        	if ( key == 'data_window' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        		keys.push({text: key, width:150, dataIndex: key}); 
