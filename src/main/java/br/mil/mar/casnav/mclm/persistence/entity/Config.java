@@ -107,7 +107,8 @@ public class Config {
 			String proxyUser, String proxyPassword, Integer proxyPort, String geoserverUser, String geoserverPassword,
 			Integer mapZoom, Integer queryFactorRadius, String mapCenter, String shapeFileTargetPath, 
 			String routingServer, String routingUser, String routingPassword, Integer routingPort, String routingDatabase,
-			String apoloServer, Integer distanceFromRoute ) {
+			String apoloServer, Integer distanceFromRoute, String symbolServerURL, String servicosCptecUrl ) {
+		
 		super();
 		this.idConfig = idConfig;
 		this.geoserverUrl = geoserverUrl;
@@ -126,6 +127,10 @@ public class Config {
 		this.queryFactorRadius = queryFactorRadius;
 		this.mapCenter = mapCenter;
 		this.shapeFileTargetPath = shapeFileTargetPath;
+		
+		this.symbolServerURL = symbolServerURL;
+		this.servicosCptecUrl = servicosCptecUrl;
+		
 		
 		this.routingServer = routingServer;
 		this.routingUser = routingUser;

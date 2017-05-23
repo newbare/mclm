@@ -57,13 +57,15 @@ public class SaveConfigAction extends BasicActionClass {
 				String routingDatabase = request.getParameter("routingDatabase");
 				
 				String apoloServer = request.getParameter("apoloServer");
+				String symbolServerURL = request.getParameter("symbolServerURL");
+				String servicosCptecUrl = request.getParameter("servicosCptecUrl");
 
 				
 				Config config = new Config(idConfig, geoserverUrl, baseLayer, useProxy, externalLayersToLocalServer, externalWorkspaceName, 
 							proxyHost, nonProxyHosts, proxyUser, proxyPassword, proxyPort, geoserverUser, 
 							geoserverPassword, mapZoom, queryFactorRadius, mapCenter, shapeFileTargetPath, 
 							routingServer, routingUser, routingPassword, routingPort, routingDatabase,	
-							apoloServer, distanceFromRoute);	
+							apoloServer, distanceFromRoute, symbolServerURL, servicosCptecUrl);	
 				
 				
 				ConfigService cs = new ConfigService();
