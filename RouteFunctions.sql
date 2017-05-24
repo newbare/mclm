@@ -102,8 +102,68 @@ FROM
     )  
  
 $function$;
-  
+ 
+/*
+	FUNÇÃO DE GEOCODING DADO UMA COORDENADA
+*/
+ 
+ 
+CREATE OR REPLACE FUNCTION public.geocode_point(
+    IN coords character varying,
+    IN srid integer)
+  RETURNS TABLE(admin_level character varying, "name" character varying, place character varying, "ref" character varying, tags hstore, "type" character varying) AS
+$BODY$
 
+
+select admin_level, "name", place, "ref", tags, "type" from (
+SELECT admin_level, "name", place, "ref", tags, 'ADM'::text as "type"  
+FROM planet_osm_polygon pl
+WHERE ST_Within( ST_Transform(ST_GeometryFromText('POINT(' || $1 ||  ')',$2), 900913), pl.way ) 
+) as t1
+union 
+select admin_level, "name", place, "ref", tags, 'RUA'::text as "type" from (
+select '99999'::text as admin_level, ll."name", ll.place, ll."ref", ll.tags from planet_osm_line ll 
+ORDER BY ll.way <-> ST_Transform(ST_GeometryFromText('POINT(' || $1 ||  ')',$2), 900913) LIMIT 1
+) as t2
+order by admin_level
+	 
+/*	 
+	FUNÇÃO QUE VERIFICA SE UMA GEOMETRIA ESTÁ EM UMA CIDADE 
+*/
+	 
+CREATE OR REPLACE FUNCTION public.estaNaCidade(oque Geometry, cidade_nome character varying)
+  RETURNS boolean AS
+$func$
+
+
+select esta from (
+select 
+	ST_Within( $1, pl.way ) as esta from planet_osm_polygon pl
+where	
+	( pl."name" = $2 and pl.admin_level = '8' ) -- Pais = 2 // Estado = 4
+) as t1 where t1.esta = true
+
+$func$ LANGUAGE sql STABLE STRICT;	 
+
+/*
+
+select 
+	ll.osm_id, ll."name", ST_AsText( ST_Transform(ST_StartPoint(ll.way),4326) ), ST_AsLatLonText( ST_StartPoint(ll.way) ) as coordinates
+from 
+	planet_osm_line ll
+where 
+	ll."name" like '%Leite%' 
+and 
+	estaNoEstado( ll.way, 'Rio de Janeiro')
+and 
+	estaNaCidade( ll.way, 'Niterói')
+and 
+	estaNoPais( ll.way, 'Brasil')
+
+
+	
+*/
+	
 /* 
   FUNÇÃO DE LOCALIZAÇÃO DE PONTOS DE INTERESSE PRÓXIMOS A UMA ROTA 
 */	
@@ -179,7 +239,19 @@ select * from pointscanner('MULTILINESTRING(
 SELECT array_to_json( array_agg( t ) ) as result FROM ( select osm_name,source,target from nearest_way('-54.64209596130702  -16.45105478873363', 1, 4326) ) as t
 
 select * from nearest_way('-54.64209596130702  -16.45105478873363', 1, 4326)		
-		
+	
+
+SELECT pl.admin_level, pl."name", pl.place, pl."ref", ST_AsText(po.way) as geom
+FROM planet_osm_polygon pl, planet_osm_point po 
+WHERE ST_Within( po.way, pl.way ) 
+and po.osm_id = 529749027 order by pl.admin_level::integer
+
+
+SELECT admin_level, "name", place, "ref"  
+FROM planet_osm_polygon pl
+WHERE ST_Within( ST_Transform(ST_GeometryFromText('POINT(-54.64209596130702  -16.45105478873363)',4326), 900913), pl.way ) 
+order by admin_level
+	
 			
 */  
 		  

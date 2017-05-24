@@ -1,0 +1,9 @@
+var geoCodeHelper = Ext.create('MCLM.view.geocode.GeoCodeHelper');
+
+geoCodeHelper.init( geoserverUrl, baseLayerName, "Leite Ribeiro", "Fonseca", "Niterói", "Rio de Janeiro", "Brasil", "-55.37109375,-17.39257927105777" );
+
+
+geoserverUrl  	= http://10.5.115.122/geoserver/wms/ 
+baseLayerName  	= osm:AA_OpenStreetMap
+    	
+    	

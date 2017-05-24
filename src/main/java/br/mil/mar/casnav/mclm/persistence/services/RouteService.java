@@ -39,6 +39,97 @@ public class RouteService {
 		return result;
 	}
 	
+	/*
+
+
+		select 
+			ll.osm_id, ll."name", ST_AsLatLonText( ST_StartPoint(ll.way) ) as coordinates
+		from 
+			planet_osm_line ll
+		where 
+			ll."name" like '%Leite Ribeiro%' 
+		and 
+			estaNoEstado( ll.way, 'Rio de Janeiro')
+		and 
+			estaNaCidade( ll.way, 'Niterói')
+		and 
+			estaNoPais( ll.way, 'Brasil')
+
+
+	*/
+	
+	public String getAddress( String rua, String cidade, String estado, String pais ) throws Exception {
+
+		Config cfg = Configurator.getInstance().getConfig();
+		
+		String estaNaCidade = "";
+		String estaNoPais = "";
+		String estaNoEstado = "";
+		
+		if ( cidade != null ) {
+			estaNaCidade = " and estaNaCidade( ll.way, '" + cidade + "')";
+		}
+		
+		if ( pais != null ) {
+			estaNoPais = " and estaNoPais( ll.way, '" + pais + "')";			
+		}
+
+		if ( estado != null ) {
+			estaNoEstado = " and estaNoEstado( ll.way, '" + estado + "')";
+		}
+		
+		String sql = "SELECT array_to_json( array_agg( t ) ) as result FROM ("+
+
+		"select ll.osm_id, ll.name, ST_AsText( ST_Transform(ST_StartPoint(ll.way),4326) ), ST_AsLatLonText( ST_StartPoint(ll.way) ) as coordinates " +
+			" from planet_osm_line ll where ll.name like '%Leite Ribeiro%' " + estaNoEstado + estaNaCidade + estaNoPais + ") as t";
+		
+		String result = "";
+
+		
+		System.out.println( sql );
+		
+		String connectionString = "jdbc:postgresql://" + cfg.getRoutingServer() +
+				":" + cfg.getRoutingPort() + "/" + cfg.getRoutingDatabase();
+		GenericService gs = new GenericService( connectionString, cfg.getRoutingUser(), cfg.getRoutingPassword()  );
+		
+		List<UserTableEntity> utes = gs.genericFetchList( sql );
+		
+		if ( utes.size() > 0 ) {
+			UserTableEntity ute = utes.get(0);
+			result = ute.getData("result");
+		}
+		
+		return result;
+	}
+	
+	
+	public String getAddress( String coordinate ) throws Exception {
+
+		Config cfg = Configurator.getInstance().getConfig();
+		coordinate = coordinate.replace(",", " ");
+		
+		String sql = "SELECT array_to_json( array_agg( t ) ) as result FROM ("+
+			"select * from geocode_point('" + coordinate + "', 4326)"+
+			") as t";
+		
+		String result = "";
+		
+		String connectionString = "jdbc:postgresql://" + cfg.getRoutingServer() +
+				":" + cfg.getRoutingPort() + "/" + cfg.getRoutingDatabase();
+		GenericService gs = new GenericService( connectionString, cfg.getRoutingUser(), cfg.getRoutingPassword()  );
+		
+		List<UserTableEntity> utes = gs.genericFetchList( sql );
+		
+		if ( utes.size() > 0 ) {
+			UserTableEntity ute = utes.get(0);
+			result = ute.getData("result");
+		}
+		
+		return result;
+	}	
+	
+	
+	
 	public String calcRoute( String source, String target, Integer kpaths, String directed ) throws Exception {
 		Config cfg = Configurator.getInstance().getConfig();
 		
