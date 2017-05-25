@@ -58,7 +58,7 @@ public class RouteService {
 
 	*/
 	
-	public String getAddress( String rua, String cidade, String estado, String pais ) throws Exception {
+	public String getAddress( String rua, String bairro, String cidade, String estado, String pais ) throws Exception {
 
 		Config cfg = Configurator.getInstance().getConfig();
 		

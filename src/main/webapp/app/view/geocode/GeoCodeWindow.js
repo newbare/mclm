@@ -4,6 +4,7 @@ Ext.define('MCLM.view.geocode.GeoCodeWindow', {
 	requires: [
 	   'MCLM.view.geocode.GeoCodeController',
 	   'MCLM.view.geocode.GeoCodePanel',
+	   'MCLM.view.geocode.GeoCodeSelStreetPanel',
 	   'MCLM.view.geocode.GeoCodeMapPanel',
 	],  
 	
@@ -12,7 +13,7 @@ Ext.define('MCLM.view.geocode.GeoCodeWindow', {
 	id:'geocodeWindow',    	
 	xtype: 'geocodeWindow',
 	title : "GeoCode",
-	width : 550,
+	width : 750,
 	height: 450,
 	
 	layout:'border',
@@ -21,6 +22,8 @@ Ext.define('MCLM.view.geocode.GeoCodeWindow', {
 	
     items : [{
         xtype: 'geoCodeMapPanel',
+    },{
+        xtype: 'geoCodeSelStreetPanel',
     },{
         xtype: 'geoCodePanel',
     }],

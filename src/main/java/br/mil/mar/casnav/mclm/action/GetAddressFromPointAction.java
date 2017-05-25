@@ -21,6 +21,7 @@ import br.mil.mar.casnav.mclm.persistence.services.RouteService;
 public class GetAddressFromPointAction {
 	private String coordinate;
 	private String rua;
+	private String bairro;
 	private String pais;
 	private String estado;
 	private String cidade;
@@ -33,7 +34,7 @@ public class GetAddressFromPointAction {
 			
 			RouteService rs = new RouteService();
 			if ( coordinate != null ) { result = rs.getAddress( coordinate ); } else {
-				result = rs.getAddress(rua, cidade, estado, pais);
+				result = rs.getAddress(rua, bairro, cidade, estado, pais);
 			}
 				
 			
@@ -68,7 +69,9 @@ public class GetAddressFromPointAction {
 	}
 
 
-	
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
 	
 	
 }

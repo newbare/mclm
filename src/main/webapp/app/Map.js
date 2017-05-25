@@ -302,19 +302,23 @@ Ext.define('MCLM.Map', {
 				
 			} else {
 				
+				//layerName = "122";
+				//serverUrl = "http://wms.snirh.gov.br/arcgis/services/SNIRH/2016/MapServer/WMSServer/";
+				
+				
 				var paramsRel = {
 	    	        	tiled: true,
 	    	            'layers': layerName,
-	    	            //'VERSION': '1.1.1', 
-	    	            'format': 'image/png8'
+	    	            'VERSION': '1.1.1', 
+	    	            'FORMAT': 'image/png8'
 	    	    }
 				if ( cql ) {
 					paramsRel = {
 		    	        	tiled: true,
 		    	            'layers': layerName,
 		    	            'cql_filter': cql,
-		    	            //'VERSION': '1.1.1', 
-		    	            'format': 'image/png8'
+		    	            'VERSION': '1.1.1', 
+		    	            'FORMAT': 'image/png8'
 		    	    }					
 				}
 				
@@ -328,6 +332,9 @@ Ext.define('MCLM.Map', {
 		    	    })
 		    	});	
 				
+		    	
+		    	console.log( "URL Camada " + layerName + " " + serverUrl );
+		    	
 			}
 			
 			if ( transparency == 0 ) transparency = 1;

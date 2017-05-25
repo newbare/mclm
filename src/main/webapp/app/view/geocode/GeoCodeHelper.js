@@ -68,7 +68,8 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
     	this.createMarkerLayer();
     	
 		if( coordenadas ) {
-			this.getNearestRoads(coordenadas);
+			this.getAddressFromPoint(coordenadas);
+			
 			this.panTo(coordenadas, 7);
 			var coord = coordenadas.split(",");
 			var lat = Number( coord[0].trim() );
@@ -77,13 +78,15 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
 			this.putIcon( coordinate );
 			this.clickedCoordinate = coordinate;
 			
+		} else {
+			this.getAddressFromAddress(rua, bairro, estado, cidade, pais);
 		}
 
 		var me = this;
 		this.mapLayerGeoCode.onClickBindKey = this.mapLayerGeoCode.on('click', function(event) {
 			me.putIcon( event.coordinate );
 			me.clickedCoordinate = event.coordinate;
-			me.getNearestRoads( event.coordinate );
+			me.getAddressFromPoint( event.coordinate );
 			
 		});		
 		
@@ -165,7 +168,44 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
     	geoCodePanel.update( mainDiv );   		
 	},
 	
-	getNearestRoads : function( center ) {
+	getAddressFromAddress : function( rua, bairro, estado, cidade, pais ) {
+		var me = this;
+		
+		Ext.Ajax.request({
+	       url: me.getRoadsUrl,
+	       params: {
+	           'rua': rua,
+	           'bairro': bairro,
+	           'estado': estado,
+	           'cidade': cidade,
+	           'pais': pais,
+	       },       
+	       success: function(response, opts) {
+	    	   var respObj = Ext.decode(response.responseText);
+	    	  
+		       var geoCodePanel = Ext.getCmp('geoCodePanel');
+		       geoCodePanel.update( response.responseText );
+		       
+		       var geoCodeSelStreetPanel = Ext.getCmp('geoCodeSelStreetPanel');
+		       geoCodeSelStreetPanel.show();
+		       
+	    	   
+	    	   /*
+	    	   for (x=0; x<respObj.length;x++  ) {
+	    		   var res = respObj[x];
+	    	   }
+	    	   */
+	    	   
+	       },
+	       failure: function(response, opts) {
+	    	   Ext.Msg.alert('Erro','Erro ao receber os dados da coordenada selecionada.' );
+	       }
+		});				
+	},
+	
+	
+	
+	getAddressFromPoint : function( center ) {
 		var coordinate = ol.proj.transform( center , 'EPSG:3857', 'EPSG:4326');			
 		var me = this;
 		
