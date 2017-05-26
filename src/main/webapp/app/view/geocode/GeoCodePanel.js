@@ -5,12 +5,12 @@ Ext.define('MCLM.view.geocode.GeoCodePanel', {
 	
 	region: 'south',
 	
-	height : 60,
+	height : 65,
 	
 	border: true,
     frame: false,
-    margin: '5',	
-    bodyStyle: 'padding: 5px;',
+    margin: '4',	
+    bodyStyle: 'padding: 3px;',
 
     html : ''
 	

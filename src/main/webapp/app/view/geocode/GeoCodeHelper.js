@@ -1,10 +1,11 @@
 Ext.define("MCLM.view.geocode.GeoCodeHelper", {
 	xtype: 'geoCodeHelper',
 	id: 'geoCodeHelper',	
-
+	
 	mapLayerGeoCode : null,
 	vectorSourceMarker : null,
 	vectorLayerMarker: null,
+	
 	
 	rua : null, 
 	bairro : null, 
@@ -27,6 +28,16 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
 	getRoadsUrl : 'getAddressFromPoint',
 	
 	init : function(geoserverUrl, baseLayerName, rua, bairro, cidade, estado, pais, coordenadas) {
+		
+	
+    	var geocodeWindow = Ext.getCmp('geocodeWindow');
+    	if ( !geocodeWindow ) {
+    		geocodeWindow = Ext.create('MCLM.view.geocode.GeoCodeWindow');
+    	}
+    	geocodeWindow.show();	
+    	geocodeWindow.helper = this;		
+		
+		
 		this.rua = rua;
 		this.bairro = bairro;
 		this.cidade = cidade;
@@ -34,15 +45,6 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
 		this.pais = pais;
 		this.coordenadas = coordenadas;
 		
-		
-    	var geocodeWindow = Ext.getCmp('geocodeWindow');
-    	if ( !geocodeWindow ) {
-    		geocodeWindow = Ext.create('MCLM.view.geocode.GeoCodeWindow');
-    	}
-    	geocodeWindow.show();	
-    	geocodeWindow.helper = this;
-    	
-    	
     	this.geocodeView = new ol.View({
             center: ol.proj.transform([-55.37109375,-17.39257927105777], 'EPSG:4326', 'EPSG:3857'),
             zoom: 3
@@ -68,15 +70,7 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
     	this.createMarkerLayer();
     	
 		if( coordenadas ) {
-			this.getAddressFromPoint(coordenadas);
-			
-			this.panTo(coordenadas, 7);
-			var coord = coordenadas.split(",");
-			var lat = Number( coord[0].trim() );
-			var lon = Number( coord[1].trim() );
-			var coordinate = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');					
-			this.putIcon( coordinate );
-			this.clickedCoordinate = coordinate;
+			this.processCoordinates( coordenadas );
 			
 		} else {
 			this.getAddressFromAddress(rua, bairro, estado, cidade, pais);
@@ -84,13 +78,29 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
 
 		var me = this;
 		this.mapLayerGeoCode.onClickBindKey = this.mapLayerGeoCode.on('click', function(event) {
+			
+			var geoCodeRightPanel = Ext.getCmp('geoCodeRightPanel');
+			geoCodeRightPanel.getStore().load([]);			
+			
 			me.putIcon( event.coordinate );
 			me.clickedCoordinate = event.coordinate;
 			me.getAddressFromPoint( event.coordinate );
-			
 		});		
 		
 		
+	},
+	
+	processCoordinates : function( coordenadas ) {
+		this.getAddressFromPoint(coordenadas);
+		
+		
+		this.panTo(coordenadas, 12);
+		var coord = coordenadas.split(",");
+		var lat = Number( coord[0].trim() );
+		var lon = Number( coord[1].trim() );
+		var coordinate = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');					
+		this.clickedCoordinate = coordinate;
+		this.putIcon( coordinate );
 	},
 	
 	panTo : function( center, zoom ) {
@@ -158,8 +168,8 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
     	}
     	
     	var mainDiv = "<div style='position:relative;width:100%;height:100%'>" + 
-    	"<div style='height:25px;width:100%'>" + coord + "</div>" + 
-    	"<div style='height:15px;width:100%'>" + this.rua + ", " + this.cidade + ", " + this.estado + " (" + this.estadoSigla + "), " + this.pais + "</div>" + 
+    	"<div style='height:29px;width:100%'>" + coord + "</div>" + 
+    	"<div style='height:35px;width:350px'>" + this.rua + ", " + this.cidade + ", " + this.estado + " (" + this.estadoSigla + "), " + this.pais + "</div>" + 
     	
     	"<div style='top:0px;right:0px;position:absolute;'>" + bandeiraEstado + "</div>" + 
     	"<div style='top:0px;right:40px;position:absolute;'>" + bandeiraPais + "</div>" + 
@@ -169,7 +179,11 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
 	},
 	
 	getAddressFromAddress : function( rua, bairro, estado, cidade, pais ) {
+		
 		var me = this;
+		$("#alert_geocode").css("display","block");
+    	var geoCodePanel = Ext.getCmp('geoCodePanel');
+    	geoCodePanel.update("Procurando por ruas contendo '" + rua + "' ...");
 		
 		Ext.Ajax.request({
 	       url: me.getRoadsUrl,
@@ -181,23 +195,20 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
 	           'pais': pais,
 	       },       
 	       success: function(response, opts) {
+	    	   
+	    	   geoCodePanel.update("Concluído.");
+	    	   
 	    	   var respObj = Ext.decode(response.responseText);
 	    	  
-		       var geoCodePanel = Ext.getCmp('geoCodePanel');
-		       geoCodePanel.update( response.responseText );
+		       var geoCodeRightPanel = Ext.getCmp('geoCodeRightPanel');
+		       geoCodeRightPanel.getStore().loadData( respObj );
+		       geoCodeRightPanel.show();
 		       
-		       var geoCodeSelStreetPanel = Ext.getCmp('geoCodeSelStreetPanel');
-		       geoCodeSelStreetPanel.show();
-		       
-	    	   
-	    	   /*
-	    	   for (x=0; x<respObj.length;x++  ) {
-	    		   var res = respObj[x];
-	    	   }
-	    	   */
-	    	   
+		       me.mapLayerGeoCode.updateSize();
+		       $("#alert_geocode").css("display","none");
 	       },
 	       failure: function(response, opts) {
+	    	   $("#alert_geocode").css("display","none");
 	    	   Ext.Msg.alert('Erro','Erro ao receber os dados da coordenada selecionada.' );
 	       }
 		});				
@@ -208,6 +219,7 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
 	getAddressFromPoint : function( center ) {
 		var coordinate = ol.proj.transform( center , 'EPSG:3857', 'EPSG:4326');			
 		var me = this;
+		$("#alert_geocode").css("display","block");
 		
 		Ext.Ajax.request({
 	       url: me.getRoadsUrl,
@@ -246,10 +258,11 @@ Ext.define("MCLM.view.geocode.GeoCodeHelper", {
 	    	   }
 
 	    	   me.showAddress();
-	    	   
+	    	   $("#alert_geocode").css("display","none");
 	       },
 	       failure: function(response, opts) {
 	    	   Ext.Msg.alert('Erro','Erro ao receber os dados da coordenada selecionada.' );
+	    	   $("#alert_geocode").css("display","none");
 	       }
 		});				
 	},

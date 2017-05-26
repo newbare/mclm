@@ -21,10 +21,9 @@ Ext.define('MCLM.view.main.MainController', {
 		var geoserverUrl = config.geoserverUrl;
 		var baseLayerName = config.baseLayer;    
 		
-		
 		var geoCodeHelper = Ext.create('MCLM.view.geocode.GeoCodeHelper');
-		// "-55.37109375,-17.39257927105777"
-		geoCodeHelper.init( geoserverUrl, baseLayerName, "Leite Ribeiro", "Fonseca", "Niterói", "Rio de Janeiro", "Brasil", null );
+		geoCodeHelper.init( geoserverUrl, baseLayerName, "Leite", "", "", "Rio de Janeiro", "Brasil", null );
+		//geoCodeHelper.init( geoserverUrl, baseLayerName, "", "", "", "", "", "-55.37109375,-17.39257927105777" );
     	
     	
 	},

@@ -66,22 +66,22 @@ public class RouteService {
 		String estaNoPais = "";
 		String estaNoEstado = "";
 		
-		if ( cidade != null ) {
+		if ( cidade != null && !cidade.equals("") ) {
 			estaNaCidade = " and estaNaCidade( ll.way, '" + cidade + "')";
 		}
 		
-		if ( pais != null ) {
+		if ( pais != null && !pais.equals("") ) {
 			estaNoPais = " and estaNoPais( ll.way, '" + pais + "')";			
 		}
 
-		if ( estado != null ) {
+		if ( estado != null && !estado.equals("") ) {
 			estaNoEstado = " and estaNoEstado( ll.way, '" + estado + "')";
 		}
 		
 		String sql = "SELECT array_to_json( array_agg( t ) ) as result FROM ("+
 
-		"select ll.osm_id, ll.name, ST_AsText( ST_Transform(ST_StartPoint(ll.way),4326) ), ST_AsLatLonText( ST_StartPoint(ll.way) ) as coordinates " +
-			" from planet_osm_line ll where ll.name like '%Leite Ribeiro%' " + estaNoEstado + estaNaCidade + estaNoPais + ") as t";
+		"select ll.osm_id, ll.name, qualEstado( ll.way ) as estado, qualCidade( ll.way ) as cidade, ST_AsText( ST_Transform(ST_StartPoint(ll.way),4326) ), ST_AsLatLonText( ST_StartPoint(ll.way) ) as coordinates " +
+			" from planet_osm_line ll where ll.name like '%" + rua + "%' " + estaNoEstado + estaNaCidade + estaNoPais + ") as t";
 		
 		String result = "";
 

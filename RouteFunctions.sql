@@ -102,6 +102,45 @@ FROM
     )  
  
 $function$;
+
+
+
+/*
+	FUN플O QUE RETORNA O ESTADO ONDE EST� UM PONTO
+*/
+
+CREATE OR REPLACE FUNCTION public.qualEstado(oque Geometry)
+  RETURNS character varying AS
+$func$
+
+select 
+	pl.name from planet_osm_polygon pl
+where	
+	ST_Within( $1, pl.way ) 
+and
+	pl.admin_level = '4'  -- Pais = 2 // Cidade = 8
+
+$func$ LANGUAGE sql STABLE STRICT;	
+
+
+/*
+	FUN플O QUE RETORNA A CIDADE ONDE EST� UM PONTO
+*/
+
+
+CREATE OR REPLACE FUNCTION public.qualCidade(oque Geometry)
+  RETURNS character varying AS
+$func$
+
+select 
+	pl.name from planet_osm_polygon pl
+where	
+	ST_Within( $1, pl.way ) 
+and
+	pl.admin_level = '8'  -- Pais = 2 // Estado = 4
+
+$func$ LANGUAGE sql STABLE STRICT;	
+
  
 /*
 	FUN플O DE GEOCODING DADO UMA COORDENADA
