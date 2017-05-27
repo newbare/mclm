@@ -17,6 +17,7 @@ import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
 import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
 import br.mil.mar.casnav.mclm.persistence.services.DictionaryService;
 import br.mil.mar.casnav.mclm.persistence.services.NodeService;
+import br.mil.mar.casnav.mclm.persistence.services.OSMService;
 
 
 @WebListener
@@ -33,6 +34,7 @@ public class Startup implements ServletContextListener {
     	String path = context.getRealPath("/");
     	System.setProperty("rootPath", path );
 
+    	
     	try {
        
     		// Isso inicia o monitor de conexoes. Serve para verificar connection leaks
@@ -75,6 +77,12 @@ public class Startup implements ServletContextListener {
     		Set<NodeData> nodes = ns.getList();
     		DictionaryService ds = new DictionaryService();
 
+        	
+    		OSMService osm = new OSMService();
+    		osm.test();
+    		//System.out.println( osm.getCapabilities() );    		
+    		System.out.println( osm.getPermissions() );    		
+    		
     		
     		for( NodeData node : nodes ) {
     			if ( node.getLayerType() == LayerType.CRN) Configurator.getInstance().setFeicaoRootNode( node );
@@ -93,6 +101,7 @@ public class Startup implements ServletContextListener {
 				ns.newTransaction();
 				Configurator.getInstance().setFeicaoRootNode( ns.createCRN() );
 			} 
+			
 			
 			
 			// TEMP!

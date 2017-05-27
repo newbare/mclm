@@ -88,6 +88,36 @@ public class WebClient {
 	}
 	
 
+	public String doAuthRequest( String requestMethod, String url, String content, String geoUser, String geoPassword ) throws Exception {
+		
+		String geoCreds = geoUser + ":" + geoPassword;
+		String encodedAuth = new String( Base64.encodeBase64( geoCreds.getBytes() ) );
+		HttpURLConnection con = (HttpURLConnection) new URL( url ).openConnection();
+		con.setRequestMethod( requestMethod );
+		con.setRequestProperty("Authorization", "Basic " + encodedAuth );
+		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty("Content-type", "text/xml");
+		con.connect();
+
+		try {
+			InputStream inputStream = con.getInputStream();
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(inputStream, writer, "UTF-8");
+			String theString = writer.toString();
+			inputStream.close();
+			con.disconnect();
+			
+			return theString;
+			
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		con.disconnect();
+		return null;		
+		
+	}
+	
 	public int doRESTRequest( String requestMethod, String url, String content, String geoUser, String geoPassword ) throws Exception {
 		int code = 0;
 		
@@ -102,6 +132,7 @@ public class WebClient {
 		con.setDoOutput(true);
 		con.getOutputStream().write( content.getBytes("UTF-8") );
 		code = con.getResponseCode();
+
 	
 		// To use with GET method
 		try {
@@ -264,5 +295,7 @@ public class WebClient {
 		};
 		return routePlanner;
 	}
+	
+	
 	
 }
