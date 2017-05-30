@@ -69,7 +69,7 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
     	var me = this;
     	
 		var tituloForm = Ext.getCmp('tituloID');
-		var titulo = serverUrlForm.getValue( );
+		var titulo = tituloForm.getValue( );
 		
 		var serverUrlForm = Ext.getCmp('serverUrlID');
 		var serverUrl = serverUrlForm.getValue( );
@@ -78,7 +78,7 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
 		var layerName = layerNameForm.getValue();
 			
 		
-		if ( !layerName || !serverUrl || !titulo ) {	
+		//if ( !layerName || !serverUrl || !titulo ) {	
 			
 			var layerTree = Ext.getCmp('layerTree');
 			var selectedTreeNode = layerTree.getSelectionModel().getSelection()[0];
@@ -105,9 +105,9 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
 	        	Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
 	        }
             
-		} else {     
-			Ext.Msg.alert('Nenhuma Camada selecionada', 'Por favor, selecione uma camada e tente novamente.')
-		}
+		//} else {     
+		//	Ext.Msg.alert('Nenhuma Camada selecionada', 'Por favor, selecione uma camada e tente novamente.')
+		//}
     	
 	},
     // ---------------------------------------------------------------------------------------------------------------

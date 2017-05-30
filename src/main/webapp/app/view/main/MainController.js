@@ -17,15 +17,16 @@ Ext.define('MCLM.view.main.MainController', {
 	// --------------------------------------------------------------------------------------------
 	showForecast : function( button ) {
 		
-    	var config = MCLM.Globals.config;
-		var geoserverUrl = config.geoserverUrl;
-		var baseLayerName = config.baseLayer;    
-		
-		var geoCodeHelper = Ext.create('MCLM.view.geocode.GeoCodeHelper');
-		geoCodeHelper.init( geoserverUrl, baseLayerName, "Leite", "", "", "Rio de Janeiro", "Brasil", null );
+    	//var config = MCLM.Globals.config;
+		//var geoserverUrl = config.geoserverUrl;
+		//var baseLayerName = config.baseLayer;    
+		//var geoCodeHelper = Ext.create('MCLM.view.geocode.GeoCodeHelper');
+		//geoCodeHelper.init( geoserverUrl, baseLayerName, "Leite", "", "", "Rio de Janeiro", "Brasil", null );
 		//geoCodeHelper.init( geoserverUrl, baseLayerName, "", "", "", "", "", "-55.37109375,-17.39257927105777" );
     	
-    	
+		var aircraftHelper = Ext.create('MCLM.view.aircraft.AircraftHelper');
+		aircraftHelper.init();
+		aircraftHelper.getAircraftsBbox();
 	},
 	
 	// --------------------------------------------------------------------------------------------

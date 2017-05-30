@@ -53,6 +53,7 @@ Ext.define('MCLM.Map', {
 		               projection: 'EPSG:4326',
 		               coordinateFormat: function(coordinate) {
 		            	   var coord = ol.coordinate.toStringHDMS( coordinate );
+		            	   //console.log( coordinate );
 		            	   return coord;
 		               }
 		           })
@@ -830,6 +831,17 @@ Ext.define('MCLM.Map', {
 		    var bottomLeft = ol.proj.transform( ol.extent.getBottomLeft( extent ), 'EPSG:3857', 'EPSG:4326' );
 		    var topRight = ol.proj.transform( ol.extent.getTopRight( extent ), 'EPSG:3857', 'EPSG:4326' );
 			return bottomLeft + "," + topRight;
+			
+			/*
+			
+			var newExtent = ol.proj.transformExtent(extent, 'EPSG:3857', 'EPSG:4326');
+			var minlon = newExtent[0];
+			var minlat = newExtent[1];
+			var maxlon = newExtent[2];
+			var maxlat = newExtent[3];			
+			
+			*/
+			
 		},
 		// --------------------------------------------------------------------------------------------
 		// Retorna a URL para pegar a imagem PNG de uma camada 'layerName' do servidor 'serviceUrl'

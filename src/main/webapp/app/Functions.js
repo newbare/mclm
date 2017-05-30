@@ -224,6 +224,7 @@ Ext.define('MCLM.Functions', {
 		exibeClima : function( data ) {
 			console.log( data );
 		},
+		
 		removeDataWindowTooltip : function() {
 		 	 Ext.tip.QuickTipManager.unregister('cloneToSceneryBtn');
 		 	 Ext.tip.QuickTipManager.unregister('showWeatherBtn');
