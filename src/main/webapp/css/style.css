@@ -525,3 +525,12 @@
 	width: 30%;
 }
 
+#historyTable {
+	width:98%;padding:0px;margin:0px
+}
+
+#historyTable tr {
+	font-size : 9px;
+}
+
+

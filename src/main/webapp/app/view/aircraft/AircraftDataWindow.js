@@ -3,10 +3,10 @@ Ext.define('MCLM.view.aircraft.AircraftDataWindow', {
 	id:'aircraftDataWindow',    	
 	xtype: 'aircraftDataWindow',
 	title : "Dados da Aeronave",
-	width : 800,
-	height: 450,
-	
-	layout:'border',
+	width : 550,
+	height: 530,
+	bodyStyle:"background:#FFFFFF;",
+	resizable: false,
 	constrain: true,
 	renderTo: Ext.getBody(),
 

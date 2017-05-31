@@ -39,9 +39,11 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     		var bearing = props.bearing * 0.01745329251 ;
     		var callSign = props.callSign;
     		var flightNumber = props.flightNumber;
+    		var tailPrefix = props.tailPrefix;
     		var resultStyles = [];
     		
-    		var fData = me.stringDivider(callSign + " " + flightNumber, 7, '\n');
+    		//var fData = me.stringDivider(callSign + " " + aircraftText, 7, '\n');
+    		var fData = me.stringDivider(tailPrefix + " " + flightNumber, 10, '\n');
     		
         	var aircraftStyle = new ol.style.Style({
     			image: new ol.style.Icon(({
@@ -54,14 +56,14 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     				src: 'img/aeroplane.png'
     			})),
 			      text: new ol.style.Text({
-			          font: '10px Calibri,sans-serif',
+			          font: '10px Consolas',
 			          textAlign: 'center',
 			          offsetX: 0,
 			          offsetY: 25,
 			          textBaseline: 'middle',
-			          fill: new ol.style.Fill({ color: '#f20b07' }),
+			          fill: new ol.style.Fill({ color: '#000' }),
 			          stroke: new ol.style.Stroke({
-			            color: '#FFFFFF', width: 7
+			            color: '#FFFFFF', width: 3
 			          }),
 			          text: fData,
 			        })    			
@@ -92,35 +94,170 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     },
 
     showAircraftDetails : function( aircraft ) {
-    	var aircraftDataWindow = Ext.getCmp('aircraftDataWindow');
-    	if ( !aircraftDataWindow ) {
-    		aircraftDataWindow = Ext.create('MCLM.view.aircraft.AircraftDataWindow');
-    	}
-    	aircraftDataWindow.show();
     	
     	var acId = aircraft.id;
     	var acCallSign = aircraft.callSign;
+    	var tailPrefix = aircraft.tailPrefix;
+    	var model = aircraft.model;
+    	var source = aircraft.airportSource;
+    	var destination = aircraft.airportDestination;
+    	var flightNumber = aircraft.flightNumber;
     	
-    	aircraftDataWindow.setTitle("Dados da Aeronave " + acCallSign);
     	
-    	aircraftDataWindow.update( acId + " " + acCallSign );
-    	console.log( aircraft );
+        Ext.Ajax.request({
+            url: 'getAircraftDetail',
+            params: {
+                'flightID': acId,
+            },
+            failure: function (response, opts) {
+            	//
+            },
+            success: function (response, opts) {
+            	var respObj = Ext.decode(response.responseText);
+
+            	console.log( response.responseText );
+            	
+            	var aircraftText = respObj.aircraft.model.text;
+            	
+            	var aircraftImageLarge = "img/large_not_found.jpg";
+
+            	if ( respObj.aircraft.images ) {
+            		
+	            	if ( respObj.aircraft.images.large ) { 
+	            		aircraftImageLarge = respObj.aircraft.images.large[0].src;
+	            	} else if ( respObj.aircraft.images.medium ) {
+	            		aircraftImageLarge = respObj.aircraft.images.medium[0].src;
+	            	} else if( respObj.aircraft.images.thumbnails ) {
+	            		aircraftImageLarge = respObj.aircraft.images.thumbnails[0].src;
+	            	}
+	            	
+            	}
+            	 
+            	
+            	
+            	var partidaReal = new Date(respObj.time.real.departure * 1000).toISOString().substr(11, 8);
+            	var chegadaEstimada = new Date(respObj.time.estimated.arrival * 1000).toISOString().substr(11, 8);
+            	
+            	
+            	var airportOrigin = respObj.airport.origin;
+            	var airportDestination = respObj.airport.destination;
+            	var airLineName = "";
+            	if ( respObj.airline ) airLineName = respObj.airline.name;
+
+            	
+            	var airportOriginName = "";
+            	var airportOriginIata = "";
+            	var airportOriginCountry = "";
+            	var airportOriginCity = "";
+            	var airportOriginGate = "";         	
+            	
+            	if ( airportOrigin ) {
+	            	var airportOriginName = airportOrigin.name;
+	            	var airportOriginIata = airportOrigin.code.iata;
+	            	var airportOriginCountry = airportOrigin.position.country.name;
+	            	var airportOriginCity = airportOrigin.position.region.city;
+	            	var airportOriginGate = airportOrigin.info.gate;
+            	}
+            	
+            	var airportDestinationName = "";
+            	var airportDestinationIata = "";
+            	var airportDestinationCountry = "";
+            	var airportDestinationCity = "";
+            	var airportDestinationGate = "";
+            	
+            	if( airportDestination ) {
+	            	airportDestinationName = airportDestination.name;
+	            	airportDestinationIata = airportDestination.code.iata;
+	            	airportDestinationCountry = airportDestination.position.country.name;
+	            	airportDestinationCity = airportDestination.position.region.city;
+	            	airportDestinationGate = airportDestination.info.gate;            	
+            	} 
+            	
+            	var history = respObj.flightHistory.aircraft;
+            	
+            	var aircraftDataWindow = Ext.getCmp('aircraftDataWindow');
+            	if ( !aircraftDataWindow ) {
+            		aircraftDataWindow = Ext.create('MCLM.view.aircraft.AircraftDataWindow');
+            	}
+            	aircraftDataWindow.show();
+            	
+            	aircraftDataWindow.setTitle("Dados da Aeronave");
+            	
+            	var aeroDataNames = tailPrefix + " " + aircraftText + " ("+acCallSign+") " + flightNumber;
+            	
+            	var histTable = "";
+            	if (history) {
+	            	if ( history.length > 0 ) {
+	            		histTable = "<table id='historyTable' >";
+	            		histTable = histTable + "<tr><td style='width:7%'>N. Voo</td><td style='width:40%'>Origem</td><td style='width:40%'>Destino</td><td style='width:7%'>Decolagem</td></tr>";
+	            		for ( x=0; x<history.length; x++  ) {
+	            			var histDt = history[x];
+	            			var voo = histDt.identification.number.default;
+	            			var origem = "";
+	            			if ( histDt.airport.origin ) origem = histDt.airport.origin.code.iata + " - " + histDt.airport.origin.name; 
+	            			var destino = histDt.airport.destination.code.iata + " - " + histDt.airport.destination.name; 
+	            			var decolagem = new Date(histDt.time.real.departure * 1000).toISOString().substr(11, 8);
+	            			var linha = "<tr><td>" + voo + "</td><td>" + origem + "</td><td>" + destino + "</td><td>" + decolagem + "</td></tr>";
+	            			histTable = histTable + linha;
+	            		}
+	            		histTable = histTable + "</table>";
+	            		
+	            	}
+            	}
+            	
+            	var html = "<div style='display:table;width:550px;height:100%'>" + 
+            		"<div style='float:left;display:table-cell;height:200px;width:538px'>" + 
+	            		//"<div style='float:left;width:319px;height:200px'>" + 
+	            			"<img src='"+aircraftImageLarge+"' style='border:1px solid #000;width:100%;height:200px'>" + 
+	            		//"</div>"+
+	            		/*
+	            		"<div style='float:right;width:230px;height:200px'>" +
+	            			"<img src='"+aircraftImageThumb1+"' style='border:1px solid #000;width:230px;height:99px'>" +
+	            			"<img src='"+aircraftImageThumb2+"' style='border:1px solid #000;width:230px;height:99px'>" +
+	            		"</div>" +
+	            		*/
+	            	"</div>" +
+	            	
+	            	"<div style='margin-top:2px;float:left;display:table-cell;border-top:1px solid #000;border-bottom:1px solid #000;height:92px;width:538px'>" +
+	            		
+	            		"<div style='text-align:center;float:left;width:245px;height:90px'>" +
+	            			"<p style='margin-top: 10px;margin-bottom: 0px;font-size:20px;width: 99%;font-weight:bold'>"+airportOriginIata+"</p>" + 
+	            			"<p style='margin-top: 5px;margin-bottom: 0px;font-size: 10px;width: 99%;'>"+airportOriginName+"</p>" + 
+	            			"<p style='margin-top: 5px;margin-bottom: 0px;font-size: 9px;width: 99%;'>"+airportOriginCity + " " + airportOriginCountry +"</p>" + 
+	            			"<p style='margin-top: 5px;margin-bottom: 0px;font-size: 9px;width: 99%;'>"+ partidaReal +"</p>" + 
+	            		"</div>" +
+	            		
+	            		"<div style='border-right:1px solid #000;border-left:1px solid #000;float:left;width:48px;height:90px'>" +
+	            			"<img src='img/right-arrow.png' style='margin-top: 23px;width:46px'>" + 
+	            		"</div>" +
+
+	            		"<div style='text-align:center;float:left;width:245px;height:90px'>" +
+	            			"<p style='margin-top: 10px;margin-bottom: 0px;font-size:20px;width:99%;font-weight:bold'>"+airportDestinationIata+"</p>" +
+	            			"<p style='margin-top: 5px;margin-bottom: 0px;font-size: 10px;width: 99%;'>"+airportDestinationName+"</p>" +
+	            			"<p style='margin-top: 5px;margin-bottom: 0px;font-size: 9px;width: 99%;'>"+airportDestinationCity + " " + airportDestinationCountry +"</p>" +
+	            			"<p style='margin-top: 5px;margin-bottom: 0px;font-size: 9px;width: 99%;'>"+ chegadaEstimada+"</p>" +
+	            		"</div>" +
+	            		
+	            		"<div style='padding-bottom:5px;padding-top:5px;border-bottom:1px solid #000;text-align:center;float:left;width:100%'>" + 
+	            			airLineName + "<br>" + 
+	            			aeroDataNames +	"</div>" +
+	            		
+	            		"<div style='float:left;width:100%'>" + histTable + "</div>" +
+	            		
+	            	"</div>" +
+	            	
+            	"</div>";
+
+            	
+            	aircraftDataWindow.update( html );
+            }
+        });
+    	
+    	
+    	
     },
     
-	inspectFeature : function( pixel ) {
-        var features = [];
-        MCLM.Map.map.forEachFeatureAtPixel( pixel, function(feature, layer) {
-        	features.push(feature);
-        });
-        
-        console.log( features );
-        
-        if( features.length > 0 ) {
-        	
-        }
-        
-	},
-	
+
     deleteAircrafts : function() {
     	var features = this.vectorSource.getFeatures();
     	for ( x=0; x < features.length; x++ ) {
@@ -166,15 +303,23 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
             		
             		var obj = respObj[key];
             		if ( Array.isArray( obj ) ) {
-            			coordinates[0] = obj[ 2 ]; // -45 
-            			coordinates[1] = obj[ 1 ]; // -20
-            			
             			properties["id"] = key;
+
+            			properties["code"] = obj[0];
+            			coordinates[1] = obj[ 1 ]; 
+            			coordinates[0] = obj[ 2 ]; 
             			properties["bearing"] = obj[3];
             			
+            			properties["model"] = obj[8];
+            			properties["tailPrefix"] = obj[9];
+            			
+            			properties["airportSource"] = obj[11];
+            			properties["airportDestination"] = obj[12];
             			properties["flightNumber"] = obj[13];
+            			
             			properties["callSign"] = obj[16];
 
+            			
                 		var geometry = {};
                 		geometry["type"] = "Point";
                 		geometry["coordinates"] = coordinates;

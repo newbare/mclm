@@ -61,7 +61,6 @@ Ext.define('MCLM.Map', {
 		               projection: 'EPSG:4326',
 		               coordinateFormat: function(coordinate) {
 		            	   var coord = ol.coordinate.toStringHDMS( coordinate );
-		            	   //console.log( coordinate );
 		            	   return coord;
 		               }
 		           })
@@ -314,10 +313,6 @@ Ext.define('MCLM.Map', {
 				});				
 				
 			} else {
-				
-				//layerName = "122";
-				//serverUrl = "http://wms.snirh.gov.br/arcgis/services/SNIRH/2016/MapServer/WMSServer/";
-				
 				
 				var paramsRel = {
 	    	        	tiled: true,
