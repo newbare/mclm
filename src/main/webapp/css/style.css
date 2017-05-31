@@ -63,6 +63,11 @@
 	background-repeat: no-repeat;
 }
 
+.aeroplane-icon {
+	background-image: url('../img/aeroplane.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .panel-icon {
 	background-image: url('../img/panel.svg') !important;
 	background-repeat: no-repeat;

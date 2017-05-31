@@ -78,12 +78,12 @@ public class Startup implements ServletContextListener {
     		DictionaryService ds = new DictionaryService();
 
         	
-    		OSMService osm = new OSMService();
-    		osm.test();
+    		//OSMService osm = new OSMService();
+    		//osm.test();
     		//System.out.println( osm.getCapabilities() );    		
-    		System.out.println( osm.getPermissions() );    		
+    		//System.out.println( osm.getPermissions() );    		
     		
-    		
+    		/*
     		for( NodeData node : nodes ) {
     			if ( node.getLayerType() == LayerType.CRN) Configurator.getInstance().setFeicaoRootNode( node );
     			
@@ -91,8 +91,12 @@ public class Startup implements ServletContextListener {
 				try {
 					ds.getDictionary( node.getIdNodeData() );
 				} catch ( NotFoundException nfe ) {
-					int quant = ds.updateDictionary( node );
-					if ( quant > 0 ) System.out.println(" > concluido com " + quant + " itens.");
+					try {
+						int quant = ds.updateDictionary( node );
+						if ( quant > 0 ) System.out.println(" > concluido com " + quant + " itens.");
+					} catch ( Exception e ) {
+						System.out.println("Erro ao tentar atualizar o dicionário: " + e.getMessage() );
+					}
 				}
 				
 			}
@@ -101,7 +105,7 @@ public class Startup implements ServletContextListener {
 				ns.newTransaction();
 				Configurator.getInstance().setFeicaoRootNode( ns.createCRN() );
 			} 
-			
+			*/
 			
 			
 			// TEMP!

@@ -308,6 +308,12 @@ Ext.define('MCLM.Functions', {
 		        width: 150,
 		        dismissDelay: 5000 
 		    }, {
+		        target: 'aeroplaneID',
+		        title: 'Tráfego Aéreo',
+		        text: 'Exibe tráfego aéreo.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    }, {
 		        target: 'id116',
 		        title: 'Controle de Camadas',
 		        text: 'Controla a disposição e visualizaçao das camadas ativas no mapa.',

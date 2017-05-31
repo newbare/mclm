@@ -9,34 +9,61 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     vectorSource : null,
     activeAircraftLayer : null,
 
+    stringDivider : function( str, width, spaceReplacer ) {
+        if (str.length > width) {
+            var p = width;
+            while (p > 0 && (str[p] != ' ' && str[p] != '-')) {
+              p--;
+            }
+            if (p > 0) {
+              var left;
+              if (str.substring(p, p + 1) == '-') {
+                left = str.substring(0, p + 1);
+              } else {
+                left = str.substring(0, p);
+              }
+              var right = str.substring(p + 1);
+              return left + spaceReplacer + this.stringDivider(right, width, spaceReplacer);
+            }
+          }
+          return str;    	
+    },
     
     init: function () {
     	
     	this.vectorSource = new ol.source.Vector();
+    	var me = this;
     	
     	var customStyleFunction = function( feature, resolution ) {
     		var props = feature.getProperties();
     		var bearing = props.bearing * 0.01745329251 ;
     		var callSign = props.callSign;
+    		var flightNumber = props.flightNumber;
     		var resultStyles = [];
+    		
+    		var fData = me.stringDivider(callSign + " " + flightNumber, 7, '\n');
     		
         	var aircraftStyle = new ol.style.Style({
     			image: new ol.style.Icon(({
-    				scale : 1.2,
-    				anchor: [0.5, 35],
+    				scale : 1,
+    				anchor: [0.5, 0.5],
     				rotation : bearing,
     				anchorXUnits: 'fraction',
-    				anchorYUnits: 'pixels',
+    				anchorYUnits: 'fraction',
     				opacity: 1.0,
     				src: 'img/aeroplane.png'
     			})),
 			      text: new ol.style.Text({
-			          font: '12px Calibri,sans-serif',
-			          fill: new ol.style.Fill({ color: '#000' }),
+			          font: '10px Calibri,sans-serif',
+			          textAlign: 'center',
+			          offsetX: 0,
+			          offsetY: 25,
+			          textBaseline: 'middle',
+			          fill: new ol.style.Fill({ color: '#f20b07' }),
 			          stroke: new ol.style.Stroke({
-			            color: '#fff', width: 2
+			            color: '#FFFFFF', width: 7
 			          }),
-			          text: callSign
+			          text: fData,
 			        })    			
         	});	 
         	
@@ -64,6 +91,22 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 
     },
 
+    showAircraftDetails : function( aircraft ) {
+    	var aircraftDataWindow = Ext.getCmp('aircraftDataWindow');
+    	if ( !aircraftDataWindow ) {
+    		aircraftDataWindow = Ext.create('MCLM.view.aircraft.AircraftDataWindow');
+    	}
+    	aircraftDataWindow.show();
+    	
+    	var acId = aircraft.id;
+    	var acCallSign = aircraft.callSign;
+    	
+    	aircraftDataWindow.setTitle("Dados da Aeronave " + acCallSign);
+    	
+    	aircraftDataWindow.update( acId + " " + acCallSign );
+    	console.log( aircraft );
+    },
+    
 	inspectFeature : function( pixel ) {
         var features = [];
         MCLM.Map.map.forEachFeatureAtPixel( pixel, function(feature, layer) {
@@ -89,8 +132,6 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 	getAircraftsBbox : function() {
 		var me = this;
 		
-		this.deleteAircrafts();
-		
 		var bbox = MCLM.Map.getMapCurrentBbox();
 		var coord = bbox.split(",");
 		
@@ -100,9 +141,6 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 		var minlat = coord[2];
 		var maxlat = coord[0];			
 		
-		console.log("Mapa : " + bbox );
-		console.log("Foi  : " + minlat+","+minlon+","+maxlat+","+ maxlon );
-		
         Ext.Ajax.request({
             url: 'getAircraftsInBBOX',
             params: {
@@ -110,6 +148,9 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
                 'minlat': minlat,
                 'maxlon': maxlon,
                 'maxlat': maxlat,
+            },
+            failure: function (response, opts) {
+            	me.deleteAircrafts();
             },
             success: function (response, opts) {
             	var respObj = Ext.decode(response.responseText);
@@ -131,7 +172,7 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
             			properties["id"] = key;
             			properties["bearing"] = obj[3];
             			
-            			properties["unk1"] = obj[13];
+            			properties["flightNumber"] = obj[13];
             			properties["callSign"] = obj[16];
 
                 		var geometry = {};
@@ -152,9 +193,11 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
             	//console.log( feicao );
 				var features = new ol.format.GeoJSON().readFeatures( feicao , {
 					featureProjection: 'EPSG:3857'
-				});	
+				});
+				
+				me.deleteAircrafts();
+				
 				for (var i = 0; i < features.length; i++) {
-					console.log( features[i] );
 					me.vectorSource.addFeature( features[i] );
 				}
 		    	   

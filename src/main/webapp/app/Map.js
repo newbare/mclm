@@ -10,6 +10,7 @@ Ext.define('MCLM.Map', {
 		theMiniView: null,
 		onClickBindKey: null,
 		graticuleEnabled: false,
+		aeroTrafficEnabled: false,
 		arrayMapCenter: null,
 		mapZoom: 5,
 		mapCenterLat: 0,
@@ -22,6 +23,7 @@ Ext.define('MCLM.Map', {
 		geoserverUrl: '',
 		highlight : null,
 		interrogatingFeatures : false,
+		aircraftHelper : null,
 		
 		getBaseMapName : function() {
 			return MCLM.Map.baseLayerName;
@@ -31,6 +33,12 @@ Ext.define('MCLM.Map', {
 		},
 		isBaseMapActive : function() {
 			return MCLM.Map.baseLayer.getVisible();
+		},
+		
+		updateAeroTraffic : function() {
+			if ( MCLM.Map.aeroTrafficEnabled ) {
+				MCLM.Map.aircraftHelper.getAircraftsBbox();
+			}
 		},
 		
 		// --------------------------------------------------------------------------------------------
@@ -92,6 +100,10 @@ Ext.define('MCLM.Map', {
 			    }
 			    */			    
 			});
+			
+			MCLM.Map.aircraftHelper = Ext.create('MCLM.view.aircraft.AircraftHelper');
+			MCLM.Map.aircraftHelper.init();
+			setInterval( MCLM.Map.updateAeroTraffic , 8000);			
 			
 		},
 		// --------------------------------------------------------------------------------------------
@@ -334,7 +346,7 @@ Ext.define('MCLM.Map', {
 		    	});	
 				
 		    	
-		    	console.log( "URL Camada " + layerName + " " + serverUrl );
+		    	//console.log( "URL Camada " + layerName + " " + serverUrl );
 		    	
 			}
 			
@@ -387,6 +399,16 @@ Ext.define('MCLM.Map', {
 				MCLM.Map.graticuleEnabled = false;
 			}	
 		},
+		// --------------------------------------------------------------------------------------------
+		// Liga / desliga controle de tráfego aéreo
+		toggleAeroTraffic : function () {
+			MCLM.Map.aeroTrafficEnabled = !MCLM.Map.aeroTrafficEnabled ;
+			if ( !MCLM.Map.aeroTrafficEnabled ) {
+				MCLM.Map.aircraftHelper.deleteAircrafts();
+			} else {
+				MCLM.Map.aircraftHelper.getAircraftsBbox();
+			}
+		},		
 		// --------------------------------------------------------------------------------------------
 		// Liga / desliga a grade de coordenadas
 		toggleMapGrid : function () {
@@ -962,6 +984,12 @@ Ext.define('MCLM.Map', {
 					var layerName = layer.get("alias");
 					
 					var att = feature.getProperties();
+					
+					if ( layerName == 'aircraftLayer' ) {
+						me.aircraftHelper.showAircraftDetails( att );
+						return true;
+					}
+					
 					if ( !att.features ) {
 						MCLM.Functions.mainLog("Não existem dados na camada " + layerName );
 					} else {

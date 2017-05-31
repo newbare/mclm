@@ -14,6 +14,10 @@ Ext.define('MCLM.view.main.MainController', {
 		MCLM.Map.toggleMapGrid();
 	},
 	
+	toggleAeroTraffic : function( button ) {
+		MCLM.Map.toggleAeroTraffic();
+	},
+	
 	// --------------------------------------------------------------------------------------------
 	showForecast : function( button ) {
 		
@@ -23,10 +27,6 @@ Ext.define('MCLM.view.main.MainController', {
 		//var geoCodeHelper = Ext.create('MCLM.view.geocode.GeoCodeHelper');
 		//geoCodeHelper.init( geoserverUrl, baseLayerName, "Leite", "", "", "Rio de Janeiro", "Brasil", null );
 		//geoCodeHelper.init( geoserverUrl, baseLayerName, "", "", "", "", "", "-55.37109375,-17.39257927105777" );
-    	
-		var aircraftHelper = Ext.create('MCLM.view.aircraft.AircraftHelper');
-		aircraftHelper.init();
-		aircraftHelper.getAircraftsBbox();
 	},
 	
 	// --------------------------------------------------------------------------------------------

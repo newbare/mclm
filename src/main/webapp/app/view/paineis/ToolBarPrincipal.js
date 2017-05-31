@@ -67,6 +67,16 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
         handler: 'toggleMapGrid'
     }, 
     {
+    	// Tráfego aéreo
+    	xtype: 'button',
+    	id: 'aeroplaneID',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    iconCls: 'aeroplane-icon',
+	    enableToggle: true,
+        handler: 'toggleAeroTraffic'
+    }, 
+    {
     	// Lista de Camadas
     	xtype: 'button',
     	id: 'id116',
