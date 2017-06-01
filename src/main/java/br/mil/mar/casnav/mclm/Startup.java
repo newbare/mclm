@@ -9,7 +9,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
-import br.mil.mar.casnav.mclm.misc.LayerType;
+import br.mil.mar.casnav.mclm.misc.WebClient;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
@@ -17,7 +17,6 @@ import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
 import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
 import br.mil.mar.casnav.mclm.persistence.services.DictionaryService;
 import br.mil.mar.casnav.mclm.persistence.services.NodeService;
-import br.mil.mar.casnav.mclm.persistence.services.OSMService;
 
 
 @WebListener
@@ -77,11 +76,6 @@ public class Startup implements ServletContextListener {
     		Set<NodeData> nodes = ns.getList();
     		DictionaryService ds = new DictionaryService();
 
-        	
-    		//OSMService osm = new OSMService();
-    		//osm.test();
-    		//System.out.println( osm.getCapabilities() );    		
-    		//System.out.println( osm.getPermissions() );    		
     		
     		/*
     		for( NodeData node : nodes ) {

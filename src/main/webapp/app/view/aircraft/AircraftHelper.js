@@ -47,13 +47,13 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     		
         	var aircraftStyle = new ol.style.Style({
     			image: new ol.style.Icon(({
-    				scale : 1,
+    				scale : 0.9,
     				anchor: [0.5, 0.5],
     				rotation : bearing,
     				anchorXUnits: 'fraction',
     				anchorYUnits: 'fraction',
     				opacity: 1.0,
-    				src: 'img/aeroplane.png'
+    				src: 'img/aero_yellow.png'
     			})),
 			      text: new ol.style.Text({
 			          font: '10px Consolas',

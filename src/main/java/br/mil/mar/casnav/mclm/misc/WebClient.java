@@ -10,11 +10,11 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
@@ -23,11 +23,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.routing.HttpRoutePlanner;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -35,13 +37,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 
 
 public class WebClient {
 	private final String USER_AGENT = "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.10 (maverick) Firefox/3.6.13";
-
+	private CookieStore cookieStore;
+	
 	public int doPutFile( File file, String contentType, String url, String content, String geoUser, String geoPassword ) throws Exception {
 		int code = 0;
 		
@@ -153,8 +155,8 @@ public class WebClient {
 	}
 	
 	
-	@SuppressWarnings("unused")
-	public void doPost( String url, String parameter, String content) throws Exception {
+
+	public String doPost( String url, List<NameValuePair> postParameters, CookieStore cookieStore, String cookieString) throws Exception {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpPost httppost;
 
@@ -175,36 +177,38 @@ public class WebClient {
 			RequestConfig config = RequestConfig.custom().setProxy(proxy).build();			 
 			httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();	
 			httppost = new HttpPost( url );
-			httppost.setConfig(config);			 
+			httppost.setConfig(config);	
+			httppost.setEntity(new UrlEncodedFormEntity(postParameters, "UTF-8"));
 
 		}
 		
-		
-		String geoServerPassword = cfg.getGeoserverPassword();
-		String geoServerUser = cfg.getGeoserverUser();
-		String credString = geoServerUser + ":" + geoServerPassword;
-		String encoding = new String( Base64.encodeBase64( credString.getBytes() ) );
-		
 		httppost.setHeader("User-Agent", USER_AGENT);
-		httppost.setHeader("Authorization", "Basic " + encoding);
-		httppost.setHeader("Content-type", "text/xml");
+		httppost.setHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+		httppost.setHeader("X-Requested-With", "XMLHttpRequest");
+		httppost.setHeader("Referer", "http://www.shippingexplorer.net/en/map");
+		httppost.setHeader("Host", "www.shippingexplorer.net");
+		httppost.setHeader("Cookie", cookieString);
 		
-		
-		// ---------------------------------------------------------------------------------
-		
-		// Request parameters and other properties.
-		List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-		params.add(new BasicNameValuePair( parameter, content) );
-		httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
-		/*
-		HttpResponse httpResponse = httpClient.execute(httppost);
+		HttpClientContext context = HttpClientContext.create();
+		context.setCookieStore( cookieStore );
+		
+		for ( Header hh : httppost.getAllHeaders() ) {
+			System.out.println( hh.toString() );
+		}
+		
+		
+		HttpResponse httpResponse = httpClient.execute(httppost, context);
+		
+		
 		InputStream inputStream = httpResponse.getEntity().getContent();		
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(inputStream, writer, "UTF-8");
 		String theString = writer.toString();
 		httpClient.close();
-		*/
+		
+		return theString;
+		
 	}
 
 	public boolean testInternetConnection() {
@@ -221,7 +225,7 @@ public class WebClient {
 
 	public String doGet(String url) throws Exception {
 		
-		//System.out.println("DOGET: " + url );
+		System.out.println("DOGET: " + url );
 		
 		String result = "NO_ANSWER";
 		CloseableHttpClient httpClient;
@@ -254,11 +258,19 @@ public class WebClient {
 		getRequest.addHeader("Content-Type", "plain/text; charset=utf-8");
 		getRequest.setHeader("User-Agent", USER_AGENT);
 
-		HttpResponse response = httpClient.execute(getRequest);
+		HttpClientContext context = HttpClientContext.create();
+		HttpResponse response = httpClient.execute(getRequest, context);
+
+		try {
+		    this.cookieStore = context.getCookieStore();
+		} catch ( Exception e ) {
+		    e.printStackTrace();
+		}		
+		
+		
 		response.setHeader("Content-Type", "plain/text; charset=UTF-8");
-
 		int stCode = response.getStatusLine().getStatusCode();
-
+		
 		if ( stCode != 200) {
 			result = "Error " + stCode + " when accessing URL " + url;
 		} else {
@@ -268,6 +280,7 @@ public class WebClient {
 			Charset.forName("UTF-8").encode(result);
 			isr.close();
 		}
+
 
 		httpClient.close();
 		return result;
@@ -296,6 +309,8 @@ public class WebClient {
 		return routePlanner;
 	}
 	
-	
+	public CookieStore getCookieStore() {
+		return cookieStore;
+	}
 	
 }
