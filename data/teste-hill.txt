@@ -1,0 +1,20 @@
+osm2pgsql --latlong --keep-coastlines --verbose --create --hstore --slim --cache 4000 --database osm --username postgres --password --host 127.0.0.1 --style ./default.style ./south-america-latest.osm.pbf
+
+gdaldem hillshade S23W044.hgt S23W044.tiff -z 10 -s 90000
+
+gdaldem hillshade -of PNG jotunheimen.tif jotunheimen_hillshade.png
+
+phyghtmap --pbf --srtm=1 --a -43.7544:-23.2363:-42.0378:-22.3183 --earthdata-user=icemagno --earthdata-password=Antares2#2
+
+phyghtmap --download-only --a -43.7544:-23.2363:-42.0378:-22.3183 --earthdata-user=icemagno --earthdata-password=Antares2#2 --viewfinder-mask=1
+
+
+
+gdal_translate -of PNG -ot Byte -scale 15 2466 0 256 teste.tif teste.png
+gdalwarp -t_srs EPSG:4326 -r bilinear teste.vrt teste.tif
+gdalbuildvrt ./teste.vrt  hgt/SRTM3v3.0/S23W043.hgt hgt/SRTM3v3.0/S23W044.hgt
+
+
+gdalbuildvrt ./teste.vrt hgt/SRTM1v3.0/S23W043.hgt  hgt/SRTM1v3.0/S23W044.hgt  hgt/SRTM1v3.0/S24W043.hgt  hgt/SRTM1v3.0/S24W044.hgt
+
+gdaldem hillshade -of PNG teste.tif teste_hillshade.png
