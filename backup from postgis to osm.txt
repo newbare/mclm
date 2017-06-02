@@ -1,1 +1,8 @@
 osmosis --read-pgsql database=egypt-osm user=gisuser password='test0199' outPipe.0=pg --dataset-bounding-box inPipe.0=pg top=30.1332509 left=31.1400604 bottom=29.9400604 right=31.3220215 outPipe.0=dd --write-xml inPipe.0=dd file=- | bzip2 > cairo.osm.bz2
+
+
+https://mvnrepository.com/artifact/org.openstreetmap.osmosis
+
+https://stackoverflow.com/questions/33198513/how-to-programmatically-import-osm-data-with-osmosis-in-java
+
+http://wiki.openstreetmap.org/wiki/Osmosis/Detailed_Usage_0.45
