@@ -1,7 +1,7 @@
 
 Melhor resultado:
-1) gdaldem hillshade teste.vrt teste.tif -s 111120 -z 0.8 -alt 10 -az 315 -compute_edges -combined
-2) gdaldem hillshade teste.vrt teste.tif -s 370400 -z 0.8 -alt 5 -az 315 -compute_edges -combined
+1) gdaldem hillshade teste.vrt teste.tif -co compress=lzw -s 111120 -z 0.8 -alt 10 -az 315 -compute_edges -combined
+2) gdaldem hillshade teste.vrt teste.tif -co compress=lzw -s 370400 -z 0.8 -alt 5 -az 315 -compute_edges -combined
 ------------------------------------------------------------------------------------------------
 Comprimir:
 gdal_translate -of GTiff -co COMPRESS=JPEG teste.tif compressed.tif
@@ -12,13 +12,7 @@ gdaladdo -r gauss compressed.tif 2 4 8 16 32
 
 
 
-
-
-
-
-
-
-
+PROMISSOR: gdalwarp -tr 0.000001 0.00001  -r bilinear vrtteste.vrt teste.tif
 
 
 
@@ -40,7 +34,7 @@ gdal_translate -of PNG -ot Byte -scale 15 2466 0 256 teste.tif teste.png
 
 gdalwarp -t_srs EPSG:4326 -r bilinear teste.vrt teste.tif
 gdalbuildvrt ./teste.vrt  hgt/SRTM3v3.0/S23W043.hgt hgt/SRTM3v3.0/S23W044.hgt
-
+gdalbuildvrt ./teste2.vrt  hgt/VIEW3/S23W043.hgt hgt/VIEW3/S23W044.hgt
 
 gdalbuildvrt ./teste.vrt hgt/SRTM1v3.0/S23W043.hgt  hgt/SRTM1v3.0/S23W044.hgt  hgt/SRTM1v3.0/S24W043.hgt  hgt/SRTM1v3.0/S24W044.hgt
 
