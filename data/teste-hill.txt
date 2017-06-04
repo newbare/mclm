@@ -21,7 +21,7 @@ osm2pgsql --verbose --create --style ./srtm.style --database contour --username 
 
 gdalbuildvrt ./teste.vrt hgt/SRTM1v3.0/S23W043.hgt  hgt/SRTM1v3.0/S23W044.hgt  hgt/SRTM1v3.0/S24W043.hgt  hgt/SRTM1v3.0/S24W044.hgt
 gdal_translate -tr 0.000050 0.000050 -r cubicspline -of GTiff teste.vrt teste.tif
-gdaldem hillshade -co TILED=YES -co compress=lzw -s 111120 -z 5 -combined -compute_edges teste.tif final.tif
+gdaldem hillshade -co TILED=YES -co compress=lzw -s 111120 -z 2 -combined -compute_edges teste.tif final.tif
 
 Ativar "antialiasing" "bilinear" para camadas WMS no geoserver.
 
