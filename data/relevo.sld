@@ -16,9 +16,9 @@
               <ogc:PropertyName>grid</ogc:PropertyName>
             </sld:Geometry>
             <sld:ColorMap>
-           	    <ColorMapEntry color="#000000" quantity="0.0" label="low" opacity="0.0"/>
+                <ColorMapEntry color="#000000" quantity="0.0" label="low" opacity="1.0"/>
                 <ColorMapEntry color="#999999" quantity="1.0" label="high" opacity="0.75"/>
-                <ColorMapEntry color="#FFFFFF" quantity="256" label="alpha" opacity="0.75"/> 
+                <ColorMapEntry color="#FFFFFF" quantity="256" label="alpha" opacity="0.0"/> 
             </sld:ColorMap>
           </sld:RasterSymbolizer>
         </sld:Rule>

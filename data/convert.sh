@@ -15,4 +15,3 @@ gdal_translate -tr 0.000150 0.000150 -r cubicspline -of GTiff teste.vrt teste.ti
 
 gdaldem hillshade -co TILED=YES -co compress=lzw -s 111120 -z 2 -az 315 -alt 60 -combined -compute_edges teste.tif final.tif
 
-
