@@ -16,13 +16,13 @@
               <ogc:PropertyName>grid</ogc:PropertyName>
             </sld:Geometry>
             <sld:ColorMap>
-              <sld:ColorMapEntry color="#000000" label="low" opacity="0.0" quantity="0.0"/>
-              <sld:ColorMapEntry color="#999999" label="high" quantity="1.0"/>
-              <sld:ColorMapEntry color="#FFFFFF" label="alpha" quantity="256.0"/>				
+              <sld:ColorMapEntry color="#000000" opacity="0.0" quantity="0.0"/>
+              <sld:ColorMapEntry color="#999999" opacity="0.7" quantity="1.0"/>
+              <sld:ColorMapEntry color="#FFFFFF" opacity="0.7" quantity="256.0"/>
             </sld:ColorMap>
           </sld:RasterSymbolizer>
         </sld:Rule>
-        <sld:VendorOption name="composite">multiply</sld:VendorOption>
+        <sld:VendorOption name="composite">multiply,0.5</sld:VendorOption>
       </sld:FeatureTypeStyle>
     </sld:UserStyle>
   </sld:UserLayer>

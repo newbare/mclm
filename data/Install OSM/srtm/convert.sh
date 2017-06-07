@@ -1,17 +1,23 @@
 #! /bin/sh
 
-rm teste.tif
-#gdalwarp  teste.vrt teste.tif
-#gdaldem hillshade -co compress=lzw  -compute_edges teste.tif teste2.tif
 
-#gdalbuildvrt ./teste.vrt hgt/SRTM1v3.0/S23W043.hgt  hgt/SRTM1v3.0/S23W044.hgt  hgt/SRTM1v3.0/S24W043.hgt  hgt/SRTM1v3.0/S24W044.hgt
+
+# phyghtmap --pbf –no-zero-contour –output-prefix contour –line-cat=500,100 –step=20 --jobs=8 --srtm=1 --a -44.978:-23.383:-40.902:-20.705 --earthdata-user=icemagno --earthdata-password=Antares2#2
+
+
+ls hgt/SRTM1v3.0/*.hgt > list_of_files.txt
+gdalbuildvrt -input_file_list list_of_files.txt -overwrite -addalpha imagens.vrt
+
 
 
 gdal_translate -tr 0.000170 0.000170 -r cubicspline -of GTiff teste.vrt teste.tif
-#gdal_translate -tr 0.000833333333333 -0.000833333333333 -r bilinear -of GTiff teste.tif new_teste.tif
-
-#gdaldem hillshade -of PNG teste.tif final.png
 
 
-gdaldem hillshade -co TILED=YES -co compress=lzw -s 111120 -z 6 -az 315 -alt 60 -combined -compute_edges teste.tif final.tif
 
+gdaldem hillshade -co TILED=YES -co compress=lzw -s 111120 -z 5 -az 315 -combined -compute_edges teste.tif final.tif
+
+
+
+		 
+		 
+			 
