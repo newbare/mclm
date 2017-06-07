@@ -217,7 +217,7 @@ CREATE INDEX "route-turning-circles_way_idx" ON layers."route-turning-circles" U
 CREATE INDEX "route-turning-circles_id_idx" ON layers."route-turning-circles" USING btree (osm_id);
 
 drop materialized view  if exists layers."park";
-create materialized view layers."park" AS ( SELECT landuse,osm_id,way,leisure,name,way_area, tags->"sport" as sport, (CASE 
+create materialized view layers."park" AS ( SELECT landuse,osm_id,way,leisure,name,way_area, tags->'sport' as sport, (CASE 
             WHEN way_area >= 10000000 THEN 'huge'
             WHEN way_area >= 1000000 THEN 'large'
             WHEN way_area >= 100000 THEN 'medium'

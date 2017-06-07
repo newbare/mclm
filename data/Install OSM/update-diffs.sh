@@ -1,41 +1,42 @@
 #!/bin/bash
 
-cd /opt/osm/data/osmupdates/
+cd /home/apolo/install_osm/osmupdate/
 
 NOW=$(date +"%m-%d-%Y")
 TIME=$(date +"%T")
 
-export JAVA_HOME="/opt/osm/java/"
-export JAVACMD_OPTIONS="-Djava.io.tmpdir=/opt/osm/data/osmupdates/tmp -Xmx1G -server" 
-export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/opt/osm/java/bin/:/usr/local/pgsql/bin/"
 
-rm -f /opt/osm/data/osmupdates/update.osm.gz
-rm -f /opt/osm/data/osmupdates/update.unique.osm.gz
+#export JAVA_HOME="/opt/osm/java/"
+export JAVACMD_OPTIONS="-Djava.io.tmpdir=/home/apolo/install_osm/osmupdate/tmp -Xmx2G -server" 
+#export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/opt/osm/java/bin/:/usr/local/pgsql/bin/"
+
+rm -f /home/apolo/install_osm/osmupdate/update.osm.gz
+rm -f /home/apolo/install_osm/osmupdate/update.unique.osm.gz
 
 echo "$NOW $TIME - Baixando atualizacoes..."
 
-/opt/osm/sources/osmosis/bin/osmosis -v 3 --rri workingDirectory=/opt/osm/data/osmupdates/ --wxc /opt/osm/data/osmupdates/update.osm.gz
+/home/apolo/osmosis/bin/osmosis -v 3 --rri workingDirectory=/home/apolo/install_osm/osmupdate/ --wxc /home/apolo/install_osm/osmupdate/update.osm.gz
 
 {
-if [ ! -f /opt/osm/data/osmupdates/update.osm.gz ]; then
+if [ ! -f /home/apolo/install_osm/osmupdate/update.osm.gz ]; then
     echo "Arquivo de update nao encontrado. Saindo."
     exit 0
 fi
 }
 
-TIME=$(date +"%T")
-echo "$TIME - Parando Tomcat..."
-/opt/osm/apache-tomcat-9.0.0.M17/bin/shutdown.sh
+#TIME=$(date +"%T")
+#echo "$TIME - Parando Tomcat..."
+#/opt/osm/apache-tomcat-9.0.0.M17/bin/shutdown.sh
 
 TIME=$(date +"%T")
 echo "$TIME - Criando delta..."
 
-nice gzip -d -c /opt/osm/data/osmupdates/update.osm.gz | nice /opt/osm/sources/osmosis/bin/osmosis --read-xml-change file=/dev/stdin --simplify-change --write-xml-change file=- | nice gzip -9 -c > /opt/osm/data/osmupdates/update.unique.osm.gz
+nice gzip -d -c /home/apolo/install_osm/osmupdate/update.osm.gz | nice /home/apolo/osmosis/bin/osmosis --read-xml-change file=/dev/stdin --simplify-change --write-xml-change file=- | nice gzip -9 -c > /home/apolo/install_osm/osmupdate/update.unique.osm.gz
 
 TIME=$(date +"%T")
 echo "$TIME - Importando para o banco..."
 
-/usr/local/bin/osm2pgsql --append --latlong --number-processes 8 --flat-nodes /opt/osm/data/osm_flat_nodes.db --verbose  --hstore --slim --cache 20000 --database osm --username postgres --host 127.0.0.1 --style /opt/osm/data/default.style /opt/osm/data/osmupdates/update.unique.osm.gz 
+/usr/local/bin/osm2pgsql --append --number-processes 8 --flat-nodes /home/apolo/install_osm/osmupdate/flatnodes/osm_flat_nodes.db  --latlong --verbose --hstore --slim --cache 20000 --database osm --username postgres --host 127.0.0.1 --style /home/apolo/install_osm/osmupdate/default.style /home/apolo/install_osm/osmupdate/update.unique.osm.gz 
 
 TIME=$(date +"%T")
 echo "$TIME - Atualizando as visoes..."
@@ -66,11 +67,11 @@ echo "$TIME - Atualizando as visoes..."
 /usr/local/pgsql/bin/psql -U postgres -h localhost -d osm -H -c "refresh materialized view layers.\"aero-poly\"; "
 
 TIME=$(date +"%T")
-echo "$TIME - Termino da atualizacao de visoes."
+echo "$TIME - Termino da atualizacao de visoes. FIM."
 
-TIME=$(date +"%T")
-echo "$TIME - Iniciando Tomcat..."
-/opt/osm/apache-tomcat-9.0.0.M17/bin/startup.sh
+#TIME=$(date +"%T")
+#echo "$TIME - Iniciando Tomcat..."
+#/opt/osm/apache-tomcat-9.0.0.M17/bin/startup.sh
 
 
 
