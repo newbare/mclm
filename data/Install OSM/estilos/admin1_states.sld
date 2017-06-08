@@ -101,10 +101,13 @@
           </sld:LineSymbolizer>
         </sld:Rule>
 
+
         <sld:Rule>
          <!-- 1:9 ate 0 -->
-         <!-- MAX: 9 000000.0 --> 
-         <sld:MaxScaleDenominator>9000000.0</sld:MaxScaleDenominator>          
+         <!-- MIN: 3 000000.0 -->
+         <!-- MAX: 9 000000.0 -->
+         <sld:MinScaleDenominator>3000000.0</sld:MinScaleDenominator>          
+         <sld:MaxScaleDenominator>9000000.0</sld:MaxScaleDenominator>           
           
           <sld:LineSymbolizer>
             <sld:Stroke>
@@ -115,8 +118,7 @@
               <sld:CssParameter name="stroke-width">0.3</sld:CssParameter>
             </sld:Stroke>
           </sld:LineSymbolizer>
-        </sld:Rule>
-        
+        </sld:Rule>        
         
       </sld:FeatureTypeStyle>
     </sld:UserStyle>
