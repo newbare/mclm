@@ -16,6 +16,7 @@ Ext.define('MCLM.RouteHelper', {
 		routeAsWKT : null,
 		maxRouteSeq : 0,
 		poiStyles : [],
+		routeExtent : null,
 		
 		clear : function() {
 			MCLM.Map.removeLayerByName('routeLayer');
@@ -147,6 +148,8 @@ Ext.define('MCLM.RouteHelper', {
 	    		this.vectorSource.addFeature( features[i] );
 	    	}
 	    	
+	    	this.routeExtent = this.vectorSource.getExtent();
+	    	
 	    	this.dirty = true;
 	    	this.swapped = false;
 		},
@@ -167,6 +170,8 @@ Ext.define('MCLM.RouteHelper', {
 	    	});	
 	    	
 			var customStyleFunction = function( feature, resolution ) {
+				console.log( "bla " + feature );
+				
 				var me = MCLM.RouteHelper;
 				
 				var featureGeomType = feature.getGeometry().getType();
@@ -176,23 +181,42 @@ Ext.define('MCLM.RouteHelper', {
 				var iconName = props.iconName; 
 				
 				if ( featureGeomType == 'Point') {
-					// Estilo dos simbolos dos POI
-					var pointStyle = me.poiStyles[featureId];
-					if ( !pointStyle ) {
-			        	pointStyle = new ol.style.Style({
-							image: new ol.style.Icon(({
-								scale : 0.6,
-								anchor: [0.5, 35],
-								anchorXUnits: 'fraction',
-								anchorYUnits: 'pixels',
-								opacity: 0.75,
-								src: 'img/' + iconName + '.png'
-							}))
-				    	});
-			        	me.poiStyles[featureId] = pointStyle;
+					
+					if ( featureId ) {
+						var pointStyle = me.poiStyles[featureId];
+						// Estilo dos simbolos dos POI
+						if ( !pointStyle ) {
+				        	pointStyle = new ol.style.Style({
+								image: new ol.style.Icon(({
+									scale : 0.6,
+									anchor: [0.5, 35],
+									anchorXUnits: 'fraction',
+									anchorYUnits: 'pixels',
+									opacity: 0.75,
+									src: 'img/' + iconName + '.png'
+								}))
+					    	});
+						}
+						me.poiStyles[featureId] = pointStyle;
+						
+						
+						
+					} else {
+						var pointStyle = new ol.style.Style({
+			                image: new ol.style.Circle({
+			                    radius: 7,
+			                    fill: new ol.style.Fill({
+			                        color: '#FF4500',
+			                        opacity: 0.8
+			                    })
+			                })
+						});
 					}
-			    	resultStyles.push( pointStyle );
+					
+					resultStyles.push( pointStyle );
 				}
+				
+				
 				
 				
 				if ( featureGeomType == 'LineString') {
@@ -409,6 +433,65 @@ Ext.define('MCLM.RouteHelper', {
 	    	
 	    },
 	    
+	    
+		getPhotosInBBOX : function() {
+			
+			if ( !this.routeExtent ) {
+				Ext.Msg.alert('Erro','Selecione uma rota antes.' );
+				return true;
+			}
+			
+			var me = this;
+			
+		    var bottomLeft = ol.proj.transform( ol.extent.getBottomLeft( this.routeExtent ), 'EPSG:3857', 'EPSG:4326' );
+		    var topRight = ol.proj.transform( ol.extent.getTopRight( this.routeExtent ), 'EPSG:3857', 'EPSG:4326' );
+			var bbox = bottomLeft + "," + topRight;			
+			
+			var coord = bbox.split(",");
+			
+			var maxlon = coord[0];
+			var maxlat = coord[1];
+			var minlon = coord[2];
+			var minlat = coord[3];
+
+			Ext.Ajax.request({
+	            url: 'getPhotosInBBOX',
+	            params: {
+	                'minlon': minlon,
+	                'minlat': minlat,
+	                'maxlon': maxlon,
+	                'maxlat': maxlat,
+	                'maxresults' : 100,
+	            },
+	            failure: function (response, opts) {
+	            	//
+	            },
+	            success: function (response, opts) {
+	            	
+	            	var respObj = Ext.decode(response.responseText);
+	            	console.log( respObj );
+	            	
+	            	
+	            	
+					var features = new ol.format.GeoJSON().readFeatures( respObj , {
+						featureProjection: 'EPSG:4326'
+					});
+					
+					for (var i = 0; i < features.length; i++) {
+						me.addFeatureToPoiLayer( features[i] );
+					}
+	            	
+	            	
+	            }
+	        });
+			
+		}, 	    
+	    
+	    addFeatureToPoiLayer( feature ) {
+			this.poiSource.addFeature( feature );
+			
+		}, 
+		
 	    getPointsNearRoute : function( geom, criteria, source, featureId ) {
 	    	var me = MCLM.RouteHelper;
 	    	
@@ -452,7 +535,7 @@ Ext.define('MCLM.RouteHelper', {
 	    				   // Lilnhas: coloca o icone no inicio da linha
  		    			   if ( featureGeomType == 'LineString' ) {
  		    				   center = oldGeom.getFirstCoordinate();
- 		    				   me.poiSource.addFeature( features[i] );
+ 		    				   me.addFeatureToPoiLayer( features[i] );
  		    			   }
  		    			   
  		    			   var point = new ol.geom.Point( center );
@@ -464,9 +547,9 @@ Ext.define('MCLM.RouteHelper', {
  		    			   feature.setProperties( props );
  		    			   feature.set("featureId", "P_" + featureId );
  		    			   
- 		    			   me.poiSource.addFeature( feature );
+ 		    			   me.addFeatureToPoiLayer( feature );
  		    		   } else {
- 		    			   me.poiSource.addFeature( features[i] );
+ 		    			   me.addFeatureToPoiLayer( features[i] );
  		    		   }
  		    		   // ---------------------------------------------------------------------
  		    		   

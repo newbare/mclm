@@ -16,15 +16,14 @@
       <!-- A FeatureTypeStyle for rendering polygons -->
       <FeatureTypeStyle>
         <Rule>
-          <Name>rule1</Name>
-          <Title>Poligono marrom com linha marrom escuro</Title>
-          <Abstract>Poligo morrom com linha largura 1</Abstract>
+          <Name>Continentes</Name>
+          <Title>Poligono cinza claro</Title>
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#F0F2F2</CssParameter>
+              <CssParameter name="fill">#fcfcfc</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#F0F2F2</CssParameter>
+              <CssParameter name="stroke">#fcfcfc</CssParameter>
               <CssParameter name="stroke-width">0</CssParameter>
             </Stroke>
           </PolygonSymbolizer>

@@ -188,6 +188,12 @@
 	background-repeat: no-repeat;
 }
 
+.photo-icon {
+	background-image: url('../img/photo.svg') !important;
+	background-repeat: no-repeat;
+}
+
+
 .lock-icon {
 	background-image: url('../img/lock.svg') !important;
 	background-repeat: no-repeat;

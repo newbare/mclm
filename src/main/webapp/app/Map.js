@@ -163,7 +163,10 @@ Ext.define('MCLM.Map', {
 			        projection: ol.proj.get('EPSG:4326'),
 			        params: {
 			            'LAYERS': MCLM.Map.baseLayerName, 
-			            'FORMAT': 'image/png8'
+			            'FORMAT': 'image/png8',
+	    	            'tiled': true,
+	    	            'VERSION': '1.3.0', 
+			            	
 			        }
 			    })
 			});	
@@ -255,8 +258,8 @@ Ext.define('MCLM.Map', {
 	    	        url: serverUrl,
 	    	        isBaseLayer : false,
 	    	        params: {
-	    	        	tiled: true,
 	    	            'layers': serverLayers,
+	    	            'tiled': true,
 	    	            'VERSION': '1.1.1', 
 	    	            'format': 'image/png8'
 	    	        },

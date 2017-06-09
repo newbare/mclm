@@ -1,4 +1,4 @@
-add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update
+﻿add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update
 sudo apt-get install gdal-bin
 
 
@@ -59,7 +59,7 @@ Comprimir:
 gdal_translate -of GTiff -co COMPRESS=JPEG teste.tif compressed.tif
 ------------------------------------------------------------------------------------------------
 Não sei o que é:
-gdaladdo -r gauss compressed.tif 2 4 8 16 32
+gdaladdo -r cubicspline --config COMPRESS_OVERVIEW DEFLATE --config GDAL_TIFF_OVR_BLOCKSIZE 512 final.tif 2 4 8 16 32
 ------------------------------------------------------------------------------------------------
 
 

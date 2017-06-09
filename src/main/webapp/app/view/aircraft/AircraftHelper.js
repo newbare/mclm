@@ -279,7 +279,7 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 		var maxlat = coord[0];			
 		
         Ext.Ajax.request({
-            url: 'getAircraftsInBBOX',
+            url: getAircraftsUrl,
             params: {
                 'minlon': minlon,
                 'minlat': minlat,

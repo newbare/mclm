@@ -54,6 +54,10 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
         	iconCls: 'query-icon',
         	id: 'idQueryFeature',
             handler : 'bindMapToInspectFeature'
+        },{
+        	iconCls: 'photo-icon',
+        	id: 'idStreetPhoto',
+            handler : 'getPhotosInBBOX'
         }]
     }],	    
 	

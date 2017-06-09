@@ -40,6 +40,8 @@ echo "$TIME - Importando para o banco..."
 TIME=$(date +"%T")
 echo "$TIME - Atualizando as visoes..."
 
+export PGPASSWORD=admin
+
 /usr/local/pgsql/bin/psql -U postgres -h localhost -d osm -H -c "refresh materialized view layers.\"water\"; "
 /usr/local/pgsql/bin/psql -U postgres -h localhost -d osm -H -c "refresh materialized view layers.\"water-outline\"; "
 /usr/local/pgsql/bin/psql -U postgres -h localhost -d osm -H -c "refresh materialized view layers.\"route-turning-circles\"; "
@@ -66,7 +68,9 @@ echo "$TIME - Atualizando as visoes..."
 /usr/local/pgsql/bin/psql -U postgres -h localhost -d osm -H -c "refresh materialized view layers.\"aero-poly\"; "
 
 TIME=$(date +"%T")
-echo "$TIME - Termino da atualizacao de visoes."
+echo "$TIME - Termino da atualizacao de visoes. Iniciando VACUUM..."
+
+psql -U postgres -h localhost -d osm -H -c 'VACUUM FULL VERBOSE ANALYZE osm'
 
 #TIME=$(date +"%T")
 #echo "$TIME - Iniciando Tomcat..."
