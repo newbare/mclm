@@ -151,7 +151,7 @@ CREATE OR REPLACE FUNCTION public.geocode_point(
     IN coords character varying,
     IN srid integer)
   RETURNS TABLE(admin_level character varying, "name" character varying, place character varying, "ref" character varying, tags hstore, "type" character varying) AS
-$BODY$
+$func$
 
 
 select admin_level, "name", place, "ref", tags, "type" from (
@@ -165,6 +165,8 @@ select '99999'::text as admin_level, ll."name", ll.place, ll."ref", ll.tags from
 ORDER BY ll.way <-> ST_Transform(ST_GeometryFromText('POINT(' || $1 ||  ')',$2), 900913) LIMIT 1
 ) as t2
 order by admin_level
+
+$func$ LANGUAGE sql STABLE STRICT;	
 	 
 /*	 
 	FUNÇÃO QUE VERIFICA SE UMA GEOMETRIA ESTÁ EM UMA CIDADE 
