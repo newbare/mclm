@@ -81,7 +81,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 		var geoJsonData = MCLM.RouteHelper.getAsJson();
 		Ext.Msg.alert('Não Implementado Ainda','MCLM.views.rotas.CalcRotaController :: addRouteToCurrentScenery' );
     },
-    
+    /*
     bindMapToInspectFeature : function() {
     	var features = MCLM.RouteHelper.poiSource.getFeatures();
     	
@@ -92,7 +92,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	
     	MCLM.Map.bindMapToInspectFeature();
     },
-    
+    */
     
     getPhotosInBBOX : function() {
     	MCLM.RouteHelper.getPhotosInBBOX();

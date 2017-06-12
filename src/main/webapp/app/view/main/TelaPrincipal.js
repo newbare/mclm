@@ -49,8 +49,8 @@ Ext.define('MCLM.view.main.TelaPrincipal', {
         xtype: 'painelCentral', collapsible: false
     },{
         xtype: 'painelDireito', collapsible: false
-    },{
+    }/*,{
         xtype: 'painelInferior', collapsible: false
-    }]
+    }*/]
 });
 

@@ -948,6 +948,7 @@ Ext.define('MCLM.Map', {
 				MCLM.RouteHelper.putEndIcon( event.coordinate );
 			});
 		},
+		/*
 		bindMapToInspectFeature : function() {
 			var me = MCLM.Map;
 			MCLM.Map.unbindMapClick();
@@ -957,6 +958,7 @@ Ext.define('MCLM.Map', {
 			});
 			MCLM.Map.interrogatingFeatures = true;
 		},
+		*/
 		// --------------------------------------------------------------------------------------------
 		// Libera o click do mouse no mapa da ultima ferramenta ligada
 		unbindMapClick : function () {
@@ -980,11 +982,21 @@ Ext.define('MCLM.Map', {
 				me.map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
 					var columnRefs = {};
 					var layerName = layer.get("alias");
-					
 					var att = feature.getProperties();
 					
 					if ( layerName == 'aircraftLayer' ) {
 						me.aircraftHelper.showAircraftDetails( att );
+						return true;
+					}
+					
+					if ( layerName == 'routeLayer' ) {
+						console.log( att );
+						return true;
+					}
+					
+					
+					if ( layerName == 'poiLayer' ) {
+						MCLM.RouteHelper.inspectFeature( event.pixel );
 						return true;
 					}
 					

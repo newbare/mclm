@@ -17,6 +17,8 @@ Ext.define('MCLM.RouteHelper', {
 		maxRouteSeq : 0,
 		poiStyles : [],
 		routeExtent : null,
+		photoLayer : null,
+		photoSource : null,
 		
 		clear : function() {
 			MCLM.Map.removeLayerByName('routeLayer');
@@ -160,6 +162,7 @@ Ext.define('MCLM.RouteHelper', {
 			this.dirty = false;
 			this.vectorSource = new ol.source.Vector();
 			this.poiSource = new ol.source.Vector();
+			this.photoSource = new ol.source.Vector();
 			
 			// Estilo da rota
 	    	var routeStyle = new ol.style.Style({
@@ -169,8 +172,19 @@ Ext.define('MCLM.RouteHelper', {
 	    		})
 	    	});	
 	    	
+	    	// Estilo da foto
+			var photoStyle = new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 5,
+                    fill: new ol.style.Fill({
+                        color: '#FF4500',
+                        opacity: 0.8
+                    })
+                })
+			});
+	    	
+	    	
 			var customStyleFunction = function( feature, resolution ) {
-				console.log( "bla " + feature );
 				
 				var me = MCLM.RouteHelper;
 				
@@ -181,42 +195,23 @@ Ext.define('MCLM.RouteHelper', {
 				var iconName = props.iconName; 
 				
 				if ( featureGeomType == 'Point') {
-					
-					if ( featureId ) {
-						var pointStyle = me.poiStyles[featureId];
-						// Estilo dos simbolos dos POI
-						if ( !pointStyle ) {
-				        	pointStyle = new ol.style.Style({
-								image: new ol.style.Icon(({
-									scale : 0.6,
-									anchor: [0.5, 35],
-									anchorXUnits: 'fraction',
-									anchorYUnits: 'pixels',
-									opacity: 0.75,
-									src: 'img/' + iconName + '.png'
-								}))
-					    	});
-						}
-						me.poiStyles[featureId] = pointStyle;
-						
-						
-						
-					} else {
-						var pointStyle = new ol.style.Style({
-			                image: new ol.style.Circle({
-			                    radius: 7,
-			                    fill: new ol.style.Fill({
-			                        color: '#FF4500',
-			                        opacity: 0.8
-			                    })
-			                })
-						});
+					var pointStyle = me.poiStyles[featureId];
+					// Estilo dos simbolos dos POI
+					if ( !pointStyle ) {
+			        	pointStyle = new ol.style.Style({
+							image: new ol.style.Icon(({
+								scale : 0.6,
+								anchor: [0.5, 35],
+								anchorXUnits: 'fraction',
+								anchorYUnits: 'pixels',
+								opacity: 0.75,
+								src: 'img/' + iconName + '.png'
+							}))
+				    	});
+			        	me.poiStyles[featureId] = pointStyle;
 					}
-					
 					resultStyles.push( pointStyle );
 				}
-				
-				
 				
 				
 				if ( featureGeomType == 'LineString') {
@@ -242,6 +237,11 @@ Ext.define('MCLM.RouteHelper', {
 				source: this.vectorSource,
 				style: routeStyle
 			});			
+
+			this.photoLayer = new ol.layer.Vector({
+				source: this.photoSource,
+				style: photoStyle
+			});				
 			
 			this.poiLayer = new ol.layer.Vector({
 				source: this.poiSource,
@@ -260,12 +260,20 @@ Ext.define('MCLM.RouteHelper', {
 			this.poiLayer.set('baseLayer', false);
 			this.poiLayer.set('ready', true);
 			
+			this.photoLayer.set('name', 'photoLayer');
+			this.photoLayer.set('alias', 'photoLayer');
+			this.photoLayer.set('serialId', 'photoLayer');
+			this.photoLayer.set('baseLayer', false);
+			this.photoLayer.set('ready', true);
 			
 			MCLM.Map.removeLayerByName('routeLayer');
 			MCLM.Map.map.addLayer( this.activeRouteLayer );
 			
 			MCLM.Map.removeLayerByName('poiLayer');
 			MCLM.Map.map.addLayer( this.poiLayer );
+			
+			MCLM.Map.removeLayerByName('photoLayer');
+			MCLM.Map.map.addLayer( this.photoLayer );
 			
 			// Camada para os marcadores
 			this.vectorSourceMarker = new ol.source.Vector();
@@ -471,14 +479,12 @@ Ext.define('MCLM.RouteHelper', {
 	            	var respObj = Ext.decode(response.responseText);
 	            	console.log( respObj );
 	            	
-	            	
-	            	
 					var features = new ol.format.GeoJSON().readFeatures( respObj , {
-						featureProjection: 'EPSG:4326'
+						featureProjection: 'EPSG:3857'
 					});
 					
 					for (var i = 0; i < features.length; i++) {
-						me.addFeatureToPoiLayer( features[i] );
+						me.photoSource.addFeature( features[i] );
 					}
 	            	
 	            	

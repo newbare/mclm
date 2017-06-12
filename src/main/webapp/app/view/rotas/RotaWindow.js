@@ -50,11 +50,11 @@ Ext.define('MCLM.view.rotas.RotaWindow', {
         	iconCls: 'save-icon',
         	id: 'idAddRoute',
             handler : 'addRouteToCurrentScenery'
-        },{
+        }/*,{
         	iconCls: 'query-icon',
         	id: 'idQueryFeature',
             handler : 'bindMapToInspectFeature'
-        },{
+        }*/,{
         	iconCls: 'photo-icon',
         	id: 'idStreetPhoto',
             handler : 'getPhotosInBBOX'

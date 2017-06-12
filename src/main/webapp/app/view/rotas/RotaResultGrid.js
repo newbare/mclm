@@ -14,14 +14,7 @@ Ext.define('MCLM.view.rotas.RotaResultGrid', {
     
     listeners: {
         rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
-        	/*
-        	var osmName = record.get('way_name');
-        	var osmId = record.get('seq');
-        	var leng = record.get('km');
-        	if ( osmName == 'null' ) osmName = "(Sem Nome)";
-        	var roadDetailPanel = Ext.getCmp('roadDetailPanel');
-        	roadDetailPanel.update( osmId + ": " + osmName + " (" + leng + " Km)");
-        	*/
+        	console.log( record );
         }
     },	    
     
