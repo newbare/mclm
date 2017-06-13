@@ -24,6 +24,7 @@ Ext.define('MCLM.Map', {
 		highlight : null,
 		interrogatingFeatures : false,
 		aircraftHelper : null,
+		canPhoto : true,
 		
 		getBaseMapName : function() {
 			return MCLM.Map.baseLayerName;
@@ -91,13 +92,6 @@ Ext.define('MCLM.Map', {
 			    
 			    MCLM.Map.map.getTargetElement().style.cursor = hit ? 'pointer' : '';
 			    
-			    /*
-			    if ( hit && me.interrogatingFeatures ) {
-			        MCLM.Map.map.getTargetElement().style.cursor = 'pointer';
-			    } else {
-			        MCLM.Map.map.getTargetElement().style.cursor = '';
-			    }
-			    */			    
 			});
 			
 			MCLM.Map.aircraftHelper = Ext.create('MCLM.view.aircraft.AircraftHelper');
@@ -851,17 +845,6 @@ Ext.define('MCLM.Map', {
 		    var bottomLeft = ol.proj.transform( ol.extent.getBottomLeft( extent ), 'EPSG:3857', 'EPSG:4326' );
 		    var topRight = ol.proj.transform( ol.extent.getTopRight( extent ), 'EPSG:3857', 'EPSG:4326' );
 			return bottomLeft + "," + topRight;
-			
-			/*
-			
-			var newExtent = ol.proj.transformExtent(extent, 'EPSG:3857', 'EPSG:4326');
-			var minlon = newExtent[0];
-			var minlat = newExtent[1];
-			var maxlon = newExtent[2];
-			var maxlat = newExtent[3];			
-			
-			*/
-			
 		},
 		// --------------------------------------------------------------------------------------------
 		// Retorna a URL para pegar a imagem PNG de uma camada 'layerName' do servidor 'serviceUrl'
@@ -948,17 +931,7 @@ Ext.define('MCLM.Map', {
 				MCLM.RouteHelper.putEndIcon( event.coordinate );
 			});
 		},
-		/*
-		bindMapToInspectFeature : function() {
-			var me = MCLM.Map;
-			MCLM.Map.unbindMapClick();
-			MCLM.Map.onClickBindKey = MCLM.Map.map.on('click', function(event) {
-				var pixel = event.pixel;
-				MCLM.RouteHelper.inspectFeature( pixel );
-			});
-			MCLM.Map.interrogatingFeatures = true;
-		},
-		*/
+
 		// --------------------------------------------------------------------------------------------
 		// Libera o click do mouse no mapa da ultima ferramenta ligada
 		unbindMapClick : function () {
@@ -977,7 +950,7 @@ Ext.define('MCLM.Map', {
 			me.onClickBindKey = me.map.on('click', function(event) {
 
 				me.queryMap( event.coordinate );
-
+				var featureHit = false;
 				var externalLayerName = "";
 				me.map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
 					var columnRefs = {};
@@ -986,24 +959,30 @@ Ext.define('MCLM.Map', {
 					
 					if ( layerName == 'aircraftLayer' ) {
 						me.aircraftHelper.showAircraftDetails( att );
+						featureHit = true;
 						return true;
 					}
-					
-					if ( layerName == 'routeLayer' ) {
-						console.log( att );
-						return true;
-					}
-					
 					
 					if ( layerName == 'poiLayer' ) {
 						MCLM.RouteHelper.inspectFeature( event.pixel );
+						featureHit = true;
 						return true;
 					}
+
+					
+					if ( layerName == 'photoLayer' ) {
+						var imageUrl = "https://d1cuyjsrcm0gby.cloudfront.net/"+feature.getProperties().key+"/thumb-320.jpg";
+						MCLM.view.photo.PhotoHelper.viewPhoto( imageUrl );
+						featureHit = true;
+						return true;
+					}
+					
 					
 					if ( !att.features ) {
 						MCLM.Functions.mainLog("Não existem dados na camada " + layerName );
 					} else {
 					
+						featureHit = true;
 						
 						externalLayerName = layerName;
 						var data = [];
@@ -1036,7 +1015,10 @@ Ext.define('MCLM.Map', {
 					
 			    });				
 				
-	    	    
+				if ( me.canPhoto && !featureHit ) {
+					MCLM.view.photo.PhotoHelper.getPhotosCloseTo( event.coordinate );
+					return true;
+				}	    	    
 				
 			});
 			

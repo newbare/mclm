@@ -14,7 +14,14 @@ Ext.define('MCLM.view.rotas.RotaResultGrid', {
     
     listeners: {
         rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
-        	console.log( record );
+        	
+        	var extent = record.data.geometry;
+			var lineString = new ol.geom.MultiLineString( extent.coordinates );
+ 			var feature = new ol.Feature({
+ 				geometry: lineString,
+ 			});
+ 			MCLM.RouteHelper.inspectRoute( feature );
+ 			
         }
     },	    
     

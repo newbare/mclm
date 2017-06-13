@@ -94,10 +94,6 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     },
     */
     
-    getPhotosInBBOX : function() {
-    	MCLM.RouteHelper.getPhotosInBBOX();
-    },
-    
     disableButtons : function() {
     	var poiPanel = Ext.getCmp("routePoi");
 		var buttons = poiPanel.query('button');

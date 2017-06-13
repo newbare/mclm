@@ -17,13 +17,12 @@ Ext.define('MCLM.RouteHelper', {
 		maxRouteSeq : 0,
 		poiStyles : [],
 		routeExtent : null,
-		photoLayer : null,
-		photoSource : null,
 		
 		clear : function() {
 			MCLM.Map.removeLayerByName('routeLayer');
 			MCLM.Map.removeLayerByName('routeMarker');
 			MCLM.Map.removeLayerByName('poiLayer');
+			
 			MCLM.Map.interrogatingFeatures = false;
 			this.activeRouteLayer = null;
 			this.poiLayer = null;
@@ -162,7 +161,7 @@ Ext.define('MCLM.RouteHelper', {
 			this.dirty = false;
 			this.vectorSource = new ol.source.Vector();
 			this.poiSource = new ol.source.Vector();
-			this.photoSource = new ol.source.Vector();
+			
 			
 			// Estilo da rota
 	    	var routeStyle = new ol.style.Style({
@@ -171,18 +170,6 @@ Ext.define('MCLM.RouteHelper', {
 	    			width: 3
 	    		})
 	    	});	
-	    	
-	    	// Estilo da foto
-			var photoStyle = new ol.style.Style({
-                image: new ol.style.Circle({
-                    radius: 5,
-                    fill: new ol.style.Fill({
-                        color: '#FF4500',
-                        opacity: 0.8
-                    })
-                })
-			});
-	    	
 	    	
 			var customStyleFunction = function( feature, resolution ) {
 				
@@ -238,11 +225,6 @@ Ext.define('MCLM.RouteHelper', {
 				style: routeStyle
 			});			
 
-			this.photoLayer = new ol.layer.Vector({
-				source: this.photoSource,
-				style: photoStyle
-			});				
-			
 			this.poiLayer = new ol.layer.Vector({
 				source: this.poiSource,
 				style: customStyleFunction
@@ -260,20 +242,11 @@ Ext.define('MCLM.RouteHelper', {
 			this.poiLayer.set('baseLayer', false);
 			this.poiLayer.set('ready', true);
 			
-			this.photoLayer.set('name', 'photoLayer');
-			this.photoLayer.set('alias', 'photoLayer');
-			this.photoLayer.set('serialId', 'photoLayer');
-			this.photoLayer.set('baseLayer', false);
-			this.photoLayer.set('ready', true);
-			
 			MCLM.Map.removeLayerByName('routeLayer');
 			MCLM.Map.map.addLayer( this.activeRouteLayer );
 			
 			MCLM.Map.removeLayerByName('poiLayer');
 			MCLM.Map.map.addLayer( this.poiLayer );
-			
-			MCLM.Map.removeLayerByName('photoLayer');
-			MCLM.Map.map.addLayer( this.photoLayer );
 			
 			// Camada para os marcadores
 			this.vectorSourceMarker = new ol.source.Vector();
@@ -288,6 +261,7 @@ Ext.define('MCLM.RouteHelper', {
 			MCLM.Map.map.addLayer( this.vectorLayerMarker );			
 		    				
 		},
+		
 		inspectFeature : function( pixel ) {
 	        var features = [];
 	        MCLM.Map.map.forEachFeatureAtPixel( pixel, function(feature, layer) {
@@ -441,57 +415,10 @@ Ext.define('MCLM.RouteHelper', {
 	    	
 	    },
 	    
+	    inspectRoute : function( feature ) {
+	    	//
+	    },
 	    
-		getPhotosInBBOX : function() {
-			
-			if ( !this.routeExtent ) {
-				Ext.Msg.alert('Erro','Selecione uma rota antes.' );
-				return true;
-			}
-			
-			var me = this;
-			
-		    var bottomLeft = ol.proj.transform( ol.extent.getBottomLeft( this.routeExtent ), 'EPSG:3857', 'EPSG:4326' );
-		    var topRight = ol.proj.transform( ol.extent.getTopRight( this.routeExtent ), 'EPSG:3857', 'EPSG:4326' );
-			var bbox = bottomLeft + "," + topRight;			
-			
-			var coord = bbox.split(",");
-			
-			var maxlon = coord[0];
-			var maxlat = coord[1];
-			var minlon = coord[2];
-			var minlat = coord[3];
-
-			Ext.Ajax.request({
-	            url: 'getPhotosInBBOX',
-	            params: {
-	                'minlon': minlon,
-	                'minlat': minlat,
-	                'maxlon': maxlon,
-	                'maxlat': maxlat,
-	                'maxresults' : 100,
-	            },
-	            failure: function (response, opts) {
-	            	//
-	            },
-	            success: function (response, opts) {
-	            	
-	            	var respObj = Ext.decode(response.responseText);
-	            	console.log( respObj );
-	            	
-					var features = new ol.format.GeoJSON().readFeatures( respObj , {
-						featureProjection: 'EPSG:3857'
-					});
-					
-					for (var i = 0; i < features.length; i++) {
-						me.photoSource.addFeature( features[i] );
-					}
-	            	
-	            	
-	            }
-	        });
-			
-		}, 	    
 	    
 	    addFeatureToPoiLayer( feature ) {
 			this.poiSource.addFeature( feature );
