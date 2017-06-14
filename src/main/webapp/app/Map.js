@@ -24,6 +24,7 @@ Ext.define('MCLM.Map', {
 		highlight : null,
 		interrogatingFeatures : false,
 		aircraftHelper : null,
+		shipsHelper : null,
 		canPhoto : true,
 		
 		getBaseMapName : function() {
@@ -41,7 +42,9 @@ Ext.define('MCLM.Map', {
 				MCLM.Map.aircraftHelper.getAircraftsBbox();
 			}
 		},
-		
+		updateMaritmTraffic : function() {
+			MCLM.Map.shipsHelper.getShips();
+		},		
 		// --------------------------------------------------------------------------------------------
 		// Cria o Mapa Principal e Camadas auxiliares
 		loadMap : function( container ) {
@@ -97,6 +100,10 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.aircraftHelper = Ext.create('MCLM.view.aircraft.AircraftHelper');
 			MCLM.Map.aircraftHelper.init();
 			setInterval( MCLM.Map.updateAeroTraffic , 8000);			
+
+			MCLM.Map.shipsHelper = Ext.create('MCLM.view.ships.ShipsHelper');
+			MCLM.Map.shipsHelper.init();
+						
 			
 		},
 		// --------------------------------------------------------------------------------------------

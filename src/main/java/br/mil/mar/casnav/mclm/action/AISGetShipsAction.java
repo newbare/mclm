@@ -9,26 +9,24 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import br.mil.mar.casnav.mclm.persistence.services.AISService;
+import br.mil.mar.casnav.mclm.persistence.services.SistranAISService;
 
 
 
-@Action(value="aisTest", results= {  
+@Action(value="aisGetShips", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) }
 )   
 
 @ParentPackage("default")
-public class AISTestAction {
+public class AISGetShipsAction {
 
 	
 	public String execute(){
 
 		try { 
 
-			AISService ais = new AISService();
-			ais.getShipInfo("19373");
-			
-			String resposta = "";
+			SistranAISService ais = new  SistranAISService();
+			String resposta = ais.getShips();
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

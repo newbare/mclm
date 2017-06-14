@@ -5,7 +5,6 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     mapLayerGeoCode: null,
     vectorSourceMarker: null,
     vectorLayerMarker: null,
-    getAircraftsUrl: 'getAircraftsInBBOX',
     vectorSource : null,
     activeAircraftLayer : null,
 
@@ -279,7 +278,7 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 		var maxlat = coord[0];			
 		
         Ext.Ajax.request({
-            url: getAircraftsUrl,
+            url: 'getAircraftsInBBOX',
             params: {
                 'minlon': minlon,
                 'minlat': minlat,

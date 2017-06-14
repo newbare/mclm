@@ -77,6 +77,15 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
         handler: 'toggleAeroTraffic'
     }, 
     {
+    	// Tráfego marítmo
+    	xtype: 'button',
+    	id: 'maritmTrID',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    iconCls: 'aeroplane-icon',
+        handler: 'updateMaritmTraffic'
+    }, 
+    {
     	// Lista de Camadas
     	xtype: 'button',
     	id: 'id116',

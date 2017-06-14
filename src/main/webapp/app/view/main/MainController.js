@@ -17,6 +17,10 @@ Ext.define('MCLM.view.main.MainController', {
 	toggleAeroTraffic : function( button ) {
 		MCLM.Map.toggleAeroTraffic();
 	},
+
+	updateMaritmTraffic : function( button ) {
+		MCLM.Map.updateMaritmTraffic();
+	},	
 	
 	// --------------------------------------------------------------------------------------------
 	showForecast : function( button ) {
