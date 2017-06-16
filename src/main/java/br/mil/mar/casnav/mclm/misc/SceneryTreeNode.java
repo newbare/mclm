@@ -6,7 +6,7 @@ import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.services.DataLayerService;
 
 /*
- * Se mexer nesta estrutura, altere também 
+ * Se mexer nesta estrutura, altere tambï¿½m 
  * em TreeNode
  * 
  */
@@ -60,7 +60,7 @@ public class SceneryTreeNode {
 			this.layerName = sn.getLayer().getLayerName();
 			this.serialId = sn.getLayer().getSerialId();
 		} else {
-			// Não pode ser "null" porque a conversão para JSON vai omitir o atributo.
+			// NÃ£o pode ser "null" porque a conversÃ£o para JSON vai omitir o atributo.
 			this.serviceUrl = "";
 			this.originalServiceUrl = "";
 			this.description = "";

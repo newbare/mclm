@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java de navio complex type.
  * 
- * <p>O seguinte fragmento do esquema especifica o conteúdo esperado contido dentro desta classe.
+ * <p>O seguinte fragmento do esquema especifica o conteÃºdo esperado contido dentro desta classe.
  * 
  * <pre>
  * &lt;complexType name="navio">
@@ -76,7 +76,7 @@ public class Navio {
     protected String station;
 
     /**
-     * Obtém o valor da propriedade id.
+     * ObtÃ©m o valor da propriedade id.
      * 
      */
     public int getId() {
@@ -92,7 +92,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade irin.
+     * ObtÃ©m o valor da propriedade irin.
      * 
      * @return
      *     possible object is
@@ -116,7 +116,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade name.
+     * ObtÃ©m o valor da propriedade name.
      * 
      * @return
      *     possible object is
@@ -140,7 +140,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade imo.
+     * ObtÃ©m o valor da propriedade imo.
      * 
      * @return
      *     possible object is
@@ -164,7 +164,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade mmsi.
+     * ObtÃ©m o valor da propriedade mmsi.
      * 
      * @return
      *     possible object is
@@ -188,7 +188,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade type.
+     * ObtÃ©m o valor da propriedade type.
      * 
      * @return
      *     possible object is
@@ -212,7 +212,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade latitude.
+     * ObtÃ©m o valor da propriedade latitude.
      * 
      * @return
      *     possible object is
@@ -236,7 +236,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade longitude.
+     * ObtÃ©m o valor da propriedade longitude.
      * 
      * @return
      *     possible object is
@@ -260,7 +260,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade dt.
+     * ObtÃ©m o valor da propriedade dt.
      * 
      * @return
      *     possible object is
@@ -284,7 +284,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade startingport.
+     * ObtÃ©m o valor da propriedade startingport.
      * 
      * @return
      *     possible object is
@@ -308,7 +308,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade portarrival.
+     * ObtÃ©m o valor da propriedade portarrival.
      * 
      * @return
      *     possible object is
@@ -332,7 +332,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade arrivaldatetime.
+     * ObtÃ©m o valor da propriedade arrivaldatetime.
      * 
      * @return
      *     possible object is
@@ -356,7 +356,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade course.
+     * ObtÃ©m o valor da propriedade course.
      * 
      * @return
      *     possible object is
@@ -380,7 +380,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade speed.
+     * ObtÃ©m o valor da propriedade speed.
      * 
      * @return
      *     possible object is
@@ -404,7 +404,7 @@ public class Navio {
     }
 
     /**
-     * Obtém o valor da propriedade station.
+     * ObtÃ©m o valor da propriedade station.
      * 
      * @return
      *     possible object is

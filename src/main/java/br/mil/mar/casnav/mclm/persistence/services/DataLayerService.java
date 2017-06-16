@@ -261,14 +261,14 @@ public class DataLayerService {
 			int feicaoRootNodeId = Configurator.getInstance().getFeicaoRootNode().getIdNodeData();
 			
 			NodeService ns = new NodeService();
-			NodeData node = new NodeData(feicaoRootNodeId, "", feicaoDescricao, "Feição", layerAlias, feicaoNome, LayerType.FEI);
+			NodeData node = new NodeData(feicaoRootNodeId, "", feicaoDescricao, "FeiÃ§Ã£o", layerAlias, feicaoNome, LayerType.FEI);
 			
 			node.setFeicao( feicao );
 			
 			node.setReadOnly( false );
 			node = ns.addNode( node );					
 			
-			result = "{ \"success\": true, \"msg\": \"Feição criada com sucesso.\",\"feicao\":" + jsonFeicao + ",\"layerAlias\":\""+ layerAlias+ "\",\"idLayer\":\""+node.getIdNodeData()+"\"}";
+			result = "{ \"success\": true, \"msg\": \"Feiï¿½ï¿½o criada com sucesso.\",\"feicao\":" + jsonFeicao + ",\"layerAlias\":\""+ layerAlias+ "\",\"idLayer\":\""+node.getIdNodeData()+"\"}";
 			
 		} catch ( Exception e ) {
 			e.printStackTrace();

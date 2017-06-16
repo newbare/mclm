@@ -19,7 +19,7 @@ public class Server {
 	}
 	
 	public Server() {
-		// Necess·rio para uso do Hibernate
+		// Necess√°rio para uso do Hibernate
 	}
 
 	@Id

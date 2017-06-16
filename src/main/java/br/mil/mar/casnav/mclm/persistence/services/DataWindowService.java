@@ -25,7 +25,7 @@ public class DataWindowService {
 	}
 	
 	public String getWindow(String data) {
-		String result = "{ \"error\": true, \"msg\": \"Camada não informada.\" }";
+		String result = "{ \"error\": true, \"msg\": \"Camada nï¿½o informada.\" }";
 		
 		try {
 			
@@ -38,7 +38,7 @@ public class DataWindowService {
 			DataWindow dataWindow = nodeData.getDataWindow();			
 			
 			if ( dataWindow == null ) {
-				return "{ \"error\": true, \"msg\": \"Não há janela de dados cadastrada para esta camada.\" }";
+				return "{ \"error\": true, \"msg\": \"NÃ£o hÃ¡ janela de dados cadastrada para esta camada.\" }";
 			}
 			
 			String relationShip = dataWindow.getSqlDataAcquisition();
@@ -70,8 +70,8 @@ public class DataWindowService {
 				UserTableEntity record = utes.get(0);
 				result = createWindow( dataWindow, record );
 			} else {
-				throw new Exception("Não foi encontrada correspondência entre os dados da camada " + nodeData.getLayerAlias() +
-						" e a tabela " + dataWindow.getSourceTable() + " no banco " + databaseConn + " usando o critério [" + relationShip + "]");
+				throw new Exception("Nï¿½o foi encontrada correspondï¿½ncia entre os dados da camada " + nodeData.getLayerAlias() +
+						" e a tabela " + dataWindow.getSourceTable() + " no banco " + databaseConn + " usando o critï¿½rio [" + relationShip + "]");
 			}
 			
 			

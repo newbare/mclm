@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java de GetShipListData complex type.
  * 
- * <p>O seguinte fragmento do esquema especifica o conteúdo esperado contido dentro desta classe.
+ * <p>O seguinte fragmento do esquema especifica o conteÃºdo esperado contido dentro desta classe.
  * 
  * <pre>
  * &lt;complexType name="GetShipListData">
@@ -34,7 +34,7 @@ public class GetShipListData {
     protected String arg0;
 
     /**
-     * Obtém o valor da propriedade arg0.
+     * ObtÃ©m o valor da propriedade arg0.
      * 
      * @return
      *     possible object is

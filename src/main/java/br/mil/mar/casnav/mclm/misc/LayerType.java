@@ -3,11 +3,11 @@ package br.mil.mar.casnav.mclm.misc;
 // SHP : Shape File
 // WMS : WMS (URL)
 // KML : KML File
-// FTR : Feature / Feição / Custom
+// FTR : Feature / FeiÃ§Ã£o / Custom
 // TIF : GeoTIFF
-// FDR : Pasta na Árvore
+// FDR : Pasta na Ã¡rvore
 // FEI : Feicao
-// CRN : Root Node para os Cenários / Feições
+// CRN : Root Node para os CenÃ¡rios / FeiÃ§Ãµes
 
 public enum LayerType {
 	SHP, WMS, KML, FTR, TIF, FDR, DTA, FEI, CRN;
