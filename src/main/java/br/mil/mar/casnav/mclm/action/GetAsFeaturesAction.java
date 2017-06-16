@@ -26,7 +26,7 @@ public class GetAsFeaturesAction {
 	
 	public String execute(){
 
-		String result = "{ \"error\": true, \"msg\": \"Camada n„o informada.\" }";
+		String result = "{ \"error\": true, \"msg\": \"Camada n√£o informada.\" }";
 		
 		if ( idDataLayer != null ) {
 			

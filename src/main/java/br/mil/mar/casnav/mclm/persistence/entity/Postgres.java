@@ -30,7 +30,7 @@ public class Postgres {
 	}
 	
 	public Postgres() {
-		// Necess·rio para uso do Hibernate
+		// Necess√°rio para uso do Hibernate
 		this.tables = new ArrayList<PostgresTable>();
 	}
 

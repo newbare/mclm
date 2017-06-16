@@ -23,7 +23,7 @@ public class PostgresTable {
 	}
 	
 	public PostgresTable() {
-		// Necess·rio para uso do Hibernate
+		// Necess√°rio para uso do Hibernate
 	}
 
 	@Id

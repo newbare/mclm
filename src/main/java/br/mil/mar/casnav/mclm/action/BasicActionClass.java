@@ -19,13 +19,16 @@ public class BasicActionClass {
 	private User loggedUser;
 	private String serverBaseUrl;
 	
+	@SuppressWarnings("rawtypes")
 	public void dumpParameters() {
 		HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
-	    Map m = request.getParameterMap();
+	    
+		Map m = request.getParameterMap();
         Set s = m.entrySet();
         Iterator it = s.iterator();			
         while(it.hasNext()){
-              Map.Entry<String,String[]> entry = (Map.Entry<String,String[]>)it.next();
+        	@SuppressWarnings("unchecked")
+			Map.Entry<String,String[]> entry = (Map.Entry<String,String[]>)it.next();
               String key = entry.getKey();
               String[] value = entry.getValue();
               System.out.println(key+" :: ");
