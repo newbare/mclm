@@ -245,6 +245,9 @@ public class LayerService {
 			NodeService ns = new NodeService();
 			NodeData node = ns.getNode(idNode);
 			
+			DictionaryService ds = new DictionaryService();
+			ds.deleteDictionary( idNode );
+			
 			if ( node.getLayerType() == LayerType.FEI ) {
 				Integer idNodeData = node.getIdNodeData();
 
@@ -305,13 +308,15 @@ public class LayerService {
 			if ( node.getLayerType() == LayerType.FTR ) {
 				// Uma feature.... 
 			}
-				
+
+			/*
+			 * isso eh muito perigoso!
 			if ( node.getLayerType() == LayerType.WMS ) { 
 				// http://localhost:8080/geoserver/rest/layers/<layer>
 				serverRESTAPI = geoserverURL + "rest/layers/" + layerName;
 				serverRESTAPILayerGroup = geoserverURL + "rest/layergroups/" + layerName;
-				
 			}
+			*/
 
 			
 			if ( node.getLayerType() == LayerType.SHP ) {

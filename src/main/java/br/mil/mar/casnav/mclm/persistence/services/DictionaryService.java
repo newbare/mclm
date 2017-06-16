@@ -37,6 +37,10 @@ public class DictionaryService {
 			rep.newTransaction();
 		}
 	}
+	
+	public void deleteDictionary( int layerNode ) throws Exception {
+		rep.deleteDictionary( layerNode );
+	}
 		
 	public String getListAsJson( int idNodeData, String layerName, String serviceUrl ) throws Exception {
 		List<DictionaryItem> items = getDictionary( idNodeData );

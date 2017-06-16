@@ -10,6 +10,7 @@ import br.mil.mar.casnav.mclm.persistence.exceptions.InsertException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.UpdateException;
 import br.mil.mar.casnav.mclm.persistence.infra.DaoFactory;
 import br.mil.mar.casnav.mclm.persistence.infra.IDao;
+import br.mil.mar.casnav.mclm.persistence.services.GenericService;
 
 
 
@@ -116,6 +117,13 @@ public class DictionaryRepository extends BasicRepository {
 		}
 		closeSession();
 		return users;
+	}
+
+	public void deleteDictionary(int idNodeData ) throws Exception {
+		String sql = "delete from dictionary where id_node_data = " + idNodeData ;
+		DaoFactory<DictionaryItem> df = new DaoFactory<DictionaryItem>();
+		IDao<DictionaryItem> fm = df.getDao(this.session, DictionaryItem.class);
+		fm.executeQuery( sql , true);
 	}
 	
 }
