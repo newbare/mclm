@@ -30,7 +30,7 @@ public class GetPointsNearRouteAction {
 			
 			RouteService rs = new RouteService();
 			result = rs.getPointsNearRoute( route, criteria, source );
-			
+					
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.getWriter().write( result );  

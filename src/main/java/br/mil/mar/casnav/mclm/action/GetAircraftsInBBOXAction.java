@@ -31,7 +31,7 @@ public class GetAircraftsInBBOXAction {
 			CommercialFlightService cfs = new CommercialFlightService();
 			String resposta = cfs.getAircraftsInBBOX(minlat, minlon, maxlat, maxlon);
 			
-			
+
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.getWriter().write(resposta);  

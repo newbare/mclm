@@ -533,7 +533,7 @@ public class LayerService {
 			Configurator cfg = Configurator.getInstance();
 			String serverUrl = cfg.getGeoserverUrl();
 			String externalWorkspaceName = cfg.getExternalWorkspaceName();
-			String storeName = shpFileFileName.replace(".zip", "");
+			String storeName = shpFileFileName.replace(".zip", "").replace(" ", "_");
 			String layerName = cfg.getExternalWorkspaceName() + ":" + storeName; 
 			
 			String saveDirectory = Configurator.getInstance().getShapeFileTargetPath();
