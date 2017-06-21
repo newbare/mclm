@@ -1,12 +1,15 @@
 Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	extend: 'Ext.toolbar.Toolbar',
 	xtype: 'toolBarPrincipal',
-    dock: 'right',
+	dock: 'right',
     overflowHandler: 'scroller',
     border : false,
     style: {
         background: '#FFFFFF'
-    },    
+    }, 
+    
+    
+    
     items: [
     {
     	// Config
@@ -38,25 +41,6 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
         handler: 'manageServers'
     }, 
     {
-    	// Clima
-    	xtype: 'button',
-    	id: 'id113',
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    iconCls: 'forecast-icon',
-        handler: 'showForecast'
-    }, 
-    {
-    	// OpenSeaMap
-    	xtype: 'button',
-    	id: 'id114',
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    iconCls: 'buoy-icon',
-	    enableToggle: true,
-        handler: 'toggleSeaMapLayer',
-    }, 
-    {
     	// Grade de coordenadas
     	xtype: 'button',
     	id: 'id115',
@@ -66,25 +50,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    enableToggle: true,
         handler: 'toggleMapGrid'
     }, 
-    {
-    	// Tráfego aéreo
-    	xtype: 'button',
-    	id: 'aeroplaneID',
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    iconCls: 'aeroplane-icon',
-	    enableToggle: true,
-        handler: 'toggleAeroTraffic'
-    }, 
-    {
-    	// Tráfego marítmo
-    	xtype: 'button',
-    	id: 'maritmTrID',
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    iconCls: 'aeroplane-icon',
-        handler: 'updateMaritmTraffic'
-    }, 
+
     {
     	// Lista de Camadas
     	xtype: 'button',
@@ -133,5 +99,12 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
     	xtype: 'button',
     	id: 'drawFeicaoBtn',
         handler : 'showDrawToolBar'
+    },{
+    	iconCls: 'cloud-icon',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+    	xtype: 'button',
+    	id: 'showRestToolsBtn',
+        handler : 'showRestTools'
     }]
 });

@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "SistramAis3Service", targetNamespace = "http://web.sistram4/", wsdlLocation = "http://192.168.8.31:8082//Sistram4SEExt/SistramAis3Service?wsdl")
+@WebServiceClient(name = "SistramAis3Service", targetNamespace = "http://web.sistram4/", wsdlLocation = "http://www.sistram.mar.mil.br:8082//Sistram4SEExt/SistramAis3Service?wsdl")
 public class SistramAis3Service
     extends Service
 {
@@ -30,7 +30,7 @@ public class SistramAis3Service
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://192.168.8.31:8082//Sistram4SEExt/SistramAis3Service?wsdl");
+            url = new URL("http://www.sistram.mar.mil.br:8082//Sistram4SEExt/SistramAis3Service?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

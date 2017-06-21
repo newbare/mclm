@@ -13,24 +13,15 @@ Ext.define('MCLM.view.main.MainController', {
 	toggleMapGrid : function( button ) {
 		MCLM.Map.toggleMapGrid();
 	},
-	
-	toggleAeroTraffic : function( button ) {
-		MCLM.Map.toggleAeroTraffic();
-	},
 
-	updateMaritmTraffic : function( button ) {
-		MCLM.Map.updateMaritmTraffic();
-	},	
-	
-	// --------------------------------------------------------------------------------------------
-	showForecast : function( button ) {
-		
-    	//var config = MCLM.Globals.config;
-		//var geoserverUrl = config.geoserverUrl;
-		//var baseLayerName = config.baseLayer;    
-		//var geoCodeHelper = Ext.create('MCLM.view.geocode.GeoCodeHelper');
-		//geoCodeHelper.init( geoserverUrl, baseLayerName, "Leite", "", "", "Rio de Janeiro", "Brasil", null );
-		//geoCodeHelper.init( geoserverUrl, baseLayerName, "", "", "", "", "", "-55.37109375,-17.39257927105777" );
+	showRestTools : function( button ) {
+    	var restToolsWindow = Ext.getCmp('restToolsWindow');
+    	if ( restToolsWindow ) return;
+    	
+    	restToolsWindow = Ext.create('MCLM.view.tools.RestToolsWindow');
+    	restToolsWindow.show();    	
+    	restToolsWindow.alignTo(Ext.getBody(), "tr-tr", [-90, 10]);
+    	
 	},
 	
 	// --------------------------------------------------------------------------------------------
@@ -48,9 +39,6 @@ Ext.define('MCLM.view.main.MainController', {
     	serversWindow.show();
 	},
 	// --------------------------------------------------------------------------------------------
-	toggleSeaMapLayer : function( button ) {
-		MCLM.Map.toggleSeaMapLayer();
-	},
 	toggleBaseLayer : function( button ) {
 		MCLM.Map.toggleBaseLayer();
 	},

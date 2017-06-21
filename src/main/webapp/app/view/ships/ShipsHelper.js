@@ -24,9 +24,9 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
     		
         	var shipsStyle = new ol.style.Style({
     			image: new ol.style.Icon(({
-    				scale : 0.5,
+    				scale : 0.6,
     				anchor: [0.5, 0.5],
-    				//rotation : bearing,
+    				rotation : bearing,
     				anchorXUnits: 'fraction',
     				anchorYUnits: 'fraction',
     				opacity: 1.0,
@@ -35,12 +35,13 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
 			      text: new ol.style.Text({
 			          font: '10px Consolas',
 			          textAlign: 'center',
+			          scale : 0.8,
 			          offsetX: 0,
-			          offsetY: 25,
+			          offsetY: 15,
 			          textBaseline: 'middle',
 			          fill: new ol.style.Fill({ color: '#000' }),
 			          stroke: new ol.style.Stroke({
-			            color: '#FFFFFF', width: 3
+			            color: '#FFFFFF', width: 1
 			          }),
 			          text: shipName,
 			        })    			

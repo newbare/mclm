@@ -46,7 +46,7 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     		
         	var aircraftStyle = new ol.style.Style({
     			image: new ol.style.Icon(({
-    				scale : 0.9,
+    				scale : 0.6,
     				anchor: [0.5, 0.5],
     				rotation : bearing,
     				anchorXUnits: 'fraction',
@@ -58,11 +58,12 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 			          font: '10px Consolas',
 			          textAlign: 'center',
 			          offsetX: 0,
-			          offsetY: 25,
+			          offsetY: 20,
+			          scale : 0.8,
 			          textBaseline: 'middle',
 			          fill: new ol.style.Fill({ color: '#000' }),
 			          stroke: new ol.style.Stroke({
-			            color: '#FFFFFF', width: 3
+			            color: '#FFFFFF', width: 1
 			          }),
 			          text: fData,
 			        })    			
@@ -289,6 +290,11 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
             	me.deleteAircrafts();
             },
             success: function (response, opts) {
+            	
+            	if ( !MCLM.Map.aeroTrafficEnabled ) {
+            		return true;
+            	}
+            	
             	var respObj = Ext.decode(response.responseText);
             	
             	var feicao = {};

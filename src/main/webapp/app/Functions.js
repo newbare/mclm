@@ -289,28 +289,10 @@ Ext.define('MCLM.Functions', {
 		        text: 'Gerencia os servidores de fontes externas de mapas.',
 		        width: 150,
 		        dismissDelay: 5000 
-		    }, {
-		        target: 'id113',
-		        title: 'Previsão do Tempo',
-		        text: 'Diversos aspectos climáticos em tempo real. Necessita acesso à Internet.',
-		        width: 150,
-		        dismissDelay: 5000 
-		    }, {
-		        target: 'id114',
-		        title: 'Elementos de Navegação',
-		        text: 'Exibe elementos de carta náutica que auxiliam a navegação. Necessário nível de zoom apropriado.',
-		        width: 150,
-		        dismissDelay: 5000 
-		    }, {
+		    },{
 		        target: 'id115',
 		        title: 'Grade Auxiliar',
 		        text: 'Exibe a grade auxiliar do mapa.',
-		        width: 150,
-		        dismissDelay: 5000 
-		    }, {
-		        target: 'aeroplaneID',
-		        title: 'Tráfego Aéreo',
-		        text: 'Exibe tráfego aéreo.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }, {
@@ -359,6 +341,12 @@ Ext.define('MCLM.Functions', {
 		        target: 'reloadTreeBtn',
 		        title: 'Atualizar a Árvore',
 		        text: 'Atualiza toda a árvore carregando os dados do servidor novamente.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    }, {
+		        target: 'showRestToolsBtn',
+		        title: 'Serviços Externos',
+		        text: 'Exibe ferramentas adicionais para utitilzação de serviços oferecidos por fontes externas.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }); 	

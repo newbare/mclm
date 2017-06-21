@@ -51,6 +51,14 @@ Ext.define('MCLM.view.photo.PhotoHelper', {
 	    	photoWindow.show();
 	    	
 	    },
+	    
+	    clearPhotos : function() {
+	    	var features = this.photoSource.getFeatures();
+	    	for ( x=0; x < features.length; x++ ) {
+	    		var feature = features[x];
+	   			this.photoSource.removeFeature( feature );
+	    	}	    	
+	    },
 
 		getPhotosCloseTo : function( coordinate ) {
 			coordinate = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326')

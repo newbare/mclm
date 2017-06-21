@@ -68,6 +68,11 @@
 	background-repeat: no-repeat;
 }
 
+.ship-icon {
+	background-image: url('../img/ship.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .panel-icon {
 	background-image: url('../img/panel.svg') !important;
 	background-repeat: no-repeat;
@@ -274,6 +279,10 @@
 	background-repeat: no-repeat;
 }
 
+.cloud-icon {
+	background-image: url('../img/cloud.svg') !important;
+	background-repeat: no-repeat;
+}
 
 .pgtable-icon {
 	background-image: url('../img/add-table.svg') !important;

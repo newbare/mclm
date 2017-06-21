@@ -11,6 +11,8 @@ Ext.define('MCLM.Map', {
 		onClickBindKey: null,
 		graticuleEnabled: false,
 		aeroTrafficEnabled: false,
+		shipTrafficEnabled: false,
+		streetPhotoEnabled : false,
 		arrayMapCenter: null,
 		mapZoom: 5,
 		mapCenterLat: 0,
@@ -43,7 +45,9 @@ Ext.define('MCLM.Map', {
 			}
 		},
 		updateMaritmTraffic : function() {
-			MCLM.Map.shipsHelper.getShips();
+			if ( MCLM.Map.shipTrafficEnabled ) {
+				MCLM.Map.shipsHelper.getShips();
+			}
 		},		
 		// --------------------------------------------------------------------------------------------
 		// Cria o Mapa Principal e Camadas auxiliares
@@ -99,13 +103,14 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.aircraftHelper = Ext.create('MCLM.view.aircraft.AircraftHelper');
 			MCLM.Map.aircraftHelper.init();
-			setInterval( MCLM.Map.updateAeroTraffic , 8000);			
+			setInterval( MCLM.Map.updateAeroTraffic , 10000); // 10 segundos			
 
 			MCLM.Map.shipsHelper = Ext.create('MCLM.view.ships.ShipsHelper');
 			MCLM.Map.shipsHelper.init();
-						
+			setInterval( MCLM.Map.updateMaritmTraffic , 300000); // 5 minutos			
 			
 		},
+		
 		// --------------------------------------------------------------------------------------------
 		// Inicializa todas as variáveis e configuracoes
 		init : function() {
@@ -248,33 +253,7 @@ Ext.define('MCLM.Map', {
 			return MCLM.Map.map.getView().getZoom();
 		},
 		
-		
-		
-	    testeApagar : function ( serverUrl, serverLayers ) {
-	    	
-	    	console.log( serverUrl + "  ---- " + serverLayers );
-	    	
-	    	var newLayer = new ol.layer.Tile({
-	    	    source: new ol.source.TileWMS({
-	    	        url: serverUrl,
-	    	        isBaseLayer : false,
-	    	        params: {
-	    	            'layers': serverLayers,
-	    	            'tiled': true,
-	    	            'VERSION': '1.1.1', 
-	    	            'format': 'image/png8'
-	    	        },
-	    	        projection: ol.proj.get('EPSG:4326')
-	    	    })
-	    	});	
-	    	newLayer.set('name', 'preview_layer');
-	    	MCLM.Map.map.addLayer( newLayer );
-	    	
-	    	return newLayer;
-	    },		
-
-		
-		// --------------------------------------------------------------------------------------------
+    	// --------------------------------------------------------------------------------------------
 		// Adiciona uma nova camada ao mapa
 		addLayer : function( node ) {
 			
@@ -398,6 +377,26 @@ Ext.define('MCLM.Map', {
 				MCLM.Map.graticuleEnabled = false;
 			}	
 		},
+		
+		toggleStreetPhoto : function() {
+			MCLM.Map.streetPhotoEnabled = !MCLM.Map.streetPhotoEnabled;
+			if ( MCLM.Map.streetPhotoEnabled ) {
+				MCLM.Map.bindMapToQueryPhoto();
+			} else {
+				MCLM.Map.unbindMapClick();
+			}
+		},
+		
+		// --------------------------------------------------------------------------------------------
+		// Liga / desliga controle de tráfego maritimo
+		toggleShipTraffic : function () {
+			MCLM.Map.shipTrafficEnabled = !MCLM.Map.shipTrafficEnabled ;
+			if ( !MCLM.Map.shipTrafficEnabled ) {
+				MCLM.Map.shipsHelper.deleteShips();
+			} else {
+				MCLM.Map.shipsHelper.getShips();
+			}
+		},	
 		// --------------------------------------------------------------------------------------------
 		// Liga / desliga controle de tráfego aéreo
 		toggleAeroTraffic : function () {
@@ -517,20 +516,6 @@ Ext.define('MCLM.Map', {
 				
 				//console.log( me.replacePattern("A vaca caiu ${areakm2} e saiu voando até ${nome}...", props)  )
 
-				/*
-	        	var defaultStyle = new ol.style.Style({
-					fill: new ol.style.Fill({
-						color: '#CACACA'
-					}),
-					stroke: new ol.style.Stroke({
-						color: 'black',
-						width: 1
-					})
-				});				
-				resultStyles.push( defaultStyle );
-				*/
-				
-				
 				// ------------------------------------------------------------------------------
 				if ( featureGeomType == 'LineString' || featureGeomType == 'Line' ) {
 		        	var lineStyle = new ol.style.Style({
@@ -943,12 +928,38 @@ Ext.define('MCLM.Map', {
 		// Libera o click do mouse no mapa da ultima ferramenta ligada
 		unbindMapClick : function () {
 			if ( MCLM.Map.onClickBindKey ) {
-				// Removido por ser especifico do OL3
-				//MCLM.Map.map.unByKey( MCLM.Map.onClickBindKey );
-				// Novo metodo do OL4:
 				ol.Observable.unByKey( MCLM.Map.onClickBindKey );
 			}
 		},		
+		// --------------------------------------------------------------------------------------------
+		bindMapToQueryPhoto : function () {
+			MCLM.Map.unbindMapClick();
+			var me = MCLM.Map;
+			me.onClickBindKey = me.map.on('click', function(event) {
+				
+				var featureHit = false;
+				me.map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
+					
+					var layerName = layer.get("alias");
+					var att = feature.getProperties();					
+					
+					if ( (layerName == 'photoLayer') && me.streetPhotoEnabled ) {
+						var imageUrl = "https://d1cuyjsrcm0gby.cloudfront.net/"+att.key+"/thumb-320.jpg";
+						MCLM.view.photo.PhotoHelper.viewPhoto( imageUrl );
+						featureHit = true;
+						return true;
+					}
+				});
+				
+				if ( me.streetPhotoEnabled && !featureHit ) {
+					MCLM.view.photo.PhotoHelper.getPhotosCloseTo( event.coordinate );
+					return true;
+				}					
+				
+			});
+		},
+		
+		
 		// --------------------------------------------------------------------------------------------
 		// Liga o click do mouse no mapa com o metodo de consulta de camada
 		bindMapToQueryTool : function () {
@@ -964,7 +975,7 @@ Ext.define('MCLM.Map', {
 					var layerName = layer.get("alias");
 					var att = feature.getProperties();
 					
-					if ( layerName == 'aircraftLayer' ) {
+					if ( (layerName == 'aircraftLayer') && aeroTrafficEnabled ) {
 						me.aircraftHelper.showAircraftDetails( att );
 						featureHit = true;
 						return true;
@@ -976,15 +987,6 @@ Ext.define('MCLM.Map', {
 						return true;
 					}
 
-					
-					if ( layerName == 'photoLayer' ) {
-						var imageUrl = "https://d1cuyjsrcm0gby.cloudfront.net/"+feature.getProperties().key+"/thumb-320.jpg";
-						MCLM.view.photo.PhotoHelper.viewPhoto( imageUrl );
-						featureHit = true;
-						return true;
-					}
-					
-					
 					if ( !att.features ) {
 						MCLM.Functions.mainLog("Não existem dados na camada " + layerName );
 					} else {
@@ -1021,11 +1023,6 @@ Ext.define('MCLM.Map', {
 					}
 					
 			    });				
-				
-				if ( me.canPhoto && !featureHit ) {
-					MCLM.view.photo.PhotoHelper.getPhotosCloseTo( event.coordinate );
-					return true;
-				}	    	    
 				
 			});
 			
