@@ -89,8 +89,6 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
             success: function (response, opts) {
             	var respObj = Ext.decode(response.responseText);
             	
-            	console.log( respObj );
-            	
 				var features = new ol.format.GeoJSON().readFeatures( respObj , {
 					featureProjection: 'EPSG:3857'
 				});

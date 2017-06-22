@@ -5,7 +5,7 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 	id:'restToolsWindow',    	
 	xtype: 'restToolsWindow',
 	title : "Serviços Externos",
-	width : 185,
+	width : 220,
 	height: 70,
 	bodyStyle:"background:#FFFFFF;",
 	resizable: false,
@@ -31,6 +31,7 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 		 	Ext.tip.QuickTipManager.unregister('aeroplaneID');    	
 		 	Ext.tip.QuickTipManager.unregister('photoID');    	
 		 	Ext.tip.QuickTipManager.unregister('seaMapID');    
+		 	Ext.tip.QuickTipManager.unregister('marineTrafficID');    
 		 	MCLM.Map.shipsHelper.deleteShips();
 		 	MCLM.Map.aircraftHelper.deleteAircrafts();
 		 	MCLM.Map.aeroTrafficEnabled = false;
@@ -45,9 +46,9 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
         	
     	    Ext.tip.QuickTipManager.register({
     	        target: 'showForecastID',
-    	        title: 'Previsão do Tempo',
-    	        text: 'Diversos aspectos climáticos em tempo real.',
-    	        width: 150,
+    	        title: 'Avisos Meteorológicos INMET',
+    	        text: 'Centro Virtual para Avisos Meteorológicos Severos - INMET.',
+    	        width: 180,
     	        dismissDelay: 5000 
     	    },{
     	        target: 'maritmTrID',
@@ -67,6 +68,12 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     	        text: 'Exibe elementos de carta náutica que auxiliam a navegação. Necessário nível de zoom apropriado.',
     	        width: 150,
     	        dismissDelay: 5000 
+    	    },{
+    	    	target: 'marineTrafficID',
+    	    	title: 'Tráfego Marítimo',
+    	    	text: 'Exibe mapa com o tráfego marítimo oriundo do site MarineTraffic.',
+    	    	width: 150,
+    	    	dismissDelay: 5000 
     	    },{
     	        target: 'photoID',
     	        title: 'Fotos de Rua',

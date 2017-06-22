@@ -34,6 +34,13 @@ Ext.define('MCLM.view.tools.RestTools', {
         id : 'maritmTrID',
         xtype: 'button',
     },{
+	    iconCls: 'ship-icon',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    handler: 'shoMarineTraffic',
+        id : 'marineTrafficID',
+        xtype: 'button',
+    },{
 	    iconCls: 'photo-icon',
 	    enableToggle: true,
 	    width: MCLM.Globals.btnWidth,

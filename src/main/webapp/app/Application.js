@@ -9,6 +9,7 @@ Ext.define('MCLM.Application', {
        'MCLM.Functions',
        'MCLM.DrawHelper',
        'MCLM.RouteHelper',
+       'MCLM.ClimaHelper',
        'MCLM.view.photo.PhotoHelper',
        
     ],
