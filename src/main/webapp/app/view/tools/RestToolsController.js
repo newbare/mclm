@@ -8,7 +8,8 @@ Ext.define('MCLM.view.tools.RestToolsController', {
 		if ( !previsaoClima ) {
 			previsaoClima = Ext.create('MCLM.view.clima.PrevisaoWindow');
 		}
-		previsaoClima.show();  
+		previsaoClima.show();
+		MCLM.ClimaHelper.init();
 		MCLM.ClimaHelper.getAlerts();
     	
     },

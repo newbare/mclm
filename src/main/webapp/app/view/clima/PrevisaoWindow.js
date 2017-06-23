@@ -14,6 +14,15 @@ Ext.define('MCLM.view.clima.PrevisaoWindow', {
 
 	autoScroll : true,
 	
+    listeners: {
+		close : function() {
+			MCLM.ClimaHelper.clear();
+        	var detalheClima = Ext.getCmp('detalheClima');
+        	if ( detalheClima ) {
+        		detalheClima.close();
+        	}			
+		}
+    }	
 
     
 });

@@ -9,7 +9,7 @@ import br.mil.mar.casnav.mclm.misc.WebClient;
 public class IMNETService {
 
 	public synchronized String getAlerts() throws Exception {
-		String url = "https://alerts.inmet.gov.br/cap_12/rss/alert-as.rss";
+		String url = "http://alerts.inmet.gov.br/cap_12/rss/alert-as.rss";
 		WebClient wc = new WebClient();
 		String result = wc.doGet(url);
 		
@@ -41,7 +41,7 @@ public class IMNETService {
 	
 
 	public synchronized String getAlertsFull() throws Exception {
-		String url = "https://alerts.inmet.gov.br/cap_12/rss/alert-as.rss";
+		String url = "http://alerts.inmet.gov.br/cap_12/rss/alert-as.rss";
 		WebClient wc = new WebClient();
 		String result = wc.doGet(url);
 		JSONObject obj = XML.toJSONObject(result);
@@ -54,6 +54,14 @@ public class IMNETService {
 		String url = "http://www.inmet.gov.br/portal/index.php?r=municipio/sugestMunicipio&term=" + nome;
 		String result = wc.doGet(url);
 		return result;
+	}
+
+
+	public String getWarningDetail(String source) throws Exception {
+		WebClient wc = new WebClient();
+		String result = wc.doGet( source.replace("https", "http") );
+		JSONObject obj = XML.toJSONObject(result);
+		return obj.toString();
 	}
 
 	
