@@ -8,6 +8,14 @@ import br.mil.mar.casnav.mclm.misc.WebClient;
 
 public class IMNETService {
 
+	public synchronized String getCityAlertLevels( String lat, String lon ) throws Exception {
+		// http://alert-as.inmet.gov.br/cv/mapa/cidade?lon=-61.31363281250047&lat=2.055596697060544
+		String url = "http://alert-as.inmet.gov.br/cv/mapa/cidade?lon="+lon+"&lat=" + lat;
+		WebClient wc = new WebClient();
+		String result = wc.doGet(url);
+		return result.replace("null(", "").replaceFirst(".$","");
+	}
+	
 	public synchronized String getAlerts() throws Exception {
 		String url = "http://alerts.inmet.gov.br/cap_12/rss/alert-as.rss";
 		WebClient wc = new WebClient();

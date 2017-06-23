@@ -459,7 +459,7 @@ Ext.define('MCLM.RouteHelper', {
  		    		   // Transforma poligono e linha em ponto -------------------------------
  		    		   var featureGeomType = features[i].getGeometry().getType();
  		    		   if ( featureGeomType == 'Polygon' || featureGeomType == 'LineString' ) {
- 		    			   var oldGeom = features[i].getGeometry()
+ 		    			   var oldGeom = features[i].getGeometry();
  		    			   var oldExtent = oldGeom.getExtent();
  		    			   var props = features[i].getProperties();
  		    			   

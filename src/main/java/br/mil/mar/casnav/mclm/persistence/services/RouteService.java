@@ -84,9 +84,6 @@ public class RouteService {
 			" from planet_osm_line ll where ll.name like '%" + rua + "%' " + estaNoEstado + estaNaCidade + estaNoPais + ") as t";
 		
 		String result = "";
-
-		
-		System.out.println( sql );
 		
 		String connectionString = "jdbc:postgresql://" + cfg.getRoutingServer() +
 				":" + cfg.getRoutingPort() + "/" + cfg.getRoutingDatabase();

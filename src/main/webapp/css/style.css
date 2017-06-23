@@ -548,4 +548,23 @@
 	font-size : 9px;
 }
 
+.tableDesc {
+	border : 0px;
+}
 
+#avisoMetTable {
+	width:100%;
+	padding:0px;
+	margin:0px;
+}
+
+#avisoMetTable .avisoMetRight {
+	border-bottom:1px dotted black;
+}
+	
+#avisoMetTable .avisoMetLeft {
+	border-bottom:1px dotted black;
+	text-align:center;
+	vertical-align:top;
+	width:40px
+}

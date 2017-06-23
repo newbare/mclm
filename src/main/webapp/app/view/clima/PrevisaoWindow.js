@@ -1,12 +1,13 @@
 Ext.define('MCLM.view.clima.PrevisaoWindow', {
 	
 	extend: 'Ext.Window',
+	floating: true,
 	
 	id:'previsaoClima',    	
 	xtype: 'previsaoClima',
 	title : "Avisos Meteorológicos",
-	width : 600,
-	height: 400,
+	width : 300,
+	height: 500,
 	bodyStyle:"background:#FFFFFF;",
 	resizable: true,
 	constrain: true,

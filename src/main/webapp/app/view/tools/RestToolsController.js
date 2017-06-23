@@ -9,6 +9,7 @@ Ext.define('MCLM.view.tools.RestToolsController', {
 			previsaoClima = Ext.create('MCLM.view.clima.PrevisaoWindow');
 		}
 		previsaoClima.show();
+		previsaoClima.alignTo(Ext.getBody(), "tl-tl", [0, 0]);
 		MCLM.ClimaHelper.init();
 		MCLM.ClimaHelper.getAlerts();
     	

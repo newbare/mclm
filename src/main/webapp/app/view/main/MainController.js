@@ -56,13 +56,9 @@ Ext.define('MCLM.view.main.MainController', {
     	var rotaWindow = Ext.getCmp('rotaWindow');
     	if ( rotaWindow ) return;
     	rotaWindow = Ext.create('MCLM.view.rotas.RotaWindow');
-    	
     	rotaWindow.alignTo(Ext.getBody(), "tl-tl", [0, 0]);    	
-    	
     	rotaWindow.show();
-    	
     	MCLM.Globals.routeBlinkEnabled = true;
-    	
     },
 	// --------------------------------------------------------------------------------------------
     editStyles : function() {

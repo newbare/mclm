@@ -12,6 +12,19 @@ Ext.define('MCLM.Functions', {
 			  return "f" + s4() + s4();
 		},		
 		
+		hexToRgbA : function(hex, transp){
+		    var c;
+		    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+		        c= hex.substring(1).split('');
+		        if(c.length== 3){
+		            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+		        }
+		        c= '0x'+c.join('');
+		        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+transp+')';
+		    }
+		    throw new Error('Bad Hex');
+		},			
+		
 		guid : function() {
 			  function s4() {
 			    return Math.floor((1 + Math.random()) * 0x10000)

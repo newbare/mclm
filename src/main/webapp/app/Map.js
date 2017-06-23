@@ -138,6 +138,7 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.openSeaMapLayer = MCLM.Map.createOpenSeaMapLayer();
 			MCLM.Map.baseLayer = MCLM.Map.createBaseLayer();
+			
 		},
 		// --------------------------------------------------------------------------------------------
 		// Gera a Camada do OpenSeaMap
@@ -978,6 +979,11 @@ Ext.define('MCLM.Map', {
 					if ( (layerName == 'aircraftLayer') && aeroTrafficEnabled ) {
 						me.aircraftHelper.showAircraftDetails( att );
 						featureHit = true;
+						return true;
+					}
+					
+					if ( layerName == 'climaLayer' ) {
+						MCLM.ClimaHelper.showDetails( feature, event.coordinate );
 						return true;
 					}
 					
