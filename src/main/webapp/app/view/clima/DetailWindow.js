@@ -6,7 +6,7 @@ Ext.define('MCLM.view.clima.DetailWindow', {
 	xtype: 'detalheClima',
 	title : "Avisos meteorológicos",
 	width : 550,
-	height: 365,
+	height: 465,
 	bodyStyle:"background:#FFFFFF;",
 	resizable: false,
 	constrain: true,

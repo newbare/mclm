@@ -28,6 +28,7 @@ Ext.define('MCLM.Map', {
 		aircraftHelper : null,
 		shipsHelper : null,
 		canPhoto : true,
+		statusBar : null,
 		
 		getBaseMapName : function() {
 			return MCLM.Map.baseLayerName;
@@ -69,7 +70,14 @@ Ext.define('MCLM.Map', {
 		               projection: 'EPSG:4326',
 		               coordinateFormat: function(coordinate) {
 		            	   var coord = ol.coordinate.toStringHDMS( coordinate );
-		            	   return coord;
+
+		            	   var template = '{y} , {x}';
+		            	   var mapCoord = ol.coordinate.format(coordinate, template, 6);
+		            	   
+		            	   $("#coord_map").html( mapCoord );
+		            	   $("#coord_hdms").html( coord );
+		            	   
+		            	   return "";
 		               }
 		           })
 		        
