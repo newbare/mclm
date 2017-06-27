@@ -9,7 +9,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
-import br.mil.mar.casnav.mclm.misc.WebClient;
+import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
@@ -69,7 +69,7 @@ public class Startup implements ServletContextListener {
     		
     		// Verifica novamente se todas as camadas estao com o dicionorio carregado.
     		// Pode acontecer de no momento do cadastro da camada o link WMS esteja 
-    		// fora do ar e nÔøΩo seja possivel buscar os atributos, entao tentamos novamente agora
+    		// fora do ar e n„o seja possivel buscar os atributos, entao tentamos novamente agora
     		// O ideal seria deixar para o usuario atualizar isso quando necessario.
     		
     		NodeService ns = new NodeService();
@@ -77,7 +77,7 @@ public class Startup implements ServletContextListener {
     		DictionaryService ds = new DictionaryService();
 
     		
-    		/*
+    		
     		for( NodeData node : nodes ) {
     			if ( node.getLayerType() == LayerType.CRN) Configurator.getInstance().setFeicaoRootNode( node );
     			
@@ -89,7 +89,7 @@ public class Startup implements ServletContextListener {
 						int quant = ds.updateDictionary( node );
 						if ( quant > 0 ) System.out.println(" > concluido com " + quant + " itens.");
 					} catch ( Exception e ) {
-						System.out.println("Erro ao tentar atualizar o dicion√°rio: " + e.getMessage() );
+						System.out.println("Erro ao tentar atualizar o dicion·rio: " + e.getMessage() );
 					}
 				}
 				
@@ -99,7 +99,7 @@ public class Startup implements ServletContextListener {
 				ns.newTransaction();
 				Configurator.getInstance().setFeicaoRootNode( ns.createCRN() );
 			} 
-			*/
+			
 			
 			
 			// TEMP!

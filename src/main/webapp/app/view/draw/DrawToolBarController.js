@@ -152,7 +152,6 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
 	  		  Ext.Msg.alert('Erro','Não implementado ainda.' );
 	  		  break;
 	  	  case 'CE':
-	  		  
 		  		Ext.Ajax.request({
 				       url: 'newFeicao',
 				       params: {
