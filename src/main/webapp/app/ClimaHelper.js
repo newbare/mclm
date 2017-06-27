@@ -74,6 +74,7 @@ Ext.define('MCLM.ClimaHelper', {
 		},
 		
 		getAlerts : function() {
+			var previsaoForm = Ext.getCmp('previsaoClima');
 			
     		Ext.Ajax.request({
                 url: 'getAlerts',
@@ -81,9 +82,17 @@ Ext.define('MCLM.ClimaHelper', {
                 	
                 },
                 success: function (response, opts) {
+                	if ( response.responseText == 'NO_ALERTS' ) {
+                		Ext.Msg.alert('Nenhum aviso','Não foi publicado nenhum aviso.' );
+                		previsaoForm.close();
+                		return true;
+                	}
                 	var respObj = Ext.decode(response.responseText);
                 	var items = respObj.rss.channel.item;
-                	var div = "<div style='font-size:10px;width:99%;margin:5px'><table id='avisoMetTable'>";
+                	var div = "<div style='font-size:10px;width:99%;margin:5px;' >" +
+                	"<div id='inmet-bar' >" +
+                		"<div style='margin-left: 10px;margin-top: 7px;width:50px;float:left'><img style='width: 100px;' src='img/logo_alert-as.png'></div>  <div style='width:60px;float:right'><img style='height:40px;width: 50px;' src='img/inmet-logo.png'></div> " +
+                	"</div><table id='avisoMetTable'>";
                 	
                 	for( var x=0; x<items.length;x++  ) {
                 		var obj = items[x];
@@ -102,7 +111,6 @@ Ext.define('MCLM.ClimaHelper', {
                 	}                	
                 	
                 	div = div + "</table></div>";
-                	var previsaoForm = Ext.getCmp('previsaoClima');
                 	previsaoForm.update( div );
                 	
                 }

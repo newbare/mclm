@@ -588,15 +588,22 @@
 }
 	
 #statusBarTable {
-	width:900px;
+	width:100%;
 	padding:0px;
 	margin:0px;
-	padding-right:50px;
+	/*padding-right:50px;*/
 }
 	
 #statusBarDiv {
-	font-size : 10px;
+	font-size : 9px;
 	width:100%;
 	border-bottom:2px solid #cacaca;
-	height:20px;
+	height:25px;
+}
+
+#inmet-bar {
+	background: url('../img/back-inmet.png');
+	border-bottom:1px dotted #cacaca;
+	height:50px;
+	width:99%
 }

@@ -49,7 +49,15 @@ Ext.define('MCLM.Map', {
 			if ( MCLM.Map.shipTrafficEnabled ) {
 				MCLM.Map.shipsHelper.getShips();
 			}
-		},		
+		},	
+		toDefault : function() {
+			var zoom = MCLM.Map.mapZoom;
+			MCLM.Map.panTo( MCLM.Map.arrayMapCenter[0] + ',' + MCLM.Map.arrayMapCenter[1], zoom);
+		},
+		toWorld : function() {
+			var map = MCLM.Map.map;
+			MCLM.Map.map.getView().fit([-16716960.433033716, -7413397.061675084, 23358056.252544772, 10745594.873977667]);	
+		},
 		// --------------------------------------------------------------------------------------------
 		// Cria o Mapa Principal e Camadas auxiliares
 		loadMap : function( container ) {
@@ -71,11 +79,16 @@ Ext.define('MCLM.Map', {
 		               coordinateFormat: function(coordinate) {
 		            	   var coord = ol.coordinate.toStringHDMS( coordinate );
 
-		            	   var template = '{y} , {x}';
+		            	   var template = '{y}  {x}';
 		            	   var mapCoord = ol.coordinate.format(coordinate, template, 6);
+		            	   
+			    		   var lat = coordinate[0];
+			    		   var lon = coordinate[1];		            	   
+		            	   var utmCoord = MCLM.Functions.latLonToUTM( lon, lat );
 		            	   
 		            	   $("#coord_map").html( mapCoord );
 		            	   $("#coord_hdms").html( coord );
+		            	   $("#coord_utm").html( utmCoord );
 		            	   
 		            	   return "";
 		               }

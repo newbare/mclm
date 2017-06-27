@@ -23,16 +23,20 @@ public class GetAlertsAction {
 	public String execute(){
 
 		try { 
-
-			IMNETService imnet = new IMNETService();
-			String resposta = imnet.getAlerts();
+			String resposta = "NO_ALERTS";
+			
+			try {
+				IMNETService imnet = new IMNETService();
+				resposta = imnet.getAlerts();
+			} catch ( Exception ex ) {
+				//ex.printStackTrace();
+			}
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.getWriter().write(resposta);  
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			
+			//
 		}
 		return "ok";
 	}
