@@ -80,7 +80,7 @@ public class Startup implements ServletContextListener {
     		
     		for( NodeData node : nodes ) {
     			if ( node.getLayerType() == LayerType.CRN) Configurator.getInstance().setFeicaoRootNode( node );
-    			
+    			/*
 				ds.newTransaction();
 				try {
 					ds.getDictionary( node.getIdNodeData() );
@@ -92,6 +92,7 @@ public class Startup implements ServletContextListener {
 						System.out.println("Erro ao tentar atualizar o dicionário: " + e.getMessage() );
 					}
 				}
+				*/
 				
 			}
 			

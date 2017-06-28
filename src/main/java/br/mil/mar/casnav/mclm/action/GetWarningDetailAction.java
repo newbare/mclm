@@ -25,6 +25,8 @@ public class GetWarningDetailAction {
 		
 		try { 
 
+			System.out.println( source );
+			
 			IMNETService imnet = new IMNETService();
 			String resposta = imnet.getWarningDetail(source);
 			

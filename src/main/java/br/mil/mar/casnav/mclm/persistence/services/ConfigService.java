@@ -31,6 +31,7 @@ public class ConfigService {
 				cfg.setGeoserverUrl("http://129.206.228.72/cached/osm");
 				cfg.setMapCenter("-48.129374999999925,-14.120633163259185");
 				cfg.setServicosCptecUrl("http://servicos.cptec.inpe.br/");
+				cfg.setServerHostName("CASNAV");
 				cfg.setRoutingPort(5432);
 				cfg.setMapZoom(5);
 				cfg.setProxyPort(8080);
@@ -41,10 +42,11 @@ public class ConfigService {
 				
 			}
 			cfg.setUser( user );
+			Configurator.getInstance().updateConfiguration( cfg );
+			
 			JSONObject itemObj = new JSONObject( cfg );
 			result = itemObj.toString();
 			
-			Configurator.getInstance().updateConfiguration( cfg );
 		} catch ( Exception e ) {
 			result = "{ \"error\": true, \"msg\": \"" + e.getMessage()+ ".\" }";
 			e.printStackTrace();

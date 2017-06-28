@@ -28,6 +28,7 @@ public class GetAlertsAction {
 			try {
 				IMNETService imnet = new IMNETService();
 				resposta = imnet.getAlerts();
+				
 			} catch ( Exception ex ) {
 				//ex.printStackTrace();
 			}

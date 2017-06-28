@@ -160,6 +160,8 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.openSeaMapLayer = MCLM.Map.createOpenSeaMapLayer();
 			MCLM.Map.baseLayer = MCLM.Map.createBaseLayer();
 			
+			console.log( config );
+			$("#serverHostName").html( config.serverHostName );
 		},
 		// --------------------------------------------------------------------------------------------
 		// Gera a Camada do OpenSeaMap

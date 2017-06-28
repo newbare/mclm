@@ -25,6 +25,9 @@ public class Config {
 	@Column(length=250)
 	private String baseLayer;
 	
+	@Column(length=250)
+	private String serverHostName;
+	
 	@Column
 	private Boolean useProxy = false;
 	
@@ -361,4 +364,13 @@ public class Config {
 	public void setSymbolServerURL(String symbolServerURL) {
 		this.symbolServerURL = symbolServerURL;
 	}
+	
+	public void setServerHostName(String serverHostName) {
+		this.serverHostName = serverHostName;
+	}
+	
+	public String getServerHostName() {
+		return serverHostName;
+	}
+	
 }
