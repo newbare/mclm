@@ -1,6 +1,7 @@
 package br.mil.mar.casnav.mclm.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
@@ -9,6 +10,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 import br.mil.mar.casnav.mclm.misc.User;
+import br.mil.mar.casnav.mclm.persistence.services.ApoloService;
 
 public class ClientAccessInterceptor implements Interceptor {
 	private static final long serialVersionUID = -2344136157076941239L;
@@ -16,28 +18,29 @@ public class ClientAccessInterceptor implements Interceptor {
 	
 	public String intercept(ActionInvocation invocation) {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		
 		HttpSession session = request.getSession();
-		//System.out.println( "[" + session.getId() +  "] [" + invocation.getAction().getClass().getSimpleName() + "] [" + request.getRequestURI() + "]");
+		
+		// System.out.println( "[" + session.getId() +  "] [" + invocation.getAction().getClass().getSimpleName() + "] [" + request.getRequestURI() + "]");
 
 		User loggedUser = (User)session.getAttribute("loggedUser");
 		if (loggedUser == null) {
-			//System.out.println(" > Asking user to APOLO...");
+			try {
+				String idUser = (String)session.getAttribute("idUser");
+				
+				ApoloService as = new ApoloService();
+				User user = as.checkUser(idUser);
+				session.setAttribute("loggedUser", user);
+				
+			} catch ( Exception e ) {
+				// Quando nao encontrar usuario logado no APOLO...
+				HttpServletResponse response = ServletActionContext.getResponse();
+				response.setStatus( HttpServletResponse.SC_UNAUTHORIZED );
+				response.setStatus( HttpServletResponse.SC_FORBIDDEN );
+				return "notLogged";			
+			}
 			
-			User user = new User();
-			user.setIdUser(8658);
-			
-			// Simula um usuário logado do APOLO. Retirar isso.
-			session.setAttribute("loggedUser", user);	
-			//System.out.println(" > Found User: " + user.getIdUser() );
-			
-			// Quando nao encontrar usuario logado no APOLO...
-			// HttpServletResponse response = ServletActionContext.getResponse();
-			// response.setStatus( HttpServletResponse.SC_UNAUTHORIZED );
-			// response.setStatus( HttpServletResponse.SC_FORBIDDEN );
-			//return "notLogged";
 		} else {
-			//System.out.println(" > Logged User: " + loggedUser.getIdUser() );
+			System.out.println(" > Logged User: " + loggedUser.getIdUser() );
 		}
 		
 		

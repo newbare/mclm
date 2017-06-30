@@ -274,6 +274,15 @@ Ext.define('MCLM.Functions', {
 			Ext.tip.QuickTipManager.init();
 
 			Ext.tip.QuickTipManager.register(
+					
+					{
+						target: 'topMainToolBarHomeIcon',
+						title: 'Menu Principal',
+						text: 'Retorna ao Menu Principal do APOLO.',
+						width: 150,
+						dismissDelay: 5000 
+
+					},     	
 
 					{
 						target: 'id011',

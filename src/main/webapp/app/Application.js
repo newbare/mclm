@@ -30,8 +30,13 @@ Ext.define('MCLM.Application', {
        'MCLM.store.Styles',
        'MCLM.store.DataPanels',
     ],
+    
+    onCloseWindow : function() {
+    	location.href = 'http://apolo.defesa.mil.br/';
+    },    
    
     launch: function () {
+        var me = this;
         
     	Ext.Ajax.on("beforerequest", function (conn, options, eOpts) {
     		MCLM.Functions.showMainLoadingIcon( options.url );
@@ -48,10 +53,10 @@ Ext.define('MCLM.Application', {
     		$("#mainLoadingInfo").text( "" );
     		$("#mainLoadingIcon").css('display','none');
            if (resp.status === 401) {
-               Ext.Msg.alert('','A sessão de usuário expirou!');
+               Ext.Msg.alert('Falha de autenticação','A sessão de usuário expirou!', me.onCloseWindow);
            }
            if (resp.status === 403) {
-               Ext.Msg.alert('','Este usuário não tem permissão de acesso a esta funcionalidade!');
+               Ext.Msg.alert('Falha de autenticação','O MCLM não pode ser acessado diretamente. Use o sistema APOLO!', me.onCloseWindow );
            }
     	});    	
     	
@@ -90,10 +95,15 @@ Ext.define('MCLM.Application', {
 				    	}, 1000);					    	
 				
 				/* 5. */ MCLM.view.photo.PhotoHelper.init();		// inicializa o Mapilary
+				
+				
+				/* 6. */ $("#topMainToolBarUserName").html( config.user.userName );
+				/* 7. */ //$("#osmSource").html( config.geoserverUrl );
+				
 		        // ---------------------------------------------
 			},
 			failure: function(response, opts) {
-				Ext.Msg.alert('Erro ao receber a configuração do servidor' );
+				//
 			}
 			
 		});

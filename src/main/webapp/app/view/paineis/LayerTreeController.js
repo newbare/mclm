@@ -61,6 +61,8 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		tempData.push( record.data );
 		var layerDetailStore = Ext.data.StoreManager.lookup('store.LayerDetail');
 		layerDetailStore.loadData( tempData );
+		
+		console.log( tempData );
     	
 		if( record.data.readOnly ) {
 			$("#id_lock_icon").css("display","block");

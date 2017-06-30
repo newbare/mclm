@@ -42,6 +42,7 @@ public class ConfigService {
 				
 			}
 			cfg.setUser( user );
+			
 			Configurator.getInstance().updateConfiguration( cfg );
 			
 			JSONObject itemObj = new JSONObject( cfg );

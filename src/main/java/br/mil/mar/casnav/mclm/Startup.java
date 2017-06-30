@@ -1,7 +1,9 @@
 package br.mil.mar.casnav.mclm;
 
 import java.util.Set;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -15,7 +17,6 @@ import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
 import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
-import br.mil.mar.casnav.mclm.persistence.services.DictionaryService;
 import br.mil.mar.casnav.mclm.persistence.services.NodeService;
 
 
@@ -36,12 +37,10 @@ public class Startup implements ServletContextListener {
     	
     	try {
        
-    		// Isso inicia o monitor de conexoes. Serve para verificar connection leaks
-    		/*
+    		
     		ScheduledExecutorService  scheduler = Executors.newSingleThreadScheduledExecutor();
     		Cron cron = new Cron();
     		scheduler.scheduleAtFixedRate( cron , 0, 1, TimeUnit.MINUTES);
-    		*/
     		
     		
     		String configFile = path + "WEB-INF/classes/config.xml";
@@ -69,14 +68,12 @@ public class Startup implements ServletContextListener {
     		
     		// Verifica novamente se todas as camadas estao com o dicionorio carregado.
     		// Pode acontecer de no momento do cadastro da camada o link WMS esteja 
-    		// fora do ar e não seja possivel buscar os atributos, entao tentamos novamente agora
+    		// fora do ar e nï¿½o seja possivel buscar os atributos, entao tentamos novamente agora
     		// O ideal seria deixar para o usuario atualizar isso quando necessario.
     		
     		NodeService ns = new NodeService();
     		Set<NodeData> nodes = ns.getList();
-    		DictionaryService ds = new DictionaryService();
-
-    		
+    		//DictionaryService ds = new DictionaryService();
     		
     		for( NodeData node : nodes ) {
     			if ( node.getLayerType() == LayerType.CRN) Configurator.getInstance().setFeicaoRootNode( node );
@@ -89,7 +86,7 @@ public class Startup implements ServletContextListener {
 						int quant = ds.updateDictionary( node );
 						if ( quant > 0 ) System.out.println(" > concluido com " + quant + " itens.");
 					} catch ( Exception e ) {
-						System.out.println("Erro ao tentar atualizar o dicionário: " + e.getMessage() );
+						System.out.println("Erro ao tentar atualizar o dicionï¿½rio: " + e.getMessage() );
 					}
 				}
 				*/
