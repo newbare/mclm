@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import br.mil.mar.casnav.mclm.misc.LayerType;
+import br.mil.mar.casnav.mclm.misc.WindowType;
 
 
 @Entity
@@ -41,6 +42,10 @@ public class NodeData {
 	@Column(length=5)
 	@Enumerated(EnumType.STRING)
 	private LayerType layerType;
+	
+	@Column(length=10)
+	@Enumerated(EnumType.STRING)
+	private WindowType windowType;	
 	
 	@Transient
 	private int children;
@@ -96,6 +101,7 @@ public class NodeData {
 		this.layerType = layerType;
 		this.readOnly = false;
 		this.serialId = "LR" + UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
+		this.windowType = WindowType.DEFAULT;
 	}
 	
 	public NodeData(int idNodeParent, String originalServiceUrl, String description, String institute, String layerName, 
@@ -249,7 +255,7 @@ public class NodeData {
 		this.feicao = feicao;
 	}	
 
-
+	
 	
 	
 }

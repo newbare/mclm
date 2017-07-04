@@ -1,4 +1,4 @@
-package br.mil.mar.casnav.mclm.persistence.services;
+package br.mil.mar.casnav.mclm.persistence.services.apolo;
 
 import br.mil.mar.casnav.mclm.misc.User;
 

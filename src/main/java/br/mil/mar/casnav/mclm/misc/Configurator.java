@@ -27,6 +27,34 @@ public class Configurator {
 	private String databaseName;
 	private String databaseAddr;
 	private String databasePort;
+
+	private String apoloUserName;
+	private String apoloPassword;
+	private String apoloDatabaseName;
+	private String apoloDatabaseAddr;
+	private String apoloDatabasePort;	
+	
+	public String getApoloUserName() {
+		return apoloUserName;
+	}
+
+	public String getApoloPassword() {
+		return apoloPassword;
+	}
+
+	public String getApoloDatabaseName() {
+		return apoloDatabaseName;
+	}
+
+	public String getApoloDatabaseAddr() {
+		return apoloDatabaseAddr;
+	}
+
+	public String getApoloDatabasePort() {
+		return apoloDatabasePort;
+	}
+
+
 	private Config config;
 	private NodeData feicaoRootNode;
 	
@@ -212,6 +240,13 @@ public class Configurator {
 			databaseName = getTagValue("databaseName", mpElement);
 			databaseAddr = getTagValue("databaseAddr", mpElement);
 			databasePort = getTagValue("databasePort", mpElement);
+			
+			apoloUserName = getTagValue("apoloUserName", mpElement);
+			apoloPassword = getTagValue("apoloPassword", mpElement);
+			apoloDatabaseName = getTagValue("apoloDatabaseName", mpElement);
+			apoloDatabaseAddr = getTagValue("apoloDatabaseAddr", mpElement);
+			apoloDatabasePort = getTagValue("apoloDatabasePort", mpElement);
+			
 		} catch ( Exception e ) {
 			System.out.println( e.getMessage() );
 		}

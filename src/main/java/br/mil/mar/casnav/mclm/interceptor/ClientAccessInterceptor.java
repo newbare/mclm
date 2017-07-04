@@ -10,7 +10,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 import br.mil.mar.casnav.mclm.misc.User;
-import br.mil.mar.casnav.mclm.persistence.services.ApoloService;
+import br.mil.mar.casnav.mclm.persistence.services.apolo.ApoloService;
 
 public class ClientAccessInterceptor implements Interceptor {
 	private static final long serialVersionUID = -2344136157076941239L;
