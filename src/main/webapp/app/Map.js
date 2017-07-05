@@ -13,6 +13,7 @@ Ext.define('MCLM.Map', {
 		aeroTrafficEnabled: false,
 		shipTrafficEnabled: false,
 		streetPhotoEnabled : false,
+		queryLocationEnabled : false,
 		arrayMapCenter: null,
 		mapZoom: 5,
 		mapCenterLat: 0,
@@ -29,6 +30,69 @@ Ext.define('MCLM.Map', {
 		shipsHelper : null,
 		canPhoto : true,
 		statusBar : null,
+		
+		enableQueryLocation : function() {
+			MCLM.Map.unbindMapClick();
+			MCLM.Map.queryLocationEnabled = true;
+			$("#painelCentral").css('cursor','help');
+			MCLM.Map.onClickBindKey = MCLM.Map.map.on('click', function(event) {
+				var center = ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326');
+				
+				Ext.Ajax.request({
+				       url: 'getWeatherLocation',
+				       params: {
+				           'lat': center[1],
+				           'lon': center[0]
+				       },       
+				       success: function(response, opts) {
+				    	   var respText = Ext.decode(response.responseText);
+				    	   
+				    	   var weatherCoordinateWindow = Ext.getCmp('weatherCoordinateWindow');
+				    	   if ( !weatherCoordinateWindow ) {
+				    		   weatherCoordinateWindow = Ext.create('MCLM.view.clima.WeatherCoordinateWindow');
+				    	   }
+				    	   weatherCoordinateWindow.setTitle("Previsão para município em coordenadas");
+				    	   weatherCoordinateWindow.show();				    	   
+				    	   
+				    	   var previsoes = respText.cidade.previsao;
+				    	   var table = "<table style='width:100%'>";
+				    	   for(var x=0; x<previsoes.length;x++  ) {
+				    		   var previsao = previsoes[x];
+				    		   var diaSpt = previsao.dia.split("-");
+				    		   var preDta = diaSpt[2] + "/" + diaSpt[1] + "/" + diaSpt[0]; 
+				    			   
+				    		   var icone = "img/clima/cptec/" + previsao.tempo + ".png";
+				    		   
+				    		   var tdIcone = "<img style='width:70px' src='"+icone+"'>";
+				    		   var mxIcone = "<img src='img/clima/cptec/ic_temp_max.png'>";
+				    		   var mnIcone = "<img src='img/clima/cptec/ic_temp_min.png'>";
+				    		   
+				    		   var climaDesc = MCLM.Functions.getClimaDesc( previsao.tempo );
+				    		   
+				    		   table = table + "<tr><td colspan='3' style='background-color:#efefef;border:1px dotted #cacaca'>Previsão para "+preDta+"</td></tr>";
+				    		   table = table + "<tr><td style='font-size:9px;'>"+climaDesc+"</td><td>Máxima</td><td>Mínima</td></tr>";
+				    		   table = table + "<tr><td>"+tdIcone+"</td><td style='color: #ef9d44;font-size: 18px;font-weight: 600;'>" + mxIcone + "&nbsp;&nbsp;" + previsao.maxima+"ºC</td>" + 
+				    		   	"<td style='color: #4174e8;font-size: 18px;font-weight: 600;'>"+ mnIcone + "&nbsp;&nbsp;" + previsao.minima+"ºC</td></tr>";
+				    		   
+				    		   
+				    		   
+				    	   }
+				    	   table = table + "</table>";
+				    	   
+				    	   var divMain = "<div style='background-color:#edeff2;border-bottom:1px dotted #cacaca;width:100%;height:45px'><img style='position:absolute;left:5px;top:2px;width: 220px;' src='img/clima/cptec/logocomp.gif'><img style='width: 50px;position:absolute;right:5px;top:2px;' src='img/clima/cptec/logo_cptec.png'></div>" + 
+				    	   "<div style='padding-top:5px;font-size:11px;font-weight:bold;text-align:center;border-bottom:1px dotted #cacaca;width:100%;height:23px'>"+respText.cidade.nome+"</div>" + table;
+				    	   
+				    	   
+				    	   weatherCoordinateWindow.update( divMain );
+				    	   console.log( respText );
+				    	   
+				       }
+				});
+				
+				
+			});
+			
+		},
 		
 		getBaseMapName : function() {
 			return MCLM.Map.baseLayerName;
@@ -306,6 +370,7 @@ Ext.define('MCLM.Map', {
 			
 			var idDataWindow = node.get('idDataWindow');
 			var idNodeData = node.get('idNodeData');
+			var cqlFilter = node.get('cqlFilter');
 			
 			var serverUrl = node.get('serviceUrl');
 			var layerName = node.get('layerName');
@@ -316,11 +381,14 @@ Ext.define('MCLM.Map', {
 			var version = node.get('version');
 			var layerType = node.get('layerType');
 			
+			console.log("ATENÇÃO : Falta implementar filtro adicional. Map.js : 320");
+			/*
 			var filter = node.get("filter");
-			var cql = null;
+			var aditionalFilter = null;
 			if( filter ) {
-				cql = filter.filter;
+				aditionalFilter = filter.filter;
 			}
+			*/
 			
             var transparency = node.get('transparency') / 10;
             var layerStackIndex = node.get('layerStackIndex');			
@@ -350,11 +418,14 @@ Ext.define('MCLM.Map', {
 	    	            'VERSION': '1.1.1', 
 	    	            'FORMAT': 'image/png8'
 	    	    }
-				if ( cql ) {
+				if ( cqlFilter ) {
+					
+					console.log("Aplicando filtro " + cqlFilter );
+					
 					paramsRel = {
 		    	        	tiled: true,
 		    	            'layers': layerName,
-		    	            'cql_filter': cql,
+		    	            'cql_filter': cqlFilter,
 		    	            'VERSION': '1.1.1', 
 		    	            'FORMAT': 'image/png8'
 		    	    }					

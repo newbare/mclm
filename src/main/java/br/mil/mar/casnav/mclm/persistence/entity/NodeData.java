@@ -58,6 +58,9 @@ public class NodeData {
 
 	@Column(length=250)
 	private String description;
+
+	@Column(length=250)
+	private String cqlFilter;	
 	
 	@Column(length=250)
 	private String institute;
@@ -253,9 +256,23 @@ public class NodeData {
 
 	public void setFeicao(Feicao feicao) {
 		this.feicao = feicao;
+	}
+
+	public WindowType getWindowType() {
+		return windowType;
+	}
+
+	public void setWindowType(WindowType windowType) {
+		this.windowType = windowType;
+	}
+
+	public String getCqlFilter() {
+		return cqlFilter;
+	}
+
+	public void setCqlFilter(String cqlFilter) {
+		this.cqlFilter = cqlFilter;
 	}	
 
-	
-	
 	
 }

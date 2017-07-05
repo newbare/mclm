@@ -15,13 +15,10 @@ public class OrganizacoesMilitaresService extends BasicApoloService {
 		connect();
 		String result = "";
 		
-		/*
-		select row_to_json(omr)::text  as result FROM (select om.*,f.*, row_to_json( (select t2 from (select * from siglmd.org_mil oo where oo.orgid = om.orgid) as t2) )::text as comimsup from siglmd.org_mil om join siglmd.forca f on om.forcaid = f.forcaid where om.orgid=58040130101020005361)  as omr
-		*/
-		String comsup = "select " + rowToJson("select * from siglmd.org_mil om where om.orgid=" + orgid, "result", "omr");
-		String sql = "select " + rowToJson("select om.*, f.*, " + comsup + " from siglmd.org_mil om join siglmd.forca f on om.forcaid = f.forcaid where om.orgid=" + orgid, "result", "omr");
+		String comsup = "row_to_json( (select t2 from (select * from siglmd.org_mil oo where oo.orgid = om.orgid) as t2) )::text as comimsup";
+		String mainQuery = "select  row_to_json(omr)::text as result FROM (select om.*, f.*, " + comsup + " from siglmd.org_mil om join siglmd.forca f on om.forcaid = f.forcaid where om.orgid=" + orgid + ") as omr";
 		
-		List<UserTableEntity> utes = gs.genericFetchList( sql );
+		List<UserTableEntity> utes = gs.genericFetchList( mainQuery );
 		
 		if ( utes.size() > 0 ) {
 			UserTableEntity ute = utes.get(0);

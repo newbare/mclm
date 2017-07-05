@@ -26,7 +26,7 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     listeners: {
 
     	close : function() {
-    		Ext.tip.QuickTipManager.unregister('showForecastID');    	
+    		Ext.tip.QuickTipManager.unregister('showForecastToolBarID');    	
 		 	Ext.tip.QuickTipManager.unregister('maritmTrID');    	
 		 	Ext.tip.QuickTipManager.unregister('aeroplaneID');    	
 		 	Ext.tip.QuickTipManager.unregister('photoID');    	
@@ -45,9 +45,9 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 	    afterrender : function ( cmp ) {
         	
     	    Ext.tip.QuickTipManager.register({
-    	        target: 'showForecastID',
-    	        title: 'Avisos Meteorológicos INMET',
-    	        text: 'Centro Virtual para Avisos Meteorológicos Severos - INMET.',
+    	        target: 'showForecastToolBarID',
+    	        title: 'Serviços Meteorológicos',
+    	        text: 'Ferramentas de Serviços Meteorológicos.',
     	        width: 180,
     	        dismissDelay: 5000 
     	    },{

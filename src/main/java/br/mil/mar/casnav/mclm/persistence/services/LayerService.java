@@ -494,7 +494,7 @@ public class LayerService {
 	
     // Cria uma camada WMS
 	public String createWMSLayer(int layerFolderID, String serverUrl, String description, String institute,
-			String layerName, String layerAlias) {
+			String layerName, String layerAlias, String cqlFilter) {
 
 		if ( !serverUrl.endsWith("/") ) serverUrl = serverUrl + "/";
 		if ( !serverUrl.contains("/wms") ) serverUrl = serverUrl + "wms/";
@@ -503,6 +503,8 @@ public class LayerService {
 		try {
 			NodeService ns = new NodeService();
 			NodeData node = new NodeData(layerFolderID, serverUrl, description, institute, layerName, layerAlias, LayerType.WMS);
+			
+			node.setCqlFilter(cqlFilter);
 			
 	        Configurator cfg = Configurator.getInstance();
 	        String originalServer = node.getOriginalServiceUrl(); 

@@ -2,6 +2,55 @@ Ext.define('MCLM.Functions', {
 
 	statics: {
 		countLog : 0,
+	
+		
+		getClimaDesc : function( value ) {
+			var climaDesc = [];
+			climaDesc["ec"] = "Encoberto com Chuvas Isoladas";
+				climaDesc["ci"] = "Chuvas Isoladas";
+				climaDesc["c"] = "Chuva";
+				climaDesc["in"] = "Instável";
+				climaDesc["pp"] = "Poss. de Pancadas de Chuva";
+				climaDesc["cm"] = "Chuva pela Manhã";
+				climaDesc["cn"] = "Chuva a Noite";
+				climaDesc["pt"] = "Pancadas de Chuva a Tarde";
+				climaDesc["pm"] = "Pancadas de Chuva pela Manhã";
+				climaDesc["np"] = "Nublado e Pancadas de Chuva";
+				climaDesc["pc"] = "Pancadas de Chuva";
+				climaDesc["pn"] = "Parcialmente Nublado";
+				climaDesc["cv"] = "Chuvisco";
+				climaDesc["ch"] = "Chuvoso";
+				climaDesc["t"] = "Tempestade";
+				climaDesc["ps"] = "Predomínio de Sol";
+				climaDesc["e"] = "Encoberto";
+				climaDesc["n"] = "Nublado";
+				climaDesc["cl"] = "Céu Claro";
+				climaDesc["nv"] = "Nevoeiro";
+				climaDesc["g"] = "Geada";
+				climaDesc["ne"] = "Neve";
+				climaDesc["nd"] = "Não Definido";
+				climaDesc["pnt"] = "Pancadas de Chuva a Noite";
+				climaDesc["psc"] = "Possibilidade de Chuva";
+				climaDesc["pcm"] = "Possibilidade de Chuva pela Manhã";
+				climaDesc["pct"] = "Possibilidade de Chuva a Tarde";
+				climaDesc["pcn"] = "Possibilidade de Chuva a Noite";
+				climaDesc["npt"] = "Nublado com Pancadas a Tarde";
+				climaDesc["npn"] = "Nublado com Pancadas a Noite";
+				climaDesc["ncn"] = "Nublado com Poss. de Chuva a Noite";
+				climaDesc["nct"] = "Nublado com Poss. de Chuva a Tarde";
+				climaDesc["ncm"] = "Nubl. c/ Poss. de Chuva pela Manhã";
+				climaDesc["npm"] = "Nublado com Pancadas pela Manhã";
+				climaDesc["npp"] = "Nublado com Possibilidade de Chuva";
+				climaDesc["vn"] = "Variação de Nebulosidade";
+				climaDesc["ct"] = "Chuva a Tarde";
+				climaDesc["ppn"] = "Poss. de Panc. de Chuva a Noite";
+				climaDesc["ppt"] = "Poss. de Panc. de Chuva a Tarde";
+				climaDesc["ppm"] = "Poss. de Panc. de Chuva pela Manhã";	
+			
+				return climaDesc[ value ];
+			
+			
+		},
 
 		shortGuid : function() {
 			function s4() {

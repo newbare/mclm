@@ -29,6 +29,7 @@ Ext.define('MCLM.view.paineis.LayerDetail', {
                 	'<div style="width:100%;border-top:1px dotted black; padding: 0px;">{layerName}</div>',
                     '<div style=" padding: 0px;">{serviceUrl}</div>',
                     '<div style=" padding: 0px;">{originalServiceUrl}</div>',
+                    '<div style=" padding: 0px;">{cqlFilter}</div>',
                     '<div style=" padding: 0px;">{childrenCount} subconjuntos.</div>',
                     '<div style=" padding: 0px;">{dataLayer.table.server.serverDatabase} / {dataLayer.whereClause}</div>',
                     '</div>',

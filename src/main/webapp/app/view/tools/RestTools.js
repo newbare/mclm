@@ -12,10 +12,10 @@ Ext.define('MCLM.view.tools.RestTools', {
     
     items: [{
 	    iconCls: 'forecast-icon',
-        handler: 'showForecast',
+        handler: 'showForecastToolBar',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
-	    id : 'showForecastID',
+	    id : 'showForecastToolBarID',
         xtype: 'button',
     },{
 	    iconCls: 'aeroplane-icon',

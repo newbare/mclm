@@ -280,8 +280,12 @@ public class WebClient {
 	}
 
 	public String doGet(String url) throws Exception {
+		return this.doGet(url, "UTF-8");
+	}
+	
+	public String doGet(String url, String charset) throws Exception {
 		
-		System.out.println("DOGET: " + url );
+		System.out.println("DOGET (" + charset + "): " + url );
 		
 		String result = "NO_ANSWER";
 		CloseableHttpClient httpClient;
@@ -311,7 +315,7 @@ public class WebClient {
 		}
 		
 		getRequest.addHeader("accept", "application/json");
-		getRequest.addHeader("Content-Type", "plain/text; charset=utf-8");
+		getRequest.addHeader("Content-Type", "plain/text; charset=" + charset );
 		getRequest.setHeader("User-Agent", USER_AGENT);
 
 		HttpClientContext context = HttpClientContext.create();
@@ -324,16 +328,16 @@ public class WebClient {
 		}		
 		
 		
-		response.setHeader("Content-Type", "plain/text; charset=UTF-8");
+		response.setHeader("Content-Type", "plain/text; charset=" + charset);
 		int stCode = response.getStatusLine().getStatusCode();
 		
 		if ( stCode != 200) {
 			result = "Error " + stCode + " when accessing URL " + url;
 		} else {
 			HttpEntity entity = response.getEntity();
-			InputStreamReader isr = new InputStreamReader(entity.getContent(), "UTF-8");
+			InputStreamReader isr = new InputStreamReader(entity.getContent(), charset);
 			result = convertStreamToString(isr);
-			Charset.forName("UTF-8").encode(result);
+			Charset.forName(charset).encode(result);
 			isr.close();
 		}
 

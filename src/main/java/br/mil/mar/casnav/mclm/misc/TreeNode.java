@@ -22,6 +22,7 @@ public class TreeNode {
 	// -----------------------
 	
 	private String serviceUrl;
+	private String cqlFilter;
 	private String originalServiceUrl;
 	private String layerName;
 	private String description;
@@ -51,6 +52,10 @@ public class TreeNode {
 		this.institute = ute.getData("institute");		
 		this.layerAlias = ute.getData("layeralias");
 		this.layerType = ute.getData("layertype");
+		this.cqlFilter = ute.getData("cqlfilter");
+		
+		
+		
 		this.readOnly = Boolean.valueOf( ute.getData("read_only") );
 		this.iconCls = "";
 		this.idNodeData = Integer.valueOf( ute.getData("id_node_data") );
@@ -295,6 +300,16 @@ public class TreeNode {
 	
 	public Feicao getFeicao() {
 		return feicao;
+	}
+
+	public String getCqlFilter() {
+		return cqlFilter;
+	}
+
+	public void setCqlFilter(String cqlFilter) {
+		this.cqlFilter = cqlFilter;
 	}	
+	
+	
 	
 }

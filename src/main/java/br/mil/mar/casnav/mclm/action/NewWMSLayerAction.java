@@ -27,6 +27,7 @@ public class NewWMSLayerAction extends BasicActionClass {
 			HttpServletRequest request = (HttpServletRequest)ActionContext.getContext().get(StrutsStatics.HTTP_REQUEST);
 			
 			String serverUrl = request.getParameter("serverUrl");
+			String cqlFilter = request.getParameter("cqlFilter");
 			String layerName = request.getParameter("layerName");
 			String layerAlias = request.getParameter("layerAlias");
 			String description = request.getParameter("description");
@@ -35,7 +36,7 @@ public class NewWMSLayerAction extends BasicActionClass {
 			
 			
 			LayerService ls = new LayerService();
-			String result =	ls.createWMSLayer( layerFolderID, serverUrl, description, institute, layerName, layerAlias );
+			String result =	ls.createWMSLayer( layerFolderID, serverUrl, description, institute, layerName, layerAlias, cqlFilter );
 
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);

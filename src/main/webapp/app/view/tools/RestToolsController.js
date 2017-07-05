@@ -2,16 +2,14 @@ Ext.define('MCLM.view.tools.RestToolsController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.restToolsController',
    
-    showForecast : function() {
+    showForecastToolBar : function() {
     	
-		var previsaoClima = Ext.getCmp('previsaoClima');
-		if ( !previsaoClima ) {
-			previsaoClima = Ext.create('MCLM.view.clima.PrevisaoWindow');
+		var restWeatherWindow = Ext.getCmp('restWeatherWindow');
+		if ( !restWeatherWindow ) {
+			restWeatherWindow = Ext.create('MCLM.view.tools.RestWeatherWindow');
 		}
-		previsaoClima.show();
-		previsaoClima.alignTo(Ext.getBody(), "tl-tl", [0, 0]);
-		MCLM.ClimaHelper.init();
-		MCLM.ClimaHelper.getAlerts();
+		restWeatherWindow.show();
+		restWeatherWindow.alignTo(Ext.getBody(), "tr-tr", [-90, 100]);
     	
     },
     

@@ -5,6 +5,7 @@ Ext.define('MCLM.store.LayerDetail', {
     fields: [{name: 'layerAlias'},
              {name: 'description'},
              {name: 'layerName'},
+             {name: 'cqlFilter'},
              {name: 'originalServiceUrl'},
              {name: 'serviceUrl'},
              {name: 'institute'},

@@ -62,8 +62,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var layerDetailStore = Ext.data.StoreManager.lookup('store.LayerDetail');
 		layerDetailStore.loadData( tempData );
 		
-		console.log( tempData );
-    	
 		if( record.data.readOnly ) {
 			$("#id_lock_icon").css("display","block");
 		}
@@ -487,6 +485,8 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var layerName = node.get('layerName');
 		var serialId = node.get('serialId');
 		var layerType = node.get('layerType' );
+		
+		var cqlFilter = node.get('cqlFilter');
 		
 		if ( layerName == "" ) return;
 		

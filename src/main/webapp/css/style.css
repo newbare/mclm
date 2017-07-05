@@ -629,3 +629,13 @@
 	width : 100%;
 	height : 35px;
 }
+
+.inmet-icon {
+	background-image: url('../img/inmet-icon.svg') !important;
+
+}
+
+.cptec-icon {
+	background-image: url('../img/cptec-icon.svg') !important;
+	background-repeat: no-repeat; 
+}

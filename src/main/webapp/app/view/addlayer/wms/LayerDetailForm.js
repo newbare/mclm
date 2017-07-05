@@ -53,6 +53,11 @@ Ext.define('MCLM.view.addlayer.wms.LayerDetailForm', {
             	// 
             },
         }           
+    }, {
+        fieldLabel: 'Filtro CQL',
+        width: 330,
+        id:'cqlFilter',
+        name: 'cqlFilter',
     },{
         fieldLabel: 'Parend ID',
         width: 350,
