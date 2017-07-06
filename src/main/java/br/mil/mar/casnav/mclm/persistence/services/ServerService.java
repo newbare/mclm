@@ -47,6 +47,10 @@ public class ServerService {
 		}
 	}
 	
+	public Server getServerWMS( int serverId ) throws Exception {
+		return rep.getServerWMS(serverId);
+	}
+	
 	public Postgres getServerPGR( int IdServer ) throws Exception {
 		return rep.getServerPGR( IdServer );
 	}

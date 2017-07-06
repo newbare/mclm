@@ -19,6 +19,7 @@ import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.DictionaryItem;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
+import br.mil.mar.casnav.mclm.persistence.entity.Server;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 
 public class LayerService {
@@ -494,7 +495,7 @@ public class LayerService {
 	
     // Cria uma camada WMS
 	public String createWMSLayer(int layerFolderID, String serverUrl, String description, String institute,
-			String layerName, String layerAlias, String cqlFilter) {
+			String layerName, String layerAlias, String cqlFilter, int idServer) {
 
 		if ( !serverUrl.endsWith("/") ) serverUrl = serverUrl + "/";
 		if ( !serverUrl.contains("/wms") ) serverUrl = serverUrl + "wms/";
@@ -504,7 +505,11 @@ public class LayerService {
 			NodeService ns = new NodeService();
 			NodeData node = new NodeData(layerFolderID, serverUrl, description, institute, layerName, layerAlias, LayerType.WMS);
 			
+			ServerService ss = new ServerService();
+			Server server = ss.getServerWMS( idServer );
+			
 			node.setCqlFilter(cqlFilter);
+			node.setServer( server );
 			
 	        Configurator cfg = Configurator.getInstance();
 	        String originalServer = node.getOriginalServiceUrl(); 
@@ -523,6 +528,7 @@ public class LayerService {
 			
 			ns.addNode( node );	
 		} catch ( Exception ex ) {
+			ex.printStackTrace();
 			result = "{ \"error\": true, \"msg\": \""+ex.getMessage()+".\" }";	
 		}
 		return result;

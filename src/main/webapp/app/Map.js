@@ -31,18 +31,39 @@ Ext.define('MCLM.Map', {
 		canPhoto : true,
 		statusBar : null,
 		
+		showWindyWindow : function() {
+    	   var weatherWindity = Ext.getCmp('weatherWindity');
+    	   if ( !weatherWindity ) {
+    		   weatherWindity = Ext.create('MCLM.view.clima.WeatherWindity');
+    	   }
+    	   
+    	   var center = MCLM.Map.map.getView().getCenter();
+    	   var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
+    	   lon = center2[0];
+    	   lat = center2[1];
+    	   zoom = MCLM.Map.map.getView().getZoom();			
+    	   
+    	   var url = "<iframe width='100%' height='100%' src='https://embed.windy.com/embed2.html?lat="+lat+"&lon="+lon+"&zoom="+zoom+"&level=surface&overlay=wind&menu=&message=&marker=&forecast=24&calendar=now&location=coordinates&type=map&actualGrid=&metricWind=km%2Fh&metricTemp=%C2%B0C' frameborder='0'></iframe> ";
+    	   weatherWindity.update( url );
+    	   weatherWindity.show();				
+			
+		},
+		
 		enableQueryLocation : function() {
 			MCLM.Map.unbindMapClick();
 			MCLM.Map.queryLocationEnabled = true;
 			$("#painelCentral").css('cursor','help');
 			MCLM.Map.onClickBindKey = MCLM.Map.map.on('click', function(event) {
 				var center = ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326');
+				var lat = center[1];
+				var lon = center[0];
+				
 				
 				Ext.Ajax.request({
 				       url: 'getWeatherLocation',
 				       params: {
-				           'lat': center[1],
-				           'lon': center[0]
+				           'lat': lat,
+				           'lon': lon
 				       },       
 				       success: function(response, opts) {
 				    	   var respText = Ext.decode(response.responseText);
@@ -77,10 +98,13 @@ Ext.define('MCLM.Map', {
 				    		   
 				    		   
 				    	   }
+				    	   table = table + "<tr><td colspan='3' style='background-color:#efefef;border:1px dotted #cacaca'>Origem: Windy</td></tr>";
 				    	   table = table + "</table>";
 				    	   
+				    	   var windity = "<iframe width='410' height='220' src='https://embed.windy.com/embed2.html?lat="+lat+"&lon="+lon+"&type=forecast&metricWind=km%2Fh&metricTemp=%C2%B0C' frameborder='0'></iframe>";
+				    	   
 				    	   var divMain = "<div style='background-color:#edeff2;border-bottom:1px dotted #cacaca;width:100%;height:45px'><img style='position:absolute;left:5px;top:2px;width: 220px;' src='img/clima/cptec/logocomp.gif'><img style='width: 50px;position:absolute;right:5px;top:2px;' src='img/clima/cptec/logo_cptec.png'></div>" + 
-				    	   "<div style='padding-top:5px;font-size:11px;font-weight:bold;text-align:center;border-bottom:1px dotted #cacaca;width:100%;height:23px'>"+respText.cidade.nome+"</div>" + table;
+				    	   "<div style='padding-top:5px;font-size:11px;font-weight:bold;text-align:center;border-bottom:1px dotted #cacaca;width:100%;height:23px'>"+respText.cidade.nome+"</div>" + table + windity;
 				    	   
 				    	   
 				    	   weatherCoordinateWindow.update( divMain );

@@ -27,6 +27,8 @@ Ext.define('MCLM.view.tools.RestWeatherWindow', {
 
     	close : function() {
     		Ext.tip.QuickTipManager.unregister('showForecastID');    	
+    		Ext.tip.QuickTipManager.unregister('enableQueryLocationID');    	
+    		Ext.tip.QuickTipManager.unregister('showWindyWindowID');    	
     		MCLM.Map.unbindMapClick();
     	},
 	    
@@ -42,6 +44,12 @@ Ext.define('MCLM.view.tools.RestWeatherWindow', {
     	        target: 'enableQueryLocationID',
     	        title: 'Previsão para coordenadas',
     	        text: 'Previsão do tempo CPTEC para município em coordenada do mapa. Clique no mapa.',
+    	        width: 180,
+    	        dismissDelay: 5000 
+    	    },{
+    	        target: 'showWindyWindowID',
+    	        title: 'Previsão Windy',
+    	        text: 'Previsão do tempo e informações avançadas do site Windy.',
     	        width: 180,
     	        dismissDelay: 5000 
     	    });			

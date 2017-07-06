@@ -26,9 +26,11 @@ public class ClientAccessInterceptor implements Interceptor {
 		if (loggedUser == null) {
 			try {
 				String idUser = (String)session.getAttribute("idUser");
+				String key = (String)session.getAttribute("key");
 				
 				ApoloService as = new ApoloService();
-				User user = as.checkUser(idUser);
+				User user = as.checkUser(idUser, key);
+				
 				session.setAttribute("loggedUser", user);
 				
 			} catch ( Exception e ) {

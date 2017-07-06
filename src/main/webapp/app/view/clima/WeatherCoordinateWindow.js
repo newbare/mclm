@@ -5,7 +5,7 @@ Ext.define('MCLM.view.clima.WeatherCoordinateWindow', {
 	id:'weatherCoordinateWindow',    	
 	xtype: 'weatherCoordinateWindow',
 	title : "Previsão Para Município",
-	width : 350,
+	width : 450,
 	height: 450,
 	bodyStyle:"background:#FFFFFF;padding:2px;",
 	resizable: false,

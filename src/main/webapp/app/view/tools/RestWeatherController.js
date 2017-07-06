@@ -15,6 +15,10 @@ Ext.define('MCLM.view.tools.RestWeatherController', {
     
     enableQueryLocation : function() {
     	MCLM.Map.enableQueryLocation();
-    }
+    },
+    
+    showWindyWindow : function() {
+    	MCLM.Map.showWindyWindow();
+    },
     
 });

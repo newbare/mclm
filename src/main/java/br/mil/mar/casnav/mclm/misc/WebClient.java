@@ -39,6 +39,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.protocol.HttpContext;
 
+import br.mil.mar.casnav.mclm.persistence.exceptions.ForbiddenException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.UnauthorizedException;
+
 
 public class WebClient {
 	private final String USER_AGENT = "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.10 (maverick) Firefox/3.6.13";
@@ -333,6 +336,20 @@ public class WebClient {
 		
 		if ( stCode != 200) {
 			result = "Error " + stCode + " when accessing URL " + url;
+			
+			System.out.println( result );
+			
+			if( stCode == 403 ) {
+				httpClient.close();
+				throw new ForbiddenException(url);
+			}
+
+			if( stCode == 401 ) {
+				httpClient.close();
+				throw new UnauthorizedException(url);
+			}
+			
+			
 		} else {
 			HttpEntity entity = response.getEntity();
 			InputStreamReader isr = new InputStreamReader(entity.getContent(), charset);

@@ -80,7 +80,12 @@ public class NodeData {
 	@OneToOne()
 	@JoinColumn(name="id_filter_item", foreignKey = @ForeignKey(name = "fk_node_data_filter_item"))
 	private FilterItem filter;	
+
 	
+	@ManyToOne()
+	@JoinColumn(name="id_server", foreignKey = @ForeignKey(name = "fk_datalayer_server"))
+	private Server server;		
+
 	@ManyToOne()
 	@JoinColumn(name="id_data_window", foreignKey = @ForeignKey(name = "fk_datalayer_data_window"))
 	private DataWindow dataWindow;		
@@ -272,6 +277,14 @@ public class NodeData {
 
 	public void setCqlFilter(String cqlFilter) {
 		this.cqlFilter = cqlFilter;
+	}
+
+	public Server getServer() {
+		return server;
+	}
+
+	public void setServer(Server server) {
+		this.server = server;
 	}	
 
 	

@@ -646,6 +646,12 @@
 	background-repeat: no-repeat; 
 }
 
+.windy-icon {
+	background-image: url('../img/windy.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+
 #tableLayerDetails .rightColumn {
 	border-bottom : 1px solid #cacaca;
 	margin : 0px;

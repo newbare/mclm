@@ -24,6 +24,13 @@ Ext.define('MCLM.view.tools.RestWeather', {
 	    height: MCLM.Globals.btnHeight,
 	    id : 'enableQueryLocationID',
         xtype: 'button',
+    },{
+	    iconCls: 'windy-icon',
+        handler: 'showWindyWindow',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    id : 'showWindyWindowID',
+        xtype: 'button',
     }],
 
 	

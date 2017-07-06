@@ -58,12 +58,20 @@ Ext.define('MCLM.view.addlayer.wms.LayerDetailForm', {
         width: 330,
         id:'cqlFilter',
         name: 'cqlFilter',
+        allowBlank: true,
     },{
         fieldLabel: 'Parend ID',
         width: 350,
         xtype : 'hidden',
         name: 'layerFolderID',
         id:'parentFolderID',
+        readOnly: true,
+    },{
+        fieldLabel: 'Server ID',
+        width: 350,
+        xtype : 'hidden',
+        name: 'idServer',
+        id:'idServer',
         readOnly: true,
     }],
     buttons: [{
