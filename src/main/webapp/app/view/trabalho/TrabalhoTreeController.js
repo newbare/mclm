@@ -63,22 +63,23 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		var tree = Ext.getCmp('trabalhoTree');
 		var root = tree.getRootNode();
 		root.set("text","Área de Trabalho");
-		root.set("checked",false);
+		//root.set("checked",false);
 		
     	var painelEsquerdo = Ext.getCmp('painelesquerdo');
     	painelEsquerdo.setTitle("");		    		
 		
     	// Limpa a arvore principal
     	var layerTree = Ext.getCmp("layerTree");
+    	
     	layerTree.getRootNode().cascade( function(node) { 
-    		node.set('checked', false );
+    		if (  (node.get('layerType') != '') && (node.get('layerType') != 'CRN') && (node.get('layerType') != 'FDR') ) node.set('checked', false );
 		});   
     	
     	
     	// Apaga do layer stack
     	var trabalhoTree = Ext.getCmp("trabalhoTree");
     	trabalhoTree.getRootNode().cascade( function(node) { 
-    		node.set('checked', false );
+    		if (  (node.get('layerType') != '') && (node.get('layerType') != 'CRN') && (node.get('layerType') != 'FDR') ) node.set('checked', false );
     		me.toggleNode( node );
 		});			    	
     	
@@ -134,14 +135,17 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     
     // Recursivamente marca/desmarca pais dos nos até o root
     recursiveCheckParent : function( node, pChildCheckedCount ) {
+    	/*
 	    if( node ) {
 	    	node.set('checked', !!pChildCheckedCount);
 	    	var parent = node.parentNode;
 	    	this.recursiveCheckParent( parent, pChildCheckedCount );
 	    }
+	    */
     },
     
     clearCheckToTheRoot : function ( parentNode ) {
+    	/*
     	var me = this;
 	    
 	    var pChildCheckedCount = 0;
@@ -151,7 +155,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 	    });
 	    
 	    parentNode.set('checked', !!pChildCheckedCount);
-	    me.recursiveCheckParent( parentNode, pChildCheckedCount );	    	
+	    me.recursiveCheckParent( parentNode, pChildCheckedCount );
+	    */	    	
     },
     
     // Quando o estado do no muda (selecionado/nao selecionado)

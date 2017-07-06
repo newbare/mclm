@@ -34,7 +34,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	var layerTree = Ext.getCmp("layerTree");
     	var node = layerTree.getRootNode().findChild('serialId',serialId,true);
     	if ( node ) {
-	    	node.set('checked', status );
+    		if( (node.get('layerType') != '') && (node.get('layerType') != 'CRN') && (node.get('layerType') != 'FDR') ) node.set('checked', status );
 	    	this.clearCheckToTheRoot ( node.parentNode );
     	}
     	return true;
@@ -57,25 +57,21 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     
     // Responde ao clique em um no. Mostra os detalhes do no painel abaixo da arvore
     onLayerTreeItemClick : function( view, record, item, index, e ) {
-		var tempData = [];
-		tempData.push( record.data );
-		var layerDetailStore = Ext.data.StoreManager.lookup('store.LayerDetail');
-		layerDetailStore.loadData( tempData );
-		
-		if( record.data.readOnly ) {
-			$("#id_lock_icon").css("display","block");
-		}
-		
+    	// Nada a fazer....
     },
+    
     // Recursivamente marca/desmarca pais dos nos até o root
     recursiveCheckParent : function( node, pChildCheckedCount ) {
+    	/*
 	    if( node ) {
 	    	node.set('checked', !!pChildCheckedCount);
 	    	var parent = node.parentNode;
 	    	this.recursiveCheckParent( parent, pChildCheckedCount );
 	    }
+	    */
     },
     clearCheckToTheRoot : function ( parentNode ) {
+    	/*
     	var me = this;
 	    var pChildCheckedCount = 0;
 	    parentNode.suspendEvents();
@@ -83,16 +79,19 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	        if (c.get('checked')) pChildCheckedCount++; 
 
 	    });
-       	me.recursiveCheckParent( parentNode, pChildCheckedCount );	    	
+       	me.recursiveCheckParent( parentNode, pChildCheckedCount );
+       	*/	    	
     },
     // Quando o estado do no muda (selecionado/nao selecionado)
     // Adiciona ou remove uma camada na lista de camadas e no mapa
     onLayerTreeCheckChange : function( node, checked, eOpts ) {
+    	/*
     	if ( !node.isLeaf() ) {
 			Ext.Msg.alert('Operação Inválida', ' Não é permitido marcar um grupo de camadas. Você deve marcar as camadas individualmente.' );
 			node.set('checked',false);
 			return;
     	}
+    	*/
     	var me = this;
 	    var serialId = node.get('serialId');
 	    this.fireEvent( "syncLayerNodeInTrabalhoTree", serialId, checked );	    
@@ -140,6 +139,8 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			    	items: [
 			    	  { iconCls: 'goto-icon', text: 'Ir para...', handler: function() { me.goToFeicao( record ); } },
 					  { xtype: 'menuseparator' },
+			          { iconCls: 'properties-icon', text: 'Propriedades...', handler: function() { me.showLayerProperties( record ); } },
+					  { xtype: 'menuseparator' },
 			          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
 			        ]
 			    });
@@ -151,6 +152,8 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 					  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
 					  { iconCls: 'datawindow-icon', text: 'Criar Janela de Dados', handler: function() { me.configDataWindow(record); } },
 					  { xtype: 'menuseparator' },
+			          { iconCls: 'properties-icon', text: 'Propriedades...', handler: function() { me.showLayerProperties( record ); } },
+					  { xtype: 'menuseparator' },
 			          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
 			        ]
 			    });
@@ -159,6 +162,66 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	    var position = [e.getX()-10, e.getY()-10];
 	    menu_grid.showAt( position );
 		e.stopEvent();    	
+    },
+    
+    // Mostra os detalhes de uma camada
+    showLayerProperties : function( node ) {
+    	var layerDetailWindow = Ext.getCmp('layerDetailWindow');
+    	if( !layerDetailWindow ) {
+    		layerDetailWindow = Ext.create('MCLM.view.paineis.LayerDetailWindow');
+    	}
+    	
+    	var data = node.data;
+    	var layerAlias = data.layerAlias;
+    	
+    	var dataLayer = data.dataLayer;
+    	var feicao = data.feicao;
+    	
+    	console.log( data );
+    	
+    	layerDetailWindow.setTitle( layerAlias );
+    	var table = "<table id='tableLayerDetails' >";
+    	
+    	
+    	table = table + "<tr> <td class='leftColumn'>Nome</td> <td class='rightColumn'>"+ layerAlias + "</td> </tr>";
+    	table = table + "<tr> <td class='leftColumn'>Descrição</td> <td class='rightColumn'>"+ data.description + "</td> </tr>";
+    	table = table + "<tr> <td class='leftColumn'>Origem</td> <td class='rightColumn'>"+ data.institute + "</td> </tr>";
+    	table = table + "<tr> <td class='leftColumn'>Camada</td> <td class='rightColumn'>"+ data.layerName + "</td> </tr>";
+    	table = table + "<tr> <td class='leftColumn'>Fonte Original</td> <td class='rightColumn'>"+ data.originalServiceUrl + "</td> </tr>";
+    	table = table + "<tr> <td class='leftColumn'>Fonte Atual</td> <td class='rightColumn'>"+ data.serviceUrl + "</td> </tr>";
+    	table = table + "<tr> <td class='leftColumn'>Filtro Fixo</td> <td class='rightColumn'>"+ data.cqlFilter + "</td> </tr>";
+
+    	if ( feicao ) {
+    		
+    		var prettyJson = MCLM.Functions.syntaxHighlight(feicao.metadados);
+    		
+    		table = table + "<tr> <td colspan='2' style='padding-top:5px;' class='leftColumn'>Feição:</td></tr>";
+    		/*
+    		table = table + "<tr> <td class='leftColumn'>Nome</td> <td class='rightColumn'>"+ feicao.nome + "</td> </tr>";    		
+    		table = table + "<tr> <td class='leftColumn'>Descrição</td> <td class='rightColumn'>"+ feicao.descricao + "</td> </tr>";
+    		*/    		
+    		table = table + "<tr> <td class='leftColumn'>Tipo</td> <td class='rightColumn'>"+ feicao.geomType + "</td> </tr>";  
+    		table = table + "<tr> <td class='leftColumn'>Estilo</td> <td class='rightColumn'>"+ feicao.style.featureStyleName + "</td> </tr>";    		
+    		table = table + "<tr> <td class='leftColumn'>Metadados</td> <td class='rightColumn'><pre>"+ prettyJson + "</pre></td> </tr>";    		
+    	}
+    	
+    	if ( dataLayer ) {
+    		table = table + "<tr> <td colspan='2' style='padding-top:5px;' class='leftColumn'>Camada de Dados:</td></tr>";
+    		table = table + "<tr> <td class='leftColumn'>Estilo</td> <td class='rightColumn'>"+ dataLayer.style.featureStyleName + "</td> </tr>";
+        	table = table + "<tr> <td class='leftColumn'>Tabela</td> <td class='rightColumn'>"+ dataLayer.table.name + "</td> </tr>";
+        	table = table + "<tr> <td class='leftColumn'>Etiqueta</td> <td class='rightColumn'>"+ dataLayer.labelColumn + "</td> </tr>";
+        	table = table + "<tr> <td class='leftColumn'>Atributos</td> <td class='rightColumn'>"+ dataLayer.propertiesColumns + "</td> </tr>";
+        	table = table + "<tr> <td class='leftColumn'>Nome Servidor</td> <td class='rightColumn'>"+ dataLayer.table.server.name + "</td> </tr>";
+        	table = table + "<tr> <td class='leftColumn'>End. Servidor</td> <td class='rightColumn'>"+ dataLayer.table.server.serverAddress + "</td> </tr>";
+        	table = table + "<tr> <td class='leftColumn'>Banco de Dados</td> <td class='rightColumn'>"+ dataLayer.table.server.serverDatabase + "</td> </tr>";
+
+    	}
+    	
+    	table = table + "</table>";
+    	
+    	layerDetailWindow.update( table );
+    	layerDetailWindow.show();
+    	
     },
     
     // Configura / Cria Janela de Dados
@@ -222,7 +285,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	// se o novo no estava marcado na arvore principal, marca ele e o pai no cenario
     	if ( copy.get( 'checked' ) ) {
     		copy.set( 'selected', true );
-    		root.set( 'checked', true );
     	}
 
    	

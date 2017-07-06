@@ -159,11 +159,15 @@ public class NodeService {
 		JSONArray arrayObj = new JSONArray();
 		for ( UserTableEntity ute : utes ) {
 			TreeNode tn = new TreeNode( ute, dss, fs );
-			// Nao coloca feicao na arvore do catalogo...
-			//if ( !tn.getLayerType().equals("FEI") ) {
-				JSONObject itemObj = new JSONObject( tn );
-	            arrayObj.put( itemObj );	
-			//}
+			JSONObject itemObj = new JSONObject( tn );
+
+			// Se for pasta ou pasta de feição então nao mostra os checkboxes...
+			if ( tn.getLayerType().equals("FDR") || tn.getLayerType().equals("CRN")  ) {
+				itemObj.remove("checked");
+			}
+            
+			arrayObj.put( itemObj );	
+	            
 		}
 		dss.closeSession();
 		fs.closeSession();

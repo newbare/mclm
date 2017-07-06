@@ -53,6 +53,12 @@
 	background-repeat: no-repeat; 
 }
 
+.properties-icon {
+	background-image: url('../img/properties.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+
 .next-icon {
 	background-image: url('../img/next.svg') !important;
 	background-repeat: no-repeat;
@@ -639,3 +645,33 @@
 	background-image: url('../img/cptec-icon.svg') !important;
 	background-repeat: no-repeat; 
 }
+
+#tableLayerDetails .rightColumn {
+	border-bottom : 1px solid #cacaca;
+	margin : 0px;
+}
+	
+#tableLayerDetails .leftColumn {
+	background-color : #f9f9f9;
+	font-weight : bold;
+	border-right : 1px dotted #cacaca;
+	border-bottom : 1px solid #cacaca;
+	margin : 0px;
+}
+	
+#tableLayerDetails {
+	font-size : 9px;
+	width : 100%;
+	margin : 0px;	
+}
+
+#tableLayerDetails pre {
+		outline: 1px solid #ccc; padding: 5px; margin: 5px; 
+}
+#tableLayerDetails .string { color: green; }
+#tableLayerDetails .number { color: darkorange; }
+#tableLayerDetails .boolean { color: blue; }
+#tableLayerDetails .null { color: magenta; }
+#tableLayerDetails .key { color: red; }
+
+

@@ -16,7 +16,6 @@ Ext.define('MCLM.Application', {
     
     stores: [
        'MCLM.store.LayerTree',
-       'MCLM.store.LayerDetail',
        'MCLM.store.ExternalSource',
        'MCLM.store.PostgreSource',
        'MCLM.store.LayerStack',
