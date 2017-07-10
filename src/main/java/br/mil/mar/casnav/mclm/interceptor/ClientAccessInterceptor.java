@@ -25,15 +25,20 @@ public class ClientAccessInterceptor implements Interceptor {
 		User loggedUser = (User)session.getAttribute("loggedUser");
 		if (loggedUser == null) {
 			try {
-				String idUser = (String)session.getAttribute("idUser");
+				String userId = (String)session.getAttribute("userId");
 				String key = (String)session.getAttribute("key");
 				
 				ApoloService as = new ApoloService();
-				User user = as.checkUser(idUser, key);
+				User user = as.checkUser(userId, key);
+				
+				System.out.println(" > New User Login: " + user.getName() + " " + user.getCpfUser() );
 				
 				session.setAttribute("loggedUser", user);
 				
 			} catch ( Exception e ) {
+				
+				e.printStackTrace();
+				
 				// Quando nao encontrar usuario logado no APOLO...
 				HttpServletResponse response = ServletActionContext.getResponse();
 				response.setStatus( HttpServletResponse.SC_UNAUTHORIZED );
@@ -42,7 +47,7 @@ public class ClientAccessInterceptor implements Interceptor {
 			}
 			
 		} else {
-			System.out.println(" > Logged User: " + loggedUser.getIdUser() );
+			System.out.println(" > Logged User: " + loggedUser.getName() );
 		}
 		
 		

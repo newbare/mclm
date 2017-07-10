@@ -140,8 +140,8 @@ public class SceneryService {
 		return rep.getList();
 	}
 
-	public Set<Scenery> getList( int idUser ) throws Exception {
-		return rep.getList( idUser );
+	public Set<Scenery> getList( String cpf ) throws Exception {
+		return rep.getList( cpf );
 	}
 
 
@@ -153,7 +153,7 @@ public class SceneryService {
 		scenery.setBaseMapActive(mapaBaseAtivo);
 		scenery.setBaseServerURL( servidorBase );
 		scenery.setGraticule( graticule );
-		scenery.setIdUser( user.getIdUser() );
+		scenery.setCpfUser( user.getCpfUser() );
 		scenery.setIsPublic( false );
 		scenery.setMapCenter( mapCenter );
 		scenery.setSceneryName( nomeCenario );
@@ -182,7 +182,7 @@ public class SceneryService {
 
 	public String getSceneriesAsJSON(User loggedUser) throws Exception {
 		List<SceneryTree> lst = new ArrayList<SceneryTree>();
-		List<Scenery> ls = new ArrayList<Scenery>( getList( loggedUser.getIdUser() ) );
+		List<Scenery> ls = new ArrayList<Scenery>( getList( loggedUser.getCpfUser() ) );
 		for ( Scenery scenery : ls ) {
 			SceneryTree sceneryTree = new SceneryTree( scenery );
 			lst.add( sceneryTree );

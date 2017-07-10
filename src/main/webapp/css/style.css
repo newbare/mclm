@@ -621,12 +621,22 @@
 	margin-top:5px;
 }
 
-#topMainToolBarUserName {
+#topMainToolBarUserNameName {
 	color: white;
-	width: 200px;
 	height: 25px;
 	float: right;
 	margin-top: 8px;
+	text-align : right;
+	margin-right: 70px;
+}
+	
+#topMainToolBarUserName {
+	color: white;
+	height: 25px;
+	float: right;
+	margin-top: 8px;
+	text-align : right;
+	margin-right: 10px;
 }
 	
 #topMainToolBar {

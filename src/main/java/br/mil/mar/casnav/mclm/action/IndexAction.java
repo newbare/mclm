@@ -11,19 +11,23 @@ import com.opensymphony.xwork2.ActionContext;
 
 @ParentPackage("default")
 public class IndexAction {
-	private String idUser;
+	private String userId;
 	private String key;
 	
 	public String execute () {
 		
+		System.out.println(" KEY      > " + key );
+		System.out.println(" userId   > " + userId );
+		
 		ActionContext.getContext().getSession().put("key", key );
-		ActionContext.getContext().getSession().put("idUser", idUser );
+		ActionContext.getContext().getSession().put("userId", userId );
 		
 		return "ok";
 	}
 	
-	public void setIdUser(String idUser) {
-		this.idUser = idUser;
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 	public void setKey(String key) {

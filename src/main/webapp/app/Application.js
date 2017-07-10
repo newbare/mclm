@@ -55,7 +55,8 @@ Ext.define('MCLM.Application', {
                Ext.Msg.alert('Falha de autenticação','A sessão de usuário expirou!', me.onCloseWindow);
            }
            if (resp.status === 403) {
-               Ext.Msg.alert('Falha de autenticação','O MCLM não pode ser acessado diretamente. Use o sistema APOLO!', me.onCloseWindow );
+        	   location.href = 'http://apolo.defesa.mil.br/';
+               //Ext.Msg.alert('Falha de autenticação','O MCLM não pode ser acessado diretamente. Use o sistema APOLO!', me.onCloseWindow );
            }
     	});    	
     	
@@ -96,7 +97,8 @@ Ext.define('MCLM.Application', {
 				/* 5. */ MCLM.view.photo.PhotoHelper.init();		// inicializa o Mapilary
 				
 				
-				/* 6. */ $("#topMainToolBarUserName").html( config.user.userName );
+				/* 6. */ $("#topMainToolBarUserName").html( config.user.name );
+						 $("#topMainToolBarUserNameName").html( config.user.userName );
 				/* 7. */ //$("#osmSource").html( config.geoserverUrl );
 				
 		        // ---------------------------------------------

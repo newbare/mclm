@@ -355,6 +355,14 @@ Ext.define('MCLM.Functions', {
 
 					},     	
 					{
+						target: 'topMainToolBarHomeIcon',
+						title: 'Sair',
+						text: 'Sair do sistema.',
+						width: 150,
+						dismissDelay: 5000 
+						
+					},     	
+					{
 						target: 'id012',
 						title: 'Recolher Tudo',
 						text: 'Recolhe toda a árvore.',

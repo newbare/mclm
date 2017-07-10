@@ -60,8 +60,8 @@ public class Scenery {
     @Column(name="is_public")
 	private Boolean isPublic;	    
     
-	@Column(name="id_user")
-	private Integer idUser;	
+	@Column(name="cpf_user", length=11)
+	private String cpfUser;		
 	
     @OneToMany(orphanRemoval=true,  mappedBy="scenery", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
@@ -195,14 +195,6 @@ public class Scenery {
 		this.isPublic = isPublic;
 	}
 
-	public void setIdUser(Integer idUser) {
-		this.idUser = idUser;
-	}
-	
-	public Integer getIdUser() {
-		return idUser;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -218,5 +210,15 @@ public class Scenery {
 	public void setMapBbox(String mapBbox) {
 		this.mapBbox = mapBbox;
 	}
+
+	public String getCpfUser() {
+		return cpfUser;
+	}
+
+	public void setCpfUser(String cpfUser) {
+		this.cpfUser = cpfUser;
+	}
 	
+	
+
 }

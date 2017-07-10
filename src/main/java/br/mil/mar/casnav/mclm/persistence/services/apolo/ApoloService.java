@@ -1,7 +1,10 @@
 package br.mil.mar.casnav.mclm.persistence.services.apolo;
 
+import org.json.JSONObject;
+
 import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.misc.WebClient;
+import br.mil.mar.casnav.mclm.persistence.exceptions.UnauthorizedException;
 
 public class ApoloService {
 	
@@ -19,17 +22,24 @@ public class ApoloService {
 		if( idUser != null && key != null) {
 			
 			String result = getApoloUser(idUser, key);
-			
 			System.out.println( result );
 			
-			user.setIdUser( Integer.valueOf( idUser ) );
-			user.setUserName("Carlos Magno");
+			JSONObject userObj = new JSONObject( result );
+		
+			user.setUserName( userObj.getString("username") );
+			user.setCpfUser( userObj.getString("cpf") );
+			user.setName( userObj.getString("nome") );
+			user.setOrgId( userObj.getString("orgId") );
+			user.setSiglaOm( userObj.getString("siglaOm") );
+			user.setUserAlias(userObj.getString("apelido") );
+			user.setUserMail( userObj.getString("email") );
+			
 		} else {
 			
-			//throw new UnauthorizedException("");
+			throw new UnauthorizedException("Usuário não autorizado.");
 			
-			user.setIdUser( 99999 );
-			user.setUserName("Convidado");
+			//user.setIdUser( 99999 );
+			//user.setUserName("Convidado");
 		}
 		
 		return user;
