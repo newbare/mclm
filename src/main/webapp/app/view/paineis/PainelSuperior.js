@@ -11,7 +11,7 @@ Ext.define('MCLM.view.paineis.PainelSuperior', {
     html : 	"<div id='topMainToolBar'>" +
     			"<a href='http://apolo.defesa.mil.br'><img style='margin-left:17px;' src='img/apolo_logo_small.png'></a>" +
     			"<a href='logout'><img id='topMainToolBarHomeIcon' src='img/power.svg'></a>" +
-    			"<div id='topMainToolBarUserNameName'>&nbsp;</div>" +
+    			/*"<div id='topMainToolBarUserNameName'>&nbsp;</div>" +*/
     			"<div id='topMainToolBarUserName'>&nbsp;</div>" +
     			
     		"</div>",

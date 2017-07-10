@@ -40,7 +40,7 @@ public class Config {
 	@Column(length=100, name = "proxy_host")
 	private String proxyHost;
 	
-	@Column(length=100, name = "non_proxy_hosts")
+	@Column(length=250, name = "non_proxy_hosts")
 	private String nonProxyHosts;
 
 	@Column(length=100, name = "servicos_cptec_inpe")

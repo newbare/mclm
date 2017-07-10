@@ -177,11 +177,17 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	var dataLayer = data.dataLayer;
     	var feicao = data.feicao;
     	
-    	console.log( data );
+    	//console.log( data );
     	
     	layerDetailWindow.setTitle( layerAlias );
-    	var table = "<table id='tableLayerDetails' >";
     	
+    	var table = "";
+    	
+    	if ( data.readOnly == true ) {
+    		table = table + "<div style='width:30px;height:30px;position:absolute;top:5px;right:10px;'><img src='img/lock.svg' style='width:30px;height:30px;'></div>";
+    	}
+    	    	
+    	table = table + "<table id='tableLayerDetails' >";
     	
     	table = table + "<tr> <td class='leftColumn'>Nome</td> <td class='rightColumn'>"+ layerAlias + "</td> </tr>";
     	table = table + "<tr> <td class='leftColumn'>Descrição</td> <td class='rightColumn'>"+ data.description + "</td> </tr>";
@@ -196,10 +202,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     		var prettyJson = MCLM.Functions.syntaxHighlight(feicao.metadados);
     		
     		table = table + "<tr> <td colspan='2' style='padding-top:5px;' class='leftColumn'>Feição:</td></tr>";
-    		/*
-    		table = table + "<tr> <td class='leftColumn'>Nome</td> <td class='rightColumn'>"+ feicao.nome + "</td> </tr>";    		
-    		table = table + "<tr> <td class='leftColumn'>Descrição</td> <td class='rightColumn'>"+ feicao.descricao + "</td> </tr>";
-    		*/    		
+ 		
     		table = table + "<tr> <td class='leftColumn'>Tipo</td> <td class='rightColumn'>"+ feicao.geomType + "</td> </tr>";  
     		table = table + "<tr> <td class='leftColumn'>Estilo</td> <td class='rightColumn'>"+ feicao.style.featureStyleName + "</td> </tr>";    		
     		table = table + "<tr> <td class='leftColumn'>Metadados</td> <td class='rightColumn'><pre>"+ prettyJson + "</pre></td> </tr>";    		
@@ -207,10 +210,13 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	
     	if ( dataLayer ) {
     		table = table + "<tr> <td colspan='2' style='padding-top:5px;' class='leftColumn'>Camada de Dados:</td></tr>";
-    		table = table + "<tr> <td class='leftColumn'>Estilo</td> <td class='rightColumn'>"+ dataLayer.style.featureStyleName + "</td> </tr>";
+    		if ( dataLayer.style ) {
+    			table = table + "<tr> <td class='leftColumn'>Estilo</td> <td class='rightColumn'>"+ dataLayer.style.featureStyleName + "</td> </tr>";
+    		}
         	table = table + "<tr> <td class='leftColumn'>Tabela</td> <td class='rightColumn'>"+ dataLayer.table.name + "</td> </tr>";
         	table = table + "<tr> <td class='leftColumn'>Etiqueta</td> <td class='rightColumn'>"+ dataLayer.labelColumn + "</td> </tr>";
         	table = table + "<tr> <td class='leftColumn'>Atributos</td> <td class='rightColumn'>"+ dataLayer.propertiesColumns + "</td> </tr>";
+        	table = table + "<tr> <td class='leftColumn'>Seletor</td> <td class='rightColumn'>"+ dataLayer.whereClause + "</td> </tr>";
         	table = table + "<tr> <td class='leftColumn'>Nome Servidor</td> <td class='rightColumn'>"+ dataLayer.table.server.name + "</td> </tr>";
         	table = table + "<tr> <td class='leftColumn'>End. Servidor</td> <td class='rightColumn'>"+ dataLayer.table.server.serverAddress + "</td> </tr>";
         	table = table + "<tr> <td class='leftColumn'>Banco de Dados</td> <td class='rightColumn'>"+ dataLayer.table.server.serverDatabase + "</td> </tr>";

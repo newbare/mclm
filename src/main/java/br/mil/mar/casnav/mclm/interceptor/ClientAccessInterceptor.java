@@ -31,8 +31,6 @@ public class ClientAccessInterceptor implements Interceptor {
 				ApoloService as = new ApoloService();
 				User user = as.checkUser(userId, key);
 				
-				System.out.println(" > New User Login: " + user.getName() + " " + user.getCpfUser() );
-				
 				session.setAttribute("loggedUser", user);
 				
 			} catch ( Exception e ) {
