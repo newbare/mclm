@@ -155,10 +155,11 @@ public class NodeService {
 		
 		DataLayerService dss = new DataLayerService();
 		FilterService fs = new FilterService();
+		ServerService ss = new ServerService();
 		
 		JSONArray arrayObj = new JSONArray();
 		for ( UserTableEntity ute : utes ) {
-			TreeNode tn = new TreeNode( ute, dss, fs );
+			TreeNode tn = new TreeNode( ute, dss, fs, ss );
 			JSONObject itemObj = new JSONObject( tn );
 
 			// Se for pasta ou pasta de feição então nao mostra os checkboxes...
@@ -171,6 +172,7 @@ public class NodeService {
 		}
 		dss.closeSession();
 		fs.closeSession();
+		ss.closeSession();
 		rep.closeSession();
 		
 		return arrayObj.toString();

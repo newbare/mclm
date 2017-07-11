@@ -40,6 +40,10 @@ public class ServerService {
 		rep.updateServer(oldServer);
 
 	}	
+	
+	public void closeSession() {
+		rep.closeSession();
+	}
 
 	public void newTransaction() {
 		if ( !rep.isOpen() ) {

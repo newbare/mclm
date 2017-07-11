@@ -176,8 +176,9 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	
     	var dataLayer = data.dataLayer;
     	var feicao = data.feicao;
+    	var wmsServer = data.server; 
     	
-    	//console.log( data );
+    	console.log( data );
     	
     	layerDetailWindow.setTitle( layerAlias );
     	
@@ -193,10 +194,19 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	table = table + "<tr> <td class='leftColumn'>Descrição</td> <td class='rightColumn'>"+ data.description + "</td> </tr>";
     	table = table + "<tr> <td class='leftColumn'>Origem</td> <td class='rightColumn'>"+ data.institute + "</td> </tr>";
     	table = table + "<tr> <td class='leftColumn'>Camada</td> <td class='rightColumn'>"+ data.layerName + "</td> </tr>";
+    	/*
     	table = table + "<tr> <td class='leftColumn'>Fonte Original</td> <td class='rightColumn'>"+ data.originalServiceUrl + "</td> </tr>";
     	table = table + "<tr> <td class='leftColumn'>Fonte Atual</td> <td class='rightColumn'>"+ data.serviceUrl + "</td> </tr>";
+    	*/
     	table = table + "<tr> <td class='leftColumn'>Filtro Fixo</td> <td class='rightColumn'>"+ data.cqlFilter + "</td> </tr>";
 
+    	if ( wmsServer ) {
+    		table = table + "<tr> <td colspan='2' style='padding-top:5px;' class='leftColumn'>Fonte WMS:</td></tr>";
+    		table = table + "<tr> <td class='leftColumn'>Nome</td> <td class='rightColumn'>"+ wmsServer.name + "</td> </tr>";
+    		table = table + "<tr> <td class='leftColumn'>Origem</td> <td class='rightColumn'>"+ wmsServer.url + "</td> </tr>";
+    		table = table + "<tr> <td class='leftColumn'>Versão WMS</td> <td class='rightColumn'>"+ wmsServer.version + "</td> </tr>";
+    	}
+    	
     	if ( feicao ) {
     		
     		var prettyJson = MCLM.Functions.syntaxHighlight(feicao.metadados);
