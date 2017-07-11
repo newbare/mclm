@@ -37,6 +37,13 @@ Ext.define('MCLM.Application', {
     launch: function () {
         var me = this;
         
+        
+        Ext.define('Ext.form.PasswordField', {
+            extend: 'Ext.form.field.Base',
+            alias: 'widget.passwordfield',
+            inputType: 'password',
+        });        
+        
     	Ext.Ajax.on("beforerequest", function (conn, options, eOpts) {
     		MCLM.Functions.showMainLoadingIcon( options.url );
     		

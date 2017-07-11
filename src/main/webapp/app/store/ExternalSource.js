@@ -4,15 +4,33 @@ Ext.define('MCLM.store.ExternalSource', {
     alias: 'store.externalsource',
     storeId:'store.externalsource',
     
+    autoSync: true,
+    
 	proxy: {
         type: 'ajax',
-        url: 'getExternalSources',
         reader: {
             type: 'json',
             rootProperty:'servers',
             totalProperty: 'totalCount'
-        }        
-	},
+        },
+        api: {
+            read: 'getExternalSources',
+            create: 'setExternalSources',
+            update: 'setExternalSources',
+            destroy: 'delExternalSources'
+        },         
+        writer: {
+            type:'json',
+            allowSingle:false,
+            writeAllFields : true,
+            encode:true,
+            rootProperty:'server'
+        }          
+	},    
+	
+	
+	
+	
     fields: [
          {name:'idServer', type:'int'},    
          {name:'name', type:'string'},

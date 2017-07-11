@@ -24,7 +24,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	var me = this;
     	var layerTree = Ext.getCmp("layerTree");
     	layerTree.getRootNode().cascade( function(node) { 
-    		node.set('checked', false );
+    		if( (node.get('layerType') != '') && (node.get('layerType') != 'CRN') && (node.get('layerType') != 'FDR') ) node.set('checked', false );
     		me.toggleNode( node );
 		});    	
     },

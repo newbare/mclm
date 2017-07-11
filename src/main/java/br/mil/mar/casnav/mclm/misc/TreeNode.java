@@ -93,6 +93,7 @@ public class TreeNode {
 					if ( !serverUrl.contains("/wms") ) serverUrl = serverUrl + "wms/";
 					
 					this.serviceUrl = serverUrl;
+					this.institute = this.server.getName();
 						
 				} catch ( Exception e ) {
 					e.printStackTrace();
