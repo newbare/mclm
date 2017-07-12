@@ -96,7 +96,7 @@ public class TreeNode {
 					this.institute = this.server.getName();
 						
 				} catch ( Exception e ) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 				
 				if( filterId != null && !filterId.equals("") ) {

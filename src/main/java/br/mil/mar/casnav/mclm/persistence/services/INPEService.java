@@ -65,7 +65,7 @@ public class INPEService {
 		WebClient wc = new WebClient();
 		              //http://servicos.cptec.inpe.br/XML/cidade/7dias/-22.90/-47.06/previsaoLatLon.xml
 		              //http://servicos.cptec.inpe.br/XML/cidade/-22.71/-45.11/estendidaLatLon.xml
-		String url = "http://servicos.cptec.inpe.br/XML/cidade/"+lat+"/"+lon+"/estendidaLatLon.xml";
+		String url = "http://servicos.cptec.inpe.br/XML/cidade/"+lat+"/"+lon+"/previsaoLatLon.xml";
 
 		String result = wc.doGet(url, "ISO-8859-1");
 		JSONObject obj = XML.toJSONObject( result );

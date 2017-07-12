@@ -40,6 +40,9 @@ public class Config {
 	@Column(length=100, name = "proxy_host")
 	private String proxyHost;
 	
+	@Column(length=100, name = "mapbackgroudcolor")
+	private String mapBackgroudColor;
+	
 	@Column(length=250, name = "non_proxy_hosts")
 	private String nonProxyHosts;
 
@@ -110,7 +113,7 @@ public class Config {
 			String proxyUser, String proxyPassword, Integer proxyPort, String geoserverUser, String geoserverPassword,
 			Integer mapZoom, Integer queryFactorRadius, String mapCenter, String shapeFileTargetPath, 
 			String routingServer, String routingUser, String routingPassword, Integer routingPort, String routingDatabase,
-			String apoloServer, Integer distanceFromRoute, String symbolServerURL, String servicosCptecUrl ) {
+			String apoloServer, Integer distanceFromRoute, String symbolServerURL, String servicosCptecUrl, String mapBackgroudColor ) {
 		
 		super();
 		this.idConfig = idConfig;
@@ -134,7 +137,6 @@ public class Config {
 		this.symbolServerURL = symbolServerURL;
 		this.servicosCptecUrl = servicosCptecUrl;
 		
-		
 		this.routingServer = routingServer;
 		this.routingUser = routingUser;
 		this.routingPassword = routingPassword;
@@ -142,8 +144,8 @@ public class Config {
 		this.routingDatabase = routingDatabase;
 
 		this.apoloServer = apoloServer;
-		
 		this.distanceFromRoute = distanceFromRoute;
+		this.mapBackgroudColor = mapBackgroudColor;
 		
 	}
 
@@ -372,5 +374,15 @@ public class Config {
 	public String getServerHostName() {
 		return serverHostName;
 	}
+
+	public String getMapBackgroudColor() {
+		return mapBackgroudColor;
+	}
+
+	public void setMapBackgroudColor(String mapBackgroudColor) {
+		this.mapBackgroudColor = mapBackgroudColor;
+	}
+	
+	
 	
 }

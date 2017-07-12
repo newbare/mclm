@@ -121,19 +121,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		    });
 		} else {
 			var data = record.data;
-			/*
-			if ( data.layerType == 'WMS' ) {
-			    var menu_grid = new Ext.menu.Menu({ 
-			    	items: [
-					  { iconCls: 'add-scenery-icon', text: 'Copiar para Área de Trabalho', handler: function() { me.addToScenery(record); } },
-					  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
-					  { iconCls: 'datawindow-icon', text: 'Criar Janela de Dados', handler: function() { me.configDataWindow(record); } },
-					  { xtype: 'menuseparator' },
-			          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
-			        ]
-			    });
-			} else
-			*/
 			if ( data.layerType == 'FEI' ) {
 			    var menu_grid = new Ext.menu.Menu({ 
 			    	items: [
@@ -386,8 +373,9 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var data = record.data;
 		var name = data.layerAlias;
 		var me = this;
+
 		
-		if ( record.data.readOnly ) {
+		if ( data.readOnly ) {
 			
 			Ext.MessageBox.show({
 				title: 'Pasta Bloqueada',
@@ -395,11 +383,10 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 				buttons: Ext.MessageBox.OK,
 				icon: 'lock-icon'
 			});			
-			
 			return true;
 		}
 		
-		if ( record.data.childrenCount > 0 ) {
+		if ( record.childNodes.length > 0 ) {
 			Ext.Msg.alert('Apagar Pasta', 'Não é possível apagar pastas com camadas ou outras pastas. Remova todas as camadas e pastas desta pasta antes.');
 			return true;
 		}

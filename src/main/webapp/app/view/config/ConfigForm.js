@@ -199,15 +199,69 @@ Ext.define('MCLM.view.config.ConfigForm', {
             allowBlank : false,
             name: 'externalWorkspaceName',
             invalidText: 'Teste'
+        },{
+	        xtype: 'container',
+	        layout: 'vbox',    
+	        padding: '0, 0, 0, 0',
+		    items: [{
+			    xtype: 'container',
+			    layout: 'hbox',    
+			    padding: '0',
+			    items: [{        	
+		            fieldLabel: 'Cor de fundo',
+		            xtype: 'textfield',
+		            labelWidth: 200,
+		            width: 270,
+		            allowBlank : false,
+		            name: 'mapBackgroudColor',
+		            id: 'mapBackgroudColor',
+		            readOnly : true,
+			    },{
+			        xtype: 'component',
+			        autoEl: 'div',
+			        width : 25,
+			        height:25,
+			        id : 'callColorPickerImage',
+			        style : 'margin-left:3px',
+			        html : '<img style="cursor:pointer;width:30px;height:25px" src="img/back-arrow.svg">',
+		    }]
         }],
+
+        
+        
+    }],  
+        
+        
     buttons: [{
           text: 'Fechar',
           handler: 'onCloseConfigForm'
     	},{
           text: 'Gravar',
           handler : 'onSubmitConfigForm'
-    }]
+    }],
+    
+    listeners: {
+	    afterrender : function ( cmp ) {
+	    	
+	    	Ext.getCmp('callColorPickerImage').getEl().on('click', function() {
+	    		var colorPickerWindow = Ext.getCmp('colorPickerWindow');
+	    		if ( !colorPickerWindow ) {
+	    			colorPickerWindow = Ext.create('MCLM.view.tools.ColorPickerWindow');
+	    		}
+	    		colorPickerWindow.show();
+	    		
+	    		var mapBackgroudColor = Ext.getCmp('mapBackgroudColor');
+	    		var initialColor = mapBackgroudColor.getValue();
+	    		colorPickerWindow.init( initialColor, mapBackgroudColor );
+	    		
+	    		
+	    	});
+	    	
+	    }    
 
+    }
+    
+    
 });	
 	
 	
