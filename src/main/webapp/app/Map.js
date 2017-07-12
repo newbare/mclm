@@ -159,9 +159,10 @@ Ext.define('MCLM.Map', {
 			    loadTilesWhileAnimating: true,
 			    loadTilesWhileInteracting: true,	
 				controls: ol.control.defaults().extend([
-				   new ol.control.ScaleLine(),
-				   new ol.control.ZoomSlider(),
-		           new ol.control.MousePosition({
+                   new ol.control.FullScreen(),  
+                   new ol.control.ScaleLine(),
+                   new ol.control.ZoomSlider(),
+ 		           new ol.control.MousePosition({
 		               undefinedHTML: '',
 		               projection: 'EPSG:4326',
 		               coordinateFormat: function(coordinate) {
@@ -180,9 +181,26 @@ Ext.define('MCLM.Map', {
 		            	   
 		            	   return "";
 		               }
-		           })
-		        
+		           }),
+                   new ol.control.OverviewMap({className: 'ol-overviewmap ol-custom-overviewmap'}),
+	               new ol.control.Rotate({
+					   autoHide: false
+				   }),	                    
 				]),
+				
+		        interactions: ol.interaction.defaults({
+		        	  shiftDragZoom: false
+		        }).extend([
+		            new ol.interaction.DragRotateAndZoom(),
+		            new ol.interaction.DragZoom({
+		            	duration: 200,
+		            	condition: function(mapBrowserEvent) {
+		            		var originalEvent = mapBrowserEvent.originalEvent;
+		            		return ( originalEvent.ctrlKey && !(originalEvent.metaKey || originalEvent.altKey) && !originalEvent.shiftKey);
+		            	}
+		            })
+	            ]),				
+				
 				view: MCLM.Map.theView
 			});	
 			

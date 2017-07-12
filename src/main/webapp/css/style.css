@@ -691,3 +691,51 @@
 #tableLayerDetails .key { color: red; }
 
 
+
+.map:-moz-full-screen {
+	height: 100%;
+}
+.map:-webkit-full-screen {
+	height: 100%;
+}
+.map:fullscreen {
+	height: 100%;
+}
+/* position the rotate control lower than usual */
+.ol-rotate {
+	top: 3em;
+}
+/* Caixa de zoom por selecao  */
+.ol-dragzoom {
+	background-color: rgba(255,255,255,0.4);
+	border-color: rgba(100,150,0,1);      
+ }
+ 
+ 
+.ol-custom-overviewmap,
+.ol-custom-overviewmap.ol-uncollapsible {
+  bottom: auto;
+  left: auto;
+  right: 6px;
+  top: 65px;
+}
+
+.ol-custom-overviewmap:not(.ol-collapsed)  {
+  border: 1px solid black;
+}
+
+.ol-custom-overviewmap .ol-overviewmap-map {
+  border: none;
+  width: 300px;
+}
+
+.ol-custom-overviewmap .ol-overviewmap-box {
+  border: 2px solid red;
+}
+
+.ol-custom-overviewmap:not(.ol-collapsed) button{
+  bottom: auto;
+  left: auto;
+  right: 1px;
+  top: 1px;
+}
