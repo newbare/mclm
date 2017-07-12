@@ -211,11 +211,16 @@ Ext.define('MCLM.view.config.ConfigForm', {
 		            fieldLabel: 'Cor de fundo',
 		            xtype: 'textfield',
 		            labelWidth: 200,
-		            width: 270,
+		            width: 310,
 		            allowBlank : false,
 		            name: 'mapBackgroudColor',
 		            id: 'mapBackgroudColor',
 		            readOnly : true,
+		            listeners : {
+		            	'change' : function( textfield,newValue,oldValue ) {
+		            		$("#previewColorPickerImage").css('background-color', newValue );
+		            	}
+		            }
 			    },{
 			        xtype: 'component',
 			        autoEl: 'div',
@@ -223,8 +228,15 @@ Ext.define('MCLM.view.config.ConfigForm', {
 			        height:25,
 			        id : 'callColorPickerImage',
 			        style : 'margin-left:3px',
-			        html : '<img style="cursor:pointer;width:30px;height:25px" src="img/back-arrow.svg">',
-		    }]
+			        html : '<img style="cursor:pointer;width:25px;height:25px" src="img/back-arrow.svg">',
+		    },{
+		        xtype: 'component',
+		        autoEl: 'div',
+		        width : 45,
+		        height:25,
+		        style : 'margin-left:3px',
+		        html : '<div id="previewColorPickerImage" style="margin-left:10px; border:1px solid #cacaca; width:25px;height:25px"></div>',
+	    }]
         }],
 
         
@@ -242,18 +254,16 @@ Ext.define('MCLM.view.config.ConfigForm', {
     
     listeners: {
 	    afterrender : function ( cmp ) {
-	    	
+
 	    	Ext.getCmp('callColorPickerImage').getEl().on('click', function() {
 	    		var colorPickerWindow = Ext.getCmp('colorPickerWindow');
 	    		if ( !colorPickerWindow ) {
 	    			colorPickerWindow = Ext.create('MCLM.view.tools.ColorPickerWindow');
 	    		}
 	    		colorPickerWindow.show();
-	    		
+	    	
 	    		var mapBackgroudColor = Ext.getCmp('mapBackgroudColor');
-	    		var initialColor = mapBackgroudColor.getValue();
-	    		colorPickerWindow.init( initialColor, mapBackgroudColor );
-	    		
+	    		colorPickerWindow.init( mapBackgroudColor.getValue()  , mapBackgroudColor );
 	    		
 	    	});
 	    	
