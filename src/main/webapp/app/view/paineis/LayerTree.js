@@ -58,6 +58,12 @@ Ext.define('MCLM.view.paineis.LayerTree', {
         xtype: 'toolbar',
         items: [{
         	iconCls: 'plus-icon',
+        	id: 'testBtn',
+            handler : function() {
+            	MCLM.Map.exportMap();
+            }
+        },{
+        	iconCls: 'plus-icon',
         	id: 'id011',
             handler : 'onTreeExpandAll'
         },{

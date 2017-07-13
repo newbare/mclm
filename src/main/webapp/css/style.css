@@ -1,3 +1,7 @@
+body {
+    margin:0;
+}
+
 #mainLogDisplayContainer {
 	width:350px;
 	height:65px;

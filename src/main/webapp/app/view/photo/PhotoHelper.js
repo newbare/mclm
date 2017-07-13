@@ -34,6 +34,7 @@ Ext.define('MCLM.view.photo.PhotoHelper', {
 			this.photoLayer.set('name', 'photoLayer');
 			this.photoLayer.set('alias', 'photoLayer');
 			this.photoLayer.set('serialId', 'photoLayer');
+			this.photoLayer.set('layerType', 'FEI');
 			this.photoLayer.set('baseLayer', false);
 			this.photoLayer.set('ready', true);
 			

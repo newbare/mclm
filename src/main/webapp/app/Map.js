@@ -31,6 +31,73 @@ Ext.define('MCLM.Map', {
 		canPhoto : true,
 		statusBar : null,
 		
+		exportMap : function() {
+
+			var layers = MCLM.Map.map.getLayers();
+			var length = layers.getLength();
+			var thumImg = "";
+			
+			var images = [];
+			
+			for (var i = 0; i < length; i++) {
+				var layerName = layers.item(i).get('layerName');
+				var serviceUrl = layers.item(i).get('serviceUrl');
+				var alias = layers.item(i).get('alias');
+				var serverUrl = layers.item(i).get('serverUrl');
+				var serialId = layers.item(i).get('serialId');
+				var layerType = layers.item(i).get('layerType');				
+				var cqlFilter = layers.item(i).get('cqlFilter');				
+
+				if ( layerType == 'BAS' ) {
+					thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1000, 600 );
+					var lrObj = {};
+					lrObj["url"] = thumImg;
+					lrObj["id"] = serialId;
+					lrObj["cqlFilter"] = "";
+					images.push(lrObj);
+				}
+
+				if ( layerType == 'WMS' ) {
+					thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1000, 600, cqlFilter );
+					var lrObj = {};
+					lrObj["url"] = thumImg;
+					lrObj["id"] = serialId;
+					lrObj["cqlFilter"] = cqlFilter;
+					images.push(lrObj);
+				}
+				
+			}
+
+			if ( images.length > 0 ) {
+				
+				Ext.Ajax.request({
+				       url: 'getMapImage',
+				       params: {
+				           'urlList': Ext.encode( images ),
+				       },       
+				       success: function(response, opts) {
+				    	   var respText = Ext.decode(response.responseText);
+				    	   console.log( respText );
+				    	   
+				    	   if( respText.result != 'error ') {
+								var mapImageWindow = Ext.getCmp('mapImageWindow');
+								if ( !mapImageWindow ) {
+									mapImageWindow = Ext.create('MCLM.view.paineis.MapImageWindow');
+								}
+								mapImageWindow.show();
+								mapImageWindow.update('<img style="width:500px;height:300px" src="'+respText.result+'">');
+				    	   } else {
+				    		   
+				    	   }
+				    	   
+				       }
+				});
+				
+			}
+			
+			
+		},
+		
 		showWindyWindow : function() {
     	   var weatherWindity = Ext.getCmp('weatherWindity');
     	   if ( !weatherWindity ) {
@@ -333,6 +400,8 @@ Ext.define('MCLM.Map', {
 			landLayer.set('alias', 'Camada Base' );
 			landLayer.set('serverUrl', MCLM.Map.geoserverUrl );
 			landLayer.set('serialId', 'mclm_landlayer_cmoa');
+			landLayer.set('layerType', 'BAS');
+			
 			landLayer.set('ready', false);
 			landLayer.set('baseLayer', true);
 			MCLM.Map.bindTileEvent( landLayer );	
@@ -413,17 +482,15 @@ Ext.define('MCLM.Map', {
 			var idDataWindow = node.get('idDataWindow');
 			var idNodeData = node.get('idNodeData');
 			var cqlFilter = node.get('cqlFilter');
-			
 			var serverUrl = node.get('serviceUrl');
 			var layerName = node.get('layerName');
-			
 			var layerAlias = node.get('layerAlias');
 			var data = node.data;
 			var serialId = node.get('serialId');
 			var version = node.get('version');
 			var layerType = node.get('layerType');
 			
-			console.log("ATENÇÃO : Falta implementar filtro adicional. Map.js : 320");
+			console.log("ATENÇÃO : Falta implementar filtro adicional. Map.js : addLayer() ");
 			/*
 			var filter = node.get("filter");
 			var aditionalFilter = null;
@@ -483,22 +550,24 @@ Ext.define('MCLM.Map', {
 		    	    })
 		    	});	
 				
-		    	
-		    	//console.log( "URL Camada " + layerName + " " + serverUrl );
-		    	
 			}
+
+			//console.log( "URL Camada " + layerName + " " + serverUrl );
 			
 			if ( transparency == 0 ) transparency = 1;
 			newLayer.setOpacity( transparency );
+			newLayer.set('layerName', layerName);
 			newLayer.set('name', layerName);
 			newLayer.set('alias', layerAlias);
 			newLayer.set('idNodeData', idNodeData);
 			newLayer.set('serverUrl', serverUrl);
+			newLayer.set('serviceUrl', serverUrl);
 			newLayer.set('serialId', serialId);
 			newLayer.set('layerType', layerType);
 			newLayer.set('idDataWindow', idDataWindow);
 			newLayer.set('ready', false);
 			newLayer.set('baseLayer', false);
+			newLayer.set('cqlFilter', cqlFilter);
 			
 			MCLM.Map.bindTileEvent( newLayer );
 			MCLM.Map.map.addLayer( newLayer );
@@ -601,11 +670,16 @@ Ext.define('MCLM.Map', {
 		// Converte uma String GeoJSON para uma camada Vector
 		createVectorLayerFromGeoJSON : function( geojsonStr, node ) {
         	var dataLayer = node.get("dataLayer");
-        	var tableName = dataLayer.tableName;
-        	var database = dataLayer.database;
 			var serialId = node.get('serialId' );			
 			var layerName = node.get( 'layerName' );			
-			var layerAlias = node.get( 'layerAlias' );	
+			var layerAlias = node.get( 'layerAlias' );
+			var layerType = 'FEI';
+			var idNodeData = node.get('idNodeData');
+			
+			
+        	var tableName = dataLayer.tableName;
+        	var database = dataLayer.database;
+			
 			var layerStyle = geojsonStr.featureStyle;
 			var clustered = false;
 		
@@ -849,6 +923,8 @@ Ext.define('MCLM.Map', {
 			vectorLayer.set('serialId', serialId );
 			vectorLayer.set('ready', true);
 			vectorLayer.set('baseLayer', false);	        
+			vectorLayer.set('idNodeData', idNodeData);
+			vectorLayer.set('layerType', layerType);
 			
 			MCLM.Map.removeLayer( serialId );
 			MCLM.Map.map.addLayer( vectorLayer );
@@ -1001,9 +1077,13 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Retorna a URL para pegar a imagem PNG de uma camada 'layerName' do servidor 'serviceUrl'
 		// Usa o BBOX atual da viewport do mapa
-		getLayerImagePreview : function ( layerName, serviceUrl) {
+		getLayerImagePreview : function ( layerName, serviceUrl, width, height, cqlFilter ) {
+			if ( !width ) width = 238;
+			if ( !height ) height = 150;
+			var cql = "";
+			if ( cqlFilter ) cql = "&cql_filter=" + cqlFilter.replace(" ", "");
 			var	bbox = MCLM.Map.getMapCurrentBbox();
-			var thumImg = serviceUrl + "/?service=WMS&srs=EPSG:4326&width=238&height=150&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png8&bbox="+bbox;
+			var thumImg = serviceUrl + encodeURI("/?service=WMS&srs=EPSG:4326"+cql+"&width="+width+"&height="+height+"&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&mode=8bit&bbox="+bbox);
 			return thumImg;
 		},		
 		// --------------------------------------------------------------------------------------------
@@ -1498,26 +1578,6 @@ Ext.define('MCLM.Map', {
 			});
 			return result;
 		},		
-		
-		// --------------------------------------------------------------------------------------------
-		// TESTE - APAGAR
-		showLayers : function () {
-			var layers = MCLM.Map.map.getLayers();
-			var length = layers.getLength();
-			for (var i = 0; i < length; i++) {
-				var layerName = layers.item(i).get('name');
-				
-				var alias = layers.item(i).get('alias');
-				var serverUrl = layers.item(i).get('serverUrl');
-				var serialId = layers.item(i).get('serialId');
-				var layerType = layers.item(i).get('layerType');				
-				
-				console.log( " > " + layerName + " | " + serialId + " (" + alias + ")");
-			}
-			return null;
-		},
-		
-		
 		
 	}
 

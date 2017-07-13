@@ -19,6 +19,7 @@ Ext.define('MCLM.ClimaHelper', {
 			me.climaLayer.set('name', 'climaLayer');
 			me.climaLayer.set('alias', 'climaLayer');
 			me.climaLayer.set('serialId', 'climaLayer');
+			me.climaLayer.set('layerType', 'FEI');
 			me.climaLayer.set('baseLayer', false);
 			me.climaLayer.set('ready', true);		
 			

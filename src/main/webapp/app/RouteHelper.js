@@ -233,6 +233,7 @@ Ext.define('MCLM.RouteHelper', {
 			this.activeRouteLayer.set('name', 'routeLayer');
 			this.activeRouteLayer.set('alias', 'routeLayer');
 			this.activeRouteLayer.set('serialId', 'routeLayer');
+			this.activeRouteLayer.set('layerType', 'FEI');
 			this.activeRouteLayer.set('baseLayer', false);
 			this.activeRouteLayer.set('ready', true);
 

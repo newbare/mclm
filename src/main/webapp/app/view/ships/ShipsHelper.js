@@ -60,6 +60,7 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
 		
     	this.activeShipsLayer.set('name', 'shipsLayer');
     	this.activeShipsLayer.set('alias', 'shipsLayer');
+    	this.activeShipsLayer.set('layerType', 'FEI');
     	this.activeShipsLayer.set('serialId', 'shipsLayer');
     	this.activeShipsLayer.set('baseLayer', false);
     	this.activeShipsLayer.set('ready', true);  

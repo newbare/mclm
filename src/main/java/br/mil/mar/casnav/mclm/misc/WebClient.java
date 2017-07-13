@@ -3,6 +3,7 @@ package br.mil.mar.casnav.mclm.misc;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -13,6 +14,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -46,62 +48,26 @@ import br.mil.mar.casnav.mclm.persistence.exceptions.UnauthorizedException;
 public class WebClient {
 	private final String USER_AGENT = "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.10 (maverick) Firefox/3.6.13";
 	private CookieStore cookieStore;
+
 	
+	public void saveImage(String imageUrl, String destinationFile) throws IOException {
+		
+		imageUrl = imageUrl.replace(" ", "");
+		
+		System.out.println("DOWNLOAD: " + imageUrl );
+		
+		File picutreFile = new File( destinationFile );
+        URL url=new URL( imageUrl );
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0");
+        conn.setRequestProperty("Connection", "keep-alive");
+        conn.setRequestProperty("Cache-Control", "max-age=0");
+        conn.setConnectTimeout( 120000 );
+        conn.setRequestMethod("GET");  
+        conn.connect();
+        FileUtils.copyInputStreamToFile( conn.getInputStream(), picutreFile );		
+	}	
 	
-	/*
-	public void payloadTest() throws Exception {
-		
-		String url = "http://www.vadeonibus.com.br/vdo/vdo/vdo";
-		
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		HttpPost httppost;
-
-		Configurator cfg = Configurator.getInstance();
-		boolean useProxy = cfg.useProxy();
-		String proxyHost = cfg.getProxyHost();
-		String proxyUser = cfg.getProxyUser();
-		String proxyPassword = cfg.getProxyPassword();
-		int proxyPort = cfg.getProxyPort();
-		
-		if ( !useProxy ) {
-			httpClient = HttpClientBuilder.create().build();
-			httppost = new HttpPost( url );
-		} else {
-			CredentialsProvider credsProvider = new BasicCredentialsProvider();
-			credsProvider.setCredentials( new AuthScope(proxyHost, proxyPort),  new UsernamePasswordCredentials(proxyUser, proxyPassword));		
-			HttpHost proxy = new HttpHost(proxyHost, proxyPort);
-			RequestConfig config = RequestConfig.custom().setProxy(proxy).build();			 
-			httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();	
-			httppost = new HttpPost( url );
-			httppost.setConfig(config);	
-			
-
-		}
-		
-
-		
-		// Produce the output
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Writer writer = new OutputStreamWriter(out, "UTF-8");
-		writer.write("7|0|9|http://www.vadeonibus.com.br/vdo/vdo/|2A394A19492B477A375A658D6C1EAA03|vdo.client.VdoService|buscarPosicaoTodosOnibus|java.lang.String/2004016611|I|Z|422|12861420|1|2|3|4|4|5|6|7|5|8|2|1|9|");
-
-		// Create the request
-
-		httppost.setEntity(new ByteArrayEntity(out.toByteArray()));
-
-
-		HttpResponse httpResponse = httpClient.execute(httppost);
-		
-		InputStream inputStream = httpResponse.getEntity().getContent();		
-		StringWriter writerNew = new StringWriter();
-		IOUtils.copy(inputStream, writerNew, "UTF-8");
-		String theString = writerNew.toString();
-		httpClient.close();		
-		
-		System.out.println( theString );
-		
-	}
-	*/
 	
 	public int doPutFile( File file, String contentType, String url, String content, String geoUser, String geoPassword ) throws Exception {
 		int code = 0;
@@ -110,9 +76,9 @@ public class WebClient {
 		String encodedAuth = new String( Base64.encodeBase64( geoCreds.getBytes() ) );
 		HttpURLConnection con = (HttpURLConnection) new URL( url ).openConnection();
 		con.setRequestMethod( "PUT" );
-		con.setRequestProperty("Authorization", "Basic " + encodedAuth );
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Content-type", contentType);
+		con.setRequestProperty("Authorization", "Basic " + encodedAuth );
 		con.setConnectTimeout( 120000 );
 		
 		con.setDoOutput(true);

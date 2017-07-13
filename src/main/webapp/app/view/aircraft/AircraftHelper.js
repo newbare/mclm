@@ -85,6 +85,7 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     	this.activeAircraftLayer.set('name', 'aircraftLayer');
     	this.activeAircraftLayer.set('alias', 'aircraftLayer');
     	this.activeAircraftLayer.set('serialId', 'aircraftLayer');
+    	this.activeAircraftLayer.set('layerType', 'FEI');
     	this.activeAircraftLayer.set('baseLayer', false);
     	this.activeAircraftLayer.set('ready', true);  
 		
