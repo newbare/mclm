@@ -49,19 +49,14 @@ public class WebClient {
 	private final String USER_AGENT = "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.10 (maverick) Firefox/3.6.13";
 	private CookieStore cookieStore;
 
-	
 	public void saveImage(String imageUrl, String destinationFile) throws IOException {
-		
 		imageUrl = imageUrl.replace(" ", "");
-		
-		System.out.println("DOWNLOAD: " + imageUrl );
-		
+		System.out.println("SAVE IMG: " + imageUrl );
 		File picutreFile = new File( destinationFile );
         URL url=new URL( imageUrl );
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0");
+        conn.setRequestProperty("User-Agent", USER_AGENT);
         conn.setRequestProperty("Connection", "keep-alive");
-        conn.setRequestProperty("Cache-Control", "max-age=0");
         conn.setConnectTimeout( 120000 );
         conn.setRequestMethod("GET");  
         conn.connect();

@@ -39,6 +39,27 @@ Ext.define('MCLM.Map', {
 			
 			var images = [];
 			
+			var mapImageWindow = Ext.getCmp('mapImageWindow');
+			if ( !mapImageWindow ) {
+				mapImageWindow = Ext.create('MCLM.view.paineis.MapImageWindow');
+			}
+			mapImageWindow.update('<div style="width:1000px;height:600px" id="mapImageMap"></div>');
+			
+			var feiMap = new ol.Map({
+				layers: [],
+				target: 'mapImageMap',
+				renderer: 'canvas',
+				view : MCLM.Map.theView
+			});
+			
+			var feiMapCanvas = null;
+			
+			feiMap.once('postcompose', function(event) {
+				feiMapCanvas = event.context.canvas;	
+			});
+			
+			
+			var foundFei = false;
 			for (var i = 0; i < length; i++) {
 				var layerName = layers.item(i).get('layerName');
 				var serviceUrl = layers.item(i).get('serviceUrl');
@@ -47,53 +68,66 @@ Ext.define('MCLM.Map', {
 				var serialId = layers.item(i).get('serialId');
 				var layerType = layers.item(i).get('layerType');				
 				var cqlFilter = layers.item(i).get('cqlFilter');				
+				var visible =  layers.item(i).getVisible(); 				
 
-				if ( layerType == 'BAS' ) {
-					thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1000, 600 );
-					var lrObj = {};
-					lrObj["url"] = thumImg;
-					lrObj["id"] = serialId;
-					lrObj["cqlFilter"] = "";
-					images.push(lrObj);
-				}
-
-				if ( layerType == 'WMS' ) {
-					thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1000, 600, cqlFilter );
-					var lrObj = {};
-					lrObj["url"] = thumImg;
-					lrObj["id"] = serialId;
-					lrObj["cqlFilter"] = cqlFilter;
-					images.push(lrObj);
-				}
+				if ( visible ) {
+					
+					if ( layerType == 'FEI' ) {
+						foundFei = true;
+						feiMap.addLayer( layers.item(i) );
+					}
+					
+					if ( layerType == 'BAS' ) {
+						thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1000, 600 );
+						var lrObj = {};
+						lrObj["url"] = thumImg;
+						lrObj["id"] = serialId;
+						lrObj["cqlFilter"] = "";
+						images.push(lrObj);
+					}
+	
+					if ( layerType == 'WMS' ) {
+						thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1000, 600, cqlFilter );
+						var lrObj = {};
+						lrObj["url"] = thumImg;
+						lrObj["id"] = serialId;
+						lrObj["cqlFilter"] = cqlFilter;
+						images.push(lrObj);
+					}
+					
+				}	
 				
 			}
 
-			if ( images.length > 0 ) {
+			
+			var feiEncodedCanvas = '';
+			if ( foundFei ) {
+				feiMap.renderSync();
+				feiEncodedCanvas = feiMapCanvas.toDataURL('image/png');
+			}
+			
+			if ( images.length > 0 || foundFei ) {
 				
 				Ext.Ajax.request({
 				       url: 'getMapImage',
 				       params: {
 				           'urlList': Ext.encode( images ),
+				           'feiEncodedCanvas' : feiEncodedCanvas
 				       },       
 				       success: function(response, opts) {
 				    	   var respText = Ext.decode(response.responseText);
-				    	   console.log( respText );
 				    	   
 				    	   if( respText.result != 'error ') {
-								var mapImageWindow = Ext.getCmp('mapImageWindow');
-								if ( !mapImageWindow ) {
-									mapImageWindow = Ext.create('MCLM.view.paineis.MapImageWindow');
-								}
-								mapImageWindow.show();
 								mapImageWindow.update('<img style="width:500px;height:300px" src="'+respText.result+'">');
+								mapImageWindow.show();
 				    	   } else {
-				    		   
+				    		   Ext.alert('Erro', 'Erro ao gerar a imagem');
 				    	   }
 				    	   
 				       }
 				});
 				
-			}
+			} 
 			
 			
 		},

@@ -1,9 +1,19 @@
 package br.mil.mar.casnav.mclm.persistence.services;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -24,6 +34,66 @@ import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 
 public class LayerService {
 
+	
+	private BufferedImage convertToImage( String base64Image ) throws Exception {
+		byte[] decoded = Base64.getDecoder().decode( base64Image.replace("data:image/png;base64,", "").getBytes(StandardCharsets.UTF_8) );
+		BufferedImage image = new BufferedImage( 1000, 600, BufferedImage.TYPE_INT_RGB);
+		ByteArrayInputStream bis = new ByteArrayInputStream( decoded );
+		image = ImageIO.read(bis);
+		bis.close();		
+		return image;
+	}
+	
+	
+	public String getLayersAsImage( String urlList, String feiEncodedCanvas ) throws Exception {
+		
+		BufferedImage convertedImage = null;
+		if ( ( feiEncodedCanvas != null) && !feiEncodedCanvas.equals("") ) {
+			convertedImage = convertToImage( feiEncodedCanvas );
+		}
+		
+		WebClient wc = new WebClient();
+		
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		String path = PathFinder.getInstance().getPath() + "/tempmaps/" + uuid;
+		
+		File temp = new File( path );
+		List<File> images = new ArrayList<File>();
+		
+		temp.mkdirs();
+		JSONArray arr = new JSONArray( urlList );
+		for ( int x = 0; x < arr.length(); x++  ) {
+			JSONObject jo = arr.getJSONObject(x);
+			String url = jo.getString("url");
+			String serial = jo.getString("id");
+			
+			String targetFile = path + "/" + serial + ".png";
+			wc.saveImage(url, targetFile);
+			images.add( new File(targetFile) );
+		}
+		
+	    BufferedImage result = new BufferedImage( 1000, 600, BufferedImage.TYPE_INT_RGB);
+	    Graphics2D g = (Graphics2D)result.getGraphics();
+	    
+	    g.setPaint ( new Color ( 255, 255, 255 ) );
+	    g.fillRect ( 0, 0, result.getWidth(), result.getHeight() );	    
+		
+	    for( File image : images ) {
+	        BufferedImage bi = ImageIO.read( image );
+	        g.drawImage(bi, 0, 0, null);
+	    }	
+	    
+	    if ( convertedImage != null ) {
+	    	g.drawImage(convertedImage, 0, 0, null);
+	    	ImageIO.write( convertedImage,"png", new File(path + "/feicoes.png") );	
+	    }
+	    
+	    ImageIO.write( result,"png", new File( path + "/result.png" ) );		    
+	    String urlPath = "tempmaps/" + uuid + "/result.png";
+	    
+	    return urlPath;
+	}
+	
 	/*
 	public String getLayerAsFeatures( String requestUrl ) {
 		String result = "";

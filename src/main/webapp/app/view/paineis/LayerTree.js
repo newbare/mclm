@@ -57,8 +57,8 @@ Ext.define('MCLM.view.paineis.LayerTree', {
     dockedItems: [{
         xtype: 'toolbar',
         items: [{
-        	iconCls: 'plus-icon',
-        	id: 'testBtn',
+        	iconCls: 'save-icon',
+        	id: 'exportMapBtn',
             handler : function() {
             	MCLM.Map.exportMap();
             }
