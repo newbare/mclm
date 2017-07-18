@@ -11,7 +11,7 @@ Ext.define('MCLM.view.paineis.PainelInferior', {
      	"<table id='statusBarTable'><tr>" + 
      		 /* "<td class='statusBarName'>OSM:</td><td class='statusBarValue' style='width:200px' id='osmSource'>&nbsp;</td>" + */ 
      		"<td class='statusBarName'>Escala:</td><td class='statusBarValue' style='width:50px' id='mapScale'>&nbsp;</td>" + 
-     		"<td class='statusBarName'>Host:</td><td class='statusBarValue' style='width:120px' id='serverHostName'>&nbsp;</td>" + 
+     		"<td class='statusBarName'>Serv.:</td><td class='statusBarValue' style='width:120px' id='serverHostName'>&nbsp;</td>" + 
      		"<td class='statusBarName'>HDMS:</td><td class='statusBarValue' id='coord_hdms'>&nbsp;</td>" + 
      		"<td class='statusBarName'>UTM :</td><td style='width:110px' class='statusBarValue' id='coord_utm'>&nbsp;</td>" + 
      		"<td class='statusBarName'>Mapa:</td><td style='width:110px' class='statusBarValue' id='coord_map'>&nbsp;</td>" + 

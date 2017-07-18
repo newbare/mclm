@@ -42,8 +42,14 @@ public class Scenery {
 	@Column(name="map_center", length=100)
 	private String mapCenter = "-48.12,-15.8";
 	
+	@Column(name="map_center_hdms", length=100)
+	private String mapCenterHDMS;
+	
 	@Column(name="map_bbox", length=200)
 	private String mapBbox;	
+	
+	@Column(name="user_name", length=200)
+	private String userName;	
 
 	@Column(name="base_map", length=100)
 	private String baseMap;	
@@ -217,6 +223,23 @@ public class Scenery {
 
 	public void setCpfUser(String cpfUser) {
 		this.cpfUser = cpfUser;
+	}
+
+	public String getUserName() {
+		return this.userName;
+	}
+	
+	public void setUserName(String name) {
+		this.userName = name;
+		
+	}
+
+	public String getMapCenterHDMS() {
+		return mapCenterHDMS;
+	}
+
+	public void setMapCenterHDMS(String mapCenterHDMS) {
+		this.mapCenterHDMS = mapCenterHDMS;
 	}
 	
 	

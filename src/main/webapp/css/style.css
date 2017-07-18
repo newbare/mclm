@@ -229,6 +229,12 @@ body {
 	background-repeat: no-repeat;
 }
 
+.export-icon {
+	background-image: url('../img/export.svg') !important;
+	background-repeat: no-repeat;
+}
+
+
 .scenery-icon {
 	background-image: url('../img/scenery.svg') !important;
 	background-repeat: no-repeat;

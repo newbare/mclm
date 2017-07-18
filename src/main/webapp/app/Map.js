@@ -36,6 +36,7 @@ Ext.define('MCLM.Map', {
 			var layers = MCLM.Map.map.getLayers();
 			var length = layers.getLength();
 			var thumImg = "";
+			var idCenario = MCLM.Globals.currentScenery;
 			
 			var images = [];
 			
@@ -73,8 +74,13 @@ Ext.define('MCLM.Map', {
 				if ( visible ) {
 					
 					if ( layerType == 'FEI' ) {
-						foundFei = true;
-						feiMap.addLayer( layers.item(i) );
+						var source = layers.item(i).getSource();
+						var features = source.getFeatures();
+						if ( features.length > 0 ) {
+							alert("found FEI");
+							foundFei = true;
+							feiMap.addLayer( layers.item(i) );
+						}
 					}
 					
 					if ( layerType == 'BAS' ) {
@@ -99,9 +105,8 @@ Ext.define('MCLM.Map', {
 				
 			}
 
-			
 			var feiEncodedCanvas = '';
-			if ( foundFei ) {
+			if ( foundFei == true ) {
 				feiMap.renderSync();
 				feiEncodedCanvas = feiMapCanvas.toDataURL('image/png');
 			}
@@ -112,14 +117,17 @@ Ext.define('MCLM.Map', {
 				       url: 'getMapImage',
 				       params: {
 				           'urlList': Ext.encode( images ),
-				           'feiEncodedCanvas' : feiEncodedCanvas
+				           'feiEncodedCanvas' : feiEncodedCanvas,
 				       },       
 				       success: function(response, opts) {
 				    	   var respText = Ext.decode(response.responseText);
 				    	   
 				    	   if( respText.result != 'error ') {
-								mapImageWindow.update('<img style="width:500px;height:300px" src="'+respText.result+'">');
-								mapImageWindow.show();
+				    		   var uuid = respText.uuid;
+				    		   window.open('getMapAsPDF?uuid='+uuid+'&idCenario='+idCenario,'_blank');
+				    		   
+				    		   mapImageWindow.update('<img style="width:500px;height:300px" src="'+respText.imagePath+'">');
+				    		   mapImageWindow.show();
 				    	   } else {
 				    		   Ext.alert('Erro', 'Erro ao gerar a imagem');
 				    	   }
@@ -247,6 +255,11 @@ Ext.define('MCLM.Map', {
 			var map = MCLM.Map.map;
 			MCLM.Map.map.getView().fit([-16716960.433033716, -7413397.061675084, 23358056.252544772, 10745594.873977667]);	
 		},
+		getCenterHDMS : function() {
+			var center = MCLM.Map.map.getView().getCenter();
+			var coord = ol.coordinate.toStringHDMS( center );
+			return coord;
+		},
 		// --------------------------------------------------------------------------------------------
 		// Cria o Mapa Principal e Camadas auxiliares
 		loadMap : function( container ) {
@@ -275,6 +288,8 @@ Ext.define('MCLM.Map', {
 			    		   var lat = coordinate[0];
 			    		   var lon = coordinate[1];		            	   
 		            	   var utmCoord = MCLM.Functions.latLonToUTM( lon, lat );
+		            	   
+		            	   MCLM.Map.centerHDMS = coord;
 		            	   
 		            	   $("#coord_map").html( mapCoord );
 		            	   $("#coord_hdms").html( coord );

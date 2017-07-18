@@ -34,6 +34,7 @@ public class SceneryService {
 		target.setUser(user);
 		target.setZoomLevel( Integer.valueOf( zoomLevel ) );
 		target.setMapCenter(mapCenter);
+		target.setUserName( user.getName() );
 		
 		for ( SceneryLayer sl : source.getLayers() ) {
 			target.addNode( sl.getNode() );
@@ -55,7 +56,7 @@ public class SceneryService {
 	public String updateScenery(Integer idScenery, String mapCenter, Integer mapZoom, String mapaBase,
 			String servidorBase, String mapBbox, Boolean mapaBaseAtivo, Boolean gradeAtiva) throws Exception {
 		
-		String resp = "{ \"success\": true, \"msg\": \"Opera��o efetuada com sucesso.\" }";
+		String resp = "{ \"success\": true, \"msg\": \"Operação efetuada com sucesso.\" }";
 		
 		try {
 			Scenery oldScenery;
@@ -93,6 +94,7 @@ public class SceneryService {
 		oldScenery.setMapCenter( scenery.getMapCenter() );
 		oldScenery.setGraticule( scenery.getGraticule() );
 		oldScenery.setIsPublic( scenery.getIsPublic() );
+		oldScenery.setMapCenterHDMS( scenery.getMapCenterHDMS() );
 		
 		oldScenery.getNodes().clear();
 		for ( SceneryNode sl : scenery.getNodes() ) {
@@ -146,7 +148,7 @@ public class SceneryService {
 
 
 	public String createScenery(Boolean isPublic, Boolean graticule, String nomeCenario, String mapCenter, String description, String mapaBase,
-			String servidorBase, Integer mapZoom, Boolean mapaBaseAtivo, User user, String mapBbox) {
+			String servidorBase, Integer mapZoom, Boolean mapaBaseAtivo, User user, String mapBbox, String mapCenterHDMS) {
 		
 		Scenery scenery = new Scenery();
 		scenery.setBaseMap(mapaBase);
@@ -154,12 +156,14 @@ public class SceneryService {
 		scenery.setBaseServerURL( servidorBase );
 		scenery.setGraticule( graticule );
 		scenery.setCpfUser( user.getCpfUser() );
+		scenery.setUserName( user.getName() );
 		scenery.setIsPublic( false );
 		scenery.setMapCenter( mapCenter );
 		scenery.setSceneryName( nomeCenario );
 		scenery.setZoomLevel( mapZoom );
 		scenery.setDescription( description );
 		scenery.setMapBbox(mapBbox);
+		scenery.setMapCenterHDMS(mapCenterHDMS);
 		
 		String result;
 		try {

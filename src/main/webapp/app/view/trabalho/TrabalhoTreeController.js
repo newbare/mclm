@@ -371,7 +371,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 			Ext.getCmp('servidorBaseID').setValue( MCLM.Map.getBaseServerURL() );
 			Ext.getCmp('mapaBaseAtivoID').setValue( MCLM.Map.isBaseMapActive() );
 			Ext.getCmp('gradeAtivaID').setValue( MCLM.Map.isGraticuleActive() );
-			Ext.getCmp('mapBbox').setValue( MCLM.Map.getMapCurrentBbox() );			
+			Ext.getCmp('mapBbox').setValue( MCLM.Map.getMapCurrentBbox() );		
+			Ext.getCmp('mapCenterHDMSId').setValue( MCLM.Map.getCenterHDMS() );
 			
 			Ext.getCmp('nomeCenarioID').focus(true, 100);
 	    	

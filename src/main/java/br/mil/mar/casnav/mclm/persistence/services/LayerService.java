@@ -45,53 +45,63 @@ public class LayerService {
 	}
 	
 	
-	public String getLayersAsImage( String urlList, String feiEncodedCanvas ) throws Exception {
+	public String getLayersAsImage( String urlList, String feiEncodedCanvas )  {
 		
-		BufferedImage convertedImage = null;
-		if ( ( feiEncodedCanvas != null) && !feiEncodedCanvas.equals("") ) {
-			convertedImage = convertToImage( feiEncodedCanvas );
-		}
+		System.out.println( feiEncodedCanvas );
 		
-		WebClient wc = new WebClient();
-		
-		String uuid = UUID.randomUUID().toString().replace("-", "");
-		String path = PathFinder.getInstance().getPath() + "/tempmaps/" + uuid;
-		
-		File temp = new File( path );
-		List<File> images = new ArrayList<File>();
-		
-		temp.mkdirs();
-		JSONArray arr = new JSONArray( urlList );
-		for ( int x = 0; x < arr.length(); x++  ) {
-			JSONObject jo = arr.getJSONObject(x);
-			String url = jo.getString("url");
-			String serial = jo.getString("id");
+		String resposta = "{\"result\":\"error\"}";
+		try {
+			BufferedImage convertedImage = null;
+			if ( ( feiEncodedCanvas != null) && !feiEncodedCanvas.equals("") ) {
+				convertedImage = convertToImage( feiEncodedCanvas );
+			} 
 			
-			String targetFile = path + "/" + serial + ".png";
-			wc.saveImage(url, targetFile);
-			images.add( new File(targetFile) );
+			WebClient wc = new WebClient();
+			
+			String uuid = UUID.randomUUID().toString().replace("-", "");
+			String path = PathFinder.getInstance().getPath() + "/tempmaps/" + uuid;
+			
+			File temp = new File( path );
+			List<File> images = new ArrayList<File>();
+			
+			temp.mkdirs();
+			JSONArray arr = new JSONArray( urlList );
+			for ( int x = 0; x < arr.length(); x++  ) {
+				JSONObject jo = arr.getJSONObject(x);
+				String url = jo.getString("url");
+				String serial = jo.getString("id");
+				
+				String targetFile = path + "/" + serial + ".png";
+				wc.saveImage(url, targetFile);
+				images.add( new File(targetFile) );
+			}
+			
+		    BufferedImage result = new BufferedImage( 1000, 600, BufferedImage.TYPE_INT_RGB);
+		    Graphics2D g = (Graphics2D)result.getGraphics();
+		    
+		    g.setPaint ( new Color ( 255, 255, 255 ) );
+		    g.fillRect ( 0, 0, result.getWidth(), result.getHeight() );	    
+			
+		    for( File image : images ) {
+		        BufferedImage bi = ImageIO.read( image );
+		        g.drawImage(bi, 0, 0, null);
+		    }	
+		    
+		    if ( convertedImage != null ) {
+		    	g.drawImage(convertedImage, 0, 0, null);
+		    	ImageIO.write( convertedImage,"png", new File(path + "/feicoes.png") );	
+		    }
+		    
+		    ImageIO.write( result,"png", new File( path + "/result.png" ) );		    
+		    String urlPath = "tempmaps/" + uuid + "/result.png";
+		    
+		    resposta = "{\"result\":\"success\",\"imagePath\":\""+urlPath+"\",\"uuid\":\""+uuid+"\"}";
+
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
-		
-	    BufferedImage result = new BufferedImage( 1000, 600, BufferedImage.TYPE_INT_RGB);
-	    Graphics2D g = (Graphics2D)result.getGraphics();
-	    
-	    g.setPaint ( new Color ( 255, 255, 255 ) );
-	    g.fillRect ( 0, 0, result.getWidth(), result.getHeight() );	    
-		
-	    for( File image : images ) {
-	        BufferedImage bi = ImageIO.read( image );
-	        g.drawImage(bi, 0, 0, null);
-	    }	
-	    
-	    if ( convertedImage != null ) {
-	    	g.drawImage(convertedImage, 0, 0, null);
-	    	ImageIO.write( convertedImage,"png", new File(path + "/feicoes.png") );	
-	    }
-	    
-	    ImageIO.write( result,"png", new File( path + "/result.png" ) );		    
-	    String urlPath = "tempmaps/" + uuid + "/result.png";
-	    
-	    return urlPath;
+		    
+	    return resposta;
 	}
 	
 	/*

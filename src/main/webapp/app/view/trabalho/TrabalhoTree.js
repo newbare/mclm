@@ -33,6 +33,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
     dockedItems: [{
         xtype: 'toolbar',
         items: [{
+        	iconCls: 'export-icon',
+        	id: 'exportMapBtn',
+            handler : function() {
+            	MCLM.Map.exportMap();
+            }
+        },{
         	iconCls: 'reload-icon',
         	id: 'clrWsBtn',
             handler : 'clearWorkspace'
@@ -66,6 +72,13 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		afterrender:function(){
 			
 		    Ext.tip.QuickTipManager.register({
+				target: 'exportMapBtn',
+				title: 'Exportar',
+				text: 'Exportar Cenário / Mapa atual.',
+				width: 150,
+				dismissDelay: 5000 
+				
+			}, {
 		        target: 'svWsBtn',
 		        title: 'Salvar',
 		        text: 'Salva o conteúdo da área de trabalho / Cenário.',
