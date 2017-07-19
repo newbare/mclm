@@ -39,7 +39,7 @@ public class Config {
 
 	@Column(length=100, name = "proxy_host")
 	private String proxyHost;
-	
+
 	@Column(length=100, name = "mapbackgroudcolor")
 	private String mapBackgroudColor;
 	
@@ -383,6 +383,10 @@ public class Config {
 		this.mapBackgroudColor = mapBackgroudColor;
 	}
 	
+	@Transient
+	public String getVersion() {
+		return "v1.0";
+	}
 	
 	
 }

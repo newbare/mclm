@@ -543,8 +543,11 @@ body {
 .dataWindow .dataWindowLeft {
 	width: 20%;
 	padding-right: 5px;
-	border-right: 1px solid #cacaca;
+	padding-left: 3px;
+	border-right: 2px solid #cacaca;
 	border-bottom : 1px dotted #ebebeb;
+	background-color : #f7f7f7;
+	/*font-weight : bold;*/
 }
 
 .dataWindow .dataWindowMiddle {

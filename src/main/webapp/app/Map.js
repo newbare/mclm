@@ -14,6 +14,13 @@ Ext.define('MCLM.Map', {
 		shipTrafficEnabled: false,
 		streetPhotoEnabled : false,
 		queryLocationEnabled : false,
+		
+		precipitacaoLayer : null,
+		windLayer : null,
+		tempLayer : null,
+		pressureLayer : null,
+		vaneLayer : null,
+		
 		arrayMapCenter: null,
 		mapZoom: 5,
 		mapCenterLat: 0,
@@ -265,9 +272,12 @@ Ext.define('MCLM.Map', {
 		loadMap : function( container ) {
 			me = MCLM.Map;
 			MCLM.Map.init();
+			MCLM.Map.initExternalLayers();
+			
+			// ===================================================
 			
 			MCLM.Map.map = new ol.Map({
-				layers: [ MCLM.Map.baseLayer ],
+				layers: [ MCLM.Map.baseLayer, MCLM.Map.vaneLayer, MCLM.Map.precipitacaoLayer ],
 				target: container,
 				renderer: 'canvas',
 			    loadTilesWhileAnimating: true,
@@ -354,6 +364,77 @@ Ext.define('MCLM.Map', {
 			
 		},
 		
+		initExternalLayers : function() {
+
+			// https://openweathermap.org/api/weathermaps#examples
+			MCLM.Map.pressureLayer = new ol.layer.Tile({
+				source: new ol.source.XYZ({
+					//attributions: ["Local test."],
+					url: 'http://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
+				})
+			});				
+			
+			MCLM.Map.tempLayer = new ol.layer.Tile({
+				source: new ol.source.XYZ({
+					//attributions: ["Local test."],
+					url: 'http://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
+				})
+			});	
+
+				
+			MCLM.Map.windLayer = new ol.layer.Tile({
+				source: new ol.source.XYZ({
+					//attributions: ["Ventos."],
+					url: 'http://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
+				})
+			});	
+				
+			MCLM.Map.precipitacaoLayer = new ol.layer.Tile({
+				source: new ol.source.XYZ({
+					//attributions: ["Local test."],
+					url: 'http://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
+				})
+			});
+			
+			MCLM.Map.vaneLayer = new ol.layer.Tile({
+				source: new ol.source.XYZ({
+					//attributions: ["Local test."],
+					url : 'http://sat.owm.io/sql/{z}/{x}/{y}?appid=810c5cf214be9635b7c73268bd0b516d&from=s2'
+					//url: 'http://sat.owm.io/sql/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
+				})
+			});	
+			
+			
+			MCLM.Map.pressureLayer.set('name', 'OWMPressure');
+			MCLM.Map.pressureLayer.set('alias', 'OWMPressure');
+			MCLM.Map.pressureLayer.set('serverUrl', '' );
+			MCLM.Map.pressureLayer.set('serialId', 'mclm_owm_pressure');
+			MCLM.Map.pressureLayer.set('ready', true);
+			MCLM.Map.pressureLayer.set('baseLayer', false);			
+			
+			MCLM.Map.tempLayer.set('name', 'OWMTemperature');
+			MCLM.Map.tempLayer.set('alias', 'OWMTemperature');
+			MCLM.Map.tempLayer.set('serverUrl', '' );
+			MCLM.Map.tempLayer.set('serialId', 'mclm_owm_temperature');
+			MCLM.Map.tempLayer.set('ready', true);
+			MCLM.Map.tempLayer.set('baseLayer', false);			
+
+			MCLM.Map.windLayer.set('name', 'OWMWind');
+			MCLM.Map.windLayer.set('alias', 'OWMWind');
+			MCLM.Map.windLayer.set('serverUrl', '' );
+			MCLM.Map.windLayer.set('serialId', 'mclm_owm_wind');
+			MCLM.Map.windLayer.set('ready', true);
+			MCLM.Map.windLayer.set('baseLayer', false);					
+			
+			MCLM.Map.precipitacaoLayer.set('name', 'OWMPrecip');
+			MCLM.Map.precipitacaoLayer.set('alias', 'OWMPrecip');
+			MCLM.Map.precipitacaoLayer.set('serverUrl', '' );
+			MCLM.Map.precipitacaoLayer.set('serialId', 'mclm_owm_precip');
+			MCLM.Map.precipitacaoLayer.set('ready', true);
+			MCLM.Map.precipitacaoLayer.set('baseLayer', false);					
+			
+		},
+		
 		// --------------------------------------------------------------------------------------------
 		// Inicializa todas as variáveis e configuracoes
 		init : function() {
@@ -388,6 +469,7 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.baseLayer = MCLM.Map.createBaseLayer();
 			
 			$("#serverHostName").html( config.serverHostName );
+			$("#sysVer").html( config.version );
 			MCLM.Map.updateScale();
 			
 		},
@@ -1440,6 +1522,9 @@ Ext.define('MCLM.Map', {
 		        	if ( key == 'mclm_label_column' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 	        		if ( key == 'mclm_metadata_property' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        	if ( key == 'node_data' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
+	        		if ( key == 'window_type' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
+        			if ( key == 'layer_description' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
+       				if ( key == 'layer_source' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        	if ( key == 'data_window' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        		keys.push({text: key, width:150, dataIndex: key}); 
 		        }
@@ -1462,7 +1547,7 @@ Ext.define('MCLM.Map', {
 			    listeners: {
 			    	itemclick: function(dv, record, item, index, e) {
 			    		var selectedRec = dv.getSelectionModel().getSelection()[0];  
-			    		MCLM.Functions.openWindowData( selectedRec.data );
+			    		MCLM.Functions.openWindowData( layerName, selectedRec.data );
 			    	}
 			    }
 			    

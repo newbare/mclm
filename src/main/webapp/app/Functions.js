@@ -149,8 +149,14 @@ Ext.define('MCLM.Functions', {
 			return ctx.createPattern(cnv, 'repeat');
 		},	
 
-		openWindowData : function( record ) {
-
+		openWindowData : function( layerName, record ) {
+			
+			if ( record.window_type == 'DEFAULT' ) {
+				MCLM.Functions.createSimpleDataWindow( layerName, record );
+				MCLM.Functions.mainLog("Janela de Features criada.");
+			}
+			
+			/*
 			if ( record.data_window == -1 ) {
 				Ext.Msg.alert('Janela de Dados não encontrada','Não há janela de dados cadastrada para esta camada.' );
 				return true;
@@ -182,9 +188,90 @@ Ext.define('MCLM.Functions', {
 				}
 
 			});			
-
+			*/
+			
 		},		
 
+		// Cria uma janela de dados simples usando somente os dados vindos da camada WMS (publicado no Geoserver)
+		createSimpleDataWindow( layerName, record ) {
+			
+			//console.log( record );
+			var	dataWindow = Ext.getCmp('dataWindow');
+			
+			if ( dataWindow ) {
+				MCLM.Functions.removeDataWindowTooltip();
+				dataWindow.destroy();
+			} 	
+			
+			dataWindow = Ext.create('Ext.Window', {
+				id: 'dataWindow',    	
+				xtype: 'dataWindow',
+				title : layerName + ' (' + record.layer_source + ')',
+				width : 550,
+				height: 500,
+				bodyStyle:{"background-color":"white"},
+				autoScroll: true,
+				constrain: true,
+				renderTo: Ext.getBody(),
+				listeners : {
+					close : function() {
+						MCLM.Functions.removeDataWindowTooltip();
+					},
+				}
+			});	
+
+			//var metaData = record.mclm_metadata_property;
+			
+			var content = "<table class='dataWindow'>";
+		    for ( var key in record ) {
+		        if ( record.hasOwnProperty( key ) ) {
+		        	if ( key != 'mclm_metadata_property' && key != 'mclm_pk_gid' && key != 'window_type' && key != 'layer_description'
+		        			&& key != 'data_window' && key != 'layer_source' && key != 'node_data') {
+			        	var value = record[key];
+						content = content + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
+						"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
+		        	}
+		        }
+		    }			
+			content = content + "</table>";
+			
+			var dataTabPanel = Ext.create('Ext.Panel', {
+				layout: 'fit',
+				border: false,
+				bodyPadding: 3,
+				html : content,
+			});			
+
+			//dataTabPanel.update(  );
+			var windowData = {};
+			windowData.windowName = layerName;
+			
+			dataWindow.addDocked({
+				xtype: 'toolbar',
+				dock: 'top',
+				items: [{
+					iconCls: 'scenery-icon',
+					id: 'cloneToSceneryBtn',
+					handler: function(event, toolEl, panel){
+						MCLM.Functions.cloneToScenery( windowData,record );
+					}	                
+				}, {
+					iconCls: 'clima-icon',
+					id: 'showWeatherBtn',
+					handler: function(event, toolEl, panel){
+						MCLM.Functions.exibeClima( windowData, record );
+					}	                
+				}]
+			});			
+			
+			dataWindow.add( dataTabPanel );
+			dataWindow.show();			
+		    MCLM.Functions.bindDataWindowTooltips();
+		    
+			
+		},
+		
+		// Cria uma janela de dados complexa, indo ao Banco para requisitar os dados da camada.
 		createDataWindow( windowData, record ) {
 			var symbolServerUrl = MCLM.Globals.config.symbolServerURL;
 			var windowName = windowData.windowName;
@@ -314,6 +401,7 @@ Ext.define('MCLM.Functions', {
 			Ext.tip.QuickTipManager.unregister('cloneToSceneryBtn');
 			Ext.tip.QuickTipManager.unregister('showWeatherBtn');
 		},
+		
 		bindDataWindowTooltips : function() {
 			Ext.tip.QuickTipManager.register({
 				target: 'cloneToSceneryBtn',

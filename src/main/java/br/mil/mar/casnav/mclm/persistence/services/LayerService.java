@@ -229,6 +229,9 @@ public class LayerService {
 		
 		try {
 			DictionaryService ds = new DictionaryService();
+			NodeService ns = new NodeService();
+			NodeData node = ns.getNode(idNodeData);
+			
 			List<DictionaryItem> dictItems = ds.getDictionary( idNodeData );
 			for ( DictionaryItem item : dictItems ) {
 				String originalName = item.getOriginalName();
@@ -238,6 +241,9 @@ public class LayerService {
 					JSONObject properties = jsonFeatures.getJSONObject(x).getJSONObject("properties");
 					properties.put("data_window", idDataWindow);
 					properties.put("node_data", idNodeData);
+					properties.put("window_type", node.getWindowType().toString() );
+					properties.put("layer_description", node.getDescription() );
+					properties.put("layer_source", node.getInstitute() );
 					
 					if ( !item.isVisible() ) {
 						properties.remove( originalName );

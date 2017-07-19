@@ -41,11 +41,15 @@ public class HeaderAndFooter extends PdfPageEventHelper {
         ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, new Phrase("Chefia de Logística e Mobilização",headerMiniFont), 
                 (document.right() - document.left()) / 2 + document.leftMargin(), document.top() -20,    0);        
         
-
         // Footer
+        String version = "";
+        try {
+        	version = Configurator.getInstance().getConfig().getVersion();
+        } catch ( Exception e ) {
+        	//
+        }
         
-        
-        ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase("Centro de Análises de Sistemas Navais",footerFont), 
+        ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase("Módulo de Cenários Logísticos e de Mobilização " + version,footerFont), 
                 document.leftMargin() - 1, document.bottom() - 20, 0);
         
         ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, new Phrase( strDate + " " + strTime ,footerFont), 

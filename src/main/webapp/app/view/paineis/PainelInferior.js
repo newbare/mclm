@@ -9,7 +9,7 @@ Ext.define('MCLM.view.paineis.PainelInferior', {
     collapsed: false,
     html : 	"<div id='statusBarDiv' ><div style='float:right'>" + 
      	"<table id='statusBarTable'><tr>" + 
-     		 /* "<td class='statusBarName'>OSM:</td><td class='statusBarValue' style='width:200px' id='osmSource'>&nbsp;</td>" + */ 
+     		"<td class='statusBarName'>Versão:</td><td class='statusBarValue' style='width:50px' id='sysVer'>&nbsp;</td>" +  
      		"<td class='statusBarName'>Escala:</td><td class='statusBarValue' style='width:50px' id='mapScale'>&nbsp;</td>" + 
      		"<td class='statusBarName'>Serv.:</td><td class='statusBarValue' style='width:120px' id='serverHostName'>&nbsp;</td>" + 
      		"<td class='statusBarName'>HDMS:</td><td class='statusBarValue' id='coord_hdms'>&nbsp;</td>" + 
