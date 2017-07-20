@@ -31,6 +31,30 @@ Ext.define('MCLM.view.tools.RestWeather', {
 	    height: MCLM.Globals.btnHeight,
 	    id : 'showWindyWindowID',
         xtype: 'button',
+    },{
+	    iconCls: 'owm-rain-icon',
+	    enableToggle: true,
+        handler: 'togglePrecipitation',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    id : 'togglePrecipitationID',
+        xtype: 'button',
+    },{
+	    iconCls: 'owm-wind-icon',
+	    enableToggle: true,
+        handler: 'toggleWind',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    id : 'toggleWindID',
+        xtype: 'button',
+    },{
+	    iconCls: 'owm-temp-icon',
+	    enableToggle: true,
+        handler: 'toggleTemp',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    id : 'toggleTempID',
+        xtype: 'button',
     }],
 
 	

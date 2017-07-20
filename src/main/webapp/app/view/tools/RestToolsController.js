@@ -2,17 +2,6 @@ Ext.define('MCLM.view.tools.RestToolsController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.restToolsController',
    
-    showForecastToolBar : function() {
-    	
-		var restWeatherWindow = Ext.getCmp('restWeatherWindow');
-		if ( !restWeatherWindow ) {
-			restWeatherWindow = Ext.create('MCLM.view.tools.RestWeatherWindow');
-		}
-		restWeatherWindow.show();
-		restWeatherWindow.alignTo(Ext.getBody(), "tr-tr", [-90, 100]);
-    	
-    },
-    
     toggleAeroTraffic : function() {
     	MCLM.Map.toggleAeroTraffic();
     },

@@ -541,7 +541,13 @@ Ext.define('MCLM.Functions', {
 						text: 'Retorna para o zoom inicial da configuração.',
 						width: 150,
 						dismissDelay: 5000 
-					}); 	
+					},{
+		    	        target: 'showForecastToolBarID',
+		    	        title: 'Serviços Meteorológicos',
+		    	        text: 'Ferramentas de Serviços Meteorológicos.',
+		    	        width: 180,
+		    	        dismissDelay: 5000 
+		    	    }); 	
 		},
 
 		latLonToUTM : function(lon, lat) {

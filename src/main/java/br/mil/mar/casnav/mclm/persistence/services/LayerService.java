@@ -10,6 +10,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -235,7 +236,8 @@ public class LayerService {
 			List<DictionaryItem> dictItems = ds.getDictionary( idNodeData );
 			for ( DictionaryItem item : dictItems ) {
 				String originalName = item.getOriginalName();
-				String translatedName = item.getTranslatedName();		
+				String translatedName = item.getTranslatedName();	
+				int indexOrder = item.getIndexOrder();
 		
 				for ( int x=0; x < jsonFeatures.length(); x++ ) {
 					JSONObject properties = jsonFeatures.getJSONObject(x).getJSONObject("properties");
@@ -273,6 +275,14 @@ public class LayerService {
 						
 					}
 
+					/*
+					Iterator<?> keys = properties.keys();
+					while( keys.hasNext() ) {
+					    String key = (String)keys.next();
+					    
+					}
+					*/
+					
 				}
 			}	
 				

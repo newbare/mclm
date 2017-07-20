@@ -295,8 +295,18 @@ body {
 	background-repeat: no-repeat;
 }
 
+.copy-dictionary-icon {
+	background-image: url('../img/copy-dict.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .cloud-icon {
 	background-image: url('../img/cloud.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.rest-icon {
+	background-image: url('../img/rest.svg') !important;
 	background-repeat: no-repeat;
 }
 
@@ -671,6 +681,26 @@ body {
 
 .windy-icon {
 	background-image: url('../img/windy.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.owm-wind-icon {
+	background-image: url('../img/owm_wind.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.owm-temp-icon {
+	background-image: url('../img/owm_temperature.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.owm-rain-icon {
+	background-image: url('../img/owm_rain.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.owm-pressure-icon {
+	background-image: url('../img/owm_pressure.svg') !important;
 	background-repeat: no-repeat; 
 }
 

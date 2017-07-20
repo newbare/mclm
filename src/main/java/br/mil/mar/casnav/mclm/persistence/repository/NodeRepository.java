@@ -1,6 +1,8 @@
 package br.mil.mar.casnav.mclm.persistence.repository;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
@@ -91,6 +93,22 @@ public class NodeRepository extends BasicRepository {
 			throw e;			
 		}
 		closeSession();
+	}
+
+	public List<NodeData> getSameOrignNodes(String layerName) throws Exception {
+		DaoFactory<NodeData> df = new DaoFactory<NodeData>();
+		IDao<NodeData> fm = df.getDao(this.session, NodeData.class);
+		List<NodeData> node = null;
+		
+		try {
+			node = new ArrayList<NodeData>( fm.getList("select * from node_data where layername = '" + layerName + "'" ) );
+		} catch ( Exception e ) {
+			closeSession();
+			throw e;
+		}
+		
+		closeSession();
+		return node;
 	}		
 	
 }

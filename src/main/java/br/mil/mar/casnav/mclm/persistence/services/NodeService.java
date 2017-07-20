@@ -47,7 +47,7 @@ public class NodeService {
 	public NodeData addNode( NodeData node ) throws Exception {
         node = rep.insertNode( node );
         DictionaryService ds = new DictionaryService();
-        ds.updateDictionary( node );
+        ds.createDictionary( node );
         return node;
 	}
 	
@@ -196,6 +196,10 @@ public class NodeService {
 		node.setReadOnly( true );
 		NodeData result = addNode( node );
 		return result;
+	}
+
+	public List<NodeData> getSameOriginNodes(String layerName) throws Exception {
+		return rep.getSameOrignNodes( layerName );
 	}
 
 

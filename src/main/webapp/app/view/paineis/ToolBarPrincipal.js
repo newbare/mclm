@@ -100,11 +100,18 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
     	id: 'drawFeicaoBtn',
         handler : 'showDrawToolBar'
     },{
-    	iconCls: 'cloud-icon',
+    	iconCls: 'rest-icon',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
     	xtype: 'button',
     	id: 'showRestToolsBtn',
         handler : 'showRestTools'
+    },{
+    	iconCls: 'cloud-icon',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+    	xtype: 'button',
+    	id: 'showForecastToolBarID',
+        handler : 'showForecastToolBar'
     }]
 });

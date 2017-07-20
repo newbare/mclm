@@ -137,6 +137,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			    	items: [
 					  { iconCls: 'add-scenery-icon', text: 'Copiar para Área de Trabalho', handler: function() { me.addToScenery(record); } },
 					  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
+					  { iconCls: 'copy-dictionary-icon', text: 'Copiar Dicionário para Camadas de Mesma Origem', handler: function() { me.copyDictionary(record); } },
 					  { iconCls: 'datawindow-icon', text: 'Criar Janela de Dados', handler: function() { me.configDataWindow(record); } },
 					  { xtype: 'menuseparator' },
 			          { iconCls: 'properties-icon', text: 'Propriedades...', handler: function() { me.showLayerProperties( record ); } },
@@ -234,10 +235,53 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		configDataWindow.show();	
     },
     
+    // Copia o dicionario da camada WMS selecionada para todas as que possuem mesma origem de dados (mesma camada de origem)
+    doCopyDictionary : function( record ) {
+    	var data = record.data;
+    	var idNodeData = data.idNodeData;
+
+    	MCLM.Functions.mainLog('Copiando dicionário. Aguarde...');
+    	
+		Ext.Ajax.request({
+		       url: 'copyDictionary',
+		       params: {
+		           'sourceNode': idNodeData 
+		       },       
+		       success: function(response, opts) {
+		    	   var result = JSON.parse( response.responseText );
+		    	   if ( result.success ) {
+			    	   Ext.Msg.alert('Sucesso', result.msg );
+			    	   MCLM.Functions.mainLog('Dicionário copiado.');
+		    	   } else {
+			    	   Ext.Msg.alert('Falha', result.msg );
+			    	   MCLM.Functions.mainLog('Falha copiando dicionário.');
+		    	   }
+		       },
+		       failure: function(response, opts) {
+		    	   var result = JSON.parse( response.responseText );
+		    	   Ext.Msg.alert('Falha', result.msg );
+		    	   MCLM.Functions.mainLog('Falha copiando dicionário.');
+		       }
+		});
+    	
+    },
+    copyDictionary : function( record ) {
+
+    	var me = this;
+		Ext.Msg.confirm('Copiar Dicionário', 'Esta operação irá sobrescrever o dicionário de todas as camadas que possuem a mesma origem que esta. Tem certeza?', function( btn ){
+			   if( btn === 'yes' ){
+				   me.doCopyDictionary( record );
+			   } else {
+			       return;
+			   }
+		 });
+    	
+    	
+    },
+    
     // Edita o dicionario de dados para uma camada
     configDictionary : function(record) {
     	var data = record.data;
-    	
     	var layerName = data.layerName;
     	var layerType = data.layerType;
     	var serviceUrl = data.serviceUrl;

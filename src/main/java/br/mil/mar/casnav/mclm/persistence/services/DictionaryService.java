@@ -39,7 +39,7 @@ public class DictionaryService {
 	}
 	
 	public void deleteDictionary( int layerNode ) throws Exception {
-		rep.deleteDictionary( layerNode );
+		rep.deleteDictionary( layerNode, true );
 	}
 		
 	public String getListAsJson( int idNodeData, String layerName, String serviceUrl ) throws Exception {
@@ -61,8 +61,8 @@ public class DictionaryService {
 		return result;
 	}	
 	
-	public List<DictionaryItem> getListByLayer( String layerName ) throws Exception {
-		return rep.getListByLayer(layerName);
+	public List<DictionaryItem> getDictionaryByLayer( String layerName ) throws Exception {
+		return rep.getDictionaryByLayer(layerName);
 	}
 	
 	public List<DictionaryItem> getDictionary( int idNodeData ) throws Exception {
@@ -70,13 +70,13 @@ public class DictionaryService {
 		return result;
 	}
 	
-	public int updateDictionary( NodeData node ) throws Exception {
+	public int createDictionary( NodeData node ) throws Exception {
 		String layerName = node.getLayerName();
 		String serviceUrl = node.getServiceUrl();
 		int result = 0;
 		
 		if ( node.getLayerType() == LayerType.DTA ) {
-			System.out.println("Atualizando dicionário para [" + node.getLayerType() + "] " + node.getLayerAlias() + "..." );
+			System.out.println("Criando dicionário para [" + node.getLayerType() + "] " + node.getLayerAlias() + "..." );
 						
 			try {
 				DataLayer dl = node.getDataLayer();
@@ -89,9 +89,7 @@ public class DictionaryService {
 				String password = dl.getTable().getServer().getServerPassword();
 				String user = dl.getTable().getServer().getServerUser();
 				String tableName = dl.getTable().getName();
-				//String whereClause = dl.getWhereClause();
 				String columns = dl.getPropertiesColumns();
-				//String schemaName = "";
 				
 				// Tenta remover o nome do esquema
 				if ( tableName.contains(".") ) {
@@ -148,6 +146,7 @@ public class DictionaryService {
 				// Para cada attributo deste layer, crio um item de dicionario associado ao Node...
 				for ( GeoserverLayerAttribute attribute : layer.getProperties() ) {
 					DictionaryItem di = new DictionaryItem( attribute, node );
+					di.setVisible( true );
 					newTransaction();
 					rep.insertItem( di );
 				}
@@ -369,6 +368,13 @@ public class DictionaryService {
 				int idDictionaryItem = jo.getInt("idDictionaryItem" );
 				boolean visible = jo.getBoolean("visible");
 				boolean primaryKey = jo.getBoolean("primaryKey");
+
+				int indexOrder = 0;
+				try {
+					indexOrder = jo.getInt("indexOrder" );
+				} catch ( Exception e ) {
+					//
+				}
 				
 				newTransaction();
 				DictionaryItem item = rep.getItem( idDictionaryItem );
@@ -376,8 +382,9 @@ public class DictionaryService {
 				item.setDescription( description );
 				item.setVisible(visible);
 				item.setPrimaryKey(primaryKey);
+				item.setIndexOrder(indexOrder);
 				
-				rep.newTransaction();
+				newTransaction();
 				rep.updateItem( item );
 				
 			}
@@ -390,7 +397,52 @@ public class DictionaryService {
 
 	}
 
+	public String copyDictionary(int sourceNode) {
+		String resp = "";
+		try {
+			// Pega o dicionario da camada de origem
+			List<DictionaryItem> sourceDictionary = getDictionary( sourceNode );
+			
+			
+			// Pega todas as camadas que possuem mesma origem que a informada : INCLUSIVE ELA MESMA
+			NodeService ns = new NodeService();
+			NodeData node = ns.getNode(sourceNode);
+			String layerName = node.getLayerName(); 
+			ns.newTransaction();
+			List<NodeData> sameOrignNodes = ns.getSameOriginNodes( layerName );
+			int count = sameOrignNodes.size();
+			
+			// Apaga todo o dicionario para esse tipo de camada
+			String sql = "delete from dictionary where id_node_data in (  select id_node_data from node_data where layername = '"+layerName+"' )";
+			rep.newTransaction();
+			rep.executeQuery(sql, true);
+			
+			// Para cada camada  ...
+			DictionaryRepository newConn = new DictionaryRepository();
+			for( NodeData nodeTarget : sameOrignNodes ) {
+				
+				// Para cada item do dicionario de origem...
+				for( DictionaryItem item : sourceDictionary ) {
+					// Troca a origem pelo destino
+					item.setNode(nodeTarget);
+					newConn.newTransaction();					
+					newConn.insertItem(item);
+				}
+				
+			}
+			
+			resp = "{ \"success\": true, \"msg\": \"Operação efetuada com sucesso. Foram processadas "+ count +" camadas.\" }";
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			resp = "{ \"error\": true, \"msg\": \"" + e.getMessage() + "\" }";
+		}		
+		return resp;
+	}
 
-	
+	/*
+	public void updateDictionaryItem( DictionaryItem item ) throws Exception {
+		DictionaryItem oldItem = rep.getItem( item.getIdDictionaryItem() );
+	}
+	*/
 	
 }

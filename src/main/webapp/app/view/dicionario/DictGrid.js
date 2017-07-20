@@ -21,8 +21,8 @@ Ext.define('MCLM.view.dicionario.DictGrid', {
 	     {text:'Identificador', dataIndex:'primaryKey', width:80, xtype: 'booleancolumn', editor: {
 	    	 xtype: 'checkboxfield',
 	    	 allowBlank: false
-	     }, falseText:'Não', trueText: 'Sim'}
-	     
+	     }, falseText:'Não', trueText: 'Sim'},
+	     {text:'Ordem', dataIndex:'indexOrder', width:50, editor: 'textfield'},
 	     
     ],
     

@@ -277,7 +277,7 @@ Ext.define('MCLM.Map', {
 			// ===================================================
 			
 			MCLM.Map.map = new ol.Map({
-				layers: [ MCLM.Map.baseLayer, MCLM.Map.vaneLayer, MCLM.Map.precipitacaoLayer ],
+				layers: [ MCLM.Map.baseLayer ],
 				target: container,
 				renderer: 'canvas',
 			    loadTilesWhileAnimating: true,
@@ -400,7 +400,6 @@ Ext.define('MCLM.Map', {
 				source: new ol.source.XYZ({
 					//attributions: ["Local test."],
 					url : 'http://sat.owm.io/sql/{z}/{x}/{y}?appid=810c5cf214be9635b7c73268bd0b516d&from=s2'
-					//url: 'http://sat.owm.io/sql/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
 			});	
 			
@@ -472,7 +471,22 @@ Ext.define('MCLM.Map', {
 			$("#sysVer").html( config.version );
 			MCLM.Map.updateScale();
 			
+			
+			MCLM.Map.checkInternetAccess();
+			
 		},
+		
+		checkInternetAccess : function() {
+			var image = new Image();
+			image.src = 'https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png';
+			image.onload = function() {
+				MCLM.Functions.mainLog("Seu browser acessa a internet normalmente.");
+			};
+			image.onerror = function() {
+				Ext.Msg.alert('Alerta!','Não foi possível acessar a internet a partir de seu navegador. Alguns serviços podem não estar disponíveis.' );		  
+			};
+		},
+		
 		updateScale : function() {
 			var resolution = MCLM.Map.theView.getResolution()
 			var units = MCLM.Map.theView.getProjection().getUnits();
@@ -1481,15 +1495,13 @@ Ext.define('MCLM.Map', {
 		    	  var rawData = [];
 		    	  for ( x=0; x<jsonObj.features.length;x++ ) {
 		    		  var tempObj = jsonObj.features[x].properties;
-		    		 
 		    		  var feicaoMeta = {};
 		    		  var feicaoMetaFeatures = [];
 		    		  feicaoMetaFeatures.push( jsonObj.features[x] );
 		    		  feicaoMeta["features"] = feicaoMetaFeatures;
 		    		  feicaoMeta["type"] = "FeatureCollection";
-		    		  
 		    		  tempObj["mclm_metadata_property"] = Ext.encode( feicaoMeta );
-		    		  rawData.push( tempObj );
+		    		  rawData.push( tempObj ); 
 		    	  }
 		    	   
 		    	  if ( rawData.length > 0 ) {

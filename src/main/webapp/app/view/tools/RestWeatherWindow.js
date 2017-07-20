@@ -5,7 +5,7 @@ Ext.define('MCLM.view.tools.RestWeatherWindow', {
 	id:'restWeatherWindow',    	
 	xtype: 'restWeatherWindow',
 	title : "Serviços Meteorológicos",
-	width : 220,
+	width : 300,
 	height: 70,
 	bodyStyle:"background:#FFFFFF;",
 	resizable: false,
@@ -28,13 +28,35 @@ Ext.define('MCLM.view.tools.RestWeatherWindow', {
     	close : function() {
     		Ext.tip.QuickTipManager.unregister('showForecastID');    	
     		Ext.tip.QuickTipManager.unregister('enableQueryLocationID');    	
-    		Ext.tip.QuickTipManager.unregister('showWindyWindowID');    	
+    		Ext.tip.QuickTipManager.unregister('showWindyWindowID');   
+    		
+    		Ext.tip.QuickTipManager.unregister('toggleTempID');    	
+    		Ext.tip.QuickTipManager.unregister('toggleWindID');    	
+    		Ext.tip.QuickTipManager.unregister('togglePrecipitationID');    	
     		MCLM.Map.unbindMapClick();
     	},
 	    
 	    afterrender : function ( cmp ) {
         	
     	    Ext.tip.QuickTipManager.register({
+    	        target: 'togglePrecipitationID',
+    	        title: 'Chuva',
+    	        text: 'Exibe / Oculta camada de chuva OpenWeatherMap.',
+    	        width: 180,
+    	        dismissDelay: 5000 
+    	    },{
+    	        target: 'toggleWindID',
+    	        title: 'Vento',
+    	        text: 'Exibe / Oculta camada de vento OpenWeatherMap.',
+    	        width: 180,
+    	        dismissDelay: 5000 
+    	    },{
+    	        target: 'toggleTempID',
+    	        title: 'Temperatura',
+    	        text: 'Exibe / Oculta camada de temperatura OpenWeatherMap.',
+    	        width: 180,
+    	        dismissDelay: 5000 
+    	    },{
     	        target: 'showForecastID',
     	        title: 'Avisos Meteorológicos INMET',
     	        text: 'Centro Virtual para Avisos Meteorológicos Severos - INMET.',

@@ -72,9 +72,9 @@ public class Startup implements ServletContextListener {
     			System.out.println("Nenhum registro encontrado na tabela de configuração.");
     		}
     		
-    		// Verifica novamente se todas as camadas estao com o dicionorio carregado.
+    		// Verifica novamente se todas as camadas estao com o dicionario carregado.
     		// Pode acontecer de no momento do cadastro da camada o link WMS esteja 
-    		// fora do ar e n�o seja possivel buscar os atributos, entao tentamos novamente agora
+    		// fora do ar e não seja possivel buscar os atributos, entao tentamos novamente agora
     		// O ideal seria deixar para o usuario atualizar isso quando necessario.
     		
     		NodeService ns = new NodeService();
@@ -89,7 +89,7 @@ public class Startup implements ServletContextListener {
 					ds.getDictionary( node.getIdNodeData() );
 				} catch ( NotFoundException nfe ) {
 					try {
-						int quant = ds.updateDictionary( node );
+						int quant = ds.createDictionary( node );
 						if ( quant > 0 ) System.out.println(" > concluido com " + quant + " itens.");
 					} catch ( Exception e ) {
 						System.out.println("Erro ao tentar atualizar o dicionário: " + e.getMessage() );
