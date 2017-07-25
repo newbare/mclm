@@ -194,8 +194,6 @@ Ext.define('MCLM.Functions', {
 
 		// Cria uma janela de dados simples usando somente os dados vindos da camada WMS (publicado no Geoserver)
 		createSimpleDataWindow( layerName, record ) {
-			
-			//console.log( record );
 			var	dataWindow = Ext.getCmp('dataWindow');
 			
 			if ( dataWindow ) {
@@ -217,34 +215,39 @@ Ext.define('MCLM.Functions', {
 					close : function() {
 						MCLM.Functions.removeDataWindowTooltip();
 					},
-				}
+				},
+				resizable: false,
 			});	
 
-			//var metaData = record.mclm_metadata_property;
+			var metaData = record.mclm_metadata_property;
 			
 			var content = "<table class='dataWindow'>";
 		    for ( var key in record ) {
+		    	
 		        if ( record.hasOwnProperty( key ) ) {
-		        	if ( key != 'mclm_metadata_property' && key != 'mclm_pk_gid' && key != 'window_type' && key != 'layer_description'
+		        	if ( key != 'id' && key != 'mclm_metadata_property' && key != 'mclm_pk_gid' && key != 'window_type' && key != 'layer_description'
 		        			&& key != 'data_window' && key != 'layer_source' && key != 'node_data') {
 			        	var value = record[key];
 						content = content + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
 						"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
 		        	}
-		        }
+		        } 
 		    }			
 			content = content + "</table>";
 			
 			var dataTabPanel = Ext.create('Ext.Panel', {
-				layout: 'fit',
+				//layout: 'fit',
+				width : 525,
 				border: false,
-				bodyPadding: 3,
+				bodyPadding: 2,
 				html : content,
+				autoHeight: true
 			});			
 
-			//dataTabPanel.update(  );
 			var windowData = {};
 			windowData.windowName = layerName;
+			
+			dataWindow.add( dataTabPanel );
 			
 			dataWindow.addDocked({
 				xtype: 'toolbar',
@@ -263,9 +266,11 @@ Ext.define('MCLM.Functions', {
 					}	                
 				}]
 			});			
+
+			dataWindow.show();	
 			
-			dataWindow.add( dataTabPanel );
-			dataWindow.show();			
+			dataWindow.updateLayout();	
+			dataTabPanel.updateLayout(); 
 		    MCLM.Functions.bindDataWindowTooltips();
 		    
 			
@@ -315,7 +320,7 @@ Ext.define('MCLM.Functions', {
 					var fieldValue = fields[x].fieldValue;
 					var fieldType = fields[x].fieldType;
 					if( fieldType == 'COLOR' ) {
-						theColor = fieldValue.replace('#','');;
+						theColor = fieldValue.replace('#','');
 					}
 				}
 

@@ -10,7 +10,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -234,64 +233,80 @@ public class LayerService {
 			NodeData node = ns.getNode(idNodeData);
 			
 			List<DictionaryItem> dictItems = ds.getDictionary( idNodeData );
-			for ( DictionaryItem item : dictItems ) {
-				String originalName = item.getOriginalName();
-				String translatedName = item.getTranslatedName();	
-				int indexOrder = item.getIndexOrder();
-		
-				for ( int x=0; x < jsonFeatures.length(); x++ ) {
-					JSONObject properties = jsonFeatures.getJSONObject(x).getJSONObject("properties");
-					properties.put("data_window", idDataWindow);
-					properties.put("node_data", idNodeData);
-					properties.put("window_type", node.getWindowType().toString() );
-					properties.put("layer_description", node.getDescription() );
-					properties.put("layer_source", node.getInstitute() );
+			
+			for ( int x=0; x < jsonFeatures.length(); x++ ) {
+				JSONObject feature = jsonFeatures.getJSONObject(x);
+				JSONObject properties = feature.getJSONObject("properties");			
+
+				properties.put("data_window", idDataWindow);
+				properties.put("node_data", idNodeData);
+				properties.put("window_type", node.getWindowType().toString() );
+				properties.put("layer_description", node.getDescription() );
+				properties.put("layer_source", node.getInstitute() );					
+				
+				JSONArray attributes = new JSONArray();				
+				
+				for ( DictionaryItem item : dictItems ) {
+					String originalName = item.getOriginalName();
+					String translatedName = item.getTranslatedName();	
+					int indexOrder = item.getIndexOrder();
+
+					if ( item.isVisible() ) {
+						JSONObject attribute = new JSONObject();
+						attribute.put("indexOrder", indexOrder);
+						attribute.put("originalName", originalName);
+						attribute.put("translatedName", translatedName);
+						attribute.put("dataType", item.getDataType().toString() );
+						
+	
+						Object value = "";
+						try {
+							value = properties.get( originalName );
+							if ( value.equals("null") ) value = "";
+						} catch ( Exception e ) {
+							//e.printStackTrace();
+						}
 					
-					if ( !item.isVisible() ) {
-						properties.remove( originalName );
-					} else {					
-					
-						// Adiciona as chaves primarias com o nome do campo sem traducao.
+
 						if ( item.isPrimaryKey() ) {
-							
 							if( !properties.has( originalName ) ) {
 								// Lanca erro caso a coluna PK escolhida pelo usuario nao exista no resultset
 								// vindo do banco. Nesse caso o usuario devera adicionar a PK como coluna de retorno
 								// na consulta SQL acima para que ela venha no resultado.
-								throw new Exception("A coluna definida como chave primária (" + originalName + ") não foi encontrada entre as colunas resultantes da consulta efetuada. Adicione esta coluna na camada '" + layerName + "'" );
+								throw new Exception("A coluna definida como chave primária (" + originalName + ") não foi encontrada entre as colunas resultantes da consulta efetuada. Adicione esta coluna na camada '" + layerName + "' em " + node.getServer().getName() );
 							}
-							
-							Object value = properties.get( originalName );
 							String primaryColumnName = "mclm_pk_" + originalName;
-							properties.put(primaryColumnName, value);
+							attribute.put(primaryColumnName, value);
 						}
 						
-						// Troca o nome original pelo traduzido no dicionario
-						if ( translatedName != null && !translatedName.equals("") && properties.has( originalName ) ) {
-							Object value = properties.get( originalName );
-							properties.remove( originalName );
-							properties.put( translatedName, value );
-						}					
+						attribute.put("value", value);
+						attributes.put( attribute );
 						
-					}
+						
+					} 
 
-					/*
-					Iterator<?> keys = properties.keys();
-					while( keys.hasNext() ) {
-					    String key = (String)keys.next();
-					    
+
+					try {
+						properties.remove( originalName );	
+					} catch (Exception e) {
+						System.out.println("Cannot remove " + originalName);
 					}
-					*/
+					
 					
 				}
+				
+				System.out.println( attributes.toString() );
+
+				properties.put("attributes", attributes);
 			}	
 				
+			result = queryResult.toString();
 			
 		} catch ( Exception e ) {
-			result = e.getMessage().replace("\"", "'");
+			result = "{ \"error\": true, \"msg\": \"" + e.getMessage().replace("\"", "'") + ".\" }";
 		}
 		
-		result = queryResult.toString();
+		
 		
 		return result;
 	}

@@ -224,7 +224,7 @@ Ext.define('MCLM.Map', {
 				    	   
 				    	   
 				    	   weatherCoordinateWindow.update( divMain );
-				    	   console.log( respText );
+				    	   //console.log( respText );
 				    	   
 				       }
 				});
@@ -674,7 +674,7 @@ Ext.define('MCLM.Map', {
 	    	    }
 				if ( cqlFilter ) {
 					
-					console.log("Aplicando filtro " + cqlFilter );
+					//console.log("Aplicando filtro " + cqlFilter );
 					
 					paramsRel = {
 		    	        	tiled: true,
@@ -1488,26 +1488,82 @@ Ext.define('MCLM.Map', {
 		           'idDataWindow' : idDataWindow
 		       },       
 		       success: function(response, opts) {
-		    	  MCLM.Functions.mainLog("[OK] " + layerAlias);
-		    	  
 		    	  var jsonObj = JSON.parse(response.responseText);
-		    	   
-		    	  var rawData = [];
-		    	  for ( x=0; x<jsonObj.features.length;x++ ) {
-		    		  var tempObj = jsonObj.features[x].properties;
-		    		  var feicaoMeta = {};
-		    		  var feicaoMetaFeatures = [];
-		    		  feicaoMetaFeatures.push( jsonObj.features[x] );
-		    		  feicaoMeta["features"] = feicaoMetaFeatures;
-		    		  feicaoMeta["type"] = "FeatureCollection";
-		    		  tempObj["mclm_metadata_property"] = Ext.encode( feicaoMeta );
-		    		  rawData.push( tempObj ); 
-		    	  }
-		    	   
-		    	  if ( rawData.length > 0 ) {
-		    		 me.addGrid( layerAlias, rawData );
-		    	  }
+		    	 
+		    	  if ( jsonObj.error == true ) {
+		    		  MCLM.Functions.mainLog("[ERRO] " + layerAlias);
+		    		  Ext.Msg.alert('Erro', jsonObj.msg );
+		    	  } else {
+		    		  MCLM.Functions.mainLog("[OK] " + layerAlias);
+		    		  var symbolServerUrl = MCLM.Globals.config.symbolServerURL;
+		    		  
+			    	  var rawData = [];
+			    	  for ( x=0; x<jsonObj.features.length;x++ ) {
+			    		  var feature = jsonObj.features[x];
+			    		  var properties = feature.properties;
+			    		  var attributes = properties.attributes;
+			    		  
+			    		  attributes.sort( function(a, b) {
+			    			  return a.indexOrder - b.indexOrder;
+			  			  });
+			    		  
+			    		  var newProperties = {};
+			    		  newProperties["data_window"] = properties.data_window;
+			    		  newProperties["node_data"] = properties.node_data;
+						  newProperties["window_type"] = properties.window_type;
+						  newProperties["layer_description"] = properties.layer_description;
+						  newProperties["layer_source"] = properties.layer_source;				    		  
+			    		  
+			    		  var theColor = "000000";
+			    		  for ( y=0; y<attributes.length;y++ ) {
+			    			  var attribute = attributes[y];
+			    			  var translatedName = attribute.translatedName; 
+			    			  var originalName = attribute.originalName; 
+			    			  var attrValue = attribute.value; 
+			    			  var indexOrder = attribute.indexOrder;
+			    			  var dataType = attribute.dataType;
+			    			  var attrName = originalName;
+			    			  
+			    			  if( translatedName ) {
+			    				  attrName = translatedName;
+			    			  }
+			    			  
+			    			  if ( dataType == 'URL' ) attrValue = "<a target='_BLANK' href='" + attrValue + "'>Link Externo</a>";
+			    			  if ( dataType == 'COLOR' ) {
+			    				  theColor = attrValue.replace('#','');
+			    				  attrValue = "<div style='width:30px;height:12px;background-color:"+attrValue+";border:1px solid black'></div>";
+			    			  }
+			    			  
+			    			  if( dataType == 'IMAGE' ) {
+			    				  attrValue = "<a target='_BLANK' href='" + attrValue + "'>Ver imagem...</a>";
+			    			  }
+			    			  
+			    			  /*
+			    			  if( dataType == 'SYMBOL' ) {
+			    				  var imageLink = symbolServerUrl + "?symbol=" + attrValue + "&color=_" + theColor;
+			    				  var attrValue = '<object id="iconPreview" style="width:50px;height:50px" type="image/svg+xml" data="'+imageLink+'"></object>';
+			    			  }			    			  
+			    			  */
+			    			  
+			    			  if ( (!attrValue) || String(attrValue).toUpperCase() == 'NULL' ) attrValue = "";
+			    			  newProperties[attrName] = attrValue;
+			    		  }
+			    		  
+			    		  var feicaoMeta = {};
+			    		  var feicaoMetaFeatures = [];
+			    		  feicaoMetaFeatures.push( feature );
+			    		  feicaoMeta["features"] = feicaoMetaFeatures;
+			    		  feicaoMeta["type"] = "FeatureCollection";
+			    		  newProperties["mclm_metadata_property"] = Ext.encode( feicaoMeta );
+			    		  rawData.push( newProperties ); 
+			    	  }
+			    	   
+			    	  if ( rawData.length > 0 ) {
+			    		 me.addGrid( layerAlias, rawData );
+			    	  }
 
+		    	  }
+			    	  
 		       },
 		       failure: function(response, opts) {
 		    	   MCLM.Functions.mainLog("[ERRO] " + layerAlias);
@@ -1538,6 +1594,7 @@ Ext.define('MCLM.Map', {
         			if ( key == 'layer_description' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
        				if ( key == 'layer_source' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        	if ( key == 'data_window' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
+		        	if ( key == 'mapsymbol' ) { keys.push({text: key, width:0, dataIndex: key, hidden : true}) } else
 		        		keys.push({text: key, width:150, dataIndex: key}); 
 		        }
 		    }
@@ -1558,7 +1615,7 @@ Ext.define('MCLM.Map', {
 			    
 			    listeners: {
 			    	itemclick: function(dv, record, item, index, e) {
-			    		var selectedRec = dv.getSelectionModel().getSelection()[0];  
+			    		var selectedRec = dv.getSelectionModel().getSelection()[0];
 			    		MCLM.Functions.openWindowData( layerName, selectedRec.data );
 			    	}
 			    }

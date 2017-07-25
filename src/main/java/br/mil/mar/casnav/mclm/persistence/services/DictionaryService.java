@@ -365,6 +365,7 @@ public class DictionaryService {
 				
 				String description = jo.getString("description" );
 				String translatedName = jo.getString("translatedName" );
+				String dataType = jo.getString("dataType" );
 				int idDictionaryItem = jo.getInt("idDictionaryItem" );
 				boolean visible = jo.getBoolean("visible");
 				boolean primaryKey = jo.getBoolean("primaryKey");
@@ -383,6 +384,7 @@ public class DictionaryService {
 				item.setVisible(visible);
 				item.setPrimaryKey(primaryKey);
 				item.setIndexOrder(indexOrder);
+				item.setDataType(dataType.toUpperCase());
 				
 				newTransaction();
 				rep.updateItem( item );
