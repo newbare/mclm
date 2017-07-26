@@ -257,8 +257,8 @@ public class LayerService {
 						attribute.put("originalName", originalName);
 						attribute.put("translatedName", translatedName);
 						attribute.put("dataType", item.getDataType().toString() );
+						attribute.put("description", item.getDescription() );
 						
-	
 						Object value = "";
 						try {
 							value = properties.get( originalName );
@@ -295,7 +295,7 @@ public class LayerService {
 					
 				}
 				
-				System.out.println( attributes.toString() );
+				//System.out.println( attributes.toString() );
 
 				properties.put("attributes", attributes);
 			}	

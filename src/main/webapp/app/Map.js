@@ -1518,6 +1518,7 @@ Ext.define('MCLM.Map', {
 			    		  for ( y=0; y<attributes.length;y++ ) {
 			    			  var attribute = attributes[y];
 			    			  var translatedName = attribute.translatedName; 
+			    			  var description = attribute.description; 
 			    			  var originalName = attribute.originalName; 
 			    			  var attrValue = attribute.value; 
 			    			  var indexOrder = attribute.indexOrder;
@@ -1529,6 +1530,7 @@ Ext.define('MCLM.Map', {
 			    			  }
 			    			  
 			    			  if ( dataType == 'URL' ) attrValue = "<a target='_BLANK' href='" + attrValue + "'>Link Externo</a>";
+			    			  
 			    			  if ( dataType == 'COLOR' ) {
 			    				  theColor = attrValue.replace('#','');
 			    				  attrValue = "<div style='width:30px;height:12px;background-color:"+attrValue+";border:1px solid black'></div>";
@@ -1538,15 +1540,22 @@ Ext.define('MCLM.Map', {
 			    				  attrValue = "<a target='_BLANK' href='" + attrValue + "'>Ver imagem...</a>";
 			    			  }
 			    			  
-			    			  /*
+			    			  
 			    			  if( dataType == 'SYMBOL' ) {
 			    				  var imageLink = symbolServerUrl + "?symbol=" + attrValue + "&color=_" + theColor;
-			    				  var attrValue = '<object id="iconPreview" style="width:50px;height:50px" type="image/svg+xml" data="'+imageLink+'"></object>';
-			    			  }			    			  
-			    			  */
+			    				  attrValue = "<a onclick='MCLM.Functions.showSymbol(\"" + imageLink + "\")' href='#'>Ver símbolo...</a>";
+			    			  }	
+			    			  
+			    			  if( dataType == 'IMAGELIST' ) {
+			    				  var imgArr = [];
+			    				  // SPLIT .... 
+			    				  
+			    			  }
 			    			  
 			    			  if ( (!attrValue) || String(attrValue).toUpperCase() == 'NULL' ) attrValue = "";
+			  
 			    			  newProperties[attrName] = attrValue;
+
 			    		  }
 			    		  
 			    		  var feicaoMeta = {};
@@ -1628,6 +1637,7 @@ Ext.define('MCLM.Map', {
 		createStore : function ( storeData, columns ) {
 			var arrData = [];
 			var theData = storeData;
+
 			if ( !$.isArray( storeData ) ) {
 				arrData.push( storeData );
 				theData = arrData;
@@ -1640,6 +1650,7 @@ Ext.define('MCLM.Map', {
 			}); 	
 			return store;
 		},
+		
 		addGrid : function ( layerName, data ) {
 			
 			var storeColumns = MCLM.Map.getStoreColumnsFromJson( data[0] );   

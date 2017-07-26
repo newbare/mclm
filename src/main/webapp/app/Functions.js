@@ -190,7 +190,17 @@ Ext.define('MCLM.Functions', {
 			});			
 			*/
 			
-		},		
+		},	
+		
+		showSymbol : function( url ) {
+			var attrValue = '<object id="iconPreview" style="width:100%;height:100%" type="image/svg+xml" data="'+url+'"></object>';
+			var	showSymbolWindow = Ext.getCmp('showSymbolWindow');
+			if ( !showSymbolWindow ) {
+				showSymbolWindow = Ext.create('MCLM.view.datawindow.ShowSymbolWindow');
+			}
+			showSymbolWindow.update( attrValue );
+			showSymbolWindow.show();
+		},
 
 		// Cria uma janela de dados simples usando somente os dados vindos da camada WMS (publicado no Geoserver)
 		createSimpleDataWindow( layerName, record ) {
@@ -205,7 +215,7 @@ Ext.define('MCLM.Functions', {
 				id: 'dataWindow',    	
 				xtype: 'dataWindow',
 				title : layerName + ' (' + record.layer_source + ')',
-				width : 550,
+				width : 555,
 				height: 500,
 				bodyStyle:{"background-color":"white"},
 				autoScroll: true,

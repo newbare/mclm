@@ -15,7 +15,7 @@ Ext.define('MCLM.view.dicionario.DictGrid', {
 	     {text:'Descrição', dataIndex:'description', width:260, editor: 'textfield'},
 	     {text:'Tipo de Dado', dataIndex:'dataType', width:100,  editor: {
 				xtype: 'combobox',
-				store:['TEXT','COLOR','URL','SYMBOL', 'INT', 'STRING', 'POINT', 'GEOMETRY', 'LINESTRING', 'POLYGON', 'MULTILINESTRING', 'MULTIPOLYGON', 'MULTIPOINT'],	
+				store:['IMAGELIST', 'TEXT','COLOR','URL','SYMBOL', 'INT', 'STRING', 'POINT', 'GEOMETRY', 'LINESTRING', 'POLYGON', 'MULTILINESTRING', 'MULTIPOLYGON', 'MULTIPOINT'],	
 	        }   
 	     },
 	     {text:'Visível', dataIndex:'visible', width:50, xtype: 'booleancolumn', editor: {

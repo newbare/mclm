@@ -7,4 +7,5 @@ Ext.define("MCLM.Globals", {
          currentScenery : -1,
          routeBlinkEnabled : false,
          selectRouteActiveIcon : 'selectSourceIcon',
+        
  });
