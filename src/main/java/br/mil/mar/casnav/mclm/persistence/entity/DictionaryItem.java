@@ -65,7 +65,7 @@ public class DictionaryItem {
 		this.dataType = dataType;
 		this.visible = true;
 		this.primaryKey = false;
-		this.indexOrder = 0;
+		this.indexOrder = 99;
 	}
 
 	public int getIdDictionaryItem() {

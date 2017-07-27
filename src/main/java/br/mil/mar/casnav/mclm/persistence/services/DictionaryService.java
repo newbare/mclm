@@ -370,7 +370,7 @@ public class DictionaryService {
 				boolean visible = jo.getBoolean("visible");
 				boolean primaryKey = jo.getBoolean("primaryKey");
 
-				int indexOrder = 0;
+				int indexOrder = 99;
 				try {
 					indexOrder = jo.getInt("indexOrder" );
 				} catch ( Exception e ) {

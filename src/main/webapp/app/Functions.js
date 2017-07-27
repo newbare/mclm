@@ -192,6 +192,28 @@ Ext.define('MCLM.Functions', {
 			
 		},	
 		
+		showImages : function( imageList ) {
+			var imgArr = imageList.split(";");
+			
+			var table = "<table style='margin:0px;padding:0px;width:100%'>";
+			for ( img in imgArr ) {
+				var imgLink = "<img style='width:200px;height:200px' src='" + imgArr[img] + "'>";
+				table = table + "<tr><td>" + imgLink + "</td></tr>";
+				
+				console.log( imgLink );
+			}
+			table = table + "</table>";
+			
+			
+			var	showImagesWindow = Ext.getCmp('showImagesWindow');
+			if ( !showImagesWindow ) {
+				showImagesWindow = Ext.create('MCLM.view.datawindow.ShowImagesWindow');
+			}
+			showImagesWindow.update( table );
+			showImagesWindow.show();
+			
+		},
+		
 		showSymbol : function( url ) {
 			var attrValue = '<object id="iconPreview" style="width:100%;height:100%" type="image/svg+xml" data="'+url+'"></object>';
 			var	showSymbolWindow = Ext.getCmp('showSymbolWindow');

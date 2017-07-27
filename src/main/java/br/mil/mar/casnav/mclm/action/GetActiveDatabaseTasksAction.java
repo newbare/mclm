@@ -9,29 +9,27 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import br.mil.mar.casnav.mclm.persistence.services.RouteService;
+import br.mil.mar.casnav.mclm.persistence.services.GenericService;
 
-@Action(value="getPointsNearRoute", results= {  
+
+
+@Action(value="getActiveDatabaseTasks", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) }
 )   
 
 @ParentPackage("default")
-public class GetPointsNearRouteAction {
-	private String route;
-	private String criteria;
-	private String source;
+public class GetActiveDatabaseTasksAction {
 	
 	public String execute(){
 
 		try { 
-			String result = "";
+
+			GenericService gs = new GenericService();
+			String resposta = gs.getActiveDatabaseTasks();
 			
-			RouteService rs = new RouteService();
-			result = rs.getPointsNearRoute( route, criteria, source );
-					
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
-			response.getWriter().write( result );  
+			response.getWriter().write(resposta);  
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			
@@ -39,16 +37,5 @@ public class GetPointsNearRouteAction {
 		return "ok";
 	}
 
-	public void setCriteria(String criteria) {
-		this.criteria = criteria;
-	}
-	
-	public void setRoute(String route) {
-		this.route = route;
-	}
-
-	public void setSource(String source) {
-		this.source = source;
-	}
 	
 }

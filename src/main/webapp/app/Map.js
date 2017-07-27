@@ -84,7 +84,7 @@ Ext.define('MCLM.Map', {
 						var source = layers.item(i).getSource();
 						var features = source.getFeatures();
 						if ( features.length > 0 ) {
-							alert("found FEI");
+							//alert("found FEI");
 							foundFei = true;
 							feiMap.addLayer( layers.item(i) );
 						}
@@ -1547,9 +1547,7 @@ Ext.define('MCLM.Map', {
 			    			  }	
 			    			  
 			    			  if( dataType == 'IMAGELIST' ) {
-			    				  var imgArr = [];
-			    				  // SPLIT .... 
-			    				  
+			    				  attrValue = "<a onclick='MCLM.Functions.showImages(\"" + attrValue + "\")' href='#'>Ver imagens...</a>";
 			    			  }
 			    			  
 			    			  if ( (!attrValue) || String(attrValue).toUpperCase() == 'NULL' ) attrValue = "";
