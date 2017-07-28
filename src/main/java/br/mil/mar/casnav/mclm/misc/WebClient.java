@@ -57,7 +57,7 @@ public class WebClient {
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         conn.setRequestProperty("User-Agent", USER_AGENT);
         conn.setRequestProperty("Connection", "keep-alive");
-        conn.setConnectTimeout( 120000 );
+        conn.setConnectTimeout( 240000 );
         conn.setRequestMethod("GET");  
         conn.connect();
         FileUtils.copyInputStreamToFile( conn.getInputStream(), picutreFile );		

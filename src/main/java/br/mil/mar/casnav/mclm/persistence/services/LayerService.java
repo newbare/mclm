@@ -47,8 +47,6 @@ public class LayerService {
 	
 	public String getLayersAsImage( String urlList, String feiEncodedCanvas )  {
 		
-		System.out.println( feiEncodedCanvas );
-		
 		String resposta = "{\"result\":\"error\"}";
 		try {
 			BufferedImage convertedImage = null;

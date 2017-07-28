@@ -91,7 +91,8 @@ Ext.define('MCLM.Map', {
 					}
 					
 					if ( layerType == 'BAS' ) {
-						thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1000, 600 );
+						//thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1000, 600 );
+						thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1920, 1080 );
 						var lrObj = {};
 						lrObj["url"] = thumImg;
 						lrObj["id"] = serialId;
@@ -100,7 +101,8 @@ Ext.define('MCLM.Map', {
 					}
 	
 					if ( layerType == 'WMS' ) {
-						thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1000, 600, cqlFilter );
+						//thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1000, 600, cqlFilter );
+						thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1920, 1080, cqlFilter ); 
 						var lrObj = {};
 						lrObj["url"] = thumImg;
 						lrObj["id"] = serialId;
