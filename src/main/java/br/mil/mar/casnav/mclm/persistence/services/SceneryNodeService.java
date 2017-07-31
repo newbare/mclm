@@ -25,6 +25,7 @@ public class SceneryNodeService {
 
 	
 	public String updateOrCreateNodes(String data, Integer idScenery) {
+		
 		String result = "{ \"success\": true, \"msg\": \"Cenário atualizado com sucesso.\" }";
 
 		try {
@@ -96,14 +97,22 @@ public class SceneryNodeService {
 		return expRet ;
 	}	
 
-	public void deleteSceneryNode( int idSceneryNode ) throws DeleteException {
+	public String deleteSceneryNode( String data ) throws DeleteException {
+		String result = "{ \"success\": true, \"msg\": \"Cenário atualizado com sucesso.\" }";
 		try {
-			SceneryNode SceneryNode = rep.getSceneryNode(idSceneryNode);
+			
+			JSONObject sceneryNode = new JSONObject( data );
+			int idSceneryNode =  sceneryNode.getInt( "idSceneryNode" );
+				
+			SceneryNode SceneryNode = rep.getSceneryNode( idSceneryNode);
 			rep.newTransaction();
 			rep.deleteSceneryNode(SceneryNode);
 		} catch (Exception e) {
-			throw new DeleteException( e.getMessage() );
+			result = "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";
+			e.printStackTrace();
 		}
+		
+		return result;
 	}
 
 	/*

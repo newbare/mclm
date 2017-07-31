@@ -22,7 +22,7 @@ Ext.define('MCLM.store.TrabalhoTree', {
             read: 'getCenarioTreeNode',
             create: 'createCenarioTreeNode',
             update: 'updateCenarioTreeNode',
-            destroy: 'destroyCenarioTreeNode'
+            destroy: 'deleteCenarioTreeNode'
         },
                
         writer: {

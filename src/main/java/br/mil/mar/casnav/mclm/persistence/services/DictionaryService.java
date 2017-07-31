@@ -2,6 +2,7 @@ package br.mil.mar.casnav.mclm.persistence.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.conn.HttpHostConnectException;
 import org.json.JSONArray;
@@ -22,6 +23,7 @@ import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.DictionaryItem;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
+import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.repository.DictionaryRepository;
 
 public class DictionaryService {
@@ -439,6 +441,39 @@ public class DictionaryService {
 			resp = "{ \"error\": true, \"msg\": \"" + e.getMessage() + "\" }";
 		}		
 		return resp;
+	}
+
+	public void scanDictionary() throws Exception {
+
+		NodeService ns = new NodeService();
+		Set<NodeData> nodes = ns.getList();
+		
+		
+		for( NodeData node : nodes ) {
+			if ( node.getLayerType() == LayerType.CRN) Configurator.getInstance().setFeicaoRootNode( node );
+
+			newTransaction();
+			try {
+				getDictionary( node.getIdNodeData() );
+			} catch ( NotFoundException nfe ) {
+				try {
+					int quant = createDictionary( node );
+					if ( quant > 0 ) System.out.println(" > concluido com " + quant + " itens.");
+				} catch ( Exception e ) {
+					System.out.println("Erro ao tentar atualizar o dicionário: " + e.getMessage() );
+				}
+			}
+			
+			
+		}
+		
+		if ( Configurator.getInstance().getFeicaoRootNode() == null ) {
+			ns.newTransaction();
+			Configurator.getInstance().setFeicaoRootNode( ns.createCRN() );
+		} 
+		
+		
+		
 	}
 
 	/*

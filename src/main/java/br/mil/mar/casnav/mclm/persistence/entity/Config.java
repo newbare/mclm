@@ -30,6 +30,9 @@ public class Config {
 	
 	@Column
 	private Boolean useProxy = false;
+
+	@Column
+	private Boolean scanDictAtStartup = false;	
 	
 	@Column
 	private Boolean externalLayersToLocalServer = false;
@@ -113,7 +116,8 @@ public class Config {
 			String proxyUser, String proxyPassword, Integer proxyPort, String geoserverUser, String geoserverPassword,
 			Integer mapZoom, Integer queryFactorRadius, String mapCenter, String shapeFileTargetPath, 
 			String routingServer, String routingUser, String routingPassword, Integer routingPort, String routingDatabase,
-			String apoloServer, Integer distanceFromRoute, String symbolServerURL, String servicosCptecUrl, String mapBackgroudColor ) {
+			String apoloServer, Integer distanceFromRoute, String symbolServerURL, String servicosCptecUrl, String mapBackgroudColor,
+			boolean scanDictAtStartup) {
 		
 		super();
 		this.idConfig = idConfig;
@@ -146,6 +150,7 @@ public class Config {
 		this.apoloServer = apoloServer;
 		this.distanceFromRoute = distanceFromRoute;
 		this.mapBackgroudColor = mapBackgroudColor;
+		this.scanDictAtStartup = scanDictAtStartup;
 		
 	}
 
@@ -387,6 +392,15 @@ public class Config {
 	public String getVersion() {
 		return "v1.0";
 	}
+
+	public Boolean getScanDictAtStartup() {
+		return scanDictAtStartup;
+	}
+
+	public void setScanDictAtStartup(Boolean scanDictAtStartup) {
+		this.scanDictAtStartup = scanDictAtStartup;
+	}
+	
 	
 	
 }

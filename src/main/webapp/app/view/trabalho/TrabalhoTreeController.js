@@ -245,8 +245,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	// Apaga do layer stack
     	var trabalhoTree = Ext.getCmp("trabalhoTree");
     	trabalhoTree.getRootNode().cascade( function(node) { 
-    		node.set('checked', false );
-    		me.toggleNode( node );
+    		
+    		if( (node.get('layerType') != '') && (node.get('layerType') != 'CRN') && (node.get('layerType') != 'FDR') ) {
+    			node.set('checked', false );
+    			me.toggleNode( node );
+    		}
+    		
 		});			    	
 			
 		
@@ -410,7 +414,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 	// Efetivamente apaga um no da arvore
 	deleteLayer : function ( record ) {
 		var layerName = record.data.layerName;
- 	   	MCLM.Map.removeLayer( layerName );		
+		var serialId = record.data.serialId;
+ 	   	MCLM.Map.removeLayer( serialId );	
 		record.parentNode.removeChild(record);
 	},
 

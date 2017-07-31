@@ -387,7 +387,15 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var data = record.data;
 		var name = data.layerAlias;
 		var me = this;
-
+		
+		
+		/*
+		MCLM.Map.map.getLayers().forEach( function ( layer ) {
+			console.log( layer.get("serialId") + " -- " + data.serialId );
+		});
+		*/
+				
+		
 		if ( record.data.readOnly ) {
 			Ext.MessageBox.show({
 				title: 'Camada Bloqueada',
@@ -402,7 +410,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		Ext.Msg.confirm('Apagar Camada', 'Deseja realmente apagar a Camada "' + name + '" ?', function( btn ){
 			   if( btn === 'yes' ){
 				   record.set("checked",false);
-				   me.clearCheckToTheRoot( record );
+				   //me.clearCheckToTheRoot( record );
 				   me.deleteLayer( parentNode, data );
 			   } else {
 			       return;
@@ -450,6 +458,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 	deleteLayer : function ( parentNode, data ) {
 		var nodeId = data.id;
 		var layerName = data.layerName;
+		var serialId = data.serialId;
 		var me = this;
 		
 		Ext.Ajax.request({
@@ -462,7 +471,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		    	   
 		    	   var layerTreeStore = Ext.getStore('store.layerTree');
 		    	   layerTreeStore.load({ node: parentNode });
-		    	   MCLM.Map.removeLayer( layerName );
+		    	   MCLM.Map.removeLayer( serialId );
 		    	   
 		    	   Ext.Msg.alert('Sucesso', result.msg );
 

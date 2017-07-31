@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import br.mil.mar.casnav.mclm.misc.SceneryTree;
+import br.mil.mar.casnav.mclm.misc.SceneryTreeNode;
 import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
@@ -179,7 +181,21 @@ public class SceneryService {
 
 	public String getSceneryTreeAsJSON( int idScenery, int idNodeParent ) throws Exception {
 		SceneryTree scenery = new SceneryTree( getScenery( idScenery ) );
-		JSONArray sceneryJSON = new JSONArray( scenery.getNodes( idNodeParent ) );
+		
+		JSONArray sceneryJSON = new JSONArray();
+		List<SceneryTreeNode> nodes = scenery.getNodes( idNodeParent );
+		for ( SceneryTreeNode node : nodes ) {
+			JSONObject nodeObj = new JSONObject( node );
+			
+			// Se for pasta ou pasta de feição então nao mostra os checkboxes...
+			if ( node.getLayerType().equals("FDR") || node.getLayerType().equals("CRN")  ) {
+				nodeObj.remove("checked");
+			}
+			
+			sceneryJSON.put( nodeObj );
+		}
+		
+		
 		return sceneryJSON.toString();
 	}
 

@@ -13,28 +13,23 @@ import com.opensymphony.xwork2.ActionContext;
 
 import br.mil.mar.casnav.mclm.persistence.services.SceneryNodeService;
 
-@Action (value = "updateCenarioTreeNode", results = {  
+@Action (value = "deleteCenarioTreeNode", results = {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
 		interceptorRefs= { @InterceptorRef("seguranca")	 }
 ) 
 
 @ParentPackage("default")
-public class UpdateCenarioTreeNodeAction extends BasicActionClass {
+public class DeleteCenarioTreeNodeAction extends BasicActionClass {
 	private String data;
 	private Integer cenario;
 	
 	public String execute () {
-		String resp;
 		
 		try {
-			try {
-				SceneryNodeService sns = new SceneryNodeService();
-				resp = sns.updateOrCreateNodes(data, cenario);
-			} catch ( Exception e ) {
-				e.printStackTrace();
-				resp = "{ \"error\": true, \"msg\": \"" + e.getMessage() + "\" }";
-			}
 			
+			SceneryNodeService sns = new SceneryNodeService();
+			String resp = sns.deleteSceneryNode(data);     
+				
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 
 			response.setContentType("application/json");

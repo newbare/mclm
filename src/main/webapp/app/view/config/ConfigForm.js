@@ -181,11 +181,18 @@ Ext.define('MCLM.view.config.ConfigForm', {
             inputValue: 'true',
             invalidText: 'Teste',
         },{
-            fieldLabel: 'Criar Camadas externas no servidor local',
+            fieldLabel: 'Criar camadas externas no Servidor local',
             width: 350,
             xtype: 'checkbox',
             inputValue: 'true',
             name: 'externalLayersToLocalServer',
+            invalidText: 'Teste'
+        },{
+            fieldLabel: 'Atualizar Dicionário quando servidor iniciar',
+            width: 350,
+            xtype: 'checkbox',
+            inputValue: 'true',
+            name: 'scanDictAtStartup',
             invalidText: 'Teste'
         },{
             fieldLabel: 'Pasta para arquivos SHP',

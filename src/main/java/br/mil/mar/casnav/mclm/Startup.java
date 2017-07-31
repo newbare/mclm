@@ -1,7 +1,6 @@
 package br.mil.mar.casnav.mclm;
 
 import java.io.File;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -14,15 +13,12 @@ import javax.servlet.annotation.WebListener;
 import org.apache.commons.io.FileUtils;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
-import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.misc.PathFinder;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
-import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
 import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
 import br.mil.mar.casnav.mclm.persistence.services.DictionaryService;
-import br.mil.mar.casnav.mclm.persistence.services.NodeService;
 
 
 @WebListener
@@ -77,34 +73,13 @@ public class Startup implements ServletContextListener {
     		// fora do ar e não seja possivel buscar os atributos, entao tentamos novamente agora
     		// O ideal seria deixar para o usuario atualizar isso quando necessario.
     		
-    		NodeService ns = new NodeService();
-    		Set<NodeData> nodes = ns.getList();
-    		DictionaryService ds = new DictionaryService();
-    		
-    		for( NodeData node : nodes ) {
-    			if ( node.getLayerType() == LayerType.CRN) Configurator.getInstance().setFeicaoRootNode( node );
-
-    			ds.newTransaction();
-				try {
-					ds.getDictionary( node.getIdNodeData() );
-				} catch ( NotFoundException nfe ) {
-					try {
-						int quant = ds.createDictionary( node );
-						if ( quant > 0 ) System.out.println(" > concluido com " + quant + " itens.");
-					} catch ( Exception e ) {
-						System.out.println("Erro ao tentar atualizar o dicionário: " + e.getMessage() );
-					}
-				}
-				
-				
-			}
+    		if ( config.getConfig().getScanDictAtStartup() ) {
+    			System.out.println("Atualização de dicionario solicitada...");
+    			DictionaryService ds = new DictionaryService();
+    			ds.scanDictionary();
+    			System.out.println("Fim da atualização de dicionario.");
 			
-			if ( Configurator.getInstance().getFeicaoRootNode() == null ) {
-				ns.newTransaction();
-				Configurator.getInstance().setFeicaoRootNode( ns.createCRN() );
-			} 
-			
-			
+    		}
 			
 			// TEMP!
     		/*

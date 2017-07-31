@@ -637,6 +637,11 @@ Ext.define('MCLM.Map', {
 			var version = node.get('version');
 			var layerType = node.get('layerType');
 			
+			if ( MCLM.Map.layerExistInMap( serialId )  ){
+				console.log( " Tentativa de adicionar duas veses a camada " + layerName + " (" + serialId + ")" );
+				return true;
+			}
+			
 			console.log("ATENÇÃO : Falta implementar filtro adicional. Map.js : addLayer() ");
 			/*
 			var filter = node.get("filter");
@@ -1091,6 +1096,8 @@ Ext.define('MCLM.Map', {
 				}
 			});
 		},
+		
+		
 		removeLayer : function ( serialId ) {
 			var me = MCLM.Map;
 			MCLM.Map.map.getLayers().forEach( function ( layer ) {
@@ -1098,6 +1105,7 @@ Ext.define('MCLM.Map', {
 					me.map.removeLayer( layer );	
 					return;
 				}
+				
 			});
 			
 			// Remove da lista de camadas do gerenciador de camadas
@@ -1158,6 +1166,22 @@ Ext.define('MCLM.Map', {
 			}
 			return null;
 		},
+
+		// --------------------------------------------------------------------------------------------
+		// Retorna se uma camada já está carregada no mapa pelo ID
+		layerExistInMap : function ( serial ) {
+			var layers = MCLM.Map.map.getLayers();
+			var length = layers.getLength();
+			for (var i = 0; i < length; i++) {
+				var serialId = layers.item(i).get('serialId');
+				if (serialId === serial) {
+					return true;
+				}
+			}
+			return false;
+		},
+		
+		
 		// --------------------------------------------------------------------------------------------
 		// Retorna uma camada do mapa dado o seu serialId
 		findBySerialID : function ( serial ) {
