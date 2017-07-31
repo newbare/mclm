@@ -47,6 +47,9 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     },
 
     onReloadTree : function( button ) {
+    	
+    	this.clearMainTree();
+    	
     	var layerTree = Ext.getCmp('layerTree');
 		var rootMaintree = layerTree.getRootNode();
 		

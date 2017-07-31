@@ -430,8 +430,23 @@ Ext.define('MCLM.Functions', {
 			cloneToCenarioWindow.feicao = feicao;
 		},
 
-		exibeClima : function( data ) {
-			console.log( data );
+		exibeClima : function( data, record ) {
+			var objRecord = Ext.decode( record.mclm_metadata_property );
+			var features = new ol.format.GeoJSON().readFeatures( objRecord , {
+				featureProjection: 'EPSG:3857'
+			});			
+			
+			var theFeature = features[0];
+		    var aa = theFeature.getGeometry().getExtent();
+		    var center = ol.extent.getCenter(aa);			
+			
+	    	var center2 = ol.proj.transform( center , 'EPSG:3857', 'EPSG:4326');
+	    	lon = center2[0];
+	    	lat = center2[1];
+	    	
+	    	console.log( lon + " " + lat);
+	    	
+	    	MCLM.Map.getWeatherFromLocation( lat, lon );
 		},
 
 		removeDataWindowTooltip : function() {
@@ -556,8 +571,8 @@ Ext.define('MCLM.Functions', {
 						dismissDelay: 5000 
 					}, {
 						target: 'reloadTreeBtn',
-						title: 'Atualizar a Árvore',
-						text: 'Atualiza toda a árvore carregando os dados do servidor novamente.',
+						title: 'Limpar Catálogo',
+						text: 'Limpa as camadas selecionadas do Catálogo e o Mapa.',
 						width: 150,
 						dismissDelay: 5000 
 					}, {
