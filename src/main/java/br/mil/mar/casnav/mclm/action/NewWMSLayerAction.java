@@ -11,7 +11,9 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionContext;
 
+import br.mil.mar.casnav.mclm.persistence.entity.Server;
 import br.mil.mar.casnav.mclm.persistence.services.LayerService;
+import br.mil.mar.casnav.mclm.persistence.services.ServerService;
 
 @Action(value="newWMSLayer", results= {  
 	    @Result(name="ok", type="httpheader", params={"status", "200"}) },
@@ -34,8 +36,16 @@ public class NewWMSLayerAction extends BasicActionClass {
 			String institute = request.getParameter("institute");
 			
 			int layerFolderID = Integer.valueOf( request.getParameter("layerFolderID") );
-			int idServer = Integer.valueOf( request.getParameter("idServer") );
 			
+			int idServer;
+			try {
+				idServer = Integer.valueOf( request.getParameter("idServer") );
+			} catch ( NumberFormatException e ) {
+				Server server = new Server( institute, serverUrl, "1.1.1", "WMS" );
+				ServerService ss = new ServerService();
+				idServer = ss.insertServerWMS( server );
+			}
+
 			
 			LayerService ls = new LayerService();
 			String result =	ls.createWMSLayer( layerFolderID, serverUrl, description, institute, layerName, layerAlias, cqlFilter, idServer );

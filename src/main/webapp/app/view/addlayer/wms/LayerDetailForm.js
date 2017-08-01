@@ -69,10 +69,10 @@ Ext.define('MCLM.view.addlayer.wms.LayerDetailForm', {
     },{
         fieldLabel: 'Server ID',
         width: 350,
-        xtype : 'hidden',
         name: 'idServer',
         id:'idServer',
-        readOnly: true,
+        allowBlank: true,
+        xtype : 'hidden',
     }],
     buttons: [{
     		  // Interceptado pelo controller 'MCLM.view.addlayer.wms.CapabilitiesController'	

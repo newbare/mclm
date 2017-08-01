@@ -27,7 +27,8 @@ public class ApoloGetOMAction extends BasicActionClass {
 			String config = "";
 			
 			OrganizacoesMilitaresService oms = new OrganizacoesMilitaresService();
-			config = oms.getOrgMil( orgid );
+			
+			config = oms.getOrgMil( orgid, getLoggedUser() );
 		
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

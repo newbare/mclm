@@ -500,7 +500,19 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	
     	capabilitiesWindow = Ext.create('MCLM.view.addlayer.wms.CapabilitiesWindow');
     	capabilitiesWindow.setTitle( title );
-    	capabilitiesWindow.show();		
+    	capabilitiesWindow.show();	
+    	
+    	var serversStore = Ext.getStore('store.externalsource');
+    	serversStore.load();    	
+    	
+    	if ( MCLM.Globals.lastServerSelected  ) {
+    		var comboBox = Ext.getCmp('serversCombo');
+    		comboBox.setValue( MCLM.Globals.lastServerSelected );
+    		
+    		var idServerForm = Ext.getCmp('idServer');
+    		idServerForm.setValue( MCLM.Globals.lastServerSelectedID );	      		
+    		
+    	}
     	
     	// Interceptado pelo controller 'MCLM.view.addlayer.wms.CapabilitiesController'
     	this.fireEvent('createMapPreview', record);

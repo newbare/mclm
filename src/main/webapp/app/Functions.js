@@ -151,12 +151,25 @@ Ext.define('MCLM.Functions', {
 
 		openWindowData : function( layerName, record ) {
 			
+			/*
+				public enum WindowType {
+					ORGMIL, DEFAULT
+				}			
+			*/
+			
 			if ( record.window_type == 'DEFAULT' ) {
 				MCLM.Functions.createSimpleDataWindow( layerName, record );
 				MCLM.Functions.mainLog("Janela de Features criada.");
+				return true;
 			}
 			
-			/*
+			
+			// update node_data set windowtype = 'ORGMIL' where layername = 'view_org_mil'
+			if ( record.window_type == 'ORGMIL' ) {
+				alert("Janela para ORG MIL não implementada ainda.");
+				return true;
+			}
+
 			if ( record.data_window == -1 ) {
 				Ext.Msg.alert('Janela de Dados não encontrada','Não há janela de dados cadastrada para esta camada.' );
 				return true;
@@ -188,7 +201,7 @@ Ext.define('MCLM.Functions', {
 				}
 
 			});			
-			*/
+			
 			
 		},	
 		

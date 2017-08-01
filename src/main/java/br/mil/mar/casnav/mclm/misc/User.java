@@ -8,6 +8,8 @@ public class User {
 	private String cpfUser;
 	private String orgId;
 	private String siglaOm;
+	private String idUser;
+	private String hashKey;
 	
 	public String getUserName() {
 		return userName;
@@ -63,6 +65,24 @@ public class User {
 
 	public void setSiglaOm(String siglaOm) {
 		this.siglaOm = siglaOm;
+	}
+
+	public void setIdUser(String idUser) {
+		this.idUser = idUser;
+		
+	}
+
+	public void setHashKey(String key) {
+		this.hashKey = key;
+		
+	}
+	
+	public String getHashKey() {
+		return hashKey;
+	}
+	
+	public String getIdUser() {
+		return idUser;
 	}
 
 

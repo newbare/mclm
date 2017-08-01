@@ -2,6 +2,7 @@ package br.mil.mar.casnav.mclm.persistence.services.apolo;
 
 import org.json.JSONObject;
 
+import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.misc.WebClient;
 import br.mil.mar.casnav.mclm.persistence.exceptions.UnauthorizedException;
@@ -11,7 +12,10 @@ public class ApoloService {
 	
 	private String getApoloUser( String idUser, String key ) throws Exception {
 		WebClient wc = new WebClient();
-		String url = "http://apolo.defesa.mil.br/SIGLMD-web/MCLMSecurityServlet?userId="+idUser+"&securityCode=" + key;
+		
+		String apolo = Configurator.getInstance().getApoloRESTAddress();
+		String url = apolo + "/SIGLMD-web/MCLMSecurityServlet?userId="+idUser+"&securityCode=" + key;
+		
 		String result = wc.doGet(url);
 		return result;
 	}
@@ -19,17 +23,21 @@ public class ApoloService {
 	public User checkUser( String idUser, String key ) throws Exception {
 		User user = new User();
 
+		System.out.println("Check user: key = " + key + "  ||   ID = " + idUser);
+		
 		if( idUser != null && key != null) {
 			
 			if ( idUser.equals("god") && key.equals("masterkey") ) {
 				
-				user.setUserName( "Magno" );
+				user.setUserName( "Edgard" );
 				user.setCpfUser( "02221224710" );
-				user.setName( "Carlos Magno" );
+				user.setName( "CMG Edgard" );
 				user.setOrgId( "0000" );
 				user.setSiglaOm( "" );
-				user.setUserAlias( "Magno" );
-				user.setUserMail( "magno.mabreu@gmail.com" );				
+				user.setUserAlias( "Edgard" );
+				user.setUserMail( "econeto@gmail.com" );
+				user.setHashKey( key );
+				user.setIdUser( idUser );
 				
 			} else {
 				String result = getApoloUser(idUser, key);
@@ -43,16 +51,16 @@ public class ApoloService {
 				user.setSiglaOm( userObj.getString("siglaOm") );
 				user.setUserAlias(userObj.getString("apelido") );
 				user.setUserMail( userObj.getString("email") );
+				user.setHashKey( key );
+				user.setIdUser( idUser );
+				
+				
 			}
 			
 			
 			
 		} else {
-			
 			throw new UnauthorizedException("Usuário não autorizado.");
-			
-			//user.setIdUser( 99999 );
-			//user.setUserName("Convidado");
 		}
 		
 		return user;

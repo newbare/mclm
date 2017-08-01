@@ -28,12 +28,17 @@ public class Configurator {
 	private String databaseAddr;
 	private String databasePort;
 
+	private String apoloRESTAddress;
 	private String apoloUserName;
 	private String apoloPassword;
 	private String apoloDatabaseName;
 	private String apoloDatabaseAddr;
 	private String apoloDatabasePort;	
 	
+	public String getApoloRESTAddress() {
+		return apoloRESTAddress;
+	}
+
 	public String getApoloUserName() {
 		return apoloUserName;
 	}
@@ -241,6 +246,7 @@ public class Configurator {
 			databaseAddr = getTagValue("databaseAddr", mpElement);
 			databasePort = getTagValue("databasePort", mpElement);
 			
+			apoloRESTAddress = getTagValue("apoloRESTAddress", mpElement);
 			apoloUserName = getTagValue("apoloUserName", mpElement);
 			apoloPassword = getTagValue("apoloPassword", mpElement);
 			apoloDatabaseName = getTagValue("apoloDatabaseName", mpElement);

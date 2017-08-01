@@ -6,6 +6,7 @@ Ext.define('MCLM.store.ExternalSource', {
     
     autoSync: true,
     
+    
 	proxy: {
         type: 'ajax',
         reader: {
@@ -28,9 +29,6 @@ Ext.define('MCLM.store.ExternalSource', {
         }          
 	},    
 	
-	
-	
-	
     fields: [
          {name:'idServer', type:'int'},    
          {name:'name', type:'string'},
@@ -40,7 +38,7 @@ Ext.define('MCLM.store.ExternalSource', {
 	
 	listeners: {
         load: function(store, records){
-        	//
+        	
     	}			
 	}
 }); 

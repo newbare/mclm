@@ -60,6 +60,10 @@ public class ServerService {
 		return rep.getServerPGR( IdServer );
 	}
 	
+	public int insertServerWMS( Server server ) throws Exception {
+		return rep.insertServerWMS( server ).getIdServer();
+	}
+	
 	public String insertServerWMS( String name, String url, String version ) throws InsertException {
 		String result = "{ \"success\": true, \"msg\": \"Fonte de Dados criada com sucesso.\" }";
 		try {

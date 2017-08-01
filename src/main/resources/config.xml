@@ -9,6 +9,7 @@
 		<databasePort>5432</databasePort>
 		<databaseAddr>localhost</databaseAddr>
 		
+		<apoloRESTAddress>http://apolo.defesa.mil.br/</apoloRESTAddress>
 		<apoloUserName>postgres</apoloUserName>
 		<apoloPassword>!@#56ef10079ad6DDb</apoloPassword>
 		<apoloDatabasePort>5432</apoloDatabasePort>

@@ -44,8 +44,17 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
 		
 		var layerNameForm = Ext.getCmp('layerNameID');
 		var layerName = layerNameForm.getValue();
+
+		/*
+		var idServerForm = Ext.getCmp('idServer');
+		idServerForm.setValue( null );		
 		
-		this.addLayerToPreviewPanel( serverUrl + "wms/", layerName  );
+		if ( !layerName && MCLM.Globals.lastServerSelectedID ) {
+			idServerForm.setValue( MCLM.Globals.lastServerSelectedID );
+		}
+		*/
+		
+		this.addLayerToPreviewPanel( serverUrl, layerName  );
     	
     },
     layerNameIDChange : function() {
@@ -54,8 +63,13 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
 		
 		var layerNameForm = Ext.getCmp('layerNameID');
 		var layerName = layerNameForm.getValue();
+
+		/*
+		var idServerForm = Ext.getCmp('idServer');
+		idServerForm.setValue( null );		
+		*/
 		
-		this.addLayerToPreviewPanel( serverUrl + "wms/", layerName  );
+		this.addLayerToPreviewPanel( serverUrl, layerName  );
     },
     
     
@@ -87,6 +101,7 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
 		
 		var layerDetailForm = Ext.getCmp('layerDetailForm');
 		var form = layerDetailForm.getForm();
+		
 		if ( form.isValid() ) {
 			form.submit({
 				success: function(form, action) {
@@ -102,7 +117,7 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
         } else { 
         	Ext.Msg.alert('Dados inválidos', 'Por favor, corrija os erros assinalados.')
         }
-            
+         
     	
 	},
     // ---------------------------------------------------------------------------------------------------------------
@@ -111,6 +126,16 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
     serversComboSelect: function(combo, record, index) {
 		this.removeLayerFromPreviewPanel();
 		this.requestCapabilities( record.data );
+		
+		MCLM.Globals.lastServerSelected = record.data.name;
+		MCLM.Globals.lastServerSelectedID = record.data.idServer; 
+		
+		var layerDetailForm = Ext.getCmp('layerDetailForm');
+		layerDetailForm.getForm().reset();
+		
+		var idServerForm = Ext.getCmp('idServer');
+		idServerForm.setValue( MCLM.Globals.lastServerSelectedID );	    	
+		
     },  
     // ---------------------------------------------------------------------------------------------------------------
     // Chamado quando o usuario clica em uma camada na lista oferecida apos selecionar uma fonte externa do combo.
@@ -131,13 +156,13 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
 
 		var descriptionForm = Ext.getCmp('descriptionID');
 		descriptionForm.setValue( layerName );
-		
+
 		var combo = Ext.getCmp('serversCombo');
 		var comboValue = combo.getRawValue();
 		var origemForm = Ext.getCmp('instituteID');
 		origemForm.setValue( comboValue ); 				
 		
-    	this.addLayerToPreviewPanel( serverUrl + "wms/", layerName  );  
+    	this.addLayerToPreviewPanel( serverUrl , layerName  );  
     	
     },    
     // Fecha a janela. Interceptado do botao 'fechar' no form 'MCLM.view.addlayer.wms.LayerDetailForm' 
@@ -241,9 +266,6 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
     requestCapabilities : function ( node ) {
     	var version = node.version;
     	var url = node.url;
-    	
-    	var idServer = Ext.getCmp('idServer');
-    	idServer.setValue( node.idServer );
     	
     	MCLM.Functions.mainLog("Consultando " + url + " ...");
     	
