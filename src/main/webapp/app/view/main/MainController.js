@@ -24,6 +24,10 @@ Ext.define('MCLM.view.main.MainController', {
     	
 	},
 	
+	undoZoom : function() {
+		MCLM.Map.undoZoom();
+	},
+	
     showForecastToolBar : function() {
     	
 		var restWeatherWindow = Ext.getCmp('restWeatherWindow');

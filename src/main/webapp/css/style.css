@@ -325,6 +325,11 @@ body {
 	background-repeat: no-repeat;
 }
 
+.back-icon {
+	background-image: url('../img/back.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .draw-icon {
 	background-image: url('../img/pencil.svg') !important;
 	background-repeat: no-repeat;

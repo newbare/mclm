@@ -149,6 +149,39 @@ Ext.define('MCLM.Functions', {
 			return ctx.createPattern(cnv, 'repeat');
 		},	
 
+		showOrgMil : function( record ) {
+			console.log( record );
+			
+			
+			Ext.Ajax.request({
+				url: 'apoloGetOM',
+				params: {
+					'orgid': '58040130101020005361',
+				},       
+				success: function(response, opts) {
+					
+					var respText = Ext.decode( response.responseText );
+
+					if ( respText.error ) {
+						Ext.Msg.alert('Erro', respText.msg );
+					} else {
+						
+						console.log( respText );
+						Ext.Msg.alert('Sucesso', 'Dados recebidos, mas a janela não foi implementada ainda.' );
+						
+						// MCLM.Functions.createOrgMilWindow( respText, record );
+					}
+
+				},
+				failure: function(response, opts) {
+					Ext.Msg.alert('Erro','Erro ao receber dados.' );
+				}
+
+			});				
+			
+			
+		},
+		
 		openWindowData : function( layerName, record ) {
 			
 			/*
@@ -166,7 +199,7 @@ Ext.define('MCLM.Functions', {
 			
 			// update node_data set windowtype = 'ORGMIL' where layername = 'view_org_mil'
 			if ( record.window_type == 'ORGMIL' ) {
-				alert("Janela para ORG MIL não implementada ainda.");
+				MCLM.Functions.showOrgMil( record );
 				return true;
 			}
 
@@ -610,6 +643,12 @@ Ext.define('MCLM.Functions', {
 		    	        target: 'showForecastToolBarID',
 		    	        title: 'Serviços Meteorológicos',
 		    	        text: 'Ferramentas de Serviços Meteorológicos.',
+		    	        width: 180,
+		    	        dismissDelay: 5000 
+		    	    },{
+		    	        target: 'zoomUndo',
+		    	        title: 'Voltar Zoom Anterior',
+		    	        text: 'Retorna a posição e zoom anterior do mapa.',
 		    	        width: 180,
 		    	        dismissDelay: 5000 
 		    	    }); 	

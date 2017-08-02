@@ -103,6 +103,7 @@ public class NodeService {
 	 * Acionado quando o usuario arrasta um nao na arvore de camadas e muda sua posicao
 	 */
 	public String updateNodeIndexes( String data ) throws Exception {
+		
 		JSONArray ja = new JSONArray( data );
 		NodeData oldNode = null;
 		for( int x=0; x < ja.length(); x++ ) {
@@ -110,8 +111,7 @@ public class NodeService {
 				JSONObject jo = ja.getJSONObject( x );
 				// Pega o novo indice do no e seu ID
 				int id = jo.getInt( "id" ) ;
-				int index = jo.getInt( "index" );
-				
+
 				rep.newTransaction();
 				// Pega o n. no BD
 				oldNode = rep.getNode( id );
@@ -124,13 +124,34 @@ public class NodeService {
 					parentId = jo.getInt( "parentId" );
 				} catch ( Exception ignored ) {	}
 				
-				oldNode.setIndexOrder( index );
-				oldNode.setIdNodeParent( parentId );
-			
+				
+				if ( jo.has("index") ) {
+					int index = jo.getInt( "index" );
+					oldNode.setIndexOrder( index );
+					oldNode.setIdNodeParent( parentId );
+				} 
+				
+				if ( jo.has("text") ) {
+					String text = jo.getString("text");
+					oldNode.setLayerAlias( text );
+				}
+				
+				if ( jo.has("cqlFilter") ) {
+					String cqlFilter = jo.getString("cqlFilter");
+					oldNode.setCqlFilter( cqlFilter );
+				}
+				
+				if ( jo.has("description") ) {
+					String description = jo.getString("description");
+					oldNode.setDescription(description);
+				}
+				
+				
 				rep.newTransaction();
 				rep.updateNode( oldNode );
 
 			} catch ( Exception ex ) {
+				ex.printStackTrace();
 				// Os dados da requisiao deste item "x" nao vieram como esperado. Tentar o proximo item...
 			}
 		}

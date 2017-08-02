@@ -15,6 +15,11 @@ Ext.define('MCLM.Map', {
 		streetPhotoEnabled : false,
 		queryLocationEnabled : false,
 		
+		currentMapPosition : 0,
+		currentMap : [],
+		maxStoreSize : 15,
+		doNotStorePosition : false,
+		
 		precipitacaoLayer : null,
 		windLayer : null,
 		tempLayer : null,
@@ -348,6 +353,8 @@ Ext.define('MCLM.Map', {
 				}
 			});	
 			
+			MCLM.Map.map.on('moveend', MCLM.Map.storeMapPosition );
+			
 			MCLM.Map.map.on('pointermove', function(evt) {
 				if (evt.dragging) {
 					return;
@@ -462,7 +469,9 @@ Ext.define('MCLM.Map', {
 
 			MCLM.Map.theView = new ol.View({
 				center: ol.proj.transform( MCLM.Map.arrayMapCenter, 'EPSG:4326', 'EPSG:3857'),
-				zoom: MCLM.Map.mapZoom
+				zoom: MCLM.Map.mapZoom,
+			    minZoom: 2,
+			    maxZoom: 17				
 			});	
 			
 			
@@ -594,6 +603,55 @@ Ext.define('MCLM.Map', {
 			}
 			
 		},
+		
+		undoZoom : function() {
+			
+			var currentMapPosition = MCLM.Map.currentMapPosition;
+			currentMapPosition--;
+			if ( currentMapPosition < 1 ) currentMapPosition = MCLM.Map.currentMap.length;
+			var position = MCLM.Map.currentMap[ currentMapPosition-1 ];
+			
+			if ( position ) {
+				MCLM.Map.theView.setCenter( position.center );
+				MCLM.Map.theView.setZoom( position.zoom );
+				MCLM.Map.currentMapPosition = currentMapPosition;
+				MCLM.Map.doNotStorePosition = true;
+			}
+			
+		},
+		
+		storeMapPosition : function( center, zoom ) {
+			if ( MCLM.Map.doNotStorePosition ) {
+				MCLM.Map.doNotStorePosition = false;
+				return true;
+			}
+			
+			var maxStoreSize = MCLM.Map.maxStoreSize;
+			
+			var center = MCLM.Map.map.getView().getCenter();
+			//var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
+			//mapCenterLong = center[1];
+			//mapCenterLat = center[0];
+			var mapZoom = MCLM.Map.map.getView().getZoom();
+			
+			$("#zoomLevel").html( mapZoom );			
+			
+			var position = {};
+			position.center = center;
+			position.zoom = mapZoom;
+			
+			if ( MCLM.Map.currentMap.length < maxStoreSize ) {
+				MCLM.Map.currentMap.push( position );
+			} else {
+				if ( MCLM.Map.currentMapPosition == maxStoreSize ) {
+					MCLM.Map.currentMapPosition = 0;
+				}
+				MCLM.Map.currentMap[ MCLM.Map.currentMapPosition ] = position;
+			}
+			
+			MCLM.Map.currentMapPosition++;
+		},
+		
 		// --------------------------------------------------------------------------------------------
 		// Atualiza algumas coisas quando o mapa eh arrastado ou o zoom muda
 		updateMapCenter : function() {
@@ -642,7 +700,7 @@ Ext.define('MCLM.Map', {
 			var layerType = node.get('layerType');
 			
 			if ( MCLM.Map.layerExistInMap( serialId )  ){
-				console.log( " Tentativa de adicionar duas veses a camada " + layerName + " (" + serialId + ")" );
+				//console.log( " Tentativa de adicionar duas veses a camada " + layerName + " (" + serialId + ")" );
 				return true;
 			}
 			
