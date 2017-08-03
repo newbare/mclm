@@ -4,9 +4,9 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 	
 	id:'restToolsWindow',    	
 	xtype: 'restToolsWindow',
-	title : "Serviços Externos / Camadas Externas",
-	width : 330,
-	height: 70,
+	title : "Serviços Externos / Camadas",
+	width : 240,
+	height: 225,
 	bodyStyle:"background:#FFFFFF;",
 	resizable: false,
 	constrain: true,
@@ -22,6 +22,14 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     items: [{
         xtype: 'restTools',
     }],
+    
+    html : '<table id="externalTableLayer" >' +
+    	'<tr><td><img onclick="MCLM.Map.toggleImagery()" id="toggleImageryID" class="externalImageLayer" src="img/external_satelite.png"></td>' +
+    	'<td><img onclick="MCLM.Map.toggleHillshade()" id="toggleHillshadeID" class="externalImageLayer" src="img/external_hillshade.png"></td>' +
+    	'<td><img onclick="MCLM.Map.toggleOcean()" id="toggleOceanID" class="externalImageLayer" src="img/external_leito.png"></td></tr>'+
+    	'<tr><td><img onclick="MCLM.Map.toggleTopo()" id="toggleTopoID" class="externalImageLayer" src="img/external_topo.png"></td>' +
+    	'<td><img onclick="MCLM.Map.toggleSeaMapLayer()" id="seaMapID" class="externalImageLayer" src="img/external_nautical.png"></td><td></td></tr>'+
+    	'</table>',
 
     listeners: {
 
@@ -44,26 +52,42 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 		 	MCLM.Map.shipTrafficEnabled = false;
 		 	MCLM.Map.streetPhotoEnabled = false;
 		 	
-		 	//MCLM.Map.topoEnabled = false;
-		 	//MCLM.Map.oceanEnabled = false;
-		 	//MCLM.Map.hillshadeEnabled = false;
-		 	//MCLM.Map.imageryEnabled = false;		 	
-		 	
-		 	
-		 	
 		 	MCLM.view.photo.PhotoHelper.clearPhotos();
 		 	MCLM.Map.unbindMapClick();
-		 	MCLM.Map.removeLayer( 'mclm_openseamap_cmoa' );
+		 	
     	},
 	    
 	    afterrender : function ( cmp ) {
+
+	    	if ( MCLM.Map.seaMapEnabled ) {
+	    		$("#seaMapID").css("border","2px solid #ff5d00");
+	    	} else {
+	    		$("#seaMapID").css("border","1px solid #cacaca");
+	    	}	    	
 	    	
+	    	if ( MCLM.Map.topoEnabled ) {
+	    		$("#toggleTopoID").css("border","2px solid #ff5d00");
+	    	} else {
+	    		$("#toggleTopoID").css("border","1px solid #cacaca");
+	    	}
 	    	
-	    	Ext.getCmp('toggleTopoID').toggle( MCLM.Map.topoEnabled );
-	    	Ext.getCmp('toggleOceanID').toggle( MCLM.Map.oceanEnabled );
-	    	Ext.getCmp('toggleHillshadeID').toggle( MCLM.Map.hillshadeEnabled );
-	    	Ext.getCmp('toggleImageryID').toggle( MCLM.Map.imageryEnabled );
+	    	if ( MCLM.Map.oceanEnabled ) {
+	    		$("#toggleOceanID").css("border","2px solid #ff5d00");
+	    	} else {
+	    		$("#toggleOceanID").css("border","1px solid #cacaca");
+	    	}
 	    	
+	    	if ( MCLM.Map.hillshadeEnabled ) {
+	    		$("#toggleHillshadeID").css("border","2px solid #ff5d00");
+	    	} else {
+	    		$("#toggleHillshadeID").css("border","1px solid #cacaca");
+	    	}
+	    	
+	    	if ( MCLM.Map.imageryEnabled ) {
+	    		$("#toggleImageryID").css("border","2px solid #ff5d00");
+	    	} else {
+	    		$("#toggleImageryID").css("border","1px solid #cacaca");
+	    	}	    	
         	
     	    Ext.tip.QuickTipManager.register({
     	        target: 'maritmTrID',

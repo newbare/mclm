@@ -41,7 +41,7 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    handler: 'showStreetPhoto',
         id : 'photoID',
         xtype: 'button',
-    },{
+    }/*,{
 	    iconCls: 'buoy-icon',
 	    enableToggle: true,
 	    width: MCLM.Globals.btnWidth,
@@ -81,7 +81,7 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    handler: 'toggleImagery',
         id : 'toggleImageryID',
         xtype: 'button',
-    }],
+    }*/],
 
 	
 });

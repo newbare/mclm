@@ -19,6 +19,7 @@ Ext.define('MCLM.Map', {
 	    oceanEnabled : false,
 	    hillshadeEnabled : false,
 	    imageryEnabled : false,		
+	    seaMapEnabled : false,		
 		
 		currentMapPosition : 0,
 		currentMap : [],
@@ -29,10 +30,10 @@ Ext.define('MCLM.Map', {
 		windLayer : null,
 		tempLayer : null,
 		pressureLayer : null,
-		vaneLayer : null,
 		worldTopoMap : null,
 		oceanBaseMap : null,
 		hillshadeMap : null,
+		openSeaMapLayer: null,
 		
 		arrayMapCenter: null,
 		mapZoom: 5,
@@ -40,7 +41,7 @@ Ext.define('MCLM.Map', {
 		mapCenterLong: 0,	
 		baseLayer: null,
 		baseLayerName: null,
-		openSeaMapLayer: null,
+		
 		queryFactorRadius: 4,
 		graticule: null,
 		geoserverUrl: '',
@@ -51,6 +52,128 @@ Ext.define('MCLM.Map', {
 		canPhoto : true,
 		statusBar : null,
 		
+		toggleImagery : function() {
+	    	if( MCLM.Map.imageryEnabled ) {
+	    		MCLM.Map.imageryEnabled = false;
+	    		MCLM.Map.removeLayer( 'mclm_ago_imageryMap' );
+	    		MCLM.Map.removeFromLayerStack( 'mclm_ago_imageryMap' );
+	    		$("#toggleImageryID").css("border","1px solid #cacaca");	    		
+	    	} else {
+	    		MCLM.Map.map.addLayer( MCLM.Map.imageryMap );
+	    		MCLM.Map.imageryEnabled = true;
+	    		
+	    		var data = {};
+	    		data.description = 'Imagens de satélite do ArcGIS';
+	    		data.institute = 'www.arcgis.com';
+	    		data.layerName = 'Imagens de Satélite';
+	    		data.layerAlias = 'Imagens de Satélite';
+	    		data.serialId = 'mclm_ago_imageryMap';
+	    		data.layerType = 'Externo';
+	    		MCLM.Map.addToLayerStack( data );
+	    		$("#toggleImageryID").css("border","2px solid #ff5d00");
+	    		
+	    	}
+	    },
+		
+	    
+	    toggleHillshade : function() {
+	    	
+	    	if( MCLM.Map.hillshadeEnabled ) {
+	    		MCLM.Map.hillshadeEnabled = false;
+	    		MCLM.Map.removeLayer( 'mclm_ago_hillshadeMap' );
+	    		MCLM.Map.removeFromLayerStack( 'mclm_ago_hillshadeMap' );
+	    		$("#toggleHillshadeID").css("border","1px solid #cacaca");
+	    	} else {
+	    		MCLM.Map.map.addLayer( MCLM.Map.hillshadeMap );
+	    		MCLM.Map.hillshadeEnabled = true;
+	    		
+	    		var data = {};
+	    		data.description = 'Camada de Relevo do ArcGIS';
+	    		data.institute = 'www.arcgis.com';
+	    		data.layerName = 'Relevo';
+	    		data.layerAlias = 'Relevo';
+	    		data.serialId = 'mclm_ago_hillshadeMap';
+	    		data.layerType = 'Externo';
+	    		MCLM.Map.addToLayerStack( data );   
+	    		$("#toggleHillshadeID").css("border","2px solid #ff5d00");
+	    	}
+	    	
+	    },   	    
+
+	    
+	    toggleSeaMapLayer : function() {
+	    	
+	    	if( MCLM.Map.seaMapEnabled ) {
+	    		MCLM.Map.seaMapEnabled = false;
+	    		MCLM.Map.removeLayer( 'mclm_openseamap_cmoa' );
+	    		MCLM.Map.removeFromLayerStack( 'mclm_openseamap_cmoa' );
+	    		$("#seaMapID").css("border","1px solid #cacaca");
+	    	} else {
+	    		MCLM.Map.map.addLayer( MCLM.Map.openSeaMapLayer );
+	    		MCLM.Map.seaMapEnabled = true;
+	    		
+	    		var data = {};
+	    		data.description = 'Elementos Náuticos do OpenSeaMap';
+	    		data.institute = 'OpenSeaMap';
+	    		data.layerName = 'Elementos Náuticos';
+	    		data.layerAlias = 'Elementos Náuticos';
+	    		data.serialId = 'mclm_openseamap_cmoa';
+	    		data.layerType = 'Externo';
+	    		MCLM.Map.addToLayerStack( data );   
+	    		$("#seaMapID").css("border","2px solid #ff5d00");
+	    	}
+	    	
+	    },  	    
+	    
+	    
+	    toggleTopo : function() {
+	    	
+	    	if( MCLM.Map.topoEnabled ) {
+	    		MCLM.Map.topoEnabled = false;
+	    		MCLM.Map.removeLayer( 'mclm_ago_worldTopoMap' );
+	    		MCLM.Map.removeFromLayerStack( 'mclm_ago_worldTopoMap' );
+	    		$("#toggleTopoID").css("border","1px solid #cacaca");
+	    	} else {
+	    		MCLM.Map.map.addLayer( MCLM.Map.worldTopoMap );
+	    		MCLM.Map.topoEnabled = true;
+	    		
+	    		var data = {};
+	    		data.description = 'Camada de Topografia do ArcGIS';
+	    		data.institute = 'www.arcgis.com';
+	    		data.layerName = 'Topografia';
+	    		data.layerAlias = 'Topografia';
+	    		data.serialId = 'mclm_ago_worldTopoMap';
+	    		data.layerType = 'Externo';
+	    		MCLM.Map.addToLayerStack( data );   
+	    		$("#toggleTopoID").css("border","2px solid #ff5d00");
+	    	}
+	    	
+	    },    
+
+	    toggleOcean : function() {
+	    	
+	    	if( MCLM.Map.oceanEnabled ) {
+	    		MCLM.Map.oceanEnabled = false;
+	    		MCLM.Map.removeLayer( 'mclm_ago_oceanBaseMap' );
+	    		MCLM.Map.removeFromLayerStack( 'mclm_ago_oceanBaseMap' );
+	    		$("#toggleOceanID").css("border","1px solid #cacaca");
+	    	} else {
+	    		MCLM.Map.map.addLayer( MCLM.Map.oceanBaseMap );
+	    		MCLM.Map.oceanEnabled = true;
+	    		
+	    		var data = {};
+	    		data.description = 'Camada de Relevo do Leito Marinho do ArcGIS';
+	    		data.institute = 'www.arcgis.com';
+	    		data.layerName = 'Leito Marinho';
+	    		data.layerAlias = 'Leito Marinho';
+	    		data.serialId = 'mclm_ago_oceanBaseMap';
+	    		data.layerType = 'Externo';
+	    		MCLM.Map.addToLayerStack( data );    
+	    		$("#toggleOceanID").css("border","2px solid #ff5d00");
+	    	}
+	    	
+	    },  	    
+	    
 		exportMap : function() {
 
 			var layers = MCLM.Map.map.getLayers();
@@ -400,6 +523,7 @@ Ext.define('MCLM.Map', {
 			
 			// Street Map
 			// http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer
+
 			
 			MCLM.Map.imageryMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
@@ -461,13 +585,22 @@ Ext.define('MCLM.Map', {
 				})
 			});
 			
-			MCLM.Map.vaneLayer = new ol.layer.Tile({
-				source: new ol.source.XYZ({
-					//attributions: ["Local test."],
-					url : 'http://sat.owm.io/sql/{z}/{x}/{y}?appid=810c5cf214be9635b7c73268bd0b516d&from=s2'
+			MCLM.Map.openSeaMapLayer = new ol.layer.Tile({
+				  source: new ol.source.OSM({
+				    crossOrigin: null,
+				    url: 'http://t1.openseamap.org/seamark/{z}/{x}/{y}.png'
 				})
-			});	
+			});
 			
+			
+			MCLM.Map.openSeaMapLayer.set('name', 'OpenSeaMap');
+			MCLM.Map.openSeaMapLayer.set('alias', 'OpenSeaMap');
+			MCLM.Map.openSeaMapLayer.set('serverUrl', '' );
+			MCLM.Map.openSeaMapLayer.set('serialId', 'mclm_openseamap_cmoa');
+			MCLM.Map.openSeaMapLayer.set('ready', true);
+			MCLM.Map.openSeaMapLayer.set('baseLayer', false);			
+			
+			MCLM.Map.bindTileEvent( MCLM.Map.openSeaMapLayer );
 
 			MCLM.Map.imageryMap.set('name', 'AGOimageryMap');
 			MCLM.Map.imageryMap.set('alias', 'AGOimageryMap');
@@ -476,12 +609,16 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.imageryMap.set('ready', true);
 			MCLM.Map.imageryMap.set('baseLayer', false);
 			
+			MCLM.Map.bindTileEvent( MCLM.Map.imageryMap );
+			
 			MCLM.Map.hillshadeMap.set('name', 'AGOhillshadeMap');
 			MCLM.Map.hillshadeMap.set('alias', 'AGOhillshadeMap');
 			MCLM.Map.hillshadeMap.set('serverUrl', '' );
 			MCLM.Map.hillshadeMap.set('serialId', 'mclm_ago_hillshadeMap');
 			MCLM.Map.hillshadeMap.set('ready', true);
 			MCLM.Map.hillshadeMap.set('baseLayer', false);
+			
+			MCLM.Map.bindTileEvent( MCLM.Map.hillshadeMap );
 			
 			
 			MCLM.Map.worldTopoMap.set('name', 'AGOworldTopoMap');
@@ -491,12 +628,16 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.worldTopoMap.set('ready', true);
 			MCLM.Map.worldTopoMap.set('baseLayer', false);
 			
+			MCLM.Map.bindTileEvent( MCLM.Map.worldTopoMap );
+			
 			MCLM.Map.oceanBaseMap.set('name', 'AGOoceanBaseMap');
 			MCLM.Map.oceanBaseMap.set('alias', 'AGOoceanBaseMap');
 			MCLM.Map.oceanBaseMap.set('serverUrl', '' );
 			MCLM.Map.oceanBaseMap.set('serialId', 'mclm_ago_oceanBaseMap');
 			MCLM.Map.oceanBaseMap.set('ready', true);
-			MCLM.Map.oceanBaseMap.set('baseLayer', false);				
+			MCLM.Map.oceanBaseMap.set('baseLayer', false);	
+			
+			MCLM.Map.bindTileEvent( MCLM.Map.oceanBaseMap );
 			
 			
 			MCLM.Map.pressureLayer.set('name', 'OWMPressure');
@@ -504,21 +645,27 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.pressureLayer.set('serverUrl', '' );
 			MCLM.Map.pressureLayer.set('serialId', 'mclm_owm_pressure');
 			MCLM.Map.pressureLayer.set('ready', true);
-			MCLM.Map.pressureLayer.set('baseLayer', false);			
+			MCLM.Map.pressureLayer.set('baseLayer', false);	
+			
+			MCLM.Map.bindTileEvent( MCLM.Map.pressureLayer );
 			
 			MCLM.Map.tempLayer.set('name', 'OWMTemperature');
 			MCLM.Map.tempLayer.set('alias', 'OWMTemperature');
 			MCLM.Map.tempLayer.set('serverUrl', '' );
 			MCLM.Map.tempLayer.set('serialId', 'mclm_owm_temperature');
 			MCLM.Map.tempLayer.set('ready', true);
-			MCLM.Map.tempLayer.set('baseLayer', false);			
+			MCLM.Map.tempLayer.set('baseLayer', false);	
+			
+			MCLM.Map.bindTileEvent( MCLM.Map.tempLayer );
 
 			MCLM.Map.windLayer.set('name', 'OWMWind');
 			MCLM.Map.windLayer.set('alias', 'OWMWind');
 			MCLM.Map.windLayer.set('serverUrl', '' );
 			MCLM.Map.windLayer.set('serialId', 'mclm_owm_wind');
 			MCLM.Map.windLayer.set('ready', true);
-			MCLM.Map.windLayer.set('baseLayer', false);					
+			MCLM.Map.windLayer.set('baseLayer', false);	
+			
+			MCLM.Map.bindTileEvent( MCLM.Map.windLayer );
 			
 			MCLM.Map.precipitacaoLayer.set('name', 'OWMPrecip');
 			MCLM.Map.precipitacaoLayer.set('alias', 'OWMPrecip');
@@ -527,6 +674,7 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.precipitacaoLayer.set('ready', true);
 			MCLM.Map.precipitacaoLayer.set('baseLayer', false);					
 			
+			MCLM.Map.bindTileEvent( MCLM.Map.precipitacaoLayer );
 		},
 		
 		// --------------------------------------------------------------------------------------------
@@ -553,7 +701,7 @@ Ext.define('MCLM.Map', {
 				center: ol.proj.transform( MCLM.Map.arrayMapCenter, 'EPSG:4326', 'EPSG:3857'),
 				zoom: MCLM.Map.mapZoom,
 			    minZoom: 2,
-			    maxZoom: 17				
+			    maxZoom: 19				
 			});	
 			
 			
@@ -561,7 +709,7 @@ Ext.define('MCLM.Map', {
 				MCLM.Map.updateScale();
 			});			
 			
-			MCLM.Map.openSeaMapLayer = MCLM.Map.createOpenSeaMapLayer();
+			
 			MCLM.Map.baseLayer = MCLM.Map.createBaseLayer();
 			
 			$("#serverHostName").html( config.serverHostName );
@@ -577,10 +725,10 @@ Ext.define('MCLM.Map', {
 			var image = new Image();
 			image.src = 'https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png';
 			image.onload = function() {
-				MCLM.Functions.mainLog("Seu browser acessa a internet normalmente.");
+				MCLM.Functions.mainLog("Seu browser acessa a internet normalmente. Clique aqui para fechar esta mensagem.");
 			};
 			image.onerror = function() {
-				Ext.Msg.alert('Alerta!','Não foi possível acessar a internet a partir de seu navegador. Alguns serviços podem não estar disponíveis.' );		  
+				Ext.Msg.alert('Alerta!','Não foi possível acessar a internet a partir de seu navegador. Alguns serviços podem não estar disponíveis. Clique aqui para fechar esta mensagem.' );		  
 			};
 		},
 		
@@ -599,25 +747,6 @@ Ext.define('MCLM.Map', {
 			}
 			
 			$("#mapScale").html("1 : " + scale);
-		},
-		// --------------------------------------------------------------------------------------------
-		// Gera a Camada do OpenSeaMap
-		createOpenSeaMapLayer : function() {
-			
-			var openSeaMapLayer = new ol.layer.Tile({
-				  source: new ol.source.OSM({
-				    crossOrigin: null,
-				    url: 'http://t1.openseamap.org/seamark/{z}/{x}/{y}.png'
-				})
-			});
-			openSeaMapLayer.set('name', 'OpenSeaMap');
-			openSeaMapLayer.set('alias', 'OpenSeaMap');
-			openSeaMapLayer.set('serverUrl', '' );
-			openSeaMapLayer.set('serialId', 'mclm_openseamap_cmoa');
-			openSeaMapLayer.set('ready', true);
-			openSeaMapLayer.set('baseLayer', false);
-			
-			return openSeaMapLayer;
 		},
 		// --------------------------------------------------------------------------------------------
 		// Gera a camada-base
@@ -668,6 +797,12 @@ Ext.define('MCLM.Map', {
 				// Tile Carregado. Temos ao menos alguma coisa da camada.
 				// Oculta os icones de alerta e loading. 
 				layer.getSource().on('tileloadend', function(event) {
+					
+					
+					console.log( serialId + " ----- : " + event.tile.getTileCoord() );
+					console.log( event.tile.getImage() );
+					
+					
 					//console.log("tile '"+serialId+"' load end");
 					$("#alert_" + serialId).css("display","none");
 					$("#error_" + serialId).css("display","none");
@@ -887,7 +1022,7 @@ Ext.define('MCLM.Map', {
 		},
 		
 		addToLayerStack : function( data ) {
-			console.log( data );
+			
 			// Adiciona na lista do gerenciador de camadas.
 	    	var layerStackStore = Ext.getStore('store.layerStack');
 			var stackGridPanel = Ext.getCmp('stackGridPanel');
@@ -1274,17 +1409,9 @@ Ext.define('MCLM.Map', {
 			
 			
 		},
+	
 		// --------------------------------------------------------------------------------------------
-		// Liga/ Desliga o mapa do OpenSeaMap
-		toggleSeaMapLayer : function() {
-			if ( MCLM.Map.isLayerEnabled('OpenSeaMap') ) {
-				MCLM.Map.removeLayer( 'mclm_openseamap_cmoa' );
-			} else {
-				MCLM.Map.map.addLayer( MCLM.Map.openSeaMapLayer );	
-			}
-		},		
-		// --------------------------------------------------------------------------------------------
-		// Liga/ Desliga o mapa do OpenSeaMap
+		// Liga/ Desliga o mapa de base
 		toggleBaseLayer : function() {
 			if ( MCLM.Map.baseLayer.getVisible() ) {
 				MCLM.Map.baseLayer.setVisible(false);
@@ -1406,6 +1533,9 @@ Ext.define('MCLM.Map', {
 			if ( cqlFilter ) cql = "&cql_filter=" + cqlFilter.replace(" ", "");
 			var	bbox = MCLM.Map.getMapCurrentBbox();
 			var thumImg = serviceUrl + encodeURI("/?service=WMS&srs=EPSG:4326"+cql+"&width="+width+"&height="+height+"&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&mode=8bit&bbox="+bbox);
+			
+			console.log( "GetMap: " + thumImg );
+			
 			return thumImg;
 		},		
 		// --------------------------------------------------------------------------------------------
