@@ -387,6 +387,20 @@ Ext.define('MCLM.Map', {
 		
 		initExternalLayers : function() {
 
+			// Mais Mapas
+			
+			// Estilo Atlas:
+			// http://services.arcgisonline.com/arcgis/rest/services/NatGeo_World_Map/MapServer
+			
+			// Cartas aéreas
+			// http://services.arcgisonline.com/arcgis/rest/services/Specialty/World_Navigation_Charts/MapServer
+			
+			// Mais relevo
+			// http://services.arcgisonline.com/arcgis/rest/services/World_Shaded_Relief/MapServer
+			
+			// Street Map
+			// http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer
+			
 			MCLM.Map.imageryMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
 					url: 'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
@@ -695,11 +709,7 @@ Ext.define('MCLM.Map', {
 			}
 			
 			var maxStoreSize = MCLM.Map.maxStoreSize;
-			
 			var center = MCLM.Map.map.getView().getCenter();
-			//var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
-			//mapCenterLong = center[1];
-			//mapCenterLat = center[0];
 			var mapZoom = MCLM.Map.map.getView().getZoom();
 			
 			$("#zoomLevel").html( mapZoom );			
