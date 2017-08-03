@@ -55,6 +55,14 @@ Ext.define('MCLM.view.tools.RestWeather', {
 	    height: MCLM.Globals.btnHeight,
 	    id : 'toggleTempID',
         xtype: 'button',
+    },{
+	    iconCls: 'owm-pressure-icon',
+	    enableToggle: true,
+        handler: 'togglePressure',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    id : 'togglePressureID',
+        xtype: 'button',
     }],
 
 	

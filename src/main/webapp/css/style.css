@@ -57,6 +57,11 @@ body {
 	background-repeat: no-repeat; 
 }
 
+.arcgis-icon {
+	background-image: url('../img/arcgis-icon.svg') !important;
+	background-repeat: no-repeat; 
+}
+
 .properties-icon {
 	background-image: url('../img/properties.svg') !important;
 	background-repeat: no-repeat; 

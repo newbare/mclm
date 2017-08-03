@@ -49,6 +49,38 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    handler: 'toggleSeaMapLayer',
         id : 'seaMapID',
         xtype: 'button',
+    },{
+	    iconCls: 'arcgis-icon',
+	    enableToggle: true,
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    handler: 'toggleTopo',
+        id : 'toggleTopoID',
+        xtype: 'button',
+    },{
+	    iconCls: 'arcgis-icon',
+	    enableToggle: true,
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    handler: 'toggleOcean',
+        id : 'toggleOceanID',
+        xtype: 'button',
+    },{
+	    iconCls: 'arcgis-icon',
+	    enableToggle: true,
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    handler: 'toggleHillshade',
+        id : 'toggleHillshadeID',
+        xtype: 'button',
+    },{
+	    iconCls: 'arcgis-icon',
+	    enableToggle: true,
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    handler: 'toggleImagery',
+        id : 'toggleImageryID',
+        xtype: 'button',
     }],
 
 	

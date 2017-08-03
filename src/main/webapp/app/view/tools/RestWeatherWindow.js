@@ -33,6 +33,7 @@ Ext.define('MCLM.view.tools.RestWeatherWindow', {
     		Ext.tip.QuickTipManager.unregister('toggleTempID');    	
     		Ext.tip.QuickTipManager.unregister('toggleWindID');    	
     		Ext.tip.QuickTipManager.unregister('togglePrecipitationID');    	
+    		Ext.tip.QuickTipManager.unregister('togglePressureID');    	
     		MCLM.Map.unbindMapClick();
     	},
 	    
@@ -72,6 +73,12 @@ Ext.define('MCLM.view.tools.RestWeatherWindow', {
     	        target: 'showWindyWindowID',
     	        title: 'Previsão Windy',
     	        text: 'Previsão do tempo e informações avançadas do site Windy.',
+    	        width: 180,
+    	        dismissDelay: 5000 
+    	    },{
+    	        target: 'togglePressureID',
+    	        title: 'Pressão',
+    	        text: 'Exibe / Oculta camada de pressão atmosférica OpenWeatherMap.',
     	        width: 180,
     	        dismissDelay: 5000 
     	    });			

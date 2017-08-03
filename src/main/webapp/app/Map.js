@@ -15,6 +15,11 @@ Ext.define('MCLM.Map', {
 		streetPhotoEnabled : false,
 		queryLocationEnabled : false,
 		
+	    topoEnabled : false,
+	    oceanEnabled : false,
+	    hillshadeEnabled : false,
+	    imageryEnabled : false,		
+		
 		currentMapPosition : 0,
 		currentMap : [],
 		maxStoreSize : 15,
@@ -25,6 +30,9 @@ Ext.define('MCLM.Map', {
 		tempLayer : null,
 		pressureLayer : null,
 		vaneLayer : null,
+		worldTopoMap : null,
+		oceanBaseMap : null,
+		hillshadeMap : null,
 		
 		arrayMapCenter: null,
 		mapZoom: 5,
@@ -379,13 +387,43 @@ Ext.define('MCLM.Map', {
 		
 		initExternalLayers : function() {
 
+			MCLM.Map.imageryMap = new ol.layer.Tile({
+				source: new ol.source.XYZ({
+					url: 'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+				})
+			});
+
+			
+			
+			MCLM.Map.oceanBaseMap = new ol.layer.Tile({
+				source: new ol.source.XYZ({
+					url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}'
+				})
+			});
+								
+
+			MCLM.Map.hillshadeMap = new ol.layer.Tile({
+				source: new ol.source.XYZ({
+					url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}'
+				})
+			});				
+			
+			
+			MCLM.Map.worldTopoMap = new ol.layer.Tile({
+				source: new ol.source.XYZ({
+					url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+				})
+			});
+							
+			
+			
 			// https://openweathermap.org/api/weathermaps#examples
 			MCLM.Map.pressureLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
 					//attributions: ["Local test."],
 					url: 'http://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
-			});				
+			});
 			
 			MCLM.Map.tempLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
@@ -415,6 +453,36 @@ Ext.define('MCLM.Map', {
 					url : 'http://sat.owm.io/sql/{z}/{x}/{y}?appid=810c5cf214be9635b7c73268bd0b516d&from=s2'
 				})
 			});	
+			
+
+			MCLM.Map.imageryMap.set('name', 'AGOimageryMap');
+			MCLM.Map.imageryMap.set('alias', 'AGOimageryMap');
+			MCLM.Map.imageryMap.set('serverUrl', '' );
+			MCLM.Map.imageryMap.set('serialId', 'mclm_ago_imageryMap');
+			MCLM.Map.imageryMap.set('ready', true);
+			MCLM.Map.imageryMap.set('baseLayer', false);
+			
+			MCLM.Map.hillshadeMap.set('name', 'AGOhillshadeMap');
+			MCLM.Map.hillshadeMap.set('alias', 'AGOhillshadeMap');
+			MCLM.Map.hillshadeMap.set('serverUrl', '' );
+			MCLM.Map.hillshadeMap.set('serialId', 'mclm_ago_hillshadeMap');
+			MCLM.Map.hillshadeMap.set('ready', true);
+			MCLM.Map.hillshadeMap.set('baseLayer', false);
+			
+			
+			MCLM.Map.worldTopoMap.set('name', 'AGOworldTopoMap');
+			MCLM.Map.worldTopoMap.set('alias', 'AGOworldTopoMap');
+			MCLM.Map.worldTopoMap.set('serverUrl', '' );
+			MCLM.Map.worldTopoMap.set('serialId', 'mclm_ago_worldTopoMap');
+			MCLM.Map.worldTopoMap.set('ready', true);
+			MCLM.Map.worldTopoMap.set('baseLayer', false);
+			
+			MCLM.Map.oceanBaseMap.set('name', 'AGOoceanBaseMap');
+			MCLM.Map.oceanBaseMap.set('alias', 'AGOoceanBaseMap');
+			MCLM.Map.oceanBaseMap.set('serverUrl', '' );
+			MCLM.Map.oceanBaseMap.set('serialId', 'mclm_ago_oceanBaseMap');
+			MCLM.Map.oceanBaseMap.set('ready', true);
+			MCLM.Map.oceanBaseMap.set('baseLayer', false);				
 			
 			
 			MCLM.Map.pressureLayer.set('name', 'OWMPressure');
@@ -786,8 +854,30 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.bindTileEvent( newLayer );
 			MCLM.Map.map.addLayer( newLayer );
 
-			if ( layerStackIndex > 0 ) me.setNewIndex( layerName, layerStackIndex );
+			if ( layerStackIndex > 0 ) me.setNewIndex( serialId, layerStackIndex );
+
+			MCLM.Map.addToLayerStack( data );
 			
+			return newLayer;			
+		},
+		
+		removeFromLayerStack : function( serialId ) {
+			// Remove da lista de camadas do gerenciador de camadas
+	    	var layerStackStore = Ext.getStore('store.layerStack');
+	    	var stackGridPanel = Ext.getCmp('stackGridPanel');
+	    	layerStackStore.each( function(rec) {
+	    	    if (rec.data.serialId == serialId) {
+	    	    	layerStackStore.remove(rec);
+	    	        return false;
+	    	    }
+	    	});    	
+	    	if ( stackGridPanel ) {
+	    		stackGridPanel.getView().refresh();
+	    	}   			
+		},
+		
+		addToLayerStack : function( data ) {
+			console.log( data );
 			// Adiciona na lista do gerenciador de camadas.
 	    	var layerStackStore = Ext.getStore('store.layerStack');
 			var stackGridPanel = Ext.getCmp('stackGridPanel');
@@ -798,8 +888,8 @@ Ext.define('MCLM.Map', {
 	    		stackGridPanel.getView().refresh();
 	    	}			
 			// ----------------------------------------------
-			return newLayer;			
 		},
+		
 		// --------------------------------------------------------------------------------------------
 		// Checa se uma camada estah sendo exibida no mapa ou nao
 		isLayerEnabled : function( layerName ) {
@@ -1170,18 +1260,7 @@ Ext.define('MCLM.Map', {
 				
 			});
 			
-			// Remove da lista de camadas do gerenciador de camadas
-	    	var layerStackStore = Ext.getStore('store.layerStack');
-	    	var stackGridPanel = Ext.getCmp('stackGridPanel');
-	    	layerStackStore.each( function(rec) {
-	    	    if (rec.data.serialId == serialId) {
-	    	    	layerStackStore.remove(rec);
-	    	        return false;
-	    	    }
-	    	});    	
-	    	if ( stackGridPanel ) {
-	    		stackGridPanel.getView().refresh();
-	    	}   			
+			MCLM.Map.removeFromLayerStack( serialId );
 			
 			
 		},
@@ -1259,8 +1338,8 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Marca uma camada como selecionada.
-		selectLayer : function ( layerName ) {
-			MCLM.Map.selectedLayer = MCLM.Map.findByName( layerName );
+		selectLayer : function ( serialId ) {
+			MCLM.Map.selectedLayer = MCLM.Map.findBySerialID( serialId );
 		},
 		// --------------------------------------------------------------------------------------------
 		// Pega a opacidade da camada selecionada
@@ -1289,8 +1368,8 @@ Ext.define('MCLM.Map', {
 		},
 		// --------------------------------------------------------------------------------------------
 		// Modifica o indice de uma camada no mapa (nivel)
-		setNewIndex : function ( layerName , newIndex ) {
-			var layer = MCLM.Map.findByName( layerName );
+		setNewIndex : function ( serialId , newIndex ) {
+			var layer = MCLM.Map.findBySerialID( serialId );
 			var layers = MCLM.Map.map.getLayers();
 			if ( layer ) {
 				var length = layers.getLength();
@@ -1796,6 +1875,8 @@ Ext.define('MCLM.Map', {
 			    	} 
 		    	   
 					//Adiciona ao Layer Stack
+			    	MCLM.Map.addToLayerStack( node.data );
+			    	/*
 					var layerStackStore = Ext.getStore('store.layerStack');
 					var stackGridPanel = Ext.getCmp('stackGridPanel');
 					var layerStack = layerStackStore.getRange();
@@ -1804,6 +1885,7 @@ Ext.define('MCLM.Map', {
 					if ( stackGridPanel ) {
 						stackGridPanel.getView().refresh();
 					}
+					*/
 				},
 				failure: function(response, opts) {
 					MCLM.Functions.hideMainLoadingIcon();
