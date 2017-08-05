@@ -28,7 +28,8 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     	'<td><img onclick="MCLM.Map.toggleHillshade()" id="toggleHillshadeID" class="externalImageLayer" src="img/external_hillshade.png"></td>' +
     	'<td><img onclick="MCLM.Map.toggleOcean()" id="toggleOceanID" class="externalImageLayer" src="img/external_leito.png"></td></tr>'+
     	'<tr><td><img onclick="MCLM.Map.toggleTopo()" id="toggleTopoID" class="externalImageLayer" src="img/external_topo.png"></td>' +
-    	'<td><img onclick="MCLM.Map.toggleSeaMapLayer()" id="seaMapID" class="externalImageLayer" src="img/external_nautical.png"></td><td></td></tr>'+
+    	'<td><img onclick="MCLM.Map.toggleSeaMapLayer()" id="seaMapID" class="externalImageLayer" src="img/external_nautical.png"></td>'+
+    	'<td><img onclick="MCLM.Map.toggleOsm()" id="toggleOsmID" class="externalImageLayer" src="img/external_osm.png"></td></tr>'+
     	'</table>',
 
     listeners: {
@@ -44,6 +45,7 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 		 	Ext.tip.QuickTipManager.unregister('toggleOceanID');
 		 	Ext.tip.QuickTipManager.unregister('toggleHillshadeID');
 		 	Ext.tip.QuickTipManager.unregister('toggleImageryID');
+		 	Ext.tip.QuickTipManager.unregister('toggleOsmID');
 		 	
 		 	
 		 	MCLM.Map.shipsHelper.deleteShips();
@@ -59,6 +61,12 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 	    
 	    afterrender : function ( cmp ) {
 
+	    	if ( MCLM.Map.seaMapEnabled ) {
+	    		$("#toggleOsmID").css("border","2px solid #ff5d00");
+	    	} else {
+	    		$("#toggleOsmID").css("border","1px solid #cacaca");
+	    	}
+	    	
 	    	if ( MCLM.Map.seaMapEnabled ) {
 	    		$("#seaMapID").css("border","2px solid #ff5d00");
 	    	} else {
@@ -141,6 +149,12 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     	        target: 'toggleImageryID',
     	        title: 'Imagens de Satélite',
     	        text: 'Ativa/Desativa camada de imagens de satélite do ArcGIS.',
+    	        width: 150,
+    	        dismissDelay: 5000 
+    	    },{
+    	        target: 'toggleOsmID',
+    	        title: 'OpenStreetMap Original',
+    	        text: 'Ativa/Desativa camada OpenStreetMap original online.',
     	        width: 150,
     	        dismissDelay: 5000 
     	    });			

@@ -19,7 +19,8 @@ Ext.define('MCLM.Map', {
 	    oceanEnabled : false,
 	    hillshadeEnabled : false,
 	    imageryEnabled : false,		
-	    seaMapEnabled : false,		
+	    seaMapEnabled : false,	
+	    osmEnabled : false,
 		
 		currentMapPosition : 0,
 		currentMap : [],
@@ -34,6 +35,7 @@ Ext.define('MCLM.Map', {
 		oceanBaseMap : null,
 		hillshadeMap : null,
 		openSeaMapLayer: null,
+		osmLayer : null,
 		
 		arrayMapCenter: null,
 		mapZoom: 5,
@@ -51,6 +53,30 @@ Ext.define('MCLM.Map', {
 		shipsHelper : null,
 		canPhoto : true,
 		statusBar : null,
+		
+		
+		toggleOsm : function() {
+	    	if( MCLM.Map.osmEnabled ) {
+	    		MCLM.Map.osmEnabled = false;
+	    		MCLM.Map.removeLayer( 'mclm_openstreetmap' );
+	    		MCLM.Map.removeFromLayerStack( 'mclm_openstreetmap' );
+	    		$("#toggleOsmID").css("border","1px solid #cacaca");	    		
+	    	} else {
+	    		MCLM.Map.map.addLayer( MCLM.Map.osmLayer );
+	    		MCLM.Map.osmEnabled = true;
+	    		
+	    		var data = {};
+	    		data.description = 'Mapa OpenStreetMap Externo';
+	    		data.institute = 'www.openstreetmap.org';
+	    		data.layerName = 'OpenStreetMap';
+	    		data.layerAlias = 'OpenStreetMap';
+	    		data.serialId = 'mclm_openstreetmap';
+	    		data.layerType = 'Externo';
+	    		MCLM.Map.addToLayerStack( data );
+	    		$("#toggleOsmID").css("border","2px solid #ff5d00");
+	    		
+	    	}
+	    },		
 		
 		toggleImagery : function() {
 	    	if( MCLM.Map.imageryEnabled ) {
@@ -532,6 +558,11 @@ Ext.define('MCLM.Map', {
 			});
 
 			
+			MCLM.Map.osmLayer = new ol.layer.Tile({
+				source: new ol.source.OSM()
+			});
+
+			
 			
 			MCLM.Map.oceanBaseMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
@@ -592,6 +623,15 @@ Ext.define('MCLM.Map', {
 				})
 			});
 			
+			
+			MCLM.Map.osmLayer.set('name', 'OpenStreetMap');
+			MCLM.Map.osmLayer.set('alias', 'OpenStreetMap');
+			MCLM.Map.osmLayer.set('serverUrl', '' );
+			MCLM.Map.osmLayer.set('serialId', 'mclm_openstreetmap');
+			MCLM.Map.osmLayer.set('ready', true);
+			MCLM.Map.osmLayer.set('baseLayer', false);			
+			
+			MCLM.Map.bindTileEvent( MCLM.Map.osmLayer );			
 			
 			MCLM.Map.openSeaMapLayer.set('name', 'OpenSeaMap');
 			MCLM.Map.openSeaMapLayer.set('alias', 'OpenSeaMap');
