@@ -346,6 +346,12 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var data = record.data;
 		record.expand();
 		
+		if ( record.data.layerType == 'CRN' ) {
+			Ext.Msg.alert('Permissão Negada','Você não pode criar pastas dentro desta pasta de sistema.' );
+			return true;	
+		}
+		
+		
     	var newFolderWindow = Ext.getCmp('newFolderWindow');
     	if ( newFolderWindow ) return;
     	
@@ -428,7 +434,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		var data = record.data;
 		var name = data.layerAlias;
 		var me = this;
-
+		var type = data.layerType;  
 		
 		if ( data.readOnly ) {
 			
@@ -446,6 +452,12 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			return true;
 		}
 		
+		if ( type == "CRN" ) {
+			Ext.Msg.alert('Apagar Pasta', 'Esta é uma pasta do sistema e não pode ser apagada.');
+			return true;
+		}
+		
+		
 		Ext.Msg.confirm('Apagar Pasta', 'Deseja realmente apagar a pasta "' + name + '" ?', function( btn ){
 			   if( btn === 'yes' ){
 				   me.clearCheckToTheRoot( record );
@@ -453,7 +465,8 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			   } else {
 			       return;
 			   }
-		});	
+		});
+			
 		
 	},
 

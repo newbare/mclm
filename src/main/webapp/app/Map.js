@@ -253,8 +253,8 @@ Ext.define('MCLM.Map', {
 					}
 					
 					if ( layerType == 'BAS' ) {
-						//thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1000, 600 );
-						thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1920, 1080 );
+						thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1000, 600 );
+						//thumImg = MCLM.Map.getLayerImagePreview( MCLM.Globals.config.baseLayer, MCLM.Globals.config.geoserverUrl, 1920, 1080 );
 						var lrObj = {};
 						lrObj["url"] = thumImg;
 						lrObj["id"] = serialId;
@@ -263,8 +263,8 @@ Ext.define('MCLM.Map', {
 					}
 	
 					if ( layerType == 'WMS' ) {
-						//thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1000, 600, cqlFilter );
-						thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1920, 1080, cqlFilter ); 
+						thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1000, 600, cqlFilter );
+						//thumImg = MCLM.Map.getLayerImagePreview ( layerName, serviceUrl, 1920, 1080, cqlFilter ); 
 						var lrObj = {};
 						lrObj["url"] = thumImg;
 						lrObj["id"] = serialId;
@@ -395,7 +395,7 @@ Ext.define('MCLM.Map', {
 			    	   
 			    	   
 			    	   weatherCoordinateWindow.update( divMain );
-			    	   //console.log( respText );
+			    	   
 			    	   
 			       }
 			});
@@ -536,7 +536,7 @@ Ext.define('MCLM.Map', {
 		
 		initExternalLayers : function() {
 
-			MCLM.Functions.showMetarImage('SBRJ');
+			//MCLM.Functions.showMetarImage('SBRJ');
 			
 			// Mais Mapas
 			
@@ -555,6 +555,7 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.imageryMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
+					attributions: ["ArcGisOnline"],
 					url: 'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
 				})
 			});
@@ -568,6 +569,7 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.oceanBaseMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
+					attributions: ["ArcGisOnline"],
 					url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}'
 				})
 			});
@@ -575,6 +577,7 @@ Ext.define('MCLM.Map', {
 
 			MCLM.Map.hillshadeMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
+					attributions: ["ArcGisOnline"],
 					url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}'
 				})
 			});				
@@ -582,6 +585,7 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.worldTopoMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
+					attributions: ["ArcGisOnline"],
 					url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
 				})
 			});
@@ -591,14 +595,14 @@ Ext.define('MCLM.Map', {
 			// https://openweathermap.org/api/weathermaps#examples
 			MCLM.Map.pressureLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					//attributions: ["Local test."],
+					attributions: ["OpenWeatherMap"],
 					url: 'http://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
 			});
 			
 			MCLM.Map.tempLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					//attributions: ["Local test."],
+					attributions: ["OpenWeatherMap"],
 					url: 'http://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
 			});	
@@ -606,14 +610,14 @@ Ext.define('MCLM.Map', {
 				
 			MCLM.Map.windLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					//attributions: ["Ventos."],
+					attributions: ["OpenWeatherMap"],
 					url: 'http://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
 			});	
 				
 			MCLM.Map.precipitacaoLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					//attributions: ["Local test."],
+					attributions: ["OpenWeatherMap"],
 					url: 'http://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
 			});
@@ -621,6 +625,7 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.openSeaMapLayer = new ol.layer.Tile({
 				  source: new ol.source.OSM({
 				    crossOrigin: null,
+				    attributions: ["OpenSeaMap"],
 				    url: 'http://t1.openseamap.org/seamark/{z}/{x}/{y}.png'
 				})
 			});
@@ -826,6 +831,7 @@ Ext.define('MCLM.Map', {
 		// Trocar o jQuery por ExtJS ... 
 		bindTileEvent : function( layer ) {
 			var serialId =  layer.get('serialId');
+			
 			if ( serialId ) {
 				
 				layer.getSource().on('tileloadstart', function(event) {
@@ -834,21 +840,24 @@ Ext.define('MCLM.Map', {
 					$("#error_" + serialId).css("display","none");
 					layer.set('ready', false);
 					
+					MCLM.Functions.showMainLoadingIcon('Carregando camada "' + layer.get('alias') + '"');
+					
 				});
 			
 				// Tile Carregado. Temos ao menos alguma coisa da camada.
 				// Oculta os icones de alerta e loading. 
 				layer.getSource().on('tileloadend', function(event) {
 					
-					
 					console.log( serialId + " ----- : " + event.tile.getTileCoord() );
 					console.log( event.tile.getImage() );
-					
+					//MCLM.Functions.mainLog(   );
 					
 					//console.log("tile '"+serialId+"' load end");
 					$("#alert_" + serialId).css("display","none");
 					$("#error_" + serialId).css("display","none");
 					layer.set('ready', true);
+					
+					MCLM.Functions.hideMainLoadingIcon();
 					
 				});
 				
@@ -858,6 +867,7 @@ Ext.define('MCLM.Map', {
 					$("#error_" + serialId).css("display","block");
 					layer.set('ready', false);
 					
+					MCLM.Functions.hideMainLoadingIcon();
 				});
 			}
 			
@@ -1123,7 +1133,22 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.aeroTrafficEnabled = !MCLM.Map.aeroTrafficEnabled ;
 			if ( !MCLM.Map.aeroTrafficEnabled ) {
 				MCLM.Map.aircraftHelper.deleteAircrafts();
+				MCLM.Map.removeLayer('aircraftLayer');
+				MCLM.Map.removeFromLayerStack( 'aircraftLayer' );
+				$("#toggleAirTrafficID").css("border","1px solid #cacaca");
 			} else {
+				MCLM.Map.map.addLayer( MCLM.Map.aircraftHelper.activeAircraftLayer );
+				$("#toggleAirTrafficID").css("border","2px solid #ff5d00");
+	    		var data = {};
+	    		data.description = 'Monitoramento de Tráfego Aéreo';
+	    		data.institute = 'Serviço Externo';
+	    		data.layerName = 'Tráfego Aéreo';
+	    		data.layerAlias = 'Tráfego Aéreo';
+	    		data.serialId = 'aircraftLayer';
+	    		data.layerType = 'Externo';
+				
+				MCLM.Map.addToLayerStack( data );
+				
 				MCLM.Map.aircraftHelper.getAircraftsBbox();
 			}
 		},		
@@ -1711,16 +1736,15 @@ Ext.define('MCLM.Map', {
 			me.onClickBindKey = me.map.on('click', function(event) {
 
 				me.queryMap( event.coordinate );
-				var featureHit = false;
 				var externalLayerName = "";
 				me.map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
 					var columnRefs = {};
 					var layerName = layer.get("alias");
 					var att = feature.getProperties();
+					var layerType = layer.get("layerType");
 					
-					if ( (layerName == 'aircraftLayer') && aeroTrafficEnabled ) {
+					if ( (layerName == 'aircraftLayer') && MCLM.Map.aeroTrafficEnabled ) {
 						me.aircraftHelper.showAircraftDetails( att );
-						featureHit = true;
 						return true;
 					}
 					
@@ -1731,16 +1755,23 @@ Ext.define('MCLM.Map', {
 					
 					if ( layerName == 'poiLayer' ) {
 						MCLM.RouteHelper.inspectFeature( event.pixel );
-						featureHit = true;
 						return true;
 					}
 
+					
+					// Tete de interrogar FEI --------
+					if ( layerType == 'FEI' ) {
+						var features = [ feature ];
+						att.features = features;
+					}
+					// -------------------------------
+					//console.log( layerType );
+					//console.log( att );					
+					
 					if ( !att.features ) {
 						MCLM.Functions.mainLog("Não existem dados na camada " + layerName );
 					} else {
 					
-						featureHit = true;
-						
 						externalLayerName = layerName;
 						var data = [];
 				        att.features.forEach( function( feature ) {
@@ -2058,16 +2089,7 @@ Ext.define('MCLM.Map', {
 		    	   
 					//Adiciona ao Layer Stack
 			    	MCLM.Map.addToLayerStack( node.data );
-			    	/*
-					var layerStackStore = Ext.getStore('store.layerStack');
-					var stackGridPanel = Ext.getCmp('stackGridPanel');
-					var layerStack = layerStackStore.getRange();
-					layerStack.push( node.data );
-					layerStackStore.loadData( layerStack );    				
-					if ( stackGridPanel ) {
-						stackGridPanel.getView().refresh();
-					}
-					*/
+
 				},
 				failure: function(response, opts) {
 					MCLM.Functions.hideMainLoadingIcon();

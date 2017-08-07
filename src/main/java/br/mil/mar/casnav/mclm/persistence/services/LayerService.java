@@ -469,6 +469,7 @@ public class LayerService {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = "{ \"error\": true, \"msg\": \"" + e.getMessage()+ ".\" }";
 		}
 		

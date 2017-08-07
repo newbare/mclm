@@ -10,7 +10,7 @@ Ext.define('MCLM.view.tools.RestTools', {
         background: '#FFFFFF'
     }, 
     
-    items: [{
+    items: [/*{
 	    iconCls: 'aeroplane-icon',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
@@ -18,7 +18,7 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    enableToggle: true,
         id : 'aeroplaneID',
         xtype: 'button',
-    },{
+    },*/{
 	    iconCls: 'ship-icon',
 	    enableToggle: true,
 	    width: MCLM.Globals.btnWidth,
@@ -41,47 +41,7 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    handler: 'showStreetPhoto',
         id : 'photoID',
         xtype: 'button',
-    }/*,{
-	    iconCls: 'buoy-icon',
-	    enableToggle: true,
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    handler: 'toggleSeaMapLayer',
-        id : 'seaMapID',
-        xtype: 'button',
-    },{
-	    iconCls: 'arcgis-icon',
-	    enableToggle: true,
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    handler: 'toggleTopo',
-        id : 'toggleTopoID',
-        xtype: 'button',
-    },{
-	    iconCls: 'arcgis-icon',
-	    enableToggle: true,
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    handler: 'toggleOcean',
-        id : 'toggleOceanID',
-        xtype: 'button',
-    },{
-	    iconCls: 'arcgis-icon',
-	    enableToggle: true,
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    handler: 'toggleHillshade',
-        id : 'toggleHillshadeID',
-        xtype: 'button',
-    },{
-	    iconCls: 'arcgis-icon',
-	    enableToggle: true,
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-	    handler: 'toggleImagery',
-        id : 'toggleImageryID',
-        xtype: 'button',
-    }*/],
+    }],
 
 	
 });

@@ -30,8 +30,15 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'base-icon',
         handler: 'toggleBaseLayer'
-    }, 
-    {
+    },{
+    	// Serviços Externos - Mapas de Base Externos
+    	iconCls: 'rest-icon',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+    	xtype: 'button',
+    	id: 'showRestToolsBtn',
+        handler : 'showRestTools'
+    },{
     	// Fontes Externas
     	xtype: 'button',
     	id: 'id112',
@@ -100,25 +107,11 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
     	id: 'drawFeicaoBtn',
         handler : 'showDrawToolBar'
     },{
-    	iconCls: 'rest-icon',
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-    	xtype: 'button',
-    	id: 'showRestToolsBtn',
-        handler : 'showRestTools'
-    },{
     	iconCls: 'cloud-icon',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
     	xtype: 'button',
     	id: 'showForecastToolBarID',
         handler : 'showForecastToolBar'
-    }/*,{
-    	iconCls: 'back-icon',
-	    width: MCLM.Globals.btnWidth,
-	    height: MCLM.Globals.btnHeight,
-    	xtype: 'button',
-    	id: 'undoZoomID',
-        handler : 'undoZoom'
-    }*/]
+    }]
 });

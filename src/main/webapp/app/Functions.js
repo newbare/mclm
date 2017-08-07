@@ -31,10 +31,8 @@ Ext.define('MCLM.Functions', {
 				metarImageWindow = Ext.create('MCLM.view.tools.MetarImageWindow');
 			}
 			
-			var image = "<div style='font-size:10px;width:99%;margin:5px;' >" +
-        	"<div id='inmet-bar' >" +
-    		"<div style='margin-left: 10px;margin-top: 7px;width:50px;float:left'><img style='width: 100px;' src='img/logo_alert-as.png'></div>  <div style='width:60px;float:right'><img style='height:40px;width: 50px;' src='img/inmet-logo.png'></div> " +
-    		"</div><img style='margin-top:5px;margin-left:10px;width:500px;height:550px' src='http://img0.cptec.inpe.br/~rmetop/meteograma/"+aeroporto+".gif'>";
+			var image = "<div style='background-color:#edeff2;border-bottom:1px dotted #cacaca;width:100%;height:45px'><img style='position:absolute;left:5px;top:2px;width: 220px;' src='img/clima/cptec/logocomp.gif'><img style='width: 50px;position:absolute;right:5px;top:2px;' src='img/clima/cptec/logo_cptec.png'></div>" + 
+			    	   "<img style='margin-top:5px;margin-left:10px;width:400px;height:450px' src='http://img0.cptec.inpe.br/~rmetop/meteograma/"+aeroporto+".gif'>";
 			
 			metarImageWindow.update( image );
 			metarImageWindow.setTitle('Dados de METAR - ' + aeroporto);
@@ -504,7 +502,7 @@ Ext.define('MCLM.Functions', {
 	    	lon = center2[0];
 	    	lat = center2[1];
 	    	
-	    	console.log( lon + " " + lat);
+	    	//console.log( lon + " " + lat);
 	    	
 	    	MCLM.Map.getWeatherFromLocation( lat, lon );
 		},

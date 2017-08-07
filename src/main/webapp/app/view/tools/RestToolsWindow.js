@@ -6,7 +6,7 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 	xtype: 'restToolsWindow',
 	title : "Serviços Externos / Camadas",
 	width : 240,
-	height: 225,
+	height: 300,
 	bodyStyle:"background:#FFFFFF;",
 	resizable: false,
 	constrain: true,
@@ -30,13 +30,14 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     	'<tr><td><img onclick="MCLM.Map.toggleTopo()" id="toggleTopoID" class="externalImageLayer" src="img/external_topo.png"></td>' +
     	'<td><img onclick="MCLM.Map.toggleSeaMapLayer()" id="seaMapID" class="externalImageLayer" src="img/external_nautical.png"></td>'+
     	'<td><img onclick="MCLM.Map.toggleOsm()" id="toggleOsmID" class="externalImageLayer" src="img/external_osm.png"></td></tr>'+
+    	'<td><img onclick="MCLM.Map.toggleAeroTraffic()" id="toggleAirTrafficID" class="externalImageLayer" src="img/external_aircraft.png"></td></tr>'+
     	'</table>',
 
     listeners: {
 
     	close : function() {
 		 	Ext.tip.QuickTipManager.unregister('maritmTrID');    	
-		 	Ext.tip.QuickTipManager.unregister('aeroplaneID');    	
+		 	//Ext.tip.QuickTipManager.unregister('aeroplaneID');    	
 		 	Ext.tip.QuickTipManager.unregister('photoID');    	
 		 	Ext.tip.QuickTipManager.unregister('seaMapID');    
 		 	Ext.tip.QuickTipManager.unregister('marineTrafficID'); 
@@ -46,11 +47,11 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 		 	Ext.tip.QuickTipManager.unregister('toggleHillshadeID');
 		 	Ext.tip.QuickTipManager.unregister('toggleImageryID');
 		 	Ext.tip.QuickTipManager.unregister('toggleOsmID');
+		 	Ext.tip.QuickTipManager.unregister('toggleAirTrafficID');
 		 	
 		 	
 		 	MCLM.Map.shipsHelper.deleteShips();
-		 	MCLM.Map.aircraftHelper.deleteAircrafts();
-		 	MCLM.Map.aeroTrafficEnabled = false;
+		 	
 		 	MCLM.Map.shipTrafficEnabled = false;
 		 	MCLM.Map.streetPhotoEnabled = false;
 		 	
@@ -65,6 +66,12 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 	    		$("#toggleOsmID").css("border","2px solid #ff5d00");
 	    	} else {
 	    		$("#toggleOsmID").css("border","1px solid #cacaca");
+	    	}
+	    	
+	    	if ( MCLM.Map.aeroTrafficEnabled ) {
+	    		$("#toggleAirTrafficID").css("border","2px solid #ff5d00");
+	    	} else {
+	    		$("#toggleAirTrafficID").css("border","1px solid #cacaca");
 	    	}
 	    	
 	    	if ( MCLM.Map.seaMapEnabled ) {
@@ -96,20 +103,27 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 	    	} else {
 	    		$("#toggleImageryID").css("border","1px solid #cacaca");
 	    	}	    	
-        	
+
+	    	if ( MCLM.Map.osmEnabled ) {
+	    		$("#toggleOsmID").css("border","2px solid #ff5d00");
+	    	} else {
+	    		$("#toggleOsmID").css("border","1px solid #cacaca");
+	    	}	    	
+	    	
+	    	
     	    Ext.tip.QuickTipManager.register({
     	        target: 'maritmTrID',
     	        title: 'Tráfego Marítimo',
     	        text: 'Exibe dados de tráfego marítimo AIS via SISTRAM.',
     	        width: 150,
     	        dismissDelay: 5000 
-    	    },{
+    	    }/*,{
     	        target: 'aeroplaneID',
     	        title: 'Tráfego Aéreo',
     	        text: 'Exibe tráfego aéreo.',
     	        width: 150,
     	        dismissDelay: 5000 
-    	    },{
+    	    }*/,{
     	        target: 'seaMapID',
     	        title: 'Elementos de Navegação',
     	        text: 'Exibe elementos de carta náutica que auxiliam a navegação. Necessário nível de zoom apropriado.',
@@ -157,7 +171,13 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     	        text: 'Ativa/Desativa camada OpenStreetMap original online.',
     	        width: 150,
     	        dismissDelay: 5000 
-    	    });			
+		    },{
+		    	target: 'toggleAirTrafficID',
+		    	title: 'Monitorar Tráfego Aéreo',
+		    	text: 'Ativa/Desativa camada exibindo tráfego aéreo em tempo real.',
+		    	width: 150,
+		    	dismissDelay: 5000 
+		    });			
         	
         }
 	

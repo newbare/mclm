@@ -75,8 +75,6 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
         	return resultStyles;
     	}
     	
-	    	
-    	
     	this.activeAircraftLayer = new ol.layer.Vector({
 			source: this.vectorSource,
 			style: customStyleFunction
@@ -88,9 +86,6 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     	this.activeAircraftLayer.set('layerType', 'FEI');
     	this.activeAircraftLayer.set('baseLayer', false);
     	this.activeAircraftLayer.set('ready', true);  
-		
-		MCLM.Map.removeLayerByName('aircraftLayer');
-		MCLM.Map.map.addLayer( this.activeAircraftLayer );			
 
     },
 
@@ -115,11 +110,7 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
             },
             success: function (response, opts) {
             	var respObj = Ext.decode(response.responseText);
-
-            	console.log( response.responseText );
-            	
             	var aircraftText = respObj.aircraft.model.text;
-            	
             	var aircraftImageLarge = "img/large_not_found.jpg";
 
             	if ( respObj.aircraft.images ) {
@@ -134,8 +125,6 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 	            	
             	}
             	 
-            	
-            	
             	var partidaReal = new Date(respObj.time.real.departure * 1000).toISOString().substr(11, 8);
             	var chegadaEstimada = new Date(respObj.time.estimated.arrival * 1000).toISOString().substr(11, 8);
             	
