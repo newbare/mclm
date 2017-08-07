@@ -536,6 +536,8 @@ Ext.define('MCLM.Map', {
 		
 		initExternalLayers : function() {
 
+			MCLM.Functions.showMetarImage('SBRJ');
+			
 			// Mais Mapas
 			
 			// Estilo Atlas:

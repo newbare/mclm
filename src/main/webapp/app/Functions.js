@@ -25,7 +25,21 @@ Ext.define('MCLM.Functions', {
 		    });
 		},
 		
-		
+		showMetarImage : function( aeroporto ) {
+			var metarImageWindow = Ext.getCmp('metarImageWindow');
+			if ( !metarImageWindow ) {
+				metarImageWindow = Ext.create('MCLM.view.tools.MetarImageWindow');
+			}
+			
+			var image = "<div style='font-size:10px;width:99%;margin:5px;' >" +
+        	"<div id='inmet-bar' >" +
+    		"<div style='margin-left: 10px;margin-top: 7px;width:50px;float:left'><img style='width: 100px;' src='img/logo_alert-as.png'></div>  <div style='width:60px;float:right'><img style='height:40px;width: 50px;' src='img/inmet-logo.png'></div> " +
+    		"</div><img style='margin-top:5px;margin-left:10px;width:500px;height:550px' src='http://img0.cptec.inpe.br/~rmetop/meteograma/"+aeroporto+".gif'>";
+			
+			metarImageWindow.update( image );
+			metarImageWindow.setTitle('Dados de METAR - ' + aeroporto);
+			metarImageWindow.show();
+		},
 		
 		getClimaDesc : function( value ) {
 			var climaDesc = [];
