@@ -358,14 +358,14 @@ public class LayerService {
 			DictionaryService ds = new DictionaryService();
 			ds.deleteDictionary( idNode );
 			
+			/*
 			if ( node.getLayerType() == LayerType.FEI ) {
 				Integer idNodeData = node.getIdNodeData();
-
 				try {
 					SceneryNodeService sns = new SceneryNodeService(); 
 					SceneryNode sn = sns.getSceneryNodeByNodeData( idNodeData );
 					// Se achou eh pq pertence a um cenario
-					throw new Exception("Esta Feição pertence à um Cenário.");
+					throw new Exception("Esta Feição pertence ao Cenário '" + sn.getScenery().getSceneryName() + "'.");
 					
 				} catch ( NotFoundException nfe ) {
 					// Nao achou ... apaga!
@@ -373,9 +373,26 @@ public class LayerService {
 					ns.deleteNode(node);
 					return result;
 				}
+			}
+			*/			
+			
+			Integer idNodeData = node.getIdNodeData();
+			try {
+				SceneryNodeService sns = new SceneryNodeService(); 
+				SceneryNode sn = sns.getSceneryNodeByNodeData( idNodeData );
+				// Se achou eh pq pertence a um cenario
+				throw new Exception("Esta Camada pertence ao Cenário '" + sn.getScenery().getSceneryName() + "'.");
 				
-				
-			}			
+			} catch ( NotFoundException nfe ) {
+				// Nao achou ... apaga!
+				ns.newTransaction();
+				ns.deleteNode(node);
+			}
+			
+			if ( node.getLayerType() == LayerType.FEI ) {
+				// Se for feição, ja apagou no codigo acima. So sair...
+				return result;
+			}
 			
 			if ( node.getLayerType() == LayerType.FDR ) {
 				// É uma pasta. Apaga somente o nó SE ESTIVER VAZIO.
@@ -419,16 +436,6 @@ public class LayerService {
 				// Uma feature.... 
 			}
 
-			/*
-			 * isso eh muito perigoso!
-			if ( node.getLayerType() == LayerType.WMS ) { 
-				// http://localhost:8080/geoserver/rest/layers/<layer>
-				serverRESTAPI = geoserverURL + "rest/layers/" + layerName;
-				serverRESTAPILayerGroup = geoserverURL + "rest/layergroups/" + layerName;
-			}
-			*/
-
-			
 			if ( node.getLayerType() == LayerType.SHP ) {
 				if ( !splited ){
 					throw new Exception("Nome da camada malformado. Deve ser no padrão 'workspace:layer' e está '" + layerName + "'");
@@ -445,8 +452,17 @@ public class LayerService {
 			}
 			
 		
-			ns.newTransaction();
-			ns.deleteNode(node);
+			//ns.newTransaction();
+			//ns.deleteNode(node);
+			
+			/*
+			 * isso eh muito perigoso!
+			if ( node.getLayerType() == LayerType.WMS ) { 
+				// http://localhost:8080/geoserver/rest/layers/<layer>
+				serverRESTAPI = geoserverURL + "rest/layers/" + layerName;
+				serverRESTAPILayerGroup = geoserverURL + "rest/layergroups/" + layerName;
+			}
+			*/			
 			
 			if ( !serverRESTAPI.equals("") ) {
 				System.out.println("DELETE " + serverRESTAPI );
@@ -456,7 +472,7 @@ public class LayerService {
 				if ( !serverRESTAPILayerGroup.equals("") ) {
 					res = wc.doRESTRequest( "DELETE", serverRESTAPI, "", geoUser, geoPassword );
 				} else {
-					// Ã‰ um grupo de camadas...
+					// é um grupo de camadas...
 					res = wc.doRESTRequest( "DELETE", serverRESTAPILayerGroup, "", geoUser, geoPassword );
 				}
 

@@ -97,19 +97,38 @@ public class SceneryNodeService {
 		return expRet ;
 	}	
 
+	
+	private void deleteScenery( JSONObject sceneryNode ) throws Exception {
+		int idSceneryNode =  sceneryNode.getInt( "idSceneryNode" );
+		rep.newTransaction();
+		SceneryNode SceneryNode = rep.getSceneryNode( idSceneryNode );
+		rep.newTransaction();
+		rep.deleteSceneryNode(SceneryNode);
+		
+	}
+	
 	public String deleteSceneryNode( String data ) throws DeleteException {
 		String result = "{ \"success\": true, \"msg\": \"Cenário atualizado com sucesso.\" }";
 		try {
 			
-			JSONObject sceneryNode = new JSONObject( data );
-			int idSceneryNode =  sceneryNode.getInt( "idSceneryNode" );
+			try {
+				JSONObject sceneryNode = new JSONObject( data );
+				deleteScenery( sceneryNode );
+			} catch ( org.json.JSONException jj ) {
 				
-			SceneryNode SceneryNode = rep.getSceneryNode( idSceneryNode);
-			rep.newTransaction();
-			rep.deleteSceneryNode(SceneryNode);
+				JSONArray arr = new JSONArray( data );
+				for ( int x=0; x < arr.length(); x++ ) {
+					JSONObject sceneryNode = arr.getJSONObject(x);
+					deleteScenery( sceneryNode );
+				}
+				
+			}
+					 			
+			
 		} catch (Exception e) {
 			result = "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";
 			e.printStackTrace();
+			System.out.println("The data was: " + data );
 		}
 		
 		return result;

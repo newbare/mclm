@@ -1,9 +1,6 @@
 package br.mil.mar.casnav.mclm;
 
 import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -23,29 +20,22 @@ import br.mil.mar.casnav.mclm.persistence.services.DictionaryService;
 
 @WebListener
 public class Startup implements ServletContextListener {
-	private ScheduledExecutorService scheduler;
+	//private ScheduledExecutorService scheduler;
 	
-    private void loggerDebug( String log ) {
-    	System.out.println( log );
-    }
-    
 	@Override
     public void contextInitialized(ServletContextEvent event) {
     	ServletContext context = event.getServletContext();
     	String path = context.getRealPath("/");
     	System.setProperty("rootPath", path );
 
-    	
-    	
-    	
     	try {
        
     		String imagesPath = PathFinder.getInstance().getPath() + "/tempmaps/";
     		FileUtils.deleteDirectory( new File(imagesPath) );
     		
-    		ScheduledExecutorService  scheduler = Executors.newSingleThreadScheduledExecutor();
-    		Cron cron = new Cron();
-    		scheduler.scheduleAtFixedRate( cron , 0, 1, TimeUnit.MINUTES);
+    		//ScheduledExecutorService  scheduler = Executors.newSingleThreadScheduledExecutor();
+    		//Cron cron = new Cron();
+    		//scheduler.scheduleAtFixedRate( cron , 0, 1, TimeUnit.MINUTES);
     		
     		
     		String configFile = path + "WEB-INF/classes/config.xml";
@@ -106,9 +96,14 @@ public class Startup implements ServletContextListener {
 	
 	@Override
     public void contextDestroyed(ServletContextEvent event) {
-		loggerDebug("shutdown");
+		
+		System.out.println("Desligando MCLM.");
+		/*
 		try {
 			scheduler.shutdownNow();
-		} catch ( Exception e ) {}
+		} catch ( Exception e ) {
+			
+		}
+		*/
     }
 }

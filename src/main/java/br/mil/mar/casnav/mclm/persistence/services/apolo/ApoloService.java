@@ -15,7 +15,6 @@ public class ApoloService {
 		
 		String apolo = Configurator.getInstance().getApoloRESTAddress();
 		String url = apolo + "/SIGLMD-web/MCLMSecurityServlet?userId="+idUser+"&securityCode=" + key;
-		
 		String result = wc.doGet(url);
 		return result;
 	}
