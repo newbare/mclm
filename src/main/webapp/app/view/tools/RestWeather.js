@@ -63,6 +63,13 @@ Ext.define('MCLM.view.tools.RestWeather', {
 	    height: MCLM.Globals.btnHeight,
 	    id : 'togglePressureID',
         xtype: 'button',
+    },{
+	    iconCls: 'cptec-anim-icon',
+        handler: 'showCptecAnimation',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    id : 'showCptecAnimationID',
+        xtype: 'button',
     }],
 
 	

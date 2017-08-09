@@ -862,8 +862,8 @@ Ext.define('MCLM.Map', {
 				// Oculta os icones de alerta e loading. 
 				layer.getSource().on('tileloadend', function(event) {
 					
-					console.log( serialId + " ----- : " + event.tile.getTileCoord() );
-					console.log( event.tile.getImage() );
+					//console.log( serialId + " ----- : " + event.tile.getTileCoord() );
+					//console.log( event.tile.getImage() );
 					//MCLM.Functions.mainLog(   );
 					
 					//console.log("tile '"+serialId+"' load end");
@@ -1862,6 +1862,10 @@ Ext.define('MCLM.Map', {
 				
 				var idNodeData = layer.get("idNodeData");
 				var idDataWindow = layer.get("idDataWindow");
+				
+				console.log( layer );
+				console.log( idNodeData );
+				
 				var found = false;
 				
 				if ( layerName && ( !baseLayer ) ) {
@@ -1887,6 +1891,7 @@ Ext.define('MCLM.Map', {
 		queryLayer : function( layerName, urlFeatureInfo, layerAlias, idNodeData, idDataWindow ) {
 			
 			MCLM.Functions.mainLog("Interrogando " + layerAlias + "...");
+			
 			var encodedUrl = encodeURIComponent( urlFeatureInfo );
 			var me = MCLM.Map;
 			Ext.Ajax.request({

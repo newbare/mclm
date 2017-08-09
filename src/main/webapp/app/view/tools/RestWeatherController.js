@@ -18,6 +18,12 @@ Ext.define('MCLM.view.tools.RestWeatherController', {
     	
     },
 
+    showCptecAnimation : function() {
+    	// http://pituna.cptec.inpe.br/repositorio5/goes13/goes13_web/ams_realce_baixa/2017/08/S11235258_201708081730.jpg
+    	// http://pituna.cptec.inpe.br/repositorio5/goes13/goes13_web/ams_vapor_baixa/2017/07/S11232953_201707070000.jpg
+    	window.open('http://satelite.cptec.inpe.br/acervo/loop.show.logic?id=2953-1,5258-2', '_blank');
+    },
+    
     togglePressure : function() {
     	
     	if( this.pressureEnabled ) {

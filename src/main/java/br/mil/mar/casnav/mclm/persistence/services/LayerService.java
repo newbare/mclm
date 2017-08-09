@@ -376,6 +376,17 @@ public class LayerService {
 			}
 			*/			
 			
+			if ( node.getLayerType() == LayerType.FDR ) {
+				// É uma pasta. Apaga somente o nó SE ESTIVER VAZIO.
+				if ( node.getChildren() > 0 ) {
+					throw new Exception("A pasta não está vazia.");
+				} else {
+					ns.newTransaction();
+					ns.deleteNode(node);
+				}
+				return result;
+			}
+			
 			Integer idNodeData = node.getIdNodeData();
 			try {
 				SceneryNodeService sns = new SceneryNodeService(); 
@@ -393,18 +404,6 @@ public class LayerService {
 				// Se for feição, ja apagou no codigo acima. So sair...
 				return result;
 			}
-			
-			if ( node.getLayerType() == LayerType.FDR ) {
-				// É uma pasta. Apaga somente o nó SE ESTIVER VAZIO.
-				if ( node.getChildren() > 0 ) {
-					throw new Exception("A pasta não está vazia.");
-				} else {
-					ns.newTransaction();
-					ns.deleteNode(node);
-				}
-				return result;
-			}
-			
 			
 			String layerName = node.getLayerName();
 			String workspaceName = "";

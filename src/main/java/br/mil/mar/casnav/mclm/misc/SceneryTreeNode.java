@@ -23,6 +23,8 @@ public class SceneryTreeNode {
 	private int idSceneryNode;
 	private int idNodeParent;
 	private int indexOrder;	
+	private int idNodeData;
+	private int idDataWindow;
 	private String layerType;
 	private String serviceUrl;
 	private String originalServiceUrl;
@@ -59,6 +61,15 @@ public class SceneryTreeNode {
 			this.institute = sn.getLayer().getInstitute();
 			this.layerName = sn.getLayer().getLayerName();
 			this.serialId = sn.getLayer().getSerialId();
+			this.idNodeData = sn.getLayer().getIdNodeData();
+			
+			try {
+				this.idDataWindow = sn.getLayer().getDataWindow().getIdDataWindow();
+			} catch ( Exception ignored ) {
+				this.idDataWindow = -1;	
+			}			
+			
+					
 		} else {
 			// Não pode ser "null" porque a conversão para JSON vai omitir o atributo.
 			this.serviceUrl = "";
@@ -224,6 +235,14 @@ public class SceneryTreeNode {
 	
 	public Feicao getFeicao() {
 		return feicao;
+	}
+	
+	public int getIdNodeData() {
+		return idNodeData;
+	}
+	
+	public int getIdDataWindow() {
+		return idDataWindow;
 	}
 	
 }

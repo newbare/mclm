@@ -87,6 +87,11 @@ body {
 	background-repeat: no-repeat; 
 }
 
+.cptec-anim-icon {
+	background-image: url('../img/cptec-anim.svg') !important;
+	background-repeat: no-repeat; 
+}
+
 .arcgis-icon {
 	background-image: url('../img/arcgis-icon.svg') !important;
 	background-repeat: no-repeat; 

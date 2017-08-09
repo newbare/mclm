@@ -5,7 +5,7 @@ Ext.define('MCLM.view.tools.RestWeatherWindow', {
 	id:'restWeatherWindow',    	
 	xtype: 'restWeatherWindow',
 	title : "Serviços Meteorológicos",
-	width : 300,
+	width : 286,
 	height: 70,
 	bodyStyle:"background:#FFFFFF;",
 	resizable: false,
@@ -33,7 +33,10 @@ Ext.define('MCLM.view.tools.RestWeatherWindow', {
     		Ext.tip.QuickTipManager.unregister('toggleTempID');    	
     		Ext.tip.QuickTipManager.unregister('toggleWindID');    	
     		Ext.tip.QuickTipManager.unregister('togglePrecipitationID');    	
-    		Ext.tip.QuickTipManager.unregister('togglePressureID');    	
+    		Ext.tip.QuickTipManager.unregister('togglePressureID');
+    		
+    		Ext.tip.QuickTipManager.unregister('showCptecAnimationID');
+    		
     		MCLM.Map.unbindMapClick();
     	},
 	    
@@ -79,6 +82,12 @@ Ext.define('MCLM.view.tools.RestWeatherWindow', {
     	        target: 'togglePressureID',
     	        title: 'Pressão',
     	        text: 'Exibe / Oculta camada de pressão atmosférica OpenWeatherMap.',
+    	        width: 180,
+    	        dismissDelay: 5000 
+    	    },{
+    	        target: 'showCptecAnimationID',
+    	        title: 'Animação de Imagens',
+    	        text: 'Abre nova janela com animação de imagens meteorológicas do CPTEC/INPE.',
     	        width: 180,
     	        dismissDelay: 5000 
     	    });			
