@@ -19,8 +19,7 @@ Ext.define('MCLM.view.paineis.LayerTree', {
         clicksToEdit: 2,
         listeners: {
             beforeedit: function( e, editor, options ){
-            	//var isLeaf =  editor.record.get("leaf") ;
-                //if ( isLeaf ) return false;
+
             },
             afteredit: function( e, editor, options ){
             	

@@ -223,6 +223,10 @@ public class NodeService {
 		return rep.getSameOrignNodes( layerName );
 	}
 
+	public NodeData getFeicaoRootNode() throws Exception {
+		return rep.getFeicaoRootNode();
+	}
+
 
 	
 }

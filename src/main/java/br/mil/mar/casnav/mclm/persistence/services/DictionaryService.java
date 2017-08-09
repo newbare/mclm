@@ -450,7 +450,6 @@ public class DictionaryService {
 		
 		
 		for( NodeData node : nodes ) {
-			if ( node.getLayerType() == LayerType.CRN) Configurator.getInstance().setFeicaoRootNode( node );
 
 			newTransaction();
 			try {

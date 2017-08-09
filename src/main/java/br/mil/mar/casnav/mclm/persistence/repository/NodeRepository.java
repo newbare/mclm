@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import br.mil.mar.casnav.mclm.misc.LayerType;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DeleteException;
@@ -109,6 +110,14 @@ public class NodeRepository extends BasicRepository {
 		
 		closeSession();
 		return node;
+	}
+
+	public NodeData getFeicaoRootNode() throws Exception {
+		Set<NodeData> nodes = getList();
+		for( NodeData node : nodes ) {
+			if ( node.getLayerType() == LayerType.CRN) return node;
+		}
+		return null;
 	}		
 	
 }

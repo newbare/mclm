@@ -39,9 +39,12 @@ public class SceneryNodeService {
 			JSONArray array = new JSONArray( data );
 			List<SceneryNode> nodes = new ArrayList<SceneryNode>();
 			
-			
-			for ( Object obj : array ) {
-				JSONObject jsonobj = (JSONObject)obj;
+			for ( int xx = 0; xx < array.length(); xx++  ) {
+				JSONObject jsonobj = array.getJSONObject( xx );
+			//}
+			//for ( Object obj : array ) {
+				//JSONObject jsonobj = (JSONObject)obj;
+				
 				NodeData layer = gson.fromJson( jsonobj.toString(), NodeData.class);
 
 				int id = jsonobj.getInt( "id" );
@@ -77,6 +80,7 @@ public class SceneryNodeService {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			result = "{ \"error\": true, \"msg\": \"" + e.getMessage() + ".\" }";
+			System.out.println("The data was: " + data );
 		}
 		return result;
 	}	

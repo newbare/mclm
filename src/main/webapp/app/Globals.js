@@ -9,4 +9,5 @@ Ext.define("MCLM.Globals", {
          selectRouteActiveIcon : 'selectSourceIcon',
          lastServerSelected : null,
          lastServerSelectedID : null,
+         totalTextBoxes : 0,
  });

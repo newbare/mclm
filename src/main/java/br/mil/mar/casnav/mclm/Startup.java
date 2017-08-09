@@ -12,10 +12,12 @@ import org.apache.commons.io.FileUtils;
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.PathFinder;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
+import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.infra.ConnFactory;
 import br.mil.mar.casnav.mclm.persistence.services.ConfigService;
 import br.mil.mar.casnav.mclm.persistence.services.DictionaryService;
+import br.mil.mar.casnav.mclm.persistence.services.NodeService;
 
 
 @WebListener
@@ -57,6 +59,11 @@ public class Startup implements ServletContextListener {
     		} catch ( NotFoundException e ) {
     			System.out.println("Nenhum registro encontrado na tabela de configuração.");
     		}
+    		
+    		
+    		NodeService ns = new NodeService();
+    		NodeData node = ns.getFeicaoRootNode();
+			Configurator.getInstance().setFeicaoRootNode( node );
     		
     		// Verifica novamente se todas as camadas estao com o dicionario carregado.
     		// Pode acontecer de no momento do cadastro da camada o link WMS esteja 

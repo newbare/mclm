@@ -84,7 +84,7 @@ public class SceneryTreeNode {
 		this.id = String.valueOf( sn.getId() );
 		this.text = this.layerAlias;
 		
-		if ( this.layerName == null || this.layerName.equals("") ) {
+		if ( ( this.layerName == null || this.layerName.equals("") ) && ( !this.layerType.equals("TXT") ) ) {
 			this.leaf = false;
 		} else {
 			this.leaf = true;
@@ -92,6 +92,7 @@ public class SceneryTreeNode {
 			if ( this.layerType.equals("WMS") ) this.iconCls = "wms-icon";
 			if ( this.layerType.equals("SHP") ) this.iconCls = "shp-icon";
 			if ( this.layerType.equals("TIF") ) this.iconCls = "tif-icon";
+			if ( this.layerType.equals("TXT") ) this.iconCls = "text-icon";
 			
 			if ( this.layerType.equals("FEI") ) {
 				try {

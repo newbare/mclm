@@ -1,7 +1,8 @@
 Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.trabalho',
-    textBoxes : 0,
+    
+    addingText : false,
     
     init : function(app) {
         this.control({
@@ -200,6 +201,14 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		    });
 			
 			
+		} else if ( data.layerType == 'TXT' ) { 
+		
+		    var menu_grid = new Ext.menu.Menu({ 
+		    	items: [
+		          { iconCls: 'delete-icon', text: 'Remover', handler: function() { me.askDeleteLayer( record ); } },
+		        ]
+		    });
+		
 		} else {    	
     	
 		    var menu_grid = new Ext.menu.Menu({ 
@@ -270,13 +279,36 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		    }
 		});      	
     },  
+
     
-    createText : function( center ) {
-    	this.textBoxes++;
-    	var qtd = this.textBoxes;
+    onFormClose : function() {
+    	var textBoxWindow = Ext.getCmp('textBoxWindow');
+    	textBoxWindow.close();
+    	this.addingText = false;
+    },
+    
+    onFormSubmit : function() {
+    	var boxDescription = Ext.getCmp('boxDescriptionId');
+    	var boxTitle = Ext.getCmp('boxTitleId');
+    	var textBoxWindow = Ext.getCmp('textBoxWindow');
+    	this.addingText = false;
+    	var center = textBoxWindow.boxCenter;
+    	
+    	textBoxWindow.close();
+    	if( (boxTitle.getValue() != '') && (boxDescription.getValue() != '') ) {
+    		this.createText( center, boxTitle.getValue(), boxDescription.getValue() );   
+    	}
+    	
+    },
+    
+    
+    createText : function( center, titulo, texto ) {
+    	MCLM.Globals.totalTextBoxes++;
+    	var qtd = MCLM.Globals.totalTextBoxes;
+    	
     	var divId = 'popup'+qtd;
     	
-    	var div = $('<div id="'+divId+'"></div>').addClass("popupText");
+    	var div = $('<div id="'+divId+'"></div>').addClass("popupArea");
     	$(document.body).append( div );
     	var domDiv = document.getElementById(divId);
     	
@@ -284,11 +316,25 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 			  element: domDiv,
 			  stopEvent: false,
 			  dragging: false,
-			  positioning: 'center-center',
+			  positioning: 'left-top',
+
+			  autoPan: true,
+			  autoPanAnimation: { duration: 250 },
+			  titulo : '',
+			  texto : '',
+				  			  
+			  
 		});
 		MCLM.Map.map.addOverlay(popup);    	
 		popup.setPosition( center );
-		domDiv.innerHTML = 'Este é um teste de caixa de texto.';   	
+		
+		popup.set('titulo', titulo);
+		popup.set('texto', texto)
+		
+		var boxDiv = '<div class="popupText"><div class="popupTitle">'+titulo+'</div>' + 
+		'<div class="popupContent">'+texto+'</div></div>';
+		
+		domDiv.innerHTML = boxDiv;   	
     	
 		var dragPan;
 		MCLM.Map.map.getInteractions().forEach(function(interaction){
@@ -298,11 +344,16 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		});
 
 		domDiv.addEventListener('mousedown', function(evt) {
-		  dragPan.setActive(false);
-		  popup.set('dragging', true);
-		  console.info('start dragging');
+			dragPan.setActive(false);
+			popup.set('dragging', true);
+			console.info('start dragging ' + popup.get('titulo') );
+			$(this).css('opacity','1');
 		});
 
+		domDiv.addEventListener('mouseup', function(evt) {
+			$(this).css('opacity','0.7');
+		});
+		
 		MCLM.Map.map.on('pointermove', function(evt) {
 			if (popup.get('dragging') === true) {
 				popup.setPosition(evt.coordinate);
@@ -311,46 +362,82 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 
 		MCLM.Map.map.on('pointerup', function(evt) {
 			if (popup.get('dragging') === true) {
-		    console.info('stop dragging');
-		    dragPan.setActive(true);
-		    popup.set('dragging', false);
-		  }
+			    dragPan.setActive(true);
+			    popup.set('dragging', false);
+			    console.info('stop dragging ' + popup.get('titulo') );
+			}
 		});		
 		
 		
-    	/*
-		var feature = new ol.Feature({
-			geometry: new ol.geom.Point( center )
-		});
 
-		var iconStyle = new ol.style.Style({
-			image: new ol.style.Icon(({
-				anchor: [0.5, 35],
-				anchorXUnits: 'fraction',
-				anchorYUnits: 'pixels',
-				opacity: 0.75,
-				src: 'img/information.png'
-			}))
-		});	
+		// Cria o no no cenario
 		
-		feature.setStyle( iconStyle );		
+		var serialId = "FE" + MCLM.Functions.guid().substring(1, 8);
+		var trabalhoTree = Ext.getCmp('trabalhoTree');
+		var root = trabalhoTree.getRootNode();		
 		
-		this.vectorSourceMarker.addFeature( feature );
-		*/
+		var newId = 0;
+		root.cascadeBy( function(n) { 
+			var temp = n.get('id');
+			if ( temp > newId ) newId = temp;
+		});
+		newId++;		
+		
+		var feicao = {};
+		feicao.nome = titulo;
+		feicao.descricao = texto;
+		feicao.geomType = 'POINT';
+		feicao.metadados = center.toString();
+		
+		var newNode =  root.appendChild({
+			   'id' : newId,
+			   'text' : titulo,
+			   'layerAlias' : titulo,
+			   'layerName' : titulo,
+			   'layerType' : 'TXT',
+			   'description' : texto,
+			   'readOnly' : false,
+			   'checked' : true,
+			   'selected' : true,
+			   'institute' : 'Criado pelo Usuário',
+			   'indexOrder' : 0,
+			   'iconCls' : 'text-icon',
+			   'leaf' : true,
+			   'idNodeParent' : 0,
+			   'serialId' : serialId,
+			   'idNodeData' : -1,
+			   'feicao' : feicao
+		});			
+
     },
     
     // Adiciona um texto em uma posição geográfica
     addTextToScenery : function() {
     	var me = this;
+
+    	MCLM.Map.unbindMapClick();
+    	if ( me.addingText ) {
+    		$("#painelCentral").css('cursor','default');
+    		me.addingText = false;
+    		return true;
+    	}
     	
-		MCLM.Map.unbindMapClick();
-		
 		$("#painelCentral").css('cursor','copy');
+		
+		me.addingText = true;
 		
 		MCLM.Map.onClickBindKey = MCLM.Map.map.on('click', function(event) {
 			var center = event.coordinate;
 			MCLM.Map.unbindMapClick();	
-			me.createText( center );
+			
+			var textBoxWindow = Ext.getCmp('textBoxWindow');
+			if( !textBoxWindow ) {
+				textBoxWindow = Ext.create('MCLM.view.trabalho.TextBoxWindow');
+			}
+			textBoxWindow.show();
+			textBoxWindow.boxCenter = center;
+			Ext.getCmp('boxTitleId').focus(true, 100);
+			
 		});    	
     	
     	
@@ -533,6 +620,9 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		var layerName = node.get('layerName');
 		var serialId = node.get('serialId' );
 		var layerType = node.get('layerType' );
+		
+		
+		console.log( node );
 		
 		if ( layerName == "" ) return;
 		
