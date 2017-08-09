@@ -29,7 +29,7 @@ Ext.define('MCLM.view.config.ConfigForm', {
             fieldLabel: 'Servidor de Mapa',
             width: 350,
             name: 'geoserverUrl',
-            allowBlank : false,
+            allowBlank : true,
             invalidText: 'Teste',
         },
         {

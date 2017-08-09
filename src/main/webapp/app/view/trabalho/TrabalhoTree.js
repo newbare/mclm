@@ -59,6 +59,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
         	iconCls: 'scenery-icon',
         	id: 'mngCenaryBtn',
             handler : 'loadScenery'
+        },{
+        	xtype: 'tbseparator'
+        },{
+        	iconCls: 'text-icon',
+        	id: 'adTextBtn',
+            handler : 'addTextToScenery'
         }]
     }],
         
@@ -100,6 +106,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		        target: 'svCenaryAsBtn',
 		        title: 'Salvar Cenário como...',
 		        text: 'Salva uma cópia do Cenário atual.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    }, {
+		        target: 'adTextBtn',
+		        title: 'Adicionar caixa de texto',
+		        text: 'Adiciona uma caixa de texto ao cenário.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    });			

@@ -441,7 +441,6 @@ Ext.define('MCLM.Map', {
 			me = MCLM.Map;
 			MCLM.Map.init();
 			MCLM.Map.initExternalLayers();
-			
 			// ===================================================
 			
 			MCLM.Map.map = new ol.Map({
@@ -532,6 +531,8 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.shipsHelper.init();
 			setInterval( MCLM.Map.updateMaritmTraffic , 300000); // 5 minutos			
 			
+			
+			MCLM.Map.createSceneryInfoLayer();
 		},
 		
 		initExternalLayers : function() {
@@ -798,22 +799,35 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Gera a camada-base
 		createBaseLayer : function() {
+			var landLayer = null;
 			
-			var landLayer = new ol.layer.Tile({
-			    source: new ol.source.TileWMS({
-			        url: MCLM.Map.geoserverUrl,
-			        isBaseLayer : true,
-			        projection: ol.proj.get('EPSG:4326'),
-			        params: {
-			            'LAYERS': MCLM.Map.baseLayerName, 
-			            'FORMAT': 'image/png8',
-	    	            'tiled': true,
-	    	            'antialias' : 'full',
-	    	            'VERSION': '1.3.0', 
-			            	
-			        }
-			    })
-			});	
+			// Se a URL do mapa base for nula, usa o OSM original como base.
+			if( ( !MCLM.Map.geoserverUrl ) || ( MCLM.Map.geoserverUrl == '' ) ) {
+				
+				landLayer = new ol.layer.Tile({
+					source: new ol.source.OSM()
+				});				
+				
+			} else {
+			
+				landLayer = new ol.layer.Tile({
+				    source: new ol.source.TileWMS({
+				        url: MCLM.Map.geoserverUrl,
+				        isBaseLayer : true,
+				        projection: ol.proj.get('EPSG:4326'),
+				        params: {
+				            'LAYERS': MCLM.Map.baseLayerName, 
+				            'FORMAT': 'image/png8',
+		    	            'tiled': true,
+		    	            'antialias' : 'full',
+		    	            'VERSION': '1.3.0', 
+				            	
+				        }
+				    })
+				});
+				
+			}
+			
 			landLayer.set('name', MCLM.Map.baseLayerName );
 			landLayer.set('alias', 'Camada Base' );
 			landLayer.set('serverUrl', MCLM.Map.geoserverUrl );
@@ -1724,6 +1738,22 @@ Ext.define('MCLM.Map', {
 			});
 		},
 		
+		createSceneryInfoLayer : function() {
+
+			/*
+			// Camada para os detalhes do cenario - texto / imagem
+			MCLM.Map.vectorSourceSceneryDetails = new ol.source.Vector();
+			MCLM.Map.vectorLayerSceneryDetails = new ol.layer.Vector({
+	            source : MCLM.Map.vectorSourceSceneryDetails
+	        });
+			MCLM.Map.vectorLayerSceneryDetails.set('name', 'sceneryDetails' );
+			MCLM.Map.vectorLayerSceneryDetails.set('alias', 'sceneryDetails' );
+			MCLM.Map.vectorLayerSceneryDetails.set('serialId', 'sceneryDetails' );
+			MCLM.Map.vectorLayerSceneryDetails.set('baseLayer', false );
+			MCLM.Map.vectorLayerSceneryDetails.set('ready', true );
+			MCLM.Map.map.addLayer( MCLM.Map.vectorLayerMarker );
+			*/
+		},
 		
 		// --------------------------------------------------------------------------------------------
 		// Liga o click do mouse no mapa com o metodo de consulta de camada

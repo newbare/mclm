@@ -1,6 +1,7 @@
 Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.trabalho',
+    textBoxes : 0,
     
     init : function(app) {
         this.control({
@@ -268,7 +269,95 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		    	}
 		    }
 		});      	
-    },    
+    },  
+    
+    createText : function( center ) {
+    	this.textBoxes++;
+    	var qtd = this.textBoxes;
+    	var divId = 'popup'+qtd;
+    	
+    	var div = $('<div id="'+divId+'"></div>').addClass("popupText");
+    	$(document.body).append( div );
+    	var domDiv = document.getElementById(divId);
+    	
+		var popup = new ol.Overlay({
+			  element: domDiv,
+			  stopEvent: false,
+			  dragging: false,
+			  positioning: 'center-center',
+		});
+		MCLM.Map.map.addOverlay(popup);    	
+		popup.setPosition( center );
+		domDiv.innerHTML = 'Este é um teste de caixa de texto.';   	
+    	
+		var dragPan;
+		MCLM.Map.map.getInteractions().forEach(function(interaction){
+			if (interaction instanceof ol.interaction.DragPan) {
+				dragPan = interaction;  
+		  }
+		});
+
+		domDiv.addEventListener('mousedown', function(evt) {
+		  dragPan.setActive(false);
+		  popup.set('dragging', true);
+		  console.info('start dragging');
+		});
+
+		MCLM.Map.map.on('pointermove', function(evt) {
+			if (popup.get('dragging') === true) {
+				popup.setPosition(evt.coordinate);
+			}
+		});
+
+		MCLM.Map.map.on('pointerup', function(evt) {
+			if (popup.get('dragging') === true) {
+		    console.info('stop dragging');
+		    dragPan.setActive(true);
+		    popup.set('dragging', false);
+		  }
+		});		
+		
+		
+    	/*
+		var feature = new ol.Feature({
+			geometry: new ol.geom.Point( center )
+		});
+
+		var iconStyle = new ol.style.Style({
+			image: new ol.style.Icon(({
+				anchor: [0.5, 35],
+				anchorXUnits: 'fraction',
+				anchorYUnits: 'pixels',
+				opacity: 0.75,
+				src: 'img/information.png'
+			}))
+		});	
+		
+		feature.setStyle( iconStyle );		
+		
+		this.vectorSourceMarker.addFeature( feature );
+		*/
+    },
+    
+    // Adiciona um texto em uma posição geográfica
+    addTextToScenery : function() {
+    	var me = this;
+    	
+		MCLM.Map.unbindMapClick();
+		
+		$("#painelCentral").css('cursor','copy');
+		
+		MCLM.Map.onClickBindKey = MCLM.Map.map.on('click', function(event) {
+			var center = event.coordinate;
+			MCLM.Map.unbindMapClick();	
+			me.createText( center );
+		});    	
+    	
+    	
+    	
+    },
+    
+    
     // Abre a janela de seleção de cenários para carregar um cenario para a area de trabalho.
     loadScenery : function() {
     	var sceneryStore = Ext.getStore('store.Scenery');
