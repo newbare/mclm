@@ -164,12 +164,9 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	
     	var data = node.data;
     	var layerAlias = data.layerAlias;
-    	
     	var dataLayer = data.dataLayer;
     	var feicao = data.feicao;
     	var wmsServer = data.server; 
-    	
-    	console.log( data );
     	
     	layerDetailWindow.setTitle( layerAlias );
     	

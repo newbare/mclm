@@ -33,8 +33,19 @@ public class Configurator {
 	private String apoloPassword;
 	private String apoloDatabaseName;
 	private String apoloDatabaseAddr;
-	private String apoloDatabasePort;	
+	private String apoloDatabasePort;
 	
+	private String aisApiKey;	
+	private String aisApiPass;	
+	
+	public String getAisApiKey() {
+		return aisApiKey;
+	}
+
+	public String getAisApiPass() {
+		return aisApiPass;
+	}
+
 	public String getApoloRESTAddress() {
 		return apoloRESTAddress;
 	}
@@ -252,6 +263,9 @@ public class Configurator {
 			apoloDatabaseName = getTagValue("apoloDatabaseName", mpElement);
 			apoloDatabaseAddr = getTagValue("apoloDatabaseAddr", mpElement);
 			apoloDatabasePort = getTagValue("apoloDatabasePort", mpElement);
+			
+			aisApiKey = getTagValue("aisApiKey", mpElement);
+			aisApiPass = getTagValue("aisApiPass", mpElement);
 			
 		} catch ( Exception e ) {
 			System.out.println( e.getMessage() );

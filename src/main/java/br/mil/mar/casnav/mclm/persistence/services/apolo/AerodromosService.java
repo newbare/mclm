@@ -11,7 +11,7 @@ public class AerodromosService extends BasicApoloService {
 	}
 
 	
-	public String getOrgMil( String idAerodromo, User user ) throws Exception {
+	public String getAerodromo( String idAerodromo, User user ) throws Exception {
 		
 		String token = user.getHashKey();
 		String idUser = user.getIdUser();

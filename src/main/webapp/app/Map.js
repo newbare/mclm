@@ -1863,8 +1863,8 @@ Ext.define('MCLM.Map', {
 				var idNodeData = layer.get("idNodeData");
 				var idDataWindow = layer.get("idDataWindow");
 				
-				console.log( layer );
-				console.log( idNodeData );
+				//console.log( layer );
+				//console.log( idNodeData );
 				
 				var found = false;
 				

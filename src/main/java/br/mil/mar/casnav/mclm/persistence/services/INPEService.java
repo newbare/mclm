@@ -80,6 +80,18 @@ public class INPEService {
 		JSONObject obj = XML.toJSONObject( result );
 		
 		return obj.toString();		
+	}
+
+
+	public String getWeatherAerodromo(String codigo)  throws Exception {
+		WebClient wc = new WebClient();
+		
+		String url = "http://servicos.cptec.inpe.br/XML/estacao/"+codigo+"/condicoesAtuais.xml";
+
+		String result = wc.doGet(url, "ISO-8859-1");
+		JSONObject obj = XML.toJSONObject( result );
+		
+		return obj.toString();	
 	}	
 	
 	

@@ -15,6 +15,10 @@
 		<apoloDatabasePort>5432</apoloDatabasePort>
 		<apoloDatabaseAddr>10.5.115.137</apoloDatabaseAddr>
 		<apoloDatabaseName>siglmd</apoloDatabaseName>
+		
+		<aisApiKey>2046730488</aisApiKey>
+		<aisApiPass>adc9f816-5cf6-11e7-a4c1-00505680c1b4</aisApiPass>
+		
 	</mclm>
 	
 </configuration>

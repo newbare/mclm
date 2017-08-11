@@ -14,6 +14,16 @@ body {
 	background: rgba(255, 255, 255, 0.4); 	
 }
 
+.aeroWeather {
+	font-size : 9px;
+	font-weight : bold;
+	margin-bottom : 5px;
+}
+
+.aeroWeather td {
+	border-bottom : 1px dotted #cacaca;
+	border-right:1px dotted #cacaca
+}
 
 .popupTitle {
 	border-bottom:1px dotted #cacaca;

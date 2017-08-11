@@ -2,6 +2,41 @@ Ext.define('MCLM.Functions', {
 
 	statics: {
 		countLog : 0,
+		
+		translateAerodromos : function( what ) {
+			var aeroWindow = {};
+			aeroWindow["id"] = "Identificador";
+			aeroWindow["sigla"] = "Sigla";
+			aeroWindow["nome"] = "Nome";
+			aeroWindow["logradouro"] = "Rua";
+			aeroWindow["numeroEnd"] = "Número";
+			aeroWindow["bairro"] = "Bairro";
+			aeroWindow["cep"] = "CEP";
+			aeroWindow["caractNotaveis"] = "Características";
+			aeroWindow["fonte"] = "Fonte";
+			aeroWindow["infoContato"] = "Contato";
+			aeroWindow["sumarioPistas"] = "Sumário";
+			aeroWindow["distancia"] = "Distância";
+			aeroWindow["orgControladora"] = "Controlador";
+			aeroWindow["listCapacidadesLogisticas"] = "Cap. Logísticas";
+			aeroWindow["listTiposCapacidadeLogistica"] = "Tipos Cap. Logística";
+			aeroWindow["anacSlotControlado"] = "anacSlotControlado";
+			aeroWindow["anacSituacaoAerodromo"] = "anacSituacaoAerodromo";
+			aeroWindow["anacLocalidade"] = "anacLocalidade";
+			aeroWindow["tipoNome"] = "Tipo";
+			aeroWindow["paisNome"] = "País";
+			aeroWindow["estadoNome"] = "Estado";
+			aeroWindow["anacAerodromoSituacaoAtualizacaoNome"] = "Sit. Nome";
+			aeroWindow["administracaoNome"] = "Administração";
+			aeroWindow["cidadeNome"] = "Cidade";
+			aeroWindow["anacAerodromoUtilizacaoNome"] = "Utilização";
+			
+			
+			
+			return aeroWindow[what];
+			
+		} ,
+				 
 	
 		syntaxHighlight : function(json) {
 		    if (typeof json != 'string') {
@@ -28,7 +63,7 @@ Ext.define('MCLM.Functions', {
 		showMetarImage : function( aeroporto ) {
 			var metarImageWindow = Ext.getCmp('metarImageWindow');
 			if ( !metarImageWindow ) {
-				metarImageWindow = Ext.create('MCLM.view.tools.MetarImageWindow');
+				metarImageWindow = Ext.create('MCLM.view.apolo.aerodromo.MetarImageWindow');
 			}
 			
 			var image = "<div style='background-color:#edeff2;border-bottom:1px dotted #cacaca;width:100%;height:45px'><img style='position:absolute;left:5px;top:2px;width: 220px;' src='img/clima/cptec/logocomp.gif'><img style='width: 50px;position:absolute;right:5px;top:2px;' src='img/clima/cptec/logo_cptec.png'></div>" + 
@@ -161,14 +196,125 @@ Ext.define('MCLM.Functions', {
 			return ctx.createPattern(cnv, 'repeat');
 		},	
 
-		showOrgMil : function( record ) {
-			console.log( record );
+		createOrgMilWindow : function( respText, record ) {
+			console.log( respText );
+			
+			var orgMilWindow = Ext.getCmp('orgMilWindow');
+			if( !orgMilWindow ) {
+				orgMilWindow = Ext.create('MCLM.view.apolo.orgmil.OrgMilWindow');
+			}
+			orgMilWindow.update( Ext.encode(respText) );
+			orgMilWindow.show();
+		},
+
+		createAerodromoWindow : function( sigla, data, record ) {
+			
+			var aerodromoWindow = Ext.getCmp('aerodromoWindow');
+			if( !aerodromoWindow ) {
+				aerodromoWindow = Ext.create('MCLM.view.apolo.aerodromo.AerodromoWindow');
+			}
+			
+			aerodromoWindow.codAerodromo = sigla;
+			
+			var image = "<div style='position:relative;background-color:#edeff2;border-bottom:1px dotted #cacaca;width:100%;height:45px'><img style='position:absolute;left:5px;top:2px;width: 220px;' src='img/clima/cptec/logocomp.gif'><img style='width: 50px;position:absolute;right:5px;top:2px;' src='img/clima/cptec/logo_cptec.png'></div>";
+			
+			
+			var table = "<table style='width:370px' class='dataWindow'>";
+		    for ( var key in data ) {
+		    	
+		        if ( data.hasOwnProperty( key ) ) {
+		        	var value = data[key];
+		        	if ( !value ) { 
+		        		value = "";
+		        	} 
+		        	var translatedKey = MCLM.Functions.translateAerodromos( key );
+		        	if ( translatedKey ) {
+			        	table = table + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + translatedKey + 
+							"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
+		        	}
+		        	
+		        } 
+		    }			
+		    table = table + "</table>";
+			
+		    var frame = "<iframe frameBorder='0' width='100%' height='100%' src='http://www.aisweb.aer.mil.br/_inc/iframe.cfm?pagina=rotaer&codigo=" + sigla + "'>" 
+			 
+			var content =  "<div style='witdt:100%;height:100%'>" + 
+				"<div style='width:380px;float:left;'>" + table + "</div>" +
+				"<div style='border-left:1px dotted #cacaca;width:385px;height:2000px;float:left;'>" +
+					image +
+					"<div id='aeroWeatherContent' style='border:0px;width:384px;height:65px'></div>" +
+					"<div style='border:0px;width:384px;height:2000px'>" + frame + "</div>" +
+				"</div>" + 
+			"</div>";
+
+			Ext.Ajax.request({
+				url: 'getWeatherAerodromo',
+				params: {
+					'codigo': sigla,
+				},       
+				success: function(response, opts) {
+					var respText = Ext.decode( response.responseText );
+					
+					if ( respText.metar ) {
+						var mtr = respText.metar;
+						
+						var att = mtr.atualizacao;
+						var pressao = mtr.pressao;
+						var temp = mtr.temperatura + " ºC";
+						var tempo = '<img style="width:60px;height:50px;" src="img/clima/cptec/'+ mtr.tempo + '.png">';
+						var tempoDesc = mtr.tempo_desc;
+						var umidade = mtr.umidade;
+						var ventoDir = mtr.vento_dir;
+						var ventoInt = mtr.vento_int;
+						var visibilidade = mtr.visibilidade.replace('>','&gt;').replace('<','&lt;');
+						
+						var metar = '<table class="aeroWeather" style="height:60px;width:100%">' +
+								'<tr><td rowspan="4">'+tempo+'</td><td>' + tempoDesc + '</td> <td>' + att +'</td></tr>' + 
+								'<tr><td>Temperatura: '+temp+'</td> <td>Pressão: '+ pressao +'</td></tr>' + 
+								'<tr><td>Umidade: '+umidade+'%</td> <td>Vento: '+ventoDir+'  '+ ventoInt +'</td></tr>' + 
+								'<tr><td colspan="3">Visibilidade: '+visibilidade+' metros</td> </tr>' + 
+								'</table>';
+						
+						$('#aeroWeatherContent').html( metar );
+					}
+					
+				},
+				failure: function(response, opts) {
+					Ext.Msg.alert('Erro','Erro ao receber dados de METAR.' );
+				}
+
+			});			    
+		    
+		    
+		    aerodromoWindow.show();		    
+		    var dataPanel = Ext.getCmp('dataPanel');
+		    dataPanel.update( content );
+		    
+		},
+		
+		
+		showAerodromo : function( record ) {
+
+			var sigla = null;
+			if ( record.hasOwnProperty( 'Sigla' ) ) {
+				sigla = record.Sigla;
+			} else {
+				sigla = record.sigla;				
+			}
+			
+			// TESTE
+			//var respText = {"id":58040160825162140000,"sigla":"SWIQ","nome":"Mina\u00e7u","pais":{"codigoPais":"BRA","nome":"BRASIL","continente":{"idContinente":3,"nome":"Am\u00e9rica do Sul","area":17757691,"linkWeb":"http://en.wikipedia.org/wiki/South_America","mapcolor":"#00FF00","geom":null,"versao":1374175227526,"emptyLinkWeb":false},"tipo":{"codigo":1,"nome":"Pais Soberano","ordem":1,"mapFields":{"mapColor":{"value":"CC9966","unformattedValue":"#CC9966"},"symbology":24,"geometryTypes":["Polygon"]},"handler":{},"newRecord":false,"hibernateLazyInitializer":{}},"regiao":{"idRegiao":18,"nome":"Am\u00e9rica do Sul","area":17757691,"linkWeb":"http://en.wikipedia.org/wiki/South_America","mapcolor":"#CCFFCC","geom":null,"versao":1374175229159,"emptyLinkWeb":false},"nomeLongoPais":"Brazil","nomeFormalPais":"Rep\u00fablica Federativa do Brasil","observacoes":null,"populacaoEstimada":198739269,"anoPopulacao":null,"area":8459420,"ultimoCenso":2010,"isoa2":"BR","isoa3":"BRA","ison3":"076","linkWeb":"http://en.wikipedia.org/wiki/Brazil; www.google.com.br","podeApagar":false,"versao":1435841340935,"linkWebList":["http://en.wikipedia.org/wiki/Brazil","http://www.google.com.br"],"ddi":"55","nomeAlternativo":null,"nomeEntidadeForDialogMessage":"o Pa\u00eds","emptyLinkWeb":false,"newVersion":false,"brasil":true,"fieldForDialogMessage":"BRASIL"},"estado":{"id":2927,"codigo":"BRA-GO","sigla":"GO","nome":"Goi\u00e1s","iso":"BR-GO","area":341247,"popEstimada":6004045,"observacao":null,"linkWeb":"http://pt.wikipedia.org/wiki/Goi%C3%A1s","versao":1374175264666,"linkWebList":["http://pt.wikipedia.org/wiki/Goi%C3%A1s"],"emptyLinkWeb":false},"cidade":{"idCidade":21644,"nome":"MINA\u00c7U","nomeAlternativo":null,"tipo":{"ordem":4,"idTipoCidades":4,"nome":"Cidade","mapFields":{"mapColor":{"value":"FF00FF","unformattedValue":"#FF00FF"},"mapsymbol":704,"symbol":null}},"populacao":31149,"observacao":null,"linkWeb":"http://cidades.ibge.gov.br/xtras/perfil.php?codmun=5213087","ddd":"62","versao":1374175799975,"distancia":0,"linkWebList":["http://cidades.ibge.gov.br/xtras/perfil.php?codmun=5213087"],"codEstado":2927,"codPais":"BRA","handler":{},"emptyLinkWeb":false,"newRecord":false,"hibernateLazyInitializer":{}},"logradouro":null,"numeroEnd":null,"bairro":null,"cep":null,"caractNotaveis":null,"fonte":null,"infoContato":null,"sumarioPistas":null,"linkWeb":null,"dhCriacao":1472142099016,"versao":1472142099030,"tipo":{"codigo":"AER","nome":"Aeroporto","ordem":1,"mapFields":{"mapColor":{"value":"0000FF","unformattedValue":"#0000FF"},"mapsymbol":473,"symbol":null},"label":"Aeroporto","newRecord":false,"id":"AER"},"orgControladora":null,"distancia":0,"linkWebList":[],"mapFields":{"mapColor":{"value":"0000FF","unformattedValue":"#0000FF"},"mapsymbol":473,"symbol":null},"listCapacidadesLogisticas":[],"listTiposCapacidadeLogistica":[],"anacSlotControlado":false,"anacSituacaoAerodromo":"A","anacAerodromoUtilizacao":{"codigo":"R","nome":"Reservado"},"anacLocalidade":"N","anacAerodromoSituacaoAtualizacao":{"codigo":"A","nome":"A - N\u00e3o Informado"},"nomeEntidadeForDialogMessage":"o Aer\u00f3dromo","emptyLinkWeb":true,"fieldForDialogMessage":"Mina\u00e7u","emptyOrgControladora":true,"newRecord":false}
+			//MCLM.Functions.createAerodromoWindow( sigla, respText, record );
+			//return true;
+			// -------------------------
+			
 			
 			
 			Ext.Ajax.request({
-				url: 'apoloGetOM',
+				url: 'apoloGetAerodromo',
 				params: {
-					'orgid': '58040130101020005361',
+					'codigo': sigla,
 				},       
 				success: function(response, opts) {
 					
@@ -177,11 +323,7 @@ Ext.define('MCLM.Functions', {
 					if ( respText.error ) {
 						Ext.Msg.alert('Erro', respText.msg );
 					} else {
-						
-						console.log( respText );
-						Ext.Msg.alert('Sucesso', 'Dados recebidos, mas a janela não foi implementada ainda.' );
-						
-						// MCLM.Functions.createOrgMilWindow( respText, record );
+						MCLM.Functions.createAerodromoWindow( sigla, respText, record );
 					}
 
 				},
@@ -191,6 +333,31 @@ Ext.define('MCLM.Functions', {
 
 			});				
 			
+		},
+		
+		showOrgMil : function( record ) {
+			
+			Ext.Ajax.request({
+				url: 'apoloGetOM',
+				params: {
+					'orgid': record.id,
+				},       
+				success: function(response, opts) {
+					
+					var respText = Ext.decode( response.responseText );
+
+					if ( respText.error ) {
+						Ext.Msg.alert('Erro', respText.msg );
+					} else {
+						MCLM.Functions.createOrgMilWindow( respText, record );
+					}
+
+				},
+				failure: function(response, opts) {
+					Ext.Msg.alert('Erro','Erro ao receber dados.' );
+				}
+
+			});				
 			
 		},
 		
@@ -198,7 +365,7 @@ Ext.define('MCLM.Functions', {
 			
 			/*
 				public enum WindowType {
-					ORGMIL, DEFAULT
+					ORGMIL, DEFAULT, AERODROMO
 				}			
 			*/
 			
@@ -215,6 +382,12 @@ Ext.define('MCLM.Functions', {
 				return true;
 			}
 
+			if ( record.window_type == 'AERODROMO' ) {
+				MCLM.Functions.showAerodromo( record );
+				return true;
+			}
+			
+			
 			if ( record.data_window == -1 ) {
 				Ext.Msg.alert('Janela de Dados não encontrada','Não há janela de dados cadastrada para esta camada.' );
 				return true;
