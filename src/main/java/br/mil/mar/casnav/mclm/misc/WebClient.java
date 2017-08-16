@@ -263,7 +263,8 @@ public class WebClient {
 		int proxyPort = cfg.getProxyPort();
 
 		if ( !useProxy ) {
-			httpClient = HttpClientBuilder.create().build();
+			RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(30 * 1000).build();
+			httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 			getRequest = new HttpGet(url);
 		} else {
 			CredentialsProvider credsProvider = new BasicCredentialsProvider();
@@ -278,6 +279,7 @@ public class WebClient {
 			getRequest.setConfig(config);			 
 		}
 		
+		//conn.setConnectTimeout( 240000 );
 		getRequest.addHeader("accept", "application/json");
 		getRequest.addHeader("Content-Type", "plain/text; charset=" + charset );
 		getRequest.setHeader("User-Agent", USER_AGENT);
