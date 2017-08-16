@@ -309,8 +309,6 @@ Ext.define('MCLM.Functions', {
 			//return true;
 			// -------------------------
 			
-			
-			
 			Ext.Ajax.request({
 				url: 'apoloGetAerodromo',
 				params: {
