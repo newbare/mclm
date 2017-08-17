@@ -44,6 +44,9 @@ public class DictionaryRepository extends BasicRepository {
 			IDao<NodeData> ndd = dfnd.getDao(this.session, NodeData.class);
 			NodeData node = null;
 			node = ndd.getDO( item.getNode().getIdNodeData() );
+			
+			item.setIndexOrder(99);
+			
 			item.setNode(node);
 		}
 		
