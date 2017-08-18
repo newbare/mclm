@@ -142,7 +142,7 @@ Ext.define('MCLM.RouteHelper', {
 			this.routeAsWKT = format.writeGeometry ( myMls );
 
 	    	var features = new ol.format.GeoJSON().readFeatures( route , {
-	    	    featureProjection: 'EPSG:3857'
+	    	    //featureProjection: 'EPSG:3857'
 	    	});	
 	    	
 	    	for (var i = 0; i < features.length; i++) {
@@ -450,7 +450,7 @@ Ext.define('MCLM.RouteHelper', {
  		    	   }
  		    	   
  		    	   var features = new ol.format.GeoJSON().readFeatures( respText , {
- 			    	    featureProjection: 'EPSG:3857'
+ 			    	    //featureProjection: 'EPSG:3857'
  		    	   });	
  			    	
  		    	   for (var i = 0; i < features.length; i++) {
@@ -499,9 +499,10 @@ Ext.define('MCLM.RouteHelper', {
 		getAsJson : function() {
 			var geojson  = new ol.format.GeoJSON();
 		    var features = this.vectorSource.getFeatures();
+		    
 		    var jsonData = geojson.writeFeatures( features,{
-                featureProjection: ol.proj.get('EPSG:3857'),
-                dataProjection: ol.proj.get('EPSG:4326')
+                //featureProjection: ol.proj.get('EPSG:3857'),
+                //dataProjection: ol.proj.get('EPSG:4326')
             });
 		    return jsonData;
 		}

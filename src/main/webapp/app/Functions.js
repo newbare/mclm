@@ -662,14 +662,14 @@ Ext.define('MCLM.Functions', {
 		exibeClima : function( data, record ) {
 			var objRecord = Ext.decode( record.mclm_metadata_property );
 			var features = new ol.format.GeoJSON().readFeatures( objRecord , {
-				featureProjection: 'EPSG:3857'
+				//featureProjection: 'EPSG:3857'
 			});			
 			
 			var theFeature = features[0];
 		    var aa = theFeature.getGeometry().getExtent();
 		    var center = ol.extent.getCenter(aa);			
 			
-	    	var center2 = ol.proj.transform( center , 'EPSG:3857', 'EPSG:4326');
+	    	var center2 = center;//ol.proj.transform( center , 'EPSG:3857', 'EPSG:4326');
 	    	lon = center2[0];
 	    	lat = center2[1];
 	    	

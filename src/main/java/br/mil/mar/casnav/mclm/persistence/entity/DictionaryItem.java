@@ -56,7 +56,9 @@ public class DictionaryItem {
 	}
 	
 	public DictionaryItem( ) {
-		// 
+		this.visible = true;
+		this.primaryKey = false;
+		this.indexOrder = 99;
 	}
 
 	public DictionaryItem(String columnName, String dataType, NodeData node) {

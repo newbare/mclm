@@ -114,6 +114,7 @@ public class DictionaryService {
 					}
 					
 					DictionaryItem di = new DictionaryItem( columnName, dataType, node );
+					di.setIndexOrder(99);
 					
 					newTransaction();
 					rep.insertItem( di );				

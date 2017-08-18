@@ -318,7 +318,9 @@ Ext.define('MCLM.Map', {
     	   }
     	   
     	   var center = MCLM.Map.map.getView().getCenter();
-    	   var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
+    	   //var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
+    	   var center2 = center;
+    	   
     	   lon = center2[0];
     	   lat = center2[1];
     	   zoom = MCLM.Map.map.getView().getZoom();			
@@ -333,14 +335,13 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.unbindMapClick();
 			MCLM.Map.queryLocationEnabled = true;
 			$("#painelCentral").css('cursor','help');
+			
 			MCLM.Map.onClickBindKey = MCLM.Map.map.on('click', function(event) {
-				var center = ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326');
+				//var center = ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326');
+				var center = event.coordinate;
 				var lat = center[1];
 				var lon = center[0];
-				
-				
 				MCLM.Map.getWeatherFromLocation( lat, lon );
-				
 			});
 			
 		},
@@ -746,10 +747,12 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.arrayMapCenter = JSON.parse("[" + MCLM.Map.mapCenter + "]");
 
 			MCLM.Map.theView = new ol.View({
-				center: ol.proj.transform( MCLM.Map.arrayMapCenter, 'EPSG:4326', 'EPSG:3857'),
+				//center: ol.proj.transform( MCLM.Map.arrayMapCenter, 'EPSG:4326', 'EPSG:3857'),
+				center: MCLM.Map.arrayMapCenter,
 				zoom: MCLM.Map.mapZoom,
 			    minZoom: 2,
-			    maxZoom: 19				
+			    maxZoom: 19,
+			    projection: 'EPSG:4326',
 			});	
 			
 			
@@ -935,7 +938,10 @@ Ext.define('MCLM.Map', {
 		// Atualiza algumas coisas quando o mapa eh arrastado ou o zoom muda
 		updateMapCenter : function() {
 			var center = MCLM.Map.map.getView().getCenter();
-			var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
+			
+			//var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
+			var center2 = center;
+			
 			mapCenterLong = center2[0];
 			mapCenterLat = center2[1];
 			mapZoom = MCLM.Map.map.getView().getZoom();
@@ -952,7 +958,10 @@ Ext.define('MCLM.Map', {
 		// Retorna o centro do mapa
 		getMapCenter : function() {
 			var center = MCLM.Map.map.getView().getCenter();
-			var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
+			//var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
+			var center2 = center;
+			
+			
 			mapCenterLong = center2[0];
 			mapCenterLat = center2[1];
 			return mapCenterLong + "," + mapCenterLat;
@@ -1216,7 +1225,7 @@ Ext.define('MCLM.Map', {
 			
 			// Carregas as features
 	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr.data, {
-	    	    featureProjection: 'EPSG:3857'
+	    	    //featureProjection: 'EPSG:3857'
 	    	});		   	
 		   	
 	    	// Cria um source para as features
@@ -1600,9 +1609,15 @@ Ext.define('MCLM.Map', {
 		// Retorna o bounding box atual do mapa
 		getMapCurrentBbox : function () {
 			var extent = MCLM.Map.map.getView().calculateExtent( MCLM.Map.map.getSize() );
-		    var bottomLeft = ol.proj.transform( ol.extent.getBottomLeft( extent ), 'EPSG:3857', 'EPSG:4326' );
-		    var topRight = ol.proj.transform( ol.extent.getTopRight( extent ), 'EPSG:3857', 'EPSG:4326' );
-			return bottomLeft + "," + topRight;
+
+			//var bottomLeft = ol.proj.transform( ol.extent.getBottomLeft( extent ), 'EPSG:3857', 'EPSG:4326' );
+		    //var topRight = ol.proj.transform( ol.extent.getTopRight( extent ), 'EPSG:3857', 'EPSG:4326' );
+
+		    var bottomLeft = ol.extent.getBottomLeft( extent );
+		    var topRight = ol.extent.getTopRight( extent );
+		    
+		    
+		    return bottomLeft + "," + topRight;
 		},
 		// --------------------------------------------------------------------------------------------
 		// Retorna a URL para pegar a imagem PNG de uma camada 'layerName' do servidor 'serviceUrl'
@@ -1646,7 +1661,8 @@ Ext.define('MCLM.Map', {
 		// --------------------------------------------------------------------------------------------
 		// Interroga o servidor de rotas para saber quais ruas estão mais perto do ponto clicado pelo usuário
 		getNearestRoads : function( center, type ) {
-			var coordinate = ol.proj.transform( center , 'EPSG:3857', 'EPSG:4326');			
+			//var coordinate = ol.proj.transform( center , 'EPSG:3857', 'EPSG:4326');			
+			var coordinate = center;			
 			
 			Ext.Ajax.request({
 		       url: 'getNearestRoads',
@@ -2145,7 +2161,9 @@ Ext.define('MCLM.Map', {
 			var coord = center.split(",");
 			var lat = Number( coord[0].trim() );
 			var lon = Number( coord[1].trim() );
-			var coordinate = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');
+			
+			//var coordinate = ol.proj.transform([lat, lon], 'EPSG:4326', 'EPSG:3857');
+			var coordinate = center;
 			
 			MCLM.Map.theView.animate({
 				  zoom		: zoom,

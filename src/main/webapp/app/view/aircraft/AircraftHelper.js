@@ -332,7 +332,7 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
             	
             	//console.log( feicao );
 				var features = new ol.format.GeoJSON().readFeatures( feicao , {
-					featureProjection: 'EPSG:3857'
+					//featureProjection: 'EPSG:3857'
 				});
 				
 				me.deleteAircrafts();

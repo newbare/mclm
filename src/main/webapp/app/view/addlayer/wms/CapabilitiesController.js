@@ -182,7 +182,9 @@ Ext.define('MCLM.view.addlayer.wms.CapabilitiesController', {
     	
     	
     	var previewView = new ol.View({
-            center: ol.proj.transform([-55.37109375,-17.39257927105777], 'EPSG:4326', 'EPSG:3857'),
+            //center: ol.proj.transform([-55.37109375,-17.39257927105777], 'EPSG:4326', 'EPSG:3857'),
+            center: [-55.37109375,-17.39257927105777],
+            projection: 'EPSG:4326',
             zoom: 3
         })	
     	
