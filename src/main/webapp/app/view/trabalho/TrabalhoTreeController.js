@@ -59,12 +59,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     onLayerTreeItemClick : function( view, record, item, index, e ) {
     	//
     },
-    // Limpa a área de trabalho
+    // Limpa  Cenário
     doClearWorkspace : function() {
     	var me = this;
 		var tree = Ext.getCmp('trabalhoTree');
 		var root = tree.getRootNode();
-		root.set("text","Área de Trabalho");
+		root.set("text","Cenário");
 		//root.set("checked",false);
 		
     	var painelEsquerdo = Ext.getCmp('painelesquerdo');
@@ -99,10 +99,10 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		
 		
     },
-    // Pergunta se deseja limpar a área de trabalho
+    // Pergunta se deseja limpar o Cenário
     clearWorkspace : function() {
     	var me = this;
-		Ext.Msg.confirm('Limpar Área de Trabalho', 'Deseja realmente limpar a Área de trabalho? As alterações não gravadas serão perdidas.', function( btn ){
+		Ext.Msg.confirm('Limpar Cenário', 'Deseja realmente limpar o Cenário? As alterações não gravadas serão perdidas.', function( btn ){
 			   if( btn === 'yes' ){
 				   me.doClearWorkspace();
 			   } else {

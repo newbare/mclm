@@ -138,7 +138,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			
 			    var menu_grid = new Ext.menu.Menu({ 
 			    	items: [
-					  { iconCls: 'add-scenery-icon', text: 'Copiar para Área de Trabalho', handler: function() { me.addToScenery(record); } },
+					  { iconCls: 'add-scenery-icon', text: 'Copiar para Cenário', handler: function() { me.addToScenery(record); } },
 					  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
 					  { iconCls: 'copy-dictionary-icon', text: 'Copiar Dicionário para Camadas de Mesma Origem', handler: function() { me.copyDictionary(record); } },
 					  { iconCls: 'datawindow-icon', text: 'Criar Janela de Dados', handler: function() { me.configDataWindow(record); } },

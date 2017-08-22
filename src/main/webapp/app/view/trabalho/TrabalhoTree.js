@@ -87,7 +87,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 			}, {
 		        target: 'svWsBtn',
 		        title: 'Salvar',
-		        text: 'Salva o conteúdo da área de trabalho / Cenário.',
+		        text: 'Salva o Cenário.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }, {
@@ -98,8 +98,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		        dismissDelay: 5000 
 		    }, {
 		        target: 'clrWsBtn',
-		        title: 'Limpar Área de trabalho',
-		        text: 'Limpa a Área de Trabalho. As modificações não gravadas no cenário atual serão perdidas.',
+		        title: 'Limpar Cenário',
+		        text: 'Limpa o Cenário. As modificações não gravadas no cenário atual serão perdidas.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }, {

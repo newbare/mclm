@@ -36,7 +36,7 @@ Ext.define('MCLM.store.TrabalhoTree', {
     plugins: [{  ptype: 'treefilter', allowParentFolders: true }],
     
     root: {
-        text: 'Área de Trabalho',
+        text: 'Cenário',
         id: 0,
         index:0,
         description : 'Raiz'
