@@ -10,7 +10,7 @@ Ext.define('MCLM.view.apolo.orgmil.OrgMilWindow', {
       'MCLM.view.apolo.orgmil.OrgMilController',
 	],		
 	
-	controller : 'aerodromoController',
+	controller : 'orgMilController',
 	
 	bodyPadding: 0,
 	width : 800,

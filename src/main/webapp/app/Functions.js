@@ -344,7 +344,7 @@ Ext.define('MCLM.Functions', {
 				},       
 				success: function(response, opts) {
 					
-					console.log( response );
+					console.log( response.responseText );
 					
 					var respText = Ext.decode( response.responseText );
 
