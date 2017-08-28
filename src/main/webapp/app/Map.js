@@ -429,7 +429,7 @@ Ext.define('MCLM.Map', {
 		},
 		toWorld : function() {
 			var map = MCLM.Map.map;
-			MCLM.Map.map.getView().fit([-16716960.433033716, -7413397.061675084, 23358056.252544772, 10745594.873977667]);	
+			MCLM.Map.map.getView().fit([-90, -180, 90,180]);	
 		},
 		getCenterHDMS : function() {
 			var center = MCLM.Map.map.getView().getCenter();

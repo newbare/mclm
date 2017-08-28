@@ -12,19 +12,18 @@ Ext.define('MCLM.view.apolo.orgmil.OrgMilWindow', {
 	
 	controller : 'orgMilController',
 	
-	bodyPadding: 0,
-	width : 800,
+	
+	width : 850,
 	height: 500,
 	layout : 'border',
-    frame : false,
+	resizable: false,
+	scrollable: false,
+
+	frame : false,
     constrain: true,
     bodyStyle:"background:#FFFFFF;",
     renderTo: Ext.getBody(),
-	resizable: false,
-    
-    
-    renderTo: Ext.getBody(),
-	
+	bodyPadding: 0,
 	
     items: [{
         xtype: 'orgMilTabContainer'

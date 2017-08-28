@@ -3,41 +3,6 @@ Ext.define('MCLM.Functions', {
 	statics: {
 		countLog : 0,
 		
-		translateAerodromos : function( what ) {
-			var aeroWindow = {};
-			aeroWindow["id"] = "Identificador";
-			aeroWindow["sigla"] = "Sigla";
-			aeroWindow["nome"] = "Nome";
-			aeroWindow["logradouro"] = "Rua";
-			aeroWindow["numeroEnd"] = "Número";
-			aeroWindow["bairro"] = "Bairro";
-			aeroWindow["cep"] = "CEP";
-			aeroWindow["caractNotaveis"] = "Características";
-			aeroWindow["fonte"] = "Fonte";
-			aeroWindow["infoContato"] = "Contato";
-			aeroWindow["sumarioPistas"] = "Sumário";
-			aeroWindow["distancia"] = "Distância";
-			aeroWindow["orgControladora"] = "Controlador";
-			aeroWindow["listCapacidadesLogisticas"] = "Cap. Logísticas";
-			aeroWindow["listTiposCapacidadeLogistica"] = "Tipos Cap. Logística";
-			aeroWindow["anacSlotControlado"] = "anacSlotControlado";
-			aeroWindow["anacSituacaoAerodromo"] = "anacSituacaoAerodromo";
-			aeroWindow["anacLocalidade"] = "anacLocalidade";
-			aeroWindow["tipoNome"] = "Tipo";
-			aeroWindow["paisNome"] = "País";
-			aeroWindow["estadoNome"] = "Estado";
-			aeroWindow["anacAerodromoSituacaoAtualizacaoNome"] = "Sit. Nome";
-			aeroWindow["administracaoNome"] = "Administração";
-			aeroWindow["cidadeNome"] = "Cidade";
-			aeroWindow["anacAerodromoUtilizacaoNome"] = "Utilização";
-			
-			
-			
-			return aeroWindow[what];
-			
-		} ,
-				 
-	
 		syntaxHighlight : function(json) {
 		    if (typeof json != 'string') {
 		         json = JSON.stringify(json, undefined, 2);
@@ -181,32 +146,112 @@ Ext.define('MCLM.Functions', {
 			ctx.globalAlpha = color[3];
 			ctx.fillStyle = newColor;
 
-			// Comprimento nao pode ser maior que a dist H ou V.
-			/*
-			if ( (ptrLength > ptrHDist) || (ptrLength > ptrVDist) ) {
-				// Iguala o comprimento a maior distancia
-				if ( (ptrVDist > ptrHDist) ) ptrLength = prtVDist;
-				if ( (ptrHDist > ptrVDist) ) ptrLength = prtHDist;
-			}
-			 */
-
 			for(var i = 0; i < ptrLength; ++i) {
 				ctx.fillRect(i, i, ptrWidth, ptrHeight);
 			}
 			return ctx.createPattern(cnv, 'repeat');
 		},	
+		
+		getTableFromObject : function( data, theTitle ) {
+		
+			var x = Math.floor( Object.keys(data).length / 2 ) + 1;
+			var y = 0;
+			var table1 = "<table style='width:100%' class='dataWindow'>";
+			var table2 = "<table style='width:100%' class='dataWindow'>";			
+			
+		    for ( var key in data ) {
+		    	
+		        if ( data.hasOwnProperty( key ) ) {
+		        	var value = data[key];
+		        	if ( !value ) { 
+		        		value = "";
+		        	}
+		        	
+		        	if ( value === Object(value) ) {
+		        		x--;
+		        	} else {	
+		        	
+			        	if ( y < x ) {
+				        	table1 = table1 + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
+								"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
+			        	} else {
+				        	table2 = table2 + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
+							"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
+			        	}
+			        	y++;
+		        	
+		        	}
+		        	
+		        } 
+		    }		
+		    
+		    table1 = table1 + "</table>";
+		    table2 = table2 + "</table>";
+			var theContent = "<div style='float:left;width: 50%;'>"+table1+"</div><div style='float:left;width: 50%;'>" +table2+"</div>";  
+					
+			var theTab = {
+			title: theTitle,
+		    bodyPadding: '0',
+			items:[{
+		        xtype: 'panel',
+		        padding: '5',
+		        layout:'fit',
+		        html : theContent
+		    }]};    
 
-		createOrgMilWindow : function( respText, record ) {
-			console.log( respText );
+			return theTab;
+		},
+
+		createOrgMilWindow : function( data, record ) {
+			console.log( data );
 			
 			var orgMilWindow = Ext.getCmp('orgMilWindow');
 			if( !orgMilWindow ) {
 				orgMilWindow = Ext.create('MCLM.view.apolo.orgmil.OrgMilWindow');
 			}
 			
-			//orgMilWindow.update( Ext.encode(respText) );
+			var x = Math.floor( Object.keys(data).length / 2 ) + 1;
+			var y = 0;
+			var table1 = "<table style='width:100%' class='dataWindow'>";
+			var table2 = "<table style='width:100%' class='dataWindow'>";
+			
+		    for ( var key in data ) {
+		    	
+		        if ( data.hasOwnProperty( key ) ) {
+		        	var value = data[key];
+		        	if ( !value ) { 
+		        		value = "";
+		        	}
+		        	
+		        	if ( value === Object(value) ) {
+		        		x--;
+		        		var title = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+		        		var theTab = MCLM.Functions.getTableFromObject( value, title );
+		        		Ext.getCmp('orgMilTabContainer').add( theTab );
+		        	} else {	
+		        	
+			        	if ( y < x ) {
+				        	table1 = table1 + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
+								"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
+			        	} else {
+				        	table2 = table2 + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
+							"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
+			        	}
+			        	y++;
+		        	
+		        	}
+		        	
+		        } 
+		    }		
+		    
+		    table1 = table1 + "</table>";
+		    table2 = table2 + "</table>";
+			var theContent = "<div style='float:left;width: 50%;'>"+table1+"</div><div style='float:left;width: 50%;'>" +table2+"</div>";  
 			
 			orgMilWindow.show();
+			
+			Ext.getCmp('tab1').update(theContent);
+			
 		},
 
 		createAerodromoWindow : function( sigla, data, record ) {
@@ -228,12 +273,10 @@ Ext.define('MCLM.Functions', {
 		        	var value = data[key];
 		        	if ( !value ) { 
 		        		value = "";
-		        	} 
-		        	var translatedKey = MCLM.Functions.translateAerodromos( key );
-		        	if ( translatedKey ) {
-			        	table = table + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + translatedKey + 
-							"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
 		        	}
+		        	
+		        	table = table + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
+						"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
 		        	
 		        } 
 		    }			
@@ -336,6 +379,11 @@ Ext.define('MCLM.Functions', {
 		},
 		
 		showOrgMil : function( record ) {
+			// -------------------------------- SOMENTE TESTE :: APAGAR -------------------------------------------------------
+			var respText = {"catOrg":"M","sigla":"4º BEC","nome":"4º Batalhão de Engenharia de Construção","pais":{"codigoPais":"BRA","nome":"BRASIL","continente":{"idContinente":3,"nome":"América do Sul","area":17757691,"linkWeb":"http://en.wikipedia.org/wiki/South_America","mapcolor":"#00FF00","versao":1374175227526},"tipo":{"codigo":1,"nome":"Pais Soberano","ordem":1,"mapFields":{"mapColor":{"value":"CC9966","unformattedValue":"#CC9966"},"symbology":24,"geometryTypes":["Polygon"]}},"regiao":{"idRegiao":18,"nome":"América do Sul","area":17757691,"linkWeb":"http://en.wikipedia.org/wiki/South_America","mapcolor":"#CCFFCC","versao":1374175229159},"nomeLongoPais":"Brazil","nomeFormalPais":"República Federativa do Brasil","observacoes":null,"populacaoEstimada":198739269,"anoPopulacao":null,"area":8459420,"ultimoCenso":2010,"isoa2":"BR","isoa3":"BRA","ison3":"076","linkWeb":"http://en.wikipedia.org/wiki/Brazil; www.google.com.br","versao":1435841340935,"linkWebList":["http://en.wikipedia.org/wiki/Brazil","http://www.google.com.br"],"ddi":"55","nomeAlternativo":null,"brasil":true},"estado":{"id":3550,"codigo":"BRA-BA","sigla":"BA","nome":"Bahia","iso":"BR-BA","area":560049,"popEstimada":14021432,"observacao":null,"linkWeb":"http://pt.wikipedia.org/wiki/Bahia","versao":1374175264666,"linkWebList":["http://pt.wikipedia.org/wiki/Bahia"]},"cidade":{"idCidade":9477,"nome":"BARREIRAS","nomeAlternativo":null,"tipo":{"ordem":4,"idTipoCidades":4,"nome":"Cidade"},"populacao":137428,"observacao":null,"linkWeb":"http://cidades.ibge.gov.br/xtras/perfil.php?codmun=2903201","ddd":"77","versao":1374175799975,"distancia":0.0,"linkWebList":["http://cidades.ibge.gov.br/xtras/perfil.php?codmun=2903201"],"codEstado":3550,"codPais":"BRA"},"logradouro":"RODOVIA BR 020/242 - KM 6","complemento":"incluído no logradouro","numeroEnd":"incluído no logradouro","bairro":"Boa Vista","cep":"47800000","caractNotaveis":null,"observacao":null,"dhCriacao":1378922240197,"versao":1500461006909,"usinaSaude":null,"distancia":0.0,"associations":{"listUsina":[],"acordosAdministrativos":[],"servicos":[],"produtos":[],"instalacoes":[],"instalacoesTelecomunicacao":[],"ramosAtividade":[],"contatos":[],"listSolicitacoes":[],"telefones":[],"funcoesLogisticas":[],"capacidadesLogisticas":[],"itemSuprimentoDistribuicao":[],"principalContato":null},"codigoUgr":null,"cnpj":null,"codemp":null,"codSiscaped":null,"catCodOrgMil":"MIL","codom":"3608","comandante":null,"designacao":null,"subordinacao":null,"tipo":{"codigo":"ENG","nome":"Engenharia","operativa":true,"logistica":false,"ordem":12,"nivel":4,"mapFields":{"mapColor":{"value":"008000","unformattedValue":"#008000"},"mapsymbol":0,"symbol":null}},"omSolicitanteLog":false,"forca":{"idForca":2,"sigla":"EB","nome":"Exército Brasileiro","aeronautica":false,"marinha":false,"exercito":true},"efetivoOf":null,"efetivoPr":null,"dhUltimoProcessamento":1500461006894,"comImSup":null,"comImTec":null,"itemLabel":"4º BEC","orgMilEidn":null,"operativa":false,"orgMilOperativa":{"orgid":58040130101020005355,"omProntoEmprego":false,"dhStatus":null,"situacaoOperacional":"OPE","descricao":null,"dhPosicao":null,"dhValidadePosicao":null,"indicativo":null,"posicaoAtual":null,"renderPosicao":false,"mapFields":{"mapColor":{"value":"008000","unformattedValue":"#008000"},"mapsymbol":0,"symbol":null},"geom":null},"usinaOrRefinaria":false,"typeOfUsina":false,"typeOfRefinaria":false,"typeOfEstabSaude":false,"typeOfUsinaSaude":false,"emptyLinkWeb":true};
+			MCLM.Functions.createOrgMilWindow( respText, record );
+			return true;
+			// ----------------------------------------------------------------------------------------------------------------
 			
 			Ext.Ajax.request({
 				url: 'apoloGetOM',
@@ -347,7 +395,7 @@ Ext.define('MCLM.Functions', {
 					console.log( response.responseText );
 					
 					var respText = Ext.decode( response.responseText );
-
+					
 					if ( respText.error ) {
 						Ext.Msg.alert('Erro', respText.msg );
 					} else {
@@ -371,13 +419,6 @@ Ext.define('MCLM.Functions', {
 				}			
 			*/
 			
-			if ( record.window_type == 'DEFAULT' ) {
-				MCLM.Functions.createSimpleDataWindow( layerName, record );
-				MCLM.Functions.mainLog("Janela de Features criada.");
-				return true;
-			}
-			
-			
 			// update node_data set windowtype = 'ORGMIL' where layername = 'view_org_mil'
 			if ( record.window_type == 'ORGMIL' ) {
 				MCLM.Functions.showOrgMil( record );
@@ -389,40 +430,45 @@ Ext.define('MCLM.Functions', {
 				return true;
 			}
 			
-			
-			if ( record.data_window == -1 ) {
-				Ext.Msg.alert('Janela de Dados não encontrada','Não há janela de dados cadastrada para esta camada.' );
-				return true;
-			}
 
-			MCLM.Functions.showMainLoadingIcon();
-			MCLM.Functions.mainLog("Requisitando dados complementares da janela...");
+			if ( record.window_type == 'DEFAULT' ) {
 
-			Ext.Ajax.request({
-				url: 'getDataWindow',
-				params: {
-					'data': Ext.encode( record ),
-				},       
-				success: function(response, opts) {
-					MCLM.Functions.hideMainLoadingIcon();
-					var respText = Ext.decode(response.responseText);
-
-					if ( respText.error ) {
-						Ext.Msg.alert('Erro', respText.msg );
-					} else {
-						MCLM.Functions.createDataWindow( respText, record );
-						MCLM.Functions.mainLog("Janela recebida: " + respText.windowName);
-					}
-
-				},
-				failure: function(response, opts) {
-					MCLM.Functions.hideMainLoadingIcon();
-					Ext.Msg.alert('Erro','Erro ao receber dados.' );
+				// Tipo DEFAULT pode ter custom datawindow ou não.
+				
+				if ( record.data_window == -1 ) {
+					MCLM.Functions.createSimpleDataWindow( layerName, record );
+					MCLM.Functions.mainLog("Janela de Features criada.");
+					return true;
 				}
-
-			});			
+	
+				MCLM.Functions.showMainLoadingIcon();
+				MCLM.Functions.mainLog("Requisitando dados complementares da janela...");
+	
+				Ext.Ajax.request({
+					url: 'getDataWindow',
+					params: {
+						'data': Ext.encode( record ),
+					},       
+					success: function(response, opts) {
+						MCLM.Functions.hideMainLoadingIcon();
+						var respText = Ext.decode(response.responseText);
+	
+						if ( respText.error ) {
+							Ext.Msg.alert('Erro', respText.msg );
+						} else {
+							MCLM.Functions.createDataWindow( respText, record );
+							MCLM.Functions.mainLog("Janela recebida: " + respText.windowName);
+						}
+	
+					},
+					failure: function(response, opts) {
+						MCLM.Functions.hideMainLoadingIcon();
+						Ext.Msg.alert('Erro','Erro ao receber dados.' );
+					}
+	
+				});			
 			
-			
+			}			
 		},	
 		
 		showImages : function( imageList ) {
@@ -501,7 +547,6 @@ Ext.define('MCLM.Functions', {
 			content = content + "</table>";
 			
 			var dataTabPanel = Ext.create('Ext.Panel', {
-				//layout: 'fit',
 				width : 525,
 				border: false,
 				bodyPadding: 2,

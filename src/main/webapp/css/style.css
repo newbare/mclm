@@ -390,6 +390,12 @@ body {
 	background-repeat: no-repeat;
 }
 
+.redo-dictionary-icon {
+	background-image: url('../img/redo-dict.svg') !important;
+	background-repeat: no-repeat;
+}
+
+
 .cloud-icon {
 	background-image: url('../img/cloud.svg') !important;
 	background-repeat: no-repeat;

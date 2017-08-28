@@ -44,7 +44,7 @@ Ext.define('MCLM.store.Dictionary', {
     
 	listeners: {
         load: function(store, records){
-        	console.log( records );
+        	//console.log( records );
     	}			
 	},
     

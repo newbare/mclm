@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.http.conn.HttpHostConnectException;
+import org.apache.struts2.ServletActionContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,8 +17,10 @@ import com.google.gson.GsonBuilder;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.LayerType;
+import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.misc.WebClient;
+import br.mil.mar.casnav.mclm.misc.WindowType;
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayer;
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayerAttribute;
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayersSchema;
@@ -25,6 +31,7 @@ import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.repository.DictionaryRepository;
+import br.mil.mar.casnav.mclm.persistence.services.apolo.OrganizacoesMilitaresService;
 
 public class DictionaryService {
 	
@@ -70,6 +77,42 @@ public class DictionaryService {
 	public List<DictionaryItem> getDictionary( int idNodeData ) throws Exception {
 		List<DictionaryItem> result = rep.getList( idNodeData );
 		return result;
+	}
+	
+	
+	public String refreshDictionary( int idNodeData ) {
+		String resp = "";
+		try {
+			NodeService ns = new NodeService();
+			NodeData node = ns.getNode( idNodeData );
+			String layerName = node.getLayerName(); 
+			
+			newTransaction();			
+			String sql = "delete from dictionary where id_node_data in (  select id_node_data from node_data where layername = '"+layerName+"' )";
+			rep.executeQuery(sql, false);
+			
+			int count = createDictionary( node );
+			
+			resp = "{ \"success\": true, \"msg\": \"Operação efetuada com sucesso. Foram processados "+ count +" itens.\" }";
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			resp = "{ \"error\": true, \"msg\": \"" + e.getMessage() + "\" }";
+		}		
+		return resp;			
+			
+	}
+	
+	private void flatenJsonObject( JSONArray result, JSONObject obj, String parentName ) {
+	    for (Object key : obj.keySet() ) {
+	        String keyStr = (String)key;
+	        Object keyValue = obj.get(keyStr);
+
+	        if ( !(keyValue instanceof JSONObject) ) {
+	        	result.put( parentName + "." + keyStr );
+	        } else {
+	        	flatenJsonObject( result, (JSONObject)keyValue, parentName + "." + keyStr );
+	        }
+	    }
 	}
 	
 	public int createDictionary( NodeData node ) throws Exception {
@@ -129,6 +172,25 @@ public class DictionaryService {
 		} else
 		
 		if ( node.getLayerType() == LayerType.WMS ) {
+
+			JSONArray flatOrgMil = new JSONArray();
+			
+			try {
+				if ( node.getWindowType() == WindowType.ORGMIL) {
+					OrganizacoesMilitaresService oms = new OrganizacoesMilitaresService();
+					HttpServletRequest request = ServletActionContext.getRequest();
+					HttpSession session = request.getSession();		
+					User loggedUser = (User)session.getAttribute("loggedUser");				
+					String orgMil = oms.getOrgMil("58040130101020005545", loggedUser );
+					
+					JSONObject orgMilObj = new JSONObject( orgMil );
+					flatenJsonObject( flatOrgMil, orgMilObj, "orgmil" );
+					
+				}
+			} catch ( Exception e ) {
+				// Ao iniciar o servidor nao ha usuario logado nem ActionContext
+			}
+			
 			//System.out.println("Atualizando dicionário para [" + node.getLayerType() + "] " + node.getLayerAlias() + "..." );
 			GeoserverLayersSchema schema = null;
 			try {
@@ -149,11 +211,24 @@ public class DictionaryService {
 				// Para cada attributo deste layer, crio um item de dicionario associado ao Node...
 				for ( GeoserverLayerAttribute attribute : layer.getProperties() ) {
 					DictionaryItem di = new DictionaryItem( attribute, node );
+					di.setIndexOrder(99);
 					di.setVisible( true );
 					newTransaction();
 					rep.insertItem( di );
 				}
+				
 			}
+			
+			for ( int x = 0; x<flatOrgMil.length(); x++ ) {
+				String attribute = flatOrgMil.getString( x );
+				DictionaryItem di = new DictionaryItem( attribute, "string", node );
+				di.setIndexOrder(99);
+				di.setVisible( true );
+				newTransaction();
+				rep.insertItem( di );
+				result++;
+			}					
+			
 		} else {
 			//System.out.println(" > tipo de Camada '" + node.getLayerType() + "' não suporta dicionário.");
 		}
@@ -460,7 +535,7 @@ public class DictionaryService {
 					int quant = createDictionary( node );
 					if ( quant > 0 ) System.out.println(" > concluido com " + quant + " itens.");
 				} catch ( Exception e ) {
-					System.out.println("Erro ao tentar atualizar o dicionário: " + e.getMessage() );
+					e.printStackTrace();
 				}
 			}
 			

@@ -139,8 +139,11 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			    var menu_grid = new Ext.menu.Menu({ 
 			    	items: [
 					  { iconCls: 'add-scenery-icon', text: 'Copiar para Cenário', handler: function() { me.addToScenery(record); } },
+					  { xtype: 'menuseparator' },
 					  { iconCls: 'dictionary-icon', text: 'Configurar Dicionário', handler: function() { me.configDictionary(record); } },
 					  { iconCls: 'copy-dictionary-icon', text: 'Copiar Dicionário para Camadas de Mesma Origem', handler: function() { me.copyDictionary(record); } },
+					  { iconCls: 'redo-dictionary-icon', text: 'Refazer Dicionário', handler: function() { me.askRedoDictionary(record); } },
+					  { xtype: 'menuseparator' },
 					  { iconCls: 'datawindow-icon', text: 'Criar Janela de Dados', handler: function() { me.configDataWindow(record); } },
 					  { xtype: 'menuseparator' },
 			          { iconCls: 'properties-icon', text: 'Propriedades...', handler: function() { me.showLayerProperties( record ); } },
@@ -182,10 +185,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
     	table = table + "<tr> <td class='leftColumn'>Descrição</td> <td class='rightColumn'>"+ data.description + "</td> </tr>";
     	table = table + "<tr> <td class='leftColumn'>Origem</td> <td class='rightColumn'>"+ data.institute + "</td> </tr>";
     	table = table + "<tr> <td class='leftColumn'>Camada</td> <td class='rightColumn'>"+ data.layerName + "</td> </tr>";
-    	/*
-    	table = table + "<tr> <td class='leftColumn'>Fonte Original</td> <td class='rightColumn'>"+ data.originalServiceUrl + "</td> </tr>";
-    	table = table + "<tr> <td class='leftColumn'>Fonte Atual</td> <td class='rightColumn'>"+ data.serviceUrl + "</td> </tr>";
-    	*/
     	table = table + "<tr> <td class='leftColumn'>Filtro Fixo</td> <td class='rightColumn'>"+ data.cqlFilter + "</td> </tr>";
 
     	if ( wmsServer ) {
@@ -387,20 +386,60 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 		
     },
     
+    redoDictionary : function( record ) {
+    	var data = record.data;
+    	var idNodeData = data.idNodeData;
+		var name = data.layerAlias;
+    	
+    	MCLM.Functions.mainLog('Recriando dicionário. Aguarde, você será notificado quando o processo terminar...');
+    	
+		Ext.Ajax.request({
+		       url: 'refreshDictionary',
+		       params: {
+		           'sourceNode': idNodeData 
+		       },       
+		       success: function(response, opts) {
+		    	   var result = JSON.parse( response.responseText );
+		    	   if ( result.success ) {
+			    	   Ext.Msg.alert('Sucesso', result.msg );
+			    	   MCLM.Functions.mainLog('Dicionário da camada '+name+' recriado.');
+		    	   } else {
+			    	   //Ext.Msg.alert('Falha', result.msg );
+			    	   MCLM.Functions.mainLog('Falha recriando dicionário da camada ' + name  + ': ' + result.msg );
+		    	   }
+		       },
+		       failure: function(response, opts) {
+		    	   var result = JSON.parse( response.responseText );
+		    	   Ext.Msg.alert('Falha', result.msg );
+		    	   MCLM.Functions.mainLog('Falha copiando dicionário.');
+		       }
+		});
+    	
+    	
+    },
+    
+    askRedoDictionary: function( record ) {
+		var data = record.data;
+		var name = data.layerAlias;
+		var me = this;
+		
+		Ext.Msg.confirm('Recriar Dicionário', 'Deseja realmente recriar o dicionário para a Camada "' + name + '" ? Os dados atuais serão apagados.', function( btn ){
+			   if( btn === 'yes' ){
+				   record.set("checked",false);
+				   me.redoDictionary( record );
+			   } else {
+			       return;
+			   }
+		 });
+		
+	},
+    
     // Pergunta se quer deletar uma camada / no da arvore
 	askDeleteLayer: function( record ) {
 		var parentNode = record.parentNode;
 		var data = record.data;
 		var name = data.layerAlias;
 		var me = this;
-		
-		
-		/*
-		MCLM.Map.map.getLayers().forEach( function ( layer ) {
-			console.log( layer.get("serialId") + " -- " + data.serialId );
-		});
-		*/
-				
 		
 		if ( record.data.readOnly ) {
 			Ext.MessageBox.show({
@@ -411,7 +450,6 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			});			
 			return true;
 		}
-		
 		
 		Ext.Msg.confirm('Apagar Camada', 'Deseja realmente apagar a Camada "' + name + '" ?', function( btn ){
 			   if( btn === 'yes' ){
