@@ -152,105 +152,10 @@ Ext.define('MCLM.Functions', {
 			return ctx.createPattern(cnv, 'repeat');
 		},	
 		
-		getTableFromObject : function( data, theTitle ) {
-		
-			var x = Math.floor( Object.keys(data).length / 2 ) + 1;
-			var y = 0;
-			var table1 = "<table style='width:100%' class='dataWindow'>";
-			var table2 = "<table style='width:100%' class='dataWindow'>";			
-			
-		    for ( var key in data ) {
-		    	
-		        if ( data.hasOwnProperty( key ) ) {
-		        	var value = data[key];
-		        	if ( !value ) { 
-		        		value = "";
-		        	}
-		        	
-		        	if ( value === Object(value) ) {
-		        		x--;
-		        	} else {	
-		        	
-			        	if ( y < x ) {
-				        	table1 = table1 + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
-								"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
-			        	} else {
-				        	table2 = table2 + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
-							"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
-			        	}
-			        	y++;
-		        	
-		        	}
-		        	
-		        } 
-		    }		
-		    
-		    table1 = table1 + "</table>";
-		    table2 = table2 + "</table>";
-			var theContent = "<div style='float:left;width: 50%;'>"+table1+"</div><div style='float:left;width: 50%;'>" +table2+"</div>";  
-					
-			var theTab = {
-			title: theTitle,
-		    bodyPadding: '0',
-			items:[{
-		        xtype: 'panel',
-		        padding: '5',
-		        layout:'fit',
-		        html : theContent
-		    }]};    
-
-			return theTab;
-		},
-
 		createOrgMilWindow : function( data, record ) {
-			console.log( data );
 			
-			var orgMilWindow = Ext.getCmp('orgMilWindow');
-			if( !orgMilWindow ) {
-				orgMilWindow = Ext.create('MCLM.view.apolo.orgmil.OrgMilWindow');
-			}
-			
-			var x = Math.floor( Object.keys(data).length / 2 ) + 1;
-			var y = 0;
-			var table1 = "<table style='width:100%' class='dataWindow'>";
-			var table2 = "<table style='width:100%' class='dataWindow'>";
-			
-		    for ( var key in data ) {
-		    	
-		        if ( data.hasOwnProperty( key ) ) {
-		        	var value = data[key];
-		        	if ( !value ) { 
-		        		value = "";
-		        	}
-		        	
-		        	if ( value === Object(value) ) {
-		        		x--;
-		        		var title = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
-		        		var theTab = MCLM.Functions.getTableFromObject( value, title );
-		        		Ext.getCmp('orgMilTabContainer').add( theTab );
-		        	} else {	
-		        	
-			        	if ( y < x ) {
-				        	table1 = table1 + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
-								"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
-			        	} else {
-				        	table2 = table2 + "<tr class='dataWindowLine'><td class='dataWindowLeft'>" + key + 
-							"</td><td class='dataWindowMiddle'>" + value + "</td></tr>";
-			        	}
-			        	y++;
-		        	
-		        	}
-		        	
-		        } 
-		    }		
-		    
-		    table1 = table1 + "</table>";
-		    table2 = table2 + "</table>";
-			var theContent = "<div style='float:left;width: 50%;'>"+table1+"</div><div style='float:left;width: 50%;'>" +table2+"</div>";  
-			
-			orgMilWindow.show();
-			
-			Ext.getCmp('tab1').update(theContent);
+			var windowMaker = Ext.create('MCLM.view.apolo.orgmil.WindowMaker');
+			windowMaker.makeWindow(data);
 			
 		},
 
@@ -301,6 +206,9 @@ Ext.define('MCLM.Functions', {
 				success: function(response, opts) {
 					var respText = Ext.decode( response.responseText );
 					
+					console.log( response.responseText );
+					
+					
 					if ( respText.metar ) {
 						var mtr = respText.metar;
 						
@@ -312,7 +220,7 @@ Ext.define('MCLM.Functions', {
 						var umidade = mtr.umidade;
 						var ventoDir = mtr.vento_dir;
 						var ventoInt = mtr.vento_int;
-						var visibilidade = mtr.visibilidade.replace('>','&gt;').replace('<','&lt;');
+						var visibilidade = mtr.visibilidade.toString().replace('>','&gt;').replace('<','&lt;');
 						
 						var metar = '<table class="aeroWeather" style="height:60px;width:100%">' +
 								'<tr><td rowspan="4">'+tempo+'</td><td>' + tempoDesc + '</td> <td>' + att +'</td></tr>' + 
@@ -380,9 +288,9 @@ Ext.define('MCLM.Functions', {
 		
 		showOrgMil : function( record ) {
 			// -------------------------------- SOMENTE TESTE :: APAGAR -------------------------------------------------------
-			var respText = {"catOrg":"M","sigla":"4º BEC","nome":"4º Batalhão de Engenharia de Construção","pais":{"codigoPais":"BRA","nome":"BRASIL","continente":{"idContinente":3,"nome":"América do Sul","area":17757691,"linkWeb":"http://en.wikipedia.org/wiki/South_America","mapcolor":"#00FF00","versao":1374175227526},"tipo":{"codigo":1,"nome":"Pais Soberano","ordem":1,"mapFields":{"mapColor":{"value":"CC9966","unformattedValue":"#CC9966"},"symbology":24,"geometryTypes":["Polygon"]}},"regiao":{"idRegiao":18,"nome":"América do Sul","area":17757691,"linkWeb":"http://en.wikipedia.org/wiki/South_America","mapcolor":"#CCFFCC","versao":1374175229159},"nomeLongoPais":"Brazil","nomeFormalPais":"República Federativa do Brasil","observacoes":null,"populacaoEstimada":198739269,"anoPopulacao":null,"area":8459420,"ultimoCenso":2010,"isoa2":"BR","isoa3":"BRA","ison3":"076","linkWeb":"http://en.wikipedia.org/wiki/Brazil; www.google.com.br","versao":1435841340935,"linkWebList":["http://en.wikipedia.org/wiki/Brazil","http://www.google.com.br"],"ddi":"55","nomeAlternativo":null,"brasil":true},"estado":{"id":3550,"codigo":"BRA-BA","sigla":"BA","nome":"Bahia","iso":"BR-BA","area":560049,"popEstimada":14021432,"observacao":null,"linkWeb":"http://pt.wikipedia.org/wiki/Bahia","versao":1374175264666,"linkWebList":["http://pt.wikipedia.org/wiki/Bahia"]},"cidade":{"idCidade":9477,"nome":"BARREIRAS","nomeAlternativo":null,"tipo":{"ordem":4,"idTipoCidades":4,"nome":"Cidade"},"populacao":137428,"observacao":null,"linkWeb":"http://cidades.ibge.gov.br/xtras/perfil.php?codmun=2903201","ddd":"77","versao":1374175799975,"distancia":0.0,"linkWebList":["http://cidades.ibge.gov.br/xtras/perfil.php?codmun=2903201"],"codEstado":3550,"codPais":"BRA"},"logradouro":"RODOVIA BR 020/242 - KM 6","complemento":"incluído no logradouro","numeroEnd":"incluído no logradouro","bairro":"Boa Vista","cep":"47800000","caractNotaveis":null,"observacao":null,"dhCriacao":1378922240197,"versao":1500461006909,"usinaSaude":null,"distancia":0.0,"associations":{"listUsina":[],"acordosAdministrativos":[],"servicos":[],"produtos":[],"instalacoes":[],"instalacoesTelecomunicacao":[],"ramosAtividade":[],"contatos":[],"listSolicitacoes":[],"telefones":[],"funcoesLogisticas":[],"capacidadesLogisticas":[],"itemSuprimentoDistribuicao":[],"principalContato":null},"codigoUgr":null,"cnpj":null,"codemp":null,"codSiscaped":null,"catCodOrgMil":"MIL","codom":"3608","comandante":null,"designacao":null,"subordinacao":null,"tipo":{"codigo":"ENG","nome":"Engenharia","operativa":true,"logistica":false,"ordem":12,"nivel":4,"mapFields":{"mapColor":{"value":"008000","unformattedValue":"#008000"},"mapsymbol":0,"symbol":null}},"omSolicitanteLog":false,"forca":{"idForca":2,"sigla":"EB","nome":"Exército Brasileiro","aeronautica":false,"marinha":false,"exercito":true},"efetivoOf":null,"efetivoPr":null,"dhUltimoProcessamento":1500461006894,"comImSup":null,"comImTec":null,"itemLabel":"4º BEC","orgMilEidn":null,"operativa":false,"orgMilOperativa":{"orgid":58040130101020005355,"omProntoEmprego":false,"dhStatus":null,"situacaoOperacional":"OPE","descricao":null,"dhPosicao":null,"dhValidadePosicao":null,"indicativo":null,"posicaoAtual":null,"renderPosicao":false,"mapFields":{"mapColor":{"value":"008000","unformattedValue":"#008000"},"mapsymbol":0,"symbol":null},"geom":null},"usinaOrRefinaria":false,"typeOfUsina":false,"typeOfRefinaria":false,"typeOfEstabSaude":false,"typeOfUsinaSaude":false,"emptyLinkWeb":true};
-			MCLM.Functions.createOrgMilWindow( respText, record );
-			return true;
+			//var respText = {"catOrg":"M","sigla":"4º BEC","nome":"4º Batalhão de Engenharia de Construção","pais":{"codigoPais":"BRA","nome":"BRASIL","continente":{"idContinente":3,"nome":"América do Sul","area":17757691,"linkWeb":"http://en.wikipedia.org/wiki/South_America","mapcolor":"#00FF00","versao":1374175227526},"tipo":{"codigo":1,"nome":"Pais Soberano","ordem":1,"mapFields":{"mapColor":{"value":"CC9966","unformattedValue":"#CC9966"},"symbology":24,"geometryTypes":["Polygon"]}},"regiao":{"idRegiao":18,"nome":"América do Sul","area":17757691,"linkWeb":"http://en.wikipedia.org/wiki/South_America","mapcolor":"#CCFFCC","versao":1374175229159},"nomeLongoPais":"Brazil","nomeFormalPais":"República Federativa do Brasil","observacoes":null,"populacaoEstimada":198739269,"anoPopulacao":null,"area":8459420,"ultimoCenso":2010,"isoa2":"BR","isoa3":"BRA","ison3":"076","linkWeb":"http://en.wikipedia.org/wiki/Brazil; www.google.com.br","versao":1435841340935,"linkWebList":["http://en.wikipedia.org/wiki/Brazil","http://www.google.com.br"],"ddi":"55","nomeAlternativo":null,"brasil":true},"estado":{"id":3550,"codigo":"BRA-BA","sigla":"BA","nome":"Bahia","iso":"BR-BA","area":560049,"popEstimada":14021432,"observacao":null,"linkWeb":"http://pt.wikipedia.org/wiki/Bahia","versao":1374175264666,"linkWebList":["http://pt.wikipedia.org/wiki/Bahia"]},"cidade":{"idCidade":9477,"nome":"BARREIRAS","nomeAlternativo":null,"tipo":{"ordem":4,"idTipoCidades":4,"nome":"Cidade"},"populacao":137428,"observacao":null,"linkWeb":"http://cidades.ibge.gov.br/xtras/perfil.php?codmun=2903201","ddd":"77","versao":1374175799975,"distancia":0.0,"linkWebList":["http://cidades.ibge.gov.br/xtras/perfil.php?codmun=2903201"],"codEstado":3550,"codPais":"BRA"},"logradouro":"RODOVIA BR 020/242 - KM 6","complemento":"incluído no logradouro","numeroEnd":"incluído no logradouro","bairro":"Boa Vista","cep":"47800000","caractNotaveis":null,"observacao":null,"dhCriacao":1378922240197,"versao":1500461006909,"usinaSaude":null,"distancia":0.0,"associations":{"listUsina":[],"acordosAdministrativos":[],"servicos":[],"produtos":[],"instalacoes":[],"instalacoesTelecomunicacao":[],"ramosAtividade":[],"contatos":[],"listSolicitacoes":[],"telefones":[],"funcoesLogisticas":[],"capacidadesLogisticas":[],"itemSuprimentoDistribuicao":[],"principalContato":null},"codigoUgr":null,"cnpj":null,"codemp":null,"codSiscaped":null,"catCodOrgMil":"MIL","codom":"3608","comandante":null,"designacao":null,"subordinacao":null,"tipo":{"codigo":"ENG","nome":"Engenharia","operativa":true,"logistica":false,"ordem":12,"nivel":4,"mapFields":{"mapColor":{"value":"008000","unformattedValue":"#008000"},"mapsymbol":0,"symbol":null}},"omSolicitanteLog":false,"forca":{"idForca":2,"sigla":"EB","nome":"Exército Brasileiro","aeronautica":false,"marinha":false,"exercito":true},"efetivoOf":null,"efetivoPr":null,"dhUltimoProcessamento":1500461006894,"comImSup":null,"comImTec":null,"itemLabel":"4º BEC","orgMilEidn":null,"operativa":false,"orgMilOperativa":{"orgid":58040130101020005355,"omProntoEmprego":false,"dhStatus":null,"situacaoOperacional":"OPE","descricao":null,"dhPosicao":null,"dhValidadePosicao":null,"indicativo":null,"posicaoAtual":null,"renderPosicao":false,"mapFields":{"mapColor":{"value":"008000","unformattedValue":"#008000"},"mapsymbol":0,"symbol":null},"geom":null},"usinaOrRefinaria":false,"typeOfUsina":false,"typeOfRefinaria":false,"typeOfEstabSaude":false,"typeOfUsinaSaude":false,"emptyLinkWeb":true};
+			//MCLM.Functions.createOrgMilWindow( respText, record );
+			//return true;
 			// ----------------------------------------------------------------------------------------------------------------
 			
 			Ext.Ajax.request({
@@ -391,9 +299,6 @@ Ext.define('MCLM.Functions', {
 					'orgid': record.id,
 				},       
 				success: function(response, opts) {
-					
-					console.log( response.responseText );
-					
 					var respText = Ext.decode( response.responseText );
 					
 					if ( respText.error ) {

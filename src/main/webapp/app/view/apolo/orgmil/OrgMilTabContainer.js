@@ -10,16 +10,7 @@ Ext.define('MCLM.view.apolo.orgmil.OrgMilTabContainer', {
 	region: 'center',
 	defaults:{ autoScroll:true },
 	
-	items: [{
-		title:'Geral',
-	    bodyPadding: '0',
-		items:[{
-	        xtype: 'panel',
-	        padding: '5',
-	        id : 'tab1',
-	        layout:'fit',
-	    }]    
-	}],
+	items: [],
 
     listeners: {
     	

@@ -172,21 +172,37 @@ public class DictionaryService {
 		} else
 		
 		if ( node.getLayerType() == LayerType.WMS ) {
-
 			JSONArray flatOrgMil = new JSONArray();
+			//JSONArray flatAerodromo = new JSONArray();
+			
 			
 			try {
+				
+				HttpServletRequest request = ServletActionContext.getRequest();
+				HttpSession session = request.getSession();		
+				User loggedUser = (User)session.getAttribute("loggedUser");				
+				
 				if ( node.getWindowType() == WindowType.ORGMIL) {
 					OrganizacoesMilitaresService oms = new OrganizacoesMilitaresService();
-					HttpServletRequest request = ServletActionContext.getRequest();
-					HttpSession session = request.getSession();		
-					User loggedUser = (User)session.getAttribute("loggedUser");				
-					String orgMil = oms.getOrgMil("58040130101020005545", loggedUser );
+					String orgMil = oms.getOrgMil("0000", loggedUser );
 					
 					JSONObject orgMilObj = new JSONObject( orgMil );
 					flatenJsonObject( flatOrgMil, orgMilObj, "orgmil" );
 					
 				}
+				
+				/*
+				if ( node.getWindowType() == WindowType.AERODROMO) {
+					AerodromosService as = new AerodromosService();
+					String aerodromo = as.getAerodromo("0000", loggedUser);
+					
+					JSONObject aerodromoObj = new JSONObject( aerodromo );
+					flatenJsonObject( flatAerodromo, aerodromoObj, "aerodromo" );
+					
+				}
+				*/
+				
+				
 			} catch ( Exception e ) {
 				// Ao iniciar o servidor nao ha usuario logado nem ActionContext
 			}
@@ -227,7 +243,20 @@ public class DictionaryService {
 				newTransaction();
 				rep.insertItem( di );
 				result++;
-			}					
+			}
+			
+			/*
+			for ( int x = 0; x<flatAerodromo.length(); x++ ) {
+				String attribute = flatAerodromo.getString( x );
+				DictionaryItem di = new DictionaryItem( attribute, "string", node );
+				di.setIndexOrder(99);
+				di.setVisible( true );
+				newTransaction();
+				rep.insertItem( di );
+				result++;
+			}
+			*/					
+			
 			
 		} else {
 			//System.out.println(" > tipo de Camada '" + node.getLayerType() + "' não suporta dicionário.");

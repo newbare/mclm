@@ -42,9 +42,8 @@ Ext.define('MCLM.view.main.TelaPrincipal', {
         items: [{
         	xtype: 'abaCatalogo'
         }, {
-            xtype: 'abaTrabalho'
+            xtype: 'abaTrabalho',
         }],
-    	
     	
     },{
         xtype: 'painelCentral', collapsible: false
