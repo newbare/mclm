@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.http.conn.HttpHostConnectException;
-import org.apache.struts2.ServletActionContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,10 +13,8 @@ import com.google.gson.GsonBuilder;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.LayerType;
-import br.mil.mar.casnav.mclm.misc.User;
 import br.mil.mar.casnav.mclm.misc.UserTableEntity;
 import br.mil.mar.casnav.mclm.misc.WebClient;
-import br.mil.mar.casnav.mclm.misc.WindowType;
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayer;
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayerAttribute;
 import br.mil.mar.casnav.mclm.misc.dictionary.GeoserverLayersSchema;
@@ -31,7 +25,6 @@ import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.DatabaseConnectException;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
 import br.mil.mar.casnav.mclm.persistence.repository.DictionaryRepository;
-import br.mil.mar.casnav.mclm.persistence.services.apolo.OrganizacoesMilitaresService;
 
 public class DictionaryService {
 	
@@ -102,6 +95,7 @@ public class DictionaryService {
 			
 	}
 	
+	/*
 	private void flatenJsonObject( JSONArray result, JSONObject obj, String parentName ) {
 	    for (Object key : obj.keySet() ) {
 	        String keyStr = (String)key;
@@ -114,6 +108,7 @@ public class DictionaryService {
 	        }
 	    }
 	}
+	*/
 	
 	public int createDictionary( NodeData node ) throws Exception {
 		String layerName = node.getLayerName();
@@ -125,8 +120,6 @@ public class DictionaryService {
 						
 			try {
 				DataLayer dl = node.getDataLayer();
-				
-				//System.out.println(" > Tabela " + dl.getTable().getName() );
 				
 				int serverPort = dl.getTable().getServer().getServerPort();
 				String serverAddress = dl.getTable().getServer().getServerAddress();
@@ -172,12 +165,13 @@ public class DictionaryService {
 		} else
 		
 		if ( node.getLayerType() == LayerType.WMS ) {
-			JSONArray flatOrgMil = new JSONArray();
+			//JSONArray flatOrgMil = new JSONArray();
 			//JSONArray flatAerodromo = new JSONArray();
 			
 			
 			try {
 				
+				/*
 				HttpServletRequest request = ServletActionContext.getRequest();
 				HttpSession session = request.getSession();		
 				User loggedUser = (User)session.getAttribute("loggedUser");				
@@ -190,6 +184,7 @@ public class DictionaryService {
 					flatenJsonObject( flatOrgMil, orgMilObj, "orgmil" );
 					
 				}
+				*/
 				
 				/*
 				if ( node.getWindowType() == WindowType.AERODROMO) {
@@ -235,6 +230,7 @@ public class DictionaryService {
 				
 			}
 			
+			/*
 			for ( int x = 0; x<flatOrgMil.length(); x++ ) {
 				String attribute = flatOrgMil.getString( x );
 				DictionaryItem di = new DictionaryItem( attribute, "string", node );
@@ -244,6 +240,7 @@ public class DictionaryService {
 				rep.insertItem( di );
 				result++;
 			}
+			*/
 			
 			/*
 			for ( int x = 0; x<flatAerodromo.length(); x++ ) {

@@ -779,7 +779,7 @@ Ext.define('MCLM.Map', {
 				MCLM.Functions.mainLog("Seu browser acessa a internet normalmente. Clique aqui para fechar esta mensagem.");
 			};
 			image.onerror = function() {
-				Ext.Msg.alert('Alerta!','Não foi possível acessar a internet a partir de seu navegador. Alguns serviços podem não estar disponíveis. Clique aqui para fechar esta mensagem.' );		  
+				Ext.Msg.alert('Alerta!','Não foi possível acessar a internet a partir de seu navegador. Alguns serviços podem não estar disponíveis.' );		  
 			};
 		},
 		

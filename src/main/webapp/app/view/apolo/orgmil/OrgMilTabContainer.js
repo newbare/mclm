@@ -8,7 +8,7 @@ Ext.define('MCLM.view.apolo.orgmil.OrgMilTabContainer', {
 	plain: true,
 
 	region: 'center',
-	defaults:{ autoScroll:true },
+	defaults:{ autoScroll:true, border: false, frame: false },
 	
 	items: [],
 

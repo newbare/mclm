@@ -13,7 +13,7 @@ Ext.define('MCLM.view.apolo.orgmil.OrgMilWindow', {
 	controller : 'orgMilController',
 	
 	
-	width : 850,
+	width : 890,
 	height: 500,
 	layout : 'border',
 	resizable: false,
