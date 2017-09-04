@@ -37,6 +37,26 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		
 		var table = "<table style='width:100%;' class='dataWindow'>";
 		for (x=0; x< funLogs.length; x++ ) {
+			var detalhe = funLogs[x].detalhes;
+			var suprimento = 'Não';
+			var transporte = 'Não';
+			var nome = funLogs[x].funcaoLogistica.nome;
+			var pontos = funLogs[x].pontosCriticos;
+			var obs = funLogs[x].observações;
+			
+			
+			if( funLogs[x].funcaoLogistica.isSuprimento === true ) suprimento = 'Sim';
+			if( funLogs[x].funcaoLogistica.isTransporte === true ) transporte = 'Sim';
+			if( !obs ) obs = '';
+			if( !pontos ) pontos = '';
+			
+			table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>"+detalhe+"</td></tr>";
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Nome</td><td class='dataWindowValue'>"+nome+"</td>"+
+                "<td class='dataWindowAttibute'>Suprimento</td><td class='dataWindowValue'>"+suprimento+"</td>" +
+                "<td class='dataWindowAttibute'>Transporte</td><td class='dataWindowValue'>"+transporte+"</td></tr>";
+			
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Pontos Críticos</td><td colspan='5' class='dataWindowValue'>"+pontos+"</td></tr>";			
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Observações</td><td colspan='5' class='dataWindowValue'>"+obs+"</td></tr>";			
 			
 		}
 		
@@ -44,6 +64,143 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		return table;
 		
 	},
+
+	
+	getProdutosTab : function( data ) {
+		var produtos = data.associations.produtos;
+		if( produtos.length == 0 ) {
+			return this.noData();
+		}
+		
+		var interesseArr = [];
+		interesseArr[0] = "Não Definido";
+		interesseArr[1] = "Mobilizável";
+		interesseArr[2] = "Estratégico";
+		
+		var table = "<table style='width:100%;' class='dataWindow'>";
+		for (x=0; x < produtos.length; x++ ) {
+			var produto = produtos[x].produto;
+			var nome = produto.nome;
+			var interesse = produto.interesse;
+			var classeSuprimento = produto.classeSuprimento.classeDescricao;
+			var periodicidade = produtos[x].unidadeTempo.nome;
+			var capacidadeAtual = produtos[x].orgProdutoServico.producaoAtual;
+			var capacidadeAtual = produtos[x].orgProdutoServico.producaoMaxima;
+			
+			table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>"+nome+"</td></tr>";
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Classe Suprimento</td><td class='dataWindowValue'>"+classeSuprimento+"</td>"+
+                "<td class='dataWindowAttibute'>Interesse</td><td class='dataWindowValue'>"+interesseArr[interesse] +"</td>" +
+                "<td class='dataWindowAttibute'>Periodicidade</td><td class='dataWindowValue'>"+periodicidade+"</td></tr>";
+                
+		}
+		
+		table = table + "</table>";
+		return table;
+		
+	},		
+	
+	
+	getInstalacoesTab : function( data ) {
+		var installs = data.associations.instalacoes;
+		if( installs.length == 0 ) {
+			return this.noData();
+		}
+		
+		var table = "<table style='width:100%;' class='dataWindow'>";
+		for (x=0; x < installs.length; x++ ) {
+			
+			var capacidade = installs[x].capacidade;
+			var especialidade = installs[x].especialidade;
+			var nome = installs[x].nome;
+			
+			if ( installs[x].recusouInformar === true ) {
+				var table = "<table style='width:100%;' class='dataWindow'>";
+				table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>Recusou Informar</td></tr>";
+				table = table + "</table>";
+				return table;
+			}
+			
+			table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>"+nome+"</td></tr>";
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Especialidade</td><td class='dataWindowValue'>"+especialidade+"</td>"+
+                "<td class='dataWindowAttibute'>Capacidade</td><td class='dataWindowValue'>"+capacidade +"</td>" +
+                "<td class='dataWindowValue'>&nbsp;</td><td class='dataWindowValue'>&nbsp;</td></tr>";
+		}
+		
+		table = table + "</table>";
+		return table;
+		
+	},	
+
+	
+	getServicosTab : function( data ) {
+		var servicos = data.associations.servicos;
+		if( servicos.length == 0 ) {
+			return this.noData();
+		}
+		
+		var interesseArr = [];
+		interesseArr[0] = "Não Definido";
+		interesseArr[1] = "Mobilizável";
+		interesseArr[2] = "Estratégico";		
+		
+		var table = "<table style='width:100%;' class='dataWindow'>";
+		for (x=0; x < servicos.length; x++ ) {
+			var nome = servicos[x].orgProdutoServico.nome;
+			var funcao = servicos[x].orgProdutoServico.funcaoLogistica.nome;
+			var periodicidade = servicos[x].unidadeTempo.nome; 
+			var interesse = servicos[x].orgProdutoServico.interesse;
+			var capMaxima = servicos[x].producaoMaxima;
+			var capAtual = servicos[x].producaoAtual;
+			
+			table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>"+nome+"</td></tr>";
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Função Logística</td><td class='dataWindowValue'>"+funcao+"</td>"+
+                "<td class='dataWindowAttibute'>Interesse</td><td class='dataWindowValue'>"+interesseArr[interesse] +"</td>" +
+                "<td class='dataWindowAttibute'>Periodicidade</td><td class='dataWindowValue'>"+periodicidade+"</td></tr>";
+			
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Cap. Fornecimento Atual</td><td class='dataWindowValue'>"+capAtual+"</td>"+
+            "<td class='dataWindowAttibute'>Cap. Fornecimento Máxima</td><td class='dataWindowValue'>"+capMaxima +"</td>" +
+            "<td class='dataWindowValue'>&nbsp;</td><td class='dataWindowValue'>&nbsp;</td></tr>";
+			
+			
+		}
+		
+		table = table + "</table>";
+		return table;
+		
+	},	
+	
+	
+	getCapLogTab : function( data ) {
+		var capLogs = data.associations.capacidadesLogisticas;
+		if( capLogs.length == 0 ) {
+			return this.noData();
+		}
+		
+		var table = "<table style='width:100%;' class='dataWindow'>";
+		for (x=0; x < capLogs.length; x++ ) {
+			
+			var tipoCapacidade = capLogs[x].tipoCapacidadeLogistica.nome;
+			var interesse = 'Não';
+			var quantidade = capLogs[x].quantidade;
+			var descricao = capLogs[x].descricao;
+			var obs = capLogs[x].obs;
+			var unidade = capLogs[x].unidadeMedida.sigla;
+			
+			if ( capLogs[x].tipoCapacidadeLogistica.interesseDefesa === true ) interesse = 'Sim';
+			
+			table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>"+tipoCapacidade+"</td></tr>";
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Descrição</td><td class='dataWindowValue'>"+descricao+"</td>"+
+                "<td class='dataWindowAttibute'>Quantidade</td><td class='dataWindowValue'>"+quantidade+ " " + unidade +"</td>" +
+                "<td class='dataWindowAttibute'>Interesse</td><td class='dataWindowValue'>"+interesse+"</td></tr>";
+			
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Observações</td><td colspan='5' class='dataWindowValue'>"+obs+"</td></tr>";
+		}
+		
+		table = table + "</table>";
+		return table;
+		
+	},
+	
 	
 	getTelefoneTab : function( data ) {
 		
@@ -230,10 +387,10 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Contato', this.getContatoTab(data) ) );
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Telefone', this.getTelefoneTab(data) ) );
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Fun. Log.', this.getFunLogTab(data) ) );
-		Ext.getCmp('orgMilTabContainer').add( this.createTab('Cap. Log.', content) );
-		Ext.getCmp('orgMilTabContainer').add( this.createTab('Instalações', content) );
-		Ext.getCmp('orgMilTabContainer').add( this.createTab('Produtos', content) );
-		Ext.getCmp('orgMilTabContainer').add( this.createTab('Serviços', content) );
+		Ext.getCmp('orgMilTabContainer').add( this.createTab('Cap. Log.', this.getCapLogTab(data) ) );
+		Ext.getCmp('orgMilTabContainer').add( this.createTab('Instalações', this.getInstalacoesTab(data) ) );
+		Ext.getCmp('orgMilTabContainer').add( this.createTab('Produtos', this.getProdutosTab(data) ) );
+		Ext.getCmp('orgMilTabContainer').add( this.createTab('Serviços', this.getServicosTab(data) ) );
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Acordos Adm.', content) );
 		
 		orgMilWindow.show();

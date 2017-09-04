@@ -289,7 +289,7 @@ Ext.define('MCLM.Functions', {
 			Ext.Ajax.request({
 				url: 'apoloGetOM',
 				params: {
-					'orgid': '0000' //record.id,
+					'orgid': record.id,
 				},       
 				success: function(response, opts) {
 					var responseText = response.responseText.replace(new RegExp("null", 'g'), "\"&nbsp;\"");
