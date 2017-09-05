@@ -154,7 +154,7 @@ Ext.define('MCLM.Functions', {
 		
 		createOrgMilWindow : function( data, record ) {
 			var windowMaker = Ext.create('MCLM.view.apolo.orgmil.WindowMaker');
-			windowMaker.makeWindow(data);
+			windowMaker.makeWindow(data, record);
 		},
 
 		createAerodromoWindow : function( sigla, data, record ) {
@@ -203,9 +203,6 @@ Ext.define('MCLM.Functions', {
 				},       
 				success: function(response, opts) {
 					var respText = Ext.decode( response.responseText );
-					
-					console.log( response.responseText );
-					
 					
 					if ( respText.metar ) {
 						var mtr = respText.metar;
@@ -289,7 +286,7 @@ Ext.define('MCLM.Functions', {
 			Ext.Ajax.request({
 				url: 'apoloGetOM',
 				params: {
-					'orgid': record.id,
+					'orgid': record.id, 
 				},       
 				success: function(response, opts) {
 					var responseText = response.responseText.replace(new RegExp("null", 'g'), "\"&nbsp;\"");
@@ -377,8 +374,6 @@ Ext.define('MCLM.Functions', {
 			for ( img in imgArr ) {
 				var imgLink = "<img style='width:200px;height:200px' src='" + imgArr[img] + "'>";
 				table = table + "<tr><td>" + imgLink + "</td></tr>";
-				
-				console.log( imgLink );
 			}
 			table = table + "</table>";
 			
@@ -621,8 +616,6 @@ Ext.define('MCLM.Functions', {
 	    	lon = center2[0];
 	    	lat = center2[1];
 	    	
-	    	//console.log( lon + " " + lat);
-	    	
 	    	MCLM.Map.getWeatherFromLocation( lat, lon );
 		},
 
@@ -651,7 +644,6 @@ Ext.define('MCLM.Functions', {
 			$("#mainLoadingIcon").css('display','block');
 			$("#mainLoadingInfo").text( action );
 			$('#mainLoadingIcon').hide().show(0);
-			//console.log( action );
 		},
 
 		hideMainLoadingIcon : function() {

@@ -12,6 +12,8 @@ Ext.define('MCLM.view.apolo.orgmil.OrgMilWindow', {
 	
 	controller : 'orgMilController',
 	
+	geometry : null,
+	
 	
 	width : 890,
 	height: 500,

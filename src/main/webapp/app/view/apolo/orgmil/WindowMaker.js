@@ -131,6 +131,33 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		
 	},	
 
+
+	getAcordosTab : function( data ) {
+		var acordos = data.associations.acordosAdministrativos;
+		if( acordos.length == 0 ) {
+			return this.noData();
+		}
+		
+		var table = "<table style='width:100%;' class='dataWindow'>";
+		for (x=0; x < acordos.length; x++ ) {
+			var dataInicio = acordos[x].dataInicio;
+			var dataFim = acordos[x].dataFim;
+			var descricao = acordos[x].descricao;
+			var obs = acordos[x].observacoes;
+			
+
+			table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>"+descricao+"</td></tr>";
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Data Início</td><td class='dataWindowValue'>"+dataInicio+"</td>"+
+                "<td class='dataWindowAttibute'>Data Fim</td><td class='dataWindowValue'>"+ dataFim +"</td>" +
+                "<td class='dataWindowValue'>&nbsp;</td><td class='dataWindowValue'>&nbsp;</td></tr>";
+			
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Observações</td><td colspan='5' class='dataWindowValue'>"+obs+"</td></tr>";
+		}
+		
+		table = table + "</table>";
+		return table;		
+	},
+	
 	
 	getServicosTab : function( data ) {
 		var servicos = data.associations.servicos;
@@ -294,8 +321,6 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		if( !comImSup ) comImSup = '';
 		if( !comImTec ) comImTec = '';
 		
-		console.log( data );
-		
 		var table = "<table style='width:100%;' class='dataWindow'>";
 
 		table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>Dados Gerais</td></tr>";
@@ -374,12 +399,14 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 	
 	
 	// -----------------------------------------------------------------------------------------
-	makeWindow : function( data ) {
+	makeWindow : function( data, record ) {
 		
 		var orgMilWindow = Ext.getCmp('orgMilWindow');
 		if( !orgMilWindow ) {
 			orgMilWindow = Ext.create('MCLM.view.apolo.orgmil.OrgMilWindow');
 		}
+		
+		orgMilWindow.geometry = Ext.decode( record.mclm_metadata_property.features[0] );
 		
 		var content = 'Nenhum conteúdo ainda...';
 		
@@ -391,7 +418,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Instalações', this.getInstalacoesTab(data) ) );
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Produtos', this.getProdutosTab(data) ) );
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Serviços', this.getServicosTab(data) ) );
-		Ext.getCmp('orgMilTabContainer').add( this.createTab('Acordos Adm.', content) );
+		Ext.getCmp('orgMilTabContainer').add( this.createTab('Acordos Adm.', this.getAcordosTab(data) ) );
 		
 		orgMilWindow.show();
 			
