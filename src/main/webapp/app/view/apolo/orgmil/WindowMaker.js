@@ -406,7 +406,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 			orgMilWindow = Ext.create('MCLM.view.apolo.orgmil.OrgMilWindow');
 		}
 		
-		orgMilWindow.geometry = Ext.decode( record.mclm_metadata_property.features[0] );
+		//orgMilWindow.geometry = Ext.decode( record.mclm_metadata_property.features[0] );
 		
 		var content = 'Nenhum conteúdo ainda...';
 		
