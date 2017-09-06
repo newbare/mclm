@@ -269,7 +269,6 @@ Ext.define('MCLM.view.style.StyleEditorController', {
 	    	  loadTilesWhileAnimating: true,
 	    	  view: new ol.View({
 	    		  center: [-1056665.479014276,6874440.089719017],
-	              //center: [-55.37109375,-17.39257927105777],
 	              projection: 'EPSG:3857',
 	              zoom: 2
 	          })
