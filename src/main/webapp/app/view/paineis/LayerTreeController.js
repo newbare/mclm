@@ -127,7 +127,7 @@ Ext.define('MCLM.view.paineis.LayerTreeController', {
 			if ( data.layerType == 'FEI' ) {
 			    var menu_grid = new Ext.menu.Menu({ 
 			    	items: [
-			    	  { iconCls: 'goto-icon', text: 'Ir para...', handler: function() { me.goToFeicao( record ); } },
+			    	  { iconCls: 'goto-icon', text: 'Zoom Para Feição', handler: function() { me.goToFeicao( record ); } },
 					  { xtype: 'menuseparator' },
 			          { iconCls: 'properties-icon', text: 'Propriedades...', handler: function() { me.showLayerProperties( record ); } },
 					  { xtype: 'menuseparator' },

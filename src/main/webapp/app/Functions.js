@@ -774,6 +774,12 @@ Ext.define('MCLM.Functions', {
 		    	        text: 'Retorna a posição e zoom anterior do mapa.',
 		    	        width: 180,
 		    	        dismissDelay: 5000 
+		    	    },{
+		    	        target: 'magnifyID',
+		    	        title: 'Liga / Desliga Lupa',
+		    	        text: 'Amplia a camada de base sobre qualquer camada ativa. A camada de base precisa estar ativada.',
+		    	        width: 180,
+		    	        dismissDelay: 5000 
 		    	    }); 	
 		},
 

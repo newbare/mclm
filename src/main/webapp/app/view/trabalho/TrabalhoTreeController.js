@@ -23,6 +23,28 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
             }
         }
     },  
+    
+    
+    
+    editFeicao : function( record ) {
+    	var layerName = record.get('layerName');
+    	var feicao = record.get('feicao');
+    	var geomType = feicao.geomType;
+    	var layer = MCLM.Map.findByName( layerName );
+    	var source = layer.getSource();
+    	
+    	MCLM.Map.addInteractions( geomType, source );
+    	
+    	var editFeicaoWindow = Ext.getCmp('editFeicaoWindow');
+    	if ( !editFeicaoWindow ) {
+    		editFeicaoWindow = Ext.create('MCLM.view.tools.EditFeicaoWindow');
+    	}
+    	editFeicaoWindow.show();
+    	
+    	
+    },
+
+    
     // Disparado apos um no ser movido para outra pasta
     afterDropNode : function  (node, data, overModel, dropPosition) {
 		var theNode = data.records[0];
@@ -193,7 +215,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 
 		    var menu_grid = new Ext.menu.Menu({ 
 		    	items: [
-		    	  { iconCls: 'goto-icon', text: 'Ir para...', handler: function() { me.goToFeicao( record ); } },
+		    	  { iconCls: 'goto-icon', text: 'Zoom Para Feição', handler: function() { me.goToFeicao( record ); } },
+		    	  { iconCls: 'draw-icon', text: 'Editar Feição', handler: function() { me.editFeicao( record ); } },
 	  	          { iconCls: 'add-folder-icon', text: 'Criar Nova Pasta', handler: function() { me.addNewFolder(record); } },
 				  { xtype: 'menuseparator' },
 		          { iconCls: 'delete-icon', text: 'Apagar', handler: function() { me.askDeleteLayer( record ); } }
@@ -499,6 +522,31 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	});
     	
     },
+    
+    
+    saveFeatureEditing : function () {
+		var currentEditinFeature = MCLM.Map.editingFeature;
+
+		MCLM.Map.map.removeInteraction( MCLM.Map.modify );
+		MCLM.Map.map.removeInteraction( MCLM.Map.snap );
+		MCLM.Map.map.removeInteraction( MCLM.Map.boxing );
+
+		if ( currentEditinFeature ) {
+			
+			
+			Ext.Msg.confirm('Feição Modificada', 'Uma Feição foi editada. Deseja gravar suas alterações?', function( btn ){
+				   if( btn === 'yes' ){
+					   //
+				   } else {
+				       return;
+				   }
+			 });
+			
+		}
+		
+    },
+    
+    
     // Salva os dados do cenario (zoom, center, etc)
     updateSceneryData : function() {
     	var me = this;
@@ -508,8 +556,10 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		var servidorBase = MCLM.Map.getBaseServerURL();
 		var mapaBaseAtivo = MCLM.Map.isBaseMapActive();
 		var gradeAtiva = MCLM.Map.isGraticuleActive();
-		var mapBbox = MCLM.Map.getMapCurrentBbox();		    	
-    	
+		var mapBbox = MCLM.Map.getMapCurrentBbox();	
+		
+		me.saveFeatureEditing();
+		
 		Ext.Ajax.request({
 			url: 'updateSceneryData',
 		    params: {
@@ -620,9 +670,6 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		var layerName = node.get('layerName');
 		var serialId = node.get('serialId' );
 		var layerType = node.get('layerType' );
-		
-		
-		console.log( node );
 		
 		if ( layerName == "" ) return;
 		

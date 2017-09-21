@@ -315,6 +315,16 @@ body {
 	background-repeat: no-repeat;
 }
 
+.magnify-icon {
+	background-image: url('../img/magnify.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.cancel-icon {
+	background-image: url('../img/cancel.svg') !important;
+	background-repeat: no-repeat;
+}
+
 .export-icon {
 	background-image: url('../img/export.svg') !important;
 	background-repeat: no-repeat;

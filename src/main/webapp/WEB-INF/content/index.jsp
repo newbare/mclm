@@ -19,13 +19,16 @@
 	 -->
 	
 	<script type="text/javascript" src="app.js"></script>
+
+<!-- JQUERY -->
+	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
 	
 <!-- OPENLAYERS -->
 	<script type="text/javascript" src="js/ol.js"></script>
 	<link rel="stylesheet" href="css/ol.css" type="text/css">
-	
-<!-- JQUERY -->
-	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+	<script type="text/javascript" src="js/ol3-ext.min.js"></script>
+	<link rel="stylesheet" href="css/ol3-ext.min.css" type="text/css">
 
 <!-- COLOR PICKER -->
 	<link rel="stylesheet" media="screen" type="text/css" href="css/colorpicker.css" />

@@ -35,7 +35,7 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     	
     	var customStyleFunction = function( feature, resolution ) {
     		var props = feature.getProperties();
-    		var bearing = props.bearing * 0.01745329251 ;
+    		var bearing = props.bearing * 0.01745329251;
     		var callSign = props.callSign;
     		var flightNumber = props.flightNumber;
     		var tailPrefix = props.tailPrefix;

@@ -61,11 +61,11 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
             handler : 'loadScenery'
         },{
         	xtype: 'tbseparator'
-        }/*,{
+        },{
         	iconCls: 'text-icon',
         	id: 'adTextBtn',
             handler : 'addTextToScenery'
-        }*/]
+        }]
     }],
         
     

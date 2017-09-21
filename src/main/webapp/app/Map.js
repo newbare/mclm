@@ -53,6 +53,87 @@ Ext.define('MCLM.Map', {
 		shipsHelper : null,
 		canPhoto : true,
 		statusBar : null,
+ 
+		snap : null,
+		modify : null,
+		boxing : null,
+		magnifyOn : false,
+		editingFeature : null,
+		
+		addInteractions : function ( geometryType, source ) {
+			
+			var features = source.getFeatures();
+			var featureElement = features[0];
+			
+			featureElement.set('editing', true);			
+			
+			featureElement.on('change',function(){
+	           MCLM.Map.editingFeature = this;
+			}, featureElement );			
+			
+			
+			var temp = new ol.Collection( [featureElement] );
+			
+			this.modify = new ol.interaction.Modify({features: temp, style:null});
+			MCLM.Map.map.addInteraction( this.modify );
+			
+			this.snap = new ol.interaction.Snap({source: source});
+			MCLM.Map.map.addInteraction( this.snap );
+			
+			
+			this.boxing = new ol.interaction.Transform ({	
+				translateFeature: true,
+				scale: true,
+				rotate: true,
+				keepAspectRatio: true ? ol.events.condition.always : undefined,
+				translate: true,
+				stretch: true,
+			});
+		
+			MCLM.Map.map.addInteraction( this.boxing );
+
+		
+			var startangle = 0;
+			var d=[0,0];
+			this.boxing.on (['rotatestart','translatestart'], function(e) {	
+				startangle = e.feature.get('angle')||0;
+				
+				var editing = e.feature.get('editing');
+				if( !editing ) e.preventDefault();
+				
+				d=[0,0];
+			});
+			
+			this.boxing.on('rotating', function (e){	 
+				
+				var editing = e.feature.get('editing');
+				if( !editing ) e.preventDefault();			
+				
+				// Set angle attribute to be used on style !
+				e.feature.set('angle', startangle - e.angle);
+				
+				
+			});
+			
+			this.boxing.on('translating', function (e){	
+				var editing = e.feature.get('editing');
+				if( !editing ) e.preventDefault();			
+	
+				
+				d[0]+=e.delta[0];
+				d[1]+=e.delta[1];
+			});
+			
+			this.boxing.on('scaling', function (e){	
+				var editing = e.feature.get('editing');
+				if( !editing ) e.preventDefault();			
+			});
+			
+			this.boxing.on(['rotateend', 'translateend', 'scaleend'], function (e) {  
+				
+			}); 			
+		
+		},		
 		
 		
 		toggleOsm : function() {
@@ -498,6 +579,13 @@ Ext.define('MCLM.Map', {
 				view: MCLM.Map.theView
 			});	
 			
+			
+			MCLM.Map.lente =  new ol.Overlay.Magnify({	
+				layers: [MCLM.Map.baseLayer],
+				zoomOffset: 2.5,
+				projection: 'EPSG:4326'
+			});
+					
 			// Quando o mapa for arrastado ou o zoom mudar dispara o metodo updateMapCenter()
 			MCLM.Map.map.getView().on('propertychange', function(e) {
 				switch (e.key) {  
@@ -534,6 +622,18 @@ Ext.define('MCLM.Map', {
 			
 			
 			MCLM.Map.createSceneryInfoLayer();
+			
+		},
+		
+		toggleMagnify : function() {
+			if( MCLM.Map.magnifyOn ) {
+				MCLM.Map.magnifyOn = false;
+				MCLM.Map.map.removeOverlay( MCLM.Map.lente );
+			} else {
+				MCLM.Map.map.addOverlay( MCLM.Map.lente );
+				MCLM.Map.magnifyOn = true;
+			}
+			
 		},
 		
 		initExternalLayers : function() {
@@ -747,7 +847,6 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.arrayMapCenter = JSON.parse("[" + MCLM.Map.mapCenter + "]");
 
 			MCLM.Map.theView = new ol.View({
-				//center: ol.proj.transform( MCLM.Map.arrayMapCenter, 'EPSG:4326', 'EPSG:3857'),
 				center: MCLM.Map.arrayMapCenter,
 				zoom: MCLM.Map.mapZoom,
 			    minZoom: 2,

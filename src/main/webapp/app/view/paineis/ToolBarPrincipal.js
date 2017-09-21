@@ -113,5 +113,13 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
     	xtype: 'button',
     	id: 'showForecastToolBarID',
         handler : 'showForecastToolBar'
+    },{
+    	iconCls: 'magnify-icon',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+    	xtype: 'button',
+    	id: 'magnifyID',
+    	enableToggle: true,
+        handler : 'toggleMagnify'
     }]
 });

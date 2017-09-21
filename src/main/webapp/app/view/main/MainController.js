@@ -10,6 +10,11 @@ Ext.define('MCLM.view.main.MainController', {
 	// --------------------------------------------------------------------------------------------
     // Methods / Events
 	// --------------------------------------------------------------------------------------------
+	
+	toggleMagnify : function( button ) {
+		MCLM.Map.toggleMagnify();
+	},	
+	
 	toggleMapGrid : function( button ) {
 		MCLM.Map.toggleMapGrid();
 	},
