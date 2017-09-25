@@ -152,6 +152,20 @@ public class DataLayerRepository extends BasicRepository {
 		closeSession();
 		return styles;
 	}
+	
+	public void updateFeicao( Feicao feicao ) throws UpdateException {
+		DaoFactory<Feicao> df = new DaoFactory<Feicao>();
+		IDao<Feicao> fm = df.getDao(this.session, Feicao.class);
+		try {
+			fm.updateDO( feicao );
+			commit();
+		} catch (UpdateException e) {
+			rollBack();
+			closeSession();
+			throw e;
+		}
+		closeSession();
+	}	
 
 	public Feicao insertFeicao(Feicao feicao) throws Exception {
 		DaoFactory<Feicao> df = new DaoFactory<Feicao>();

@@ -1,6 +1,7 @@
 Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	extend: 'Ext.toolbar.Toolbar',
 	xtype: 'toolBarPrincipal',
+	id: 'toolBarPrincipal',
 	dock: 'right',
     overflowHandler: 'scroller',
     border : false,

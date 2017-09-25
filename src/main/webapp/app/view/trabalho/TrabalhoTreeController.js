@@ -25,22 +25,197 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     },  
     
     
-    
     editFeicao : function( record ) {
+    	
     	var layerName = record.get('layerName');
     	var feicao = record.get('feicao');
-    	var geomType = feicao.geomType;
+    	var styleName = feicao.style.featureStyleName;
     	var layer = MCLM.Map.findByName( layerName );
     	var source = layer.getSource();
-    	
-    	MCLM.Map.addInteractions( geomType, source );
-    	
     	var editFeicaoWindow = Ext.getCmp('editFeicaoWindow');
+    	// --------------------------------------------------------------------
+    	
+    	var getStyle = function( feature, resolution ) {
+    		var resultStyles = [];
+    		var featureGeomType = feature.getGeometry().getType();
+    		var props = feature.getProperties();
+    						
+    		// Circulo
+    		var hexColor = MCLM.Map.editFeicaoStyle.iconColor;
+    		var newColor = ol.color.asArray(hexColor);
+    		newColor = newColor.slice();
+    		newColor[3] = MCLM.Map.editFeicaoStyle.iconOpacity;	
+    		
+    		if ( featureGeomType == 'Circle' )  {
+    			  var pointStyle = new ol.style.Style({
+    					fill: new ol.style.Fill({
+    						color: newColor
+    					}),
+    					stroke: new ol.style.Stroke({
+    						color: MCLM.Map.editFeicaoStyle.iconColor,
+    						width: 2
+    					})
+    			  });	
+    			  resultStyles.push( pointStyle );					
+    		}
+    		
+    		// Ponto
+    		if ( featureGeomType == 'Point' ) {
+    			
+    			var hexColor = MCLM.Map.editFeicaoStyle.iconColor;
+    			var newColor = ol.color.asArray(hexColor);
+    			newColor = newColor.slice();
+    			newColor[3] = MCLM.Map.editFeicaoStyle.iconOpacity;						
+    			
+    			if ( MCLM.Map.editFeicaoStyle.iconSrc ) {
+    				// Se tiver icone (o caminho do icone) entao cria um estilo de icone
+    				var pointStyle = new ol.style.Style({
+    					  image: new ol.style.Icon(({
+    							anchor: JSON.parse( MCLM.Map.editFeicaoStyle.iconAnchor ),
+    							scale : MCLM.Map.editFeicaoStyle.iconScale,
+    							anchorXUnits: MCLM.Map.editFeicaoStyle.iconAnchorXUnits,
+    							anchorYUnits: MCLM.Map.editFeicaoStyle.iconAnchorYUnits,
+    							opacity: MCLM.Map.editFeicaoStyle.iconOpacity,
+    							color   : MCLM.Map.editFeicaoStyle.iconColor,
+    							rotation: MCLM.Map.editFeicaoStyle.iconRotation,
+    							src:  me.replacePattern(MCLM.Map.editFeicaoStyle.iconSrc, props)
+    					  }))
+    				});					
+    			
+    			} else {
+    			
+    				var pointStyle = new ol.style.Style({
+    					image: new ol.style.Circle({
+    						radius: MCLM.Map.editFeicaoStyle.iconScale,
+    						fill: new ol.style.Fill({
+    							color: newColor
+    						}),
+    						stroke: new ol.style.Stroke({
+    							color: MCLM.Map.editFeicaoStyle.iconColor,
+    							width: 2
+    						})
+    					})
+    				});
+    			}
+    			
+    			resultStyles.push( pointStyle );
+    		}
+
+    		// Linha
+    		try {
+    			if ( featureGeomType == 'LineString' || featureGeomType == 'Line' ) {
+    				var lineStyle = new ol.style.Style({
+    					  fill: new ol.style.Fill({
+    						  color: MCLM.Map.editFeicaoStyle.lineFillColor 
+    					  }),
+    					  stroke: new ol.style.Stroke({
+    						  color: MCLM.Map.editFeicaoStyle.lineStrokeColor,
+    						  width:  MCLM.Map.editFeicaoStyle.lineStrokeWidth,
+    						  lineDash: JSON.parse( MCLM.Map.editFeicaoStyle.lineLineDash ) 
+    					  })
+    						
+    				});	
+    				resultStyles.push( lineStyle );
+    			}
+    		} catch ( err ) {
+    			  
+    		}	 				
+    		
+    		// Poligono
+    		try {
+    			  if ( featureGeomType == 'MultiPolygon' || featureGeomType == 'Polygon' ) {
+    					var hexColor =  MCLM.Map.editFeicaoStyle.polygonFillColor;
+    					var newColor = ol.color.asArray(hexColor);
+    					newColor = newColor.slice();
+    					newColor[3] =  MCLM.Map.editFeicaoStyle.polygonFillOpacity;
+    					
+    					var polFill = newColor;
+    					
+    					var ptrHDist = MCLM.Map.editFeicaoStyle.ptrHDist;
+    					var ptrVDist = MCLM.Map.editFeicaoStyle.ptrVDist;
+    					var ptrLength = MCLM.Map.editFeicaoStyle.ptrLength;
+    					var ptrHeight = MCLM.Map.editFeicaoStyle.ptrHeight;
+    					var ptrWidth = MCLM.Map.editFeicaoStyle.ptrWidth;
+    					
+    					if ( ptrHDist && ptrVDist )
+    						polFill = MCLM.Functions.makePattern( newColor, ptrHDist, ptrVDist, ptrLength, ptrHeight, ptrWidth );
+    												
+    					
+    					
+    					
+    					var polygonStyle = new ol.style.Style({
+    						fill: new ol.style.Fill({
+    							color: polFill,
+    						}),
+    						stroke: new ol.style.Stroke({
+    							color:  MCLM.Map.editFeicaoStyle.polygonStrokeColor,
+    							width:  MCLM.Map.editFeicaoStyle.polygonStrokeWidth, 
+    							lineDash: JSON.parse(  MCLM.Map.editFeicaoStyle.polygonLineDash ), 
+    							strokeLinecap :  MCLM.Map.editFeicaoStyle.polygonStrokeLinecap,
+    						})
+    					});
+    					resultStyles.push( polygonStyle );
+    			  }
+    		} catch ( err ) {
+    			  
+    		}		
+    		
+    		
+    		// Texto
+    		var label = feature.getProperties().label;
+    		var font = MCLM.Map.editFeicaoStyle.textFont;
+    		
+    		if( label && font ) {
+    			
+    			var featureText = new ol.style.Style({
+    				text: new ol.style.Text({
+    					text: label,
+    					offsetY: MCLM.Map.editFeicaoStyle.textOffsetY,
+    					offsetX: MCLM.Map.editFeicaoStyle.textOffsetX,
+    					font: MCLM.Map.editFeicaoStyle.textFont,
+    					scale : 1,
+    					stroke: new ol.style.Stroke({
+    						color: MCLM.Map.editFeicaoStyle.textStrokeColor,
+    						width: MCLM.Map.editFeicaoStyle.textStrokeWidth
+    					}),				                
+    					fill: new ol.style.Fill({
+    						color: MCLM.Map.editFeicaoStyle.textFillColor
+    					}),
+    				})
+    			});		        	
+    			resultStyles.push( featureText );
+    		}				
+    		
+    		
+    		
+    		return resultStyles;
+    	}
+    	
+    	
+    	// --------------------------------------------------------------------
+    	
+    	layer.setStyle( getStyle );
+    	
     	if ( !editFeicaoWindow ) {
     		editFeicaoWindow = Ext.create('MCLM.view.tools.EditFeicaoWindow');
     	}
     	editFeicaoWindow.show();
     	
+    	var stylesStore = Ext.getStore('store.styles');
+    	stylesStore.load({
+            callback : function(records, options, success) {
+            	var estiloCombo = Ext.getCmp("idFeicaoStyle");
+            	for ( x=0; x< records.length; x++ ) {
+            		if ( stylesStore.getAt(x).get('featureStyleName') === styleName ) {
+            			estiloCombo.setValue( stylesStore.getAt(x) );
+            			break;
+            		}
+            	}
+            }
+        });      	
+    	
+    	
+    	MCLM.Map.addInteractions( feicao, source, record );
     	
     },
 

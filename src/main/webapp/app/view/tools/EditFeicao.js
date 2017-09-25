@@ -24,7 +24,28 @@ Ext.define('MCLM.view.tools.EditFeicao', {
 	    handler: 'cancelEditFeicao',
         id : 'cancelEditFeicaoID',
         xtype: 'button',
-    }],
+    },{
+		xtype: 'combobox',
+		editable : false,
+		name: 'idFeicaoStyle',
+		labelWidth: 30,
+		fieldLabel: 'Estilo:',
+		displayField: 'featureStyleName',	    	
+		id: 'idFeicaoStyle',
+		store: 'store.styles',	    	
+	    forceSelection: true,
+	    allowBlank: false,
+	    valueField: 'idFeatureStyle',
+	    
+	    listeners : {
+	    	select : function( ele, rec, idx ) {
+	        	MCLM.Map.editFeicaoStyle = rec.data;
+	        	MCLM.Map.editingFromSource.changed();
+	    	}
+	    } 
+    
+    
+	 }],
 
 	
 });

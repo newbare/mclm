@@ -315,8 +315,6 @@ Ext.define('MCLM.DrawHelper', {
 		    var features = this.vectorSource.getFeatures();
 		    
 		    var jsonData = geojson.writeFeatures( features,{
-                //featureProjection: ol.proj.get('EPSG:3857'),
-                //dataProjection: ol.proj.get('EPSG:4326')
             });
 		    
 		    return jsonData;

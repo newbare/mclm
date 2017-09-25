@@ -58,19 +58,89 @@ Ext.define('MCLM.Map', {
 		modify : null,
 		boxing : null,
 		magnifyOn : false,
-		editingFeature : null,
+		editingOldFeature : null,
+		editingFromSource : null,
+		editingFeicao : null,
+		editFeicaoStyle : null,
 		
-		addInteractions : function ( geometryType, source ) {
+		
+		saveEditFeicao : function() {
 			
+			var sourceFeatures = MCLM.Map.editingFromSource.getFeatures();
+			var editedFeature = sourceFeatures[0]; 
+			var idFeicao = editedFeature.get('idFeicao') ;
+			editedFeature.set('editing', false);
+			
+			var geojson  = new ol.format.GeoJSON();
+		    var jsonData = geojson.writeFeatures( sourceFeatures,{
+            });
+
+		    
+		    var record = MCLM.Map.editingFeicaoRecord;
+		    record.get('feicao').style = MCLM.Map.editFeicaoStyle;
+		    
+		    MCLM.Map.editingFeicao.metadados = jsonData; 
+		    
+			Ext.Ajax.request({
+			       url: 'saveFeicao',
+			       params: {
+			           'data': jsonData,
+			           'idFeicao' : idFeicao,
+			           'idStyle' : MCLM.Map.editFeicaoStyle.idFeatureStyle,
+			       },       
+			       success: function(response, opts) {
+			    	   var respText = Ext.decode(response.responseText);
+			    	   
+			    	   if( respText.result != 'error ') {
+			    		   Ext.Msg.alert('Concluído', respText.msg );
+			    	   } else {
+			    		   Ext.Msg.alert('Erro', respText.msg );
+			    	   }			    	   
+			       }
+			});
+		    
+		    
+			MCLM.Map.removeEditInteractions();
+		},
+		
+		cancelEditFeicao : function() {
+			var sourceFeatures = MCLM.Map.editingFromSource.getFeatures();
+			sourceFeatures[0].getGeometry().setCoordinates( MCLM.Map.editingOldFeature );
+			MCLM.Map.removeEditInteractions();
+		},
+		
+		removeEditInteractions : function() {
+			Ext.getCmp('painelesquerdo').enable();
+			Ext.getCmp('toolBarPrincipal').enable();
+			MCLM.Map.map.removeInteraction( this.modify );
+			MCLM.Map.map.removeInteraction( this.snap );
+			MCLM.Map.map.removeInteraction( this.boxing );
+			MCLM.Map.modify = null;
+			MCLM.Map.snap = null;
+			MCLM.Map.boxing = null;
+			MCLM.Map.editingFeicao = null;
+			MCLM.Map.editingFeicaoRecord = null;
+		},
+
+		
+		addInteractions : function ( feicao, source, record ) {
+			Ext.getCmp('painelesquerdo').disable();
+			Ext.getCmp('toolBarPrincipal').disable();
+			
+			var geometryType = feicao.geomType;
 			var features = source.getFeatures();
 			var featureElement = features[0];
 			
+			MCLM.Map.editFeicaoStyle = feicao.style;
+			MCLM.Map.editingOldFeature = featureElement.getGeometry().getCoordinates();
+			MCLM.Map.editingFromSource = source;
+			MCLM.Map.editingFeicao = feicao;
+			MCLM.Map.editingFeicaoRecord = record;
+			
+			var idFeicao = feicao.idFeicao;
+			
+			featureElement.set('idFeicao', idFeicao);			
 			featureElement.set('editing', true);			
-			
-			featureElement.on('change',function(){
-	           MCLM.Map.editingFeature = this;
-			}, featureElement );			
-			
 			
 			var temp = new ol.Collection( [featureElement] );
 			
@@ -381,7 +451,7 @@ Ext.define('MCLM.Map', {
 				    		   mapImageWindow.update('<img style="width:500px;height:300px" src="'+respText.imagePath+'">');
 				    		   mapImageWindow.show();
 				    	   } else {
-				    		   Ext.alert('Erro', 'Erro ao gerar a imagem');
+				    		   Ext.Msg.alert('Erro', 'Erro ao gerar a imagem');
 				    	   }
 				    	   
 				       }
@@ -579,6 +649,32 @@ Ext.define('MCLM.Map', {
 				view: MCLM.Map.theView
 			});	
 			
+			
+			MCLM.Map.graticule = new ol.control.Graticule({ 
+				step: 0.1, 
+				stepCoord: 3, 
+				margin:1, 
+				projection: 'EPSG:4326', 
+				formatCoord:function(c){ 
+					return c.toFixed(2)+"°" 
+				} 
+			});			
+			
+			var style = new ol.style.Style();
+			
+			style.setStroke (new ol.style.Stroke({ 
+				color: 'rgba(0,0,0,0.4)',
+				width: 0.5,
+			}));
+			
+			style.setFill ( new ol.style.Fill({ color: "#fff" }));
+			
+			style.setText (new ol.style.Text({ 
+				stroke: new ol.style.Stroke({ color:"#fff", width:2 }),
+				fill: new ol.style.Fill({ color:'black' }),
+			}));
+			
+			MCLM.Map.graticule.setStyle(style);			
 			
 			MCLM.Map.lente =  new ol.Overlay.Magnify({	
 				layers: [MCLM.Map.baseLayer],
@@ -830,14 +926,6 @@ Ext.define('MCLM.Map', {
 		// Inicializa todas as variáveis e configuracoes
 		init : function() {
 			var config = MCLM.Globals.config;
-			
-			MCLM.Map.graticule = new ol.Graticule({
-				strokeStyle: new ol.style.Stroke({
-					color: 'rgba(255,120,0,0.9)',
-					width: 1.5,
-					lineDash: [0.5, 4]
-				})
-			});			
 			
 			MCLM.Map.geoserverUrl = config.geoserverUrl;
 			MCLM.Map.baseLayerName = config.baseLayer;
@@ -1222,10 +1310,11 @@ Ext.define('MCLM.Map', {
 		},
 		setMapGridVisibility : function( visible ) {
 			if ( visible ) {
-				MCLM.Map.graticule.setMap( MCLM.Map.map );
+				MCLM.Map.map.addControl( MCLM.Map.graticule );
 				MCLM.Map.graticuleEnabled = true;
+				
 			} else {
-				MCLM.Map.graticule.setMap( null );
+				MCLM.Map.map.removeControl( MCLM.Map.graticule );
 				MCLM.Map.graticuleEnabled = false;
 			}	
 		},

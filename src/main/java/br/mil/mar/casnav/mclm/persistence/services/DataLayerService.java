@@ -226,6 +226,28 @@ public class DataLayerService {
 		return rep. getStyleList();
 	}
 
+	public String updateFeicao(String data, int idFeicao, int idStyle) {
+		String result = "{ \"success\": true, \"msg\": \"Feição atualizada com sucesso.\"}";
+		try {
+			
+			FeatureStyle style = rep.getStyle( idStyle );
+			
+			newTransaction();
+			
+			Feicao feicao = rep.getFeicao( idFeicao );
+			feicao.setMetadados( data );
+			
+			feicao.setStyle(style);
+			
+			newTransaction();
+			
+			rep.updateFeicao(feicao);
+		} catch ( Exception e ) {
+			result = "{ \"error\": true, \"msg\": \""+e.getMessage()+".\" }";
+		}
+		return result;
+	}
+	
 	public String insertFeicao(String data, int idFeatureStyle) {
 		String result = "";
 		
@@ -274,7 +296,7 @@ public class DataLayerService {
 			node.setReadOnly( false );
 			node = ns.addNode( node );					
 			
-			result = "{ \"success\": true, \"msg\": \"Fei��o criada com sucesso.\",\"feicao\":" + jsonFeicao + ",\"layerAlias\":\""+ layerAlias+ "\",\"idLayer\":\""+node.getIdNodeData()+"\"}";
+			result = "{ \"success\": true, \"msg\": \"Feiçãoo criada com sucesso.\",\"feicao\":" + jsonFeicao + ",\"layerAlias\":\""+ layerAlias+ "\",\"idLayer\":\""+node.getIdNodeData()+"\"}";
 			
 		} catch ( Exception e ) {
 			e.printStackTrace();

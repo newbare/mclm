@@ -5,7 +5,7 @@ Ext.define('MCLM.view.tools.EditFeicaoWindow', {
 	id:'editFeicaoWindow',    	
 	xtype: 'editFeicaoWindow',
 	title : "Editar Feição",
-	width : 150,
+	width : 280,
 	height: 70,
 	bodyStyle:"background:#FFFFFF;",
 	resizable: false,
@@ -29,6 +29,7 @@ Ext.define('MCLM.view.tools.EditFeicaoWindow', {
     	close : function() {
     		Ext.tip.QuickTipManager.unregister('saveFeicaoID');    	
     		Ext.tip.QuickTipManager.unregister('cancelEditFeicaoID');
+    		MCLM.Map.cancelEditFeicao();
     	},
 	    
 	    afterrender : function ( cmp ) {
