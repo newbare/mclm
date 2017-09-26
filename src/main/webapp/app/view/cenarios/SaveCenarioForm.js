@@ -27,12 +27,13 @@ Ext.define('MCLM.view.cenarios.SaveCenarioForm', {
         name: 'mapCenter',
         allowBlank : false,
         readOnly: true,
+        xtype : 'hidden',
     },{
     	fieldLabel: 'Centro do Mapa HDMS',
     	id : 'mapCenterHDMSId',
     	name: 'mapCenterHDMS',
     	allowBlank : false,
-    	//xtype : 'hidden',
+    	xtype : 'hidden',
     },{
         fieldLabel: 'Nível de Zoom',
         id : 'mapZoomConfigField',
@@ -41,6 +42,7 @@ Ext.define('MCLM.view.cenarios.SaveCenarioForm', {
         name: 'mapZoom',
         allowBlank : false,
         readOnly: true,
+        xtype : 'hidden',
     },{
         fieldLabel: 'Bounding Box',
         id : 'mapBbox',
@@ -48,6 +50,7 @@ Ext.define('MCLM.view.cenarios.SaveCenarioForm', {
         name: 'mapBbox',
         allowBlank : false,
         readOnly: true,
+        xtype : 'hidden',
     },{
     	fieldLabel: 'Descrição',
         width: 330,
@@ -61,6 +64,7 @@ Ext.define('MCLM.view.cenarios.SaveCenarioForm', {
         name: 'mapaBase',
         allowBlank : false,
         readOnly: true,
+        xtype : 'hidden',
     },{
         fieldLabel: 'Servidor Base',
         width: 330,
@@ -68,6 +72,7 @@ Ext.define('MCLM.view.cenarios.SaveCenarioForm', {
         name: 'servidorBase',
         allowBlank : false,
         readOnly: true,
+        xtype : 'hidden',
     },{
         fieldLabel: 'Mapa Base Ativo?',
         width: 330,

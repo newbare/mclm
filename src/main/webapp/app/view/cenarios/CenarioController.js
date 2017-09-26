@@ -247,6 +247,9 @@ Ext.define('MCLM.view.cenarios.CenarioController', {
     	
 		// Carrega as camadas do cenario na arvore de trabalho
     	MCLM.Globals.currentScenery = sceneryId;
+    	MCLM.Globals.currentSceneryData = row;
+    	
+    	
     	var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
 		trabalhoTreeStore.load({
 			params:{cenario: MCLM.Globals.currentScenery},

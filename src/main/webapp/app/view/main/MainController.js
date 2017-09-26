@@ -11,6 +11,35 @@ Ext.define('MCLM.view.main.MainController', {
     // Methods / Events
 	// --------------------------------------------------------------------------------------------
 	
+	
+	// Teste para pegar uma camada como GEOJSON
+	/*
+	teste : function( button ) {
+		var me = this;
+		
+		var vectorSource = new ol.source.Vector({	
+			url: function(extent) {
+				var sourceUrl = 'http://osm.casnav.mb/osmope/osm/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=osm:curvas_nivel&outputFormat=application/json&srsname=EPSG:4326&bbox=' + extent.join(',') + ',EPSG:4326';
+				var encodedUrl = encodeURIComponent( sourceUrl );
+				return 'getLayerAsFeatures?sourceUrl=' + encodedUrl;
+			},
+			strategy: ol.loadingstrategy.bbox,
+			projection: 'EPSG:4326',
+			format: new ol.format.GeoJSON(),
+		});
+		
+		var vector = new ol.layer.Vector({	
+			source: vectorSource,
+		});
+
+		MCLM.Map.map.addLayer(vector);
+		
+		var r3D = new ol.render3D({ height:500, maxResolution:10 });
+		vector.setRender3D(r3D);		
+	},
+	*/
+	// ----------------------------------------------------------------
+	
 	toggleMagnify : function( button ) {
 		MCLM.Map.toggleMagnify();
 	},	

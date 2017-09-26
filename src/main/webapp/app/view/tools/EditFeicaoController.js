@@ -10,7 +10,7 @@ Ext.define('MCLM.view.tools.EditFeicaoController', {
 	},
 
 	cancelEditFeicao : function() {
-		MCLM.Map.cancelEditFeicao();
+		//MCLM.Map.cancelEditFeicao();
 		var editFeicaoWindow = Ext.getCmp('editFeicaoWindow');
 		editFeicaoWindow.close();
 	},

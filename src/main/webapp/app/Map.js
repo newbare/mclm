@@ -62,10 +62,10 @@ Ext.define('MCLM.Map', {
 		editingFromSource : null,
 		editingFeicao : null,
 		editFeicaoStyle : null,
+		editFeicaoOldStyle : null,
 		
 		
 		saveEditFeicao : function() {
-			
 			var sourceFeatures = MCLM.Map.editingFromSource.getFeatures();
 			var editedFeature = sourceFeatures[0]; 
 			var idFeicao = editedFeature.get('idFeicao') ;
@@ -75,11 +75,10 @@ Ext.define('MCLM.Map', {
 		    var jsonData = geojson.writeFeatures( sourceFeatures,{
             });
 
-		    
 		    var record = MCLM.Map.editingFeicaoRecord;
 		    record.get('feicao').style = MCLM.Map.editFeicaoStyle;
 		    
-		    MCLM.Map.editingFeicao.metadados = jsonData; 
+		    MCLM.Map.editingFeicao.metadados = jsonData;
 		    
 			Ext.Ajax.request({
 			       url: 'saveFeicao',
@@ -98,14 +97,18 @@ Ext.define('MCLM.Map', {
 			    	   }			    	   
 			       }
 			});
-		    
-		    
+		    		
 			MCLM.Map.removeEditInteractions();
 		},
 		
 		cancelEditFeicao : function() {
 			var sourceFeatures = MCLM.Map.editingFromSource.getFeatures();
-			sourceFeatures[0].getGeometry().setCoordinates( MCLM.Map.editingOldFeature );
+		    var record = MCLM.Map.editingFeicaoRecord;
+		    
+		    MCLM.Map.editFeicaoStyle = Ext.decode( MCLM.Map.editFeicaoOldStyle );
+			
+		    sourceFeatures[0].getGeometry().setCoordinates( MCLM.Map.editingOldFeature );
+			MCLM.Map.editingFromSource.changed();
 			MCLM.Map.removeEditInteractions();
 		},
 		
@@ -120,6 +123,9 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.boxing = null;
 			MCLM.Map.editingFeicao = null;
 			MCLM.Map.editingFeicaoRecord = null;
+			MCLM.Map.editingFromSource = null;
+			MCLM.Map.editFeicaoOldStyle = null;
+			MCLM.Map.editFeicaoStyle = null;
 		},
 
 		
@@ -132,6 +138,8 @@ Ext.define('MCLM.Map', {
 			var featureElement = features[0];
 			
 			MCLM.Map.editFeicaoStyle = feicao.style;
+			MCLM.Map.editFeicaoOldStyle = Ext.encode( feicao.style );
+			
 			MCLM.Map.editingOldFeature = featureElement.getGeometry().getCoordinates();
 			MCLM.Map.editingFromSource = source;
 			MCLM.Map.editingFeicao = feicao;

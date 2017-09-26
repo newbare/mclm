@@ -40,6 +40,10 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
             }
         },{
         	iconCls: 'reload-icon',
+        	id: 'reloadWsBtn',
+            handler : 'reloadWorkspace'
+        },{
+        	iconCls: 'new-scenery-icon',
         	id: 'clrWsBtn',
             handler : 'clearWorkspace'
         },{
@@ -88,8 +92,14 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 				
 			},{
 		        target: 'svWsBtn',
-		        title: 'Salvar',
-		        text: 'Salva o Cenário.',
+		        title: 'Salvar Cenário',
+		        text: 'Salva e sobrescreve o Cenário atual.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    },{
+		        target: 'reloadWsBtn',
+		        title: 'Recarregar Cenário',
+		        text: 'Recarrega o Cenário atual.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    },{
@@ -100,8 +110,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		        dismissDelay: 5000 
 		    }, {
 		        target: 'clrWsBtn',
-		        title: 'Limpar Cenário',
-		        text: 'Limpa o Cenário. As modificações não gravadas no cenário atual serão perdidas.',
+		        title: 'Novo Cenário',
+		        text: 'Cria um cenário em branco. As modificações não gravadas no cenário atual serão perdidas.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }, {
@@ -110,13 +120,13 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		        text: 'Salva uma cópia do Cenário atual.',
 		        width: 150,
 		        dismissDelay: 5000 
-		    }/*,{
+		    },{
 		        target: 'adTextBtn',
 		        title: 'Adicionar caixa de texto',
-		        text: 'Adiciona uma caixa de texto ao cenário.',
+		        text: 'Adiciona uma caixa de texto ao Cenário.',
 		        width: 150,
 		        dismissDelay: 5000 
-		    }*/);			
+		    });			
 			
 			
 		},

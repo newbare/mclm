@@ -43,7 +43,8 @@ Ext.define('MCLM.view.draw.AddDrawableLayerDialog', {
 	    allowBlank: false,
 	    editable : false,
 		queryMode:'local',
-		value : 'NE',
+		value : 'CE',
+		xtype : 'hidden',
 		width: 350,
 		matchFieldWidth: false,
 		store : Ext.create('Ext.data.Store', {

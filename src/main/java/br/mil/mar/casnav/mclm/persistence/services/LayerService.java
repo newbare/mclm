@@ -102,26 +102,20 @@ public class LayerService {
 	    return resposta;
 	}
 	
-	/*
+	
 	public String getLayerAsFeatures( String requestUrl ) {
 		String result = "";
 		
-		// http://www.geoservicos.ibge.gov.br/geoserver/wms?service=WFS&version=1.0.0&request=GetFeature&typeName=CGEO:C06_aglomerados_subnormais_2010&maxFeatures=50&outputFormat=json&srsName=EPSG:4326&bbox=-45.75805664062501,-24.161790257643688,-40.13305664062501,-21.028109978642803
-
-		// http://www.geoservicos.ibge.gov.br/geoserver/CGEO/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=CGEO:C06_aglomerados_subnormais_2010&maxFeatures=50&outputFormat=json
-		//String requestUrl = serverUrl.replace("wms/", "") + "/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=" + layerName + 
-		//		limit + "&bbox=" + bbox + "&outputFormat=json"; 
-		
 		try {
 			WebClient ws = new WebClient();
-			result = ws.doGet( requestUrl );
+			result = ws.doGet( URLDecoder.decode( requestUrl, "UTF-8") );
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
 		
 		return result;
 	}
-	*/
+	
 	
 	public String getAsFeatures( int idDataLayer, int idDataWindow, int idNodeData ) {
 		String result = "";

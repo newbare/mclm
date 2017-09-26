@@ -10,4 +10,5 @@ Ext.define("MCLM.Globals", {
          lastServerSelected : null,
          lastServerSelectedID : null,
          totalTextBoxes : 0,
+         currentSceneryData : null,
  });

@@ -345,6 +345,12 @@ body {
 	background-repeat: no-repeat;
 }
 
+.new-scenery-icon {
+	background-image: url('../img/new-file.svg') !important;
+	background-repeat: no-repeat;
+}
+
+
 .filter-icon {
 	background-image: url('../img/filter.svg') !important;
 	background-repeat: no-repeat;

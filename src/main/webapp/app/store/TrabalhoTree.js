@@ -44,7 +44,8 @@ Ext.define('MCLM.store.TrabalhoTree', {
     
 	listeners: {
 		beforeload : function( store, operation, options ) {
-			store.proxy.extraParams.cenario = MCLM.Globals.currentScenery;
+			var sceneryId = MCLM.Globals.currentScenery;
+			store.proxy.extraParams.cenario = sceneryId;
 			return true;
 		}, 
         load: function(store, records){

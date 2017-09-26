@@ -24,6 +24,55 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
         }
     },  
     
+    reloadWorkspace : function( button ) {
+		var row = MCLM.Globals.currentSceneryData;
+		var currentScenery = MCLM.Globals.currentScenery;
+		
+		var sceneryName = row.get('sceneryName');
+		var zoomLevel = row.get('zoomLevel');
+		var mapCenter = row.get('mapCenter');
+		var graticule = row.get('graticule');
+
+		this.doClearWorkspace();
+		// Interceptado por 'MCLM.view.paineis.LayerTreeController'
+		this.fireEvent( "clearMainTree");	    	
+    	
+		MCLM.Map.setMapGridVisibility( graticule );
+		
+		// doClearWorkspace() limpou. Seta novamente.
+		MCLM.Globals.currentSceneryData = row;
+		MCLM.Globals.currentScenery = currentScenery;
+		
+		
+		var trabalhoTreeStore = Ext.getStore('store.trabalhoTree');
+		trabalhoTreeStore.load({
+			params:{cenario: currentScenery},
+		    callback: function(records, operation, success) {
+		    	if ( success ) {
+		        	// Mudar o titulo do no raiz para o nome do cenario
+		    		var tree = Ext.getCmp('trabalhoTree');
+		    		var root = tree.getRootNode();
+		    		
+			    	var painelEsquerdo = Ext.getCmp('painelesquerdo');
+			    	painelEsquerdo.setTitle(sceneryName);		    		
+		    		
+		    		if( root ) {
+		    			root.data.text = sceneryName;
+		    			root.collapse();
+		    			tree.expandAll();
+		    		}
+		    		MCLM.Map.panTo( mapCenter, zoomLevel );
+		    		
+		    		var cloneSceneryButton = Ext.getCmp('svCenaryAsBtn'); 
+		    		cloneSceneryButton.enable();
+		    		
+		    	}
+		    }
+		});  
+		
+    	
+    },
+    
     
     editFeicao : function( record ) {
     	
@@ -285,6 +334,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	// Limpa a arvore do cenario (trabalho)
 		root.removeAll();
 		MCLM.Globals.currentScenery = -1;
+		MCLM.Globals.currentSceneryData = null;
 		
 		var cloneSceneryButton = Ext.getCmp('svCenaryAsBtn'); 
 		cloneSceneryButton.disable();
@@ -654,6 +704,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     	cenarioWindow = Ext.create('MCLM.view.cenarios.CenarioWindow');
     	cenarioWindow.show();
     },
+    
+    
     // Salva a arvore do cenario
     updateSceneryTree : function() {
     	var me = this;

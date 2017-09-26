@@ -279,14 +279,16 @@ public class WebClient {
 			getRequest.setConfig(config);			 
 		}
 		
-		//conn.setConnectTimeout( 240000 );
 		getRequest.addHeader("accept", "application/json");
 		getRequest.addHeader("Content-Type", "plain/text; charset=" + charset );
 		getRequest.setHeader("User-Agent", USER_AGENT);
 
 		HttpClientContext context = HttpClientContext.create();
+		
+		System.out.println("   > Executando...");
 		HttpResponse response = httpClient.execute(getRequest, context);
-
+		System.out.println("   > Fim.");
+		
 		try {
 		    this.cookieStore = context.getCookieStore();
 		} catch ( Exception e ) {

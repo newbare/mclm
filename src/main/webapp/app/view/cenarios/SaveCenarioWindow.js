@@ -11,8 +11,8 @@ Ext.define('MCLM.view.cenarios.SaveCenarioWindow', {
     controller : 'savecenario',	
 	
 	
-	width : 700,
-	height: 400,
+	width : 500,
+	height: 170,
     scrollable: false,
     frame : false,
 	layout : 'border',
