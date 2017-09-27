@@ -1684,16 +1684,14 @@ Ext.define('MCLM.Map', {
 		removeLayer : function ( serialId ) {
 			var me = MCLM.Map;
 			MCLM.Map.map.getLayers().forEach( function ( layer ) {
-				if( layer.get("serialId") == serialId ) {
-					me.map.removeLayer( layer );	
-					return;
+				if ( layer ) {  
+					if( layer.get("serialId") == serialId ) {
+						me.map.removeLayer( layer );	
+						return;
+					}
 				}
-				
 			});
-			
 			MCLM.Map.removeFromLayerStack( serialId );
-			
-			
 		},
 	
 		// --------------------------------------------------------------------------------------------

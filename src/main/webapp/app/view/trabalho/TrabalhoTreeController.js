@@ -809,6 +809,20 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		});
 		
     },
+    
+    showFastChangeBar : function() {
+    	
+    	var fcw = Ext.getCmp('fastChangeWindow');
+    	if ( !fcw ) {
+    		fcw = Ext.create('MCLM.view.tools.FastChangeWindow');
+    	}
+    	fcw.show();
+    	fcw.alignTo(Ext.getBody(), "tl-tl", [350, 50]);
+    	
+    },
+    
+    
+    
     // Salva a area de trabalho atual como um cenario
     saveScenery : function() {
     	var me = this;

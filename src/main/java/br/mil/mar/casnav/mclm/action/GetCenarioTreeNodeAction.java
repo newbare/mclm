@@ -26,10 +26,12 @@ public class GetCenarioTreeNodeAction extends BasicActionClass {
 	public String execute () {
 		
 		String resp = "";
-		if ( cenario == null || cenario == -1 ) return "ok";
+		
+		System.out.println( cenario + "  " + node );
 		
 		try {
-			
+			if ( cenario == null || cenario == -1 ) return "ok";			
+
 			SceneryService ss = new SceneryService();
 			resp = ss.getSceneryTreeAsJSON( cenario, node );
 			

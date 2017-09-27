@@ -47,6 +47,10 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
         	id: 'clrWsBtn',
             handler : 'clearWorkspace'
         },{
+        	iconCls: 'fastchange-icon',
+        	id: 'fastChangeBtn',
+            handler : 'showFastChangeBar'
+        },{
         	xtype: 'tbseparator'
         },{
         	iconCls: 'save-icon',
@@ -100,6 +104,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		        target: 'reloadWsBtn',
 		        title: 'Recarregar Cenário',
 		        text: 'Recarrega o Cenário atual.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    },{
+		        target: 'fastChangeBtn',
+		        title: 'Troca Rápida',
+		        text: 'Exibe a barra de troca rápida de Cenários.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    },{

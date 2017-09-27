@@ -159,6 +159,32 @@ body {
 	background-repeat: no-repeat;
 }
 
+
+
+.one-icon {
+	background-image: url('../img/one.svg') !important;
+	background-repeat: no-repeat;
+}
+.two-icon {
+	background-image: url('../img/two.svg') !important;
+	background-repeat: no-repeat;
+}
+.three-icon {
+	background-image: url('../img/three.svg') !important;
+	background-repeat: no-repeat;
+}
+.four-icon {
+	background-image: url('../img/four.svg') !important;
+	background-repeat: no-repeat;
+}
+.five-icon {
+	background-image: url('../img/five.svg') !important;
+	background-repeat: no-repeat;
+}
+
+
+
+
 .aeroplane-icon {
 	background-image: url('../img/aeroplane.svg') !important;
 	background-repeat: no-repeat;
@@ -358,6 +384,11 @@ body {
 
 .loadscenery-icon {
 	background-image: url('../img/loadscenery.svg') !important;
+	background-repeat: no-repeat;
+}
+
+.fastchange-icon {
+	background-image: url('../img/exchange.svg') !important;
 	background-repeat: no-repeat;
 }
 

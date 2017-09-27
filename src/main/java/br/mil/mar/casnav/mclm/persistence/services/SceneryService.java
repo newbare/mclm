@@ -111,9 +111,11 @@ public class SceneryService {
 		return rep.getScenery( idScenery );
 	}
 
+	/*
 	public Scenery getScenery(String name) throws Exception{
 		return rep.getScenery(name);
 	}
+	*/
 
 	public void newTransaction() {
 		if ( !rep.isOpen() ) {
@@ -179,7 +181,8 @@ public class SceneryService {
 	}
 
 
-	public String getSceneryTreeAsJSON( int idScenery, int idNodeParent ) throws Exception {
+	public String getSceneryTreeAsJSON( Integer idScenery, int idNodeParent ) throws Exception {
+		
 		SceneryTree scenery = new SceneryTree( getScenery( idScenery ) );
 		
 		JSONArray sceneryJSON = new JSONArray();

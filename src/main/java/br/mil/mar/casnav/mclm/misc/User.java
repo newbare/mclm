@@ -10,6 +10,15 @@ public class User {
 	private String siglaOm;
 	private String idUser;
 	private String hashKey;
+	private Integer lastSceneryId;
+	
+	public void setLastSceneryId(Integer lastSceneryId) {
+		this.lastSceneryId = lastSceneryId;
+	}
+	
+	public Integer getLastSceneryId() {
+		return lastSceneryId;
+	}
 	
 	public String getUserName() {
 		return userName;
