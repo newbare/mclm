@@ -51,6 +51,10 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
         	id: 'fastChangeBtn',
             handler : 'showFastChangeBar'
         },{
+        	iconCls: 'play-icon',
+        	id: 'presentationBtn',
+            handler : 'showPresentationBar'
+        },{
         	xtype: 'tbseparator'
         },{
         	iconCls: 'save-icon',
@@ -134,6 +138,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		        target: 'adTextBtn',
 		        title: 'Adicionar caixa de texto',
 		        text: 'Adiciona uma caixa de texto ao Cenário.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    },{
+		        target: 'presentationBtn',
+		        title: 'Criar Apresentação',
+		        text: 'Exibe a barra de controle de Apresentação.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    });			

@@ -810,6 +810,18 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		
     },
     
+    
+    showPresentationBar : function() {
+    	
+    	var fcw = Ext.getCmp('presentationWindow');
+    	if ( !fcw ) {
+    		fcw = Ext.create('MCLM.view.tools.PresentationWindow');
+    	}
+    	fcw.show();
+    	fcw.alignTo(Ext.getBody(), "bl-bl", [7, -70]);
+    	
+    },
+    
     showFastChangeBar : function() {
     	
     	var fcw = Ext.getCmp('fastChangeWindow');

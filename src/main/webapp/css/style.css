@@ -149,6 +149,52 @@ body {
 }
 
 
+.play-icon {
+	background-image: url('../img/play.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.first-icon {
+	background-image: url('../img/previous.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.last-icon {
+	background-image: url('../img/next-pres.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.record-icon {
+	background-image: url('../img/record.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.next-pres-icon {
+	background-image: url('../img/fast-forward.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.previous-icon {
+	background-image: url('../img/rewind.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.flush-icon {
+	background-image: url('../img/flush.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+
+.stop-icon {
+	background-image: url('../img/stop.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.pause-icon {
+	background-image: url('../img/pause.svg') !important;
+	background-repeat: no-repeat; 
+}
+
 .next-icon {
 	background-image: url('../img/next.svg') !important;
 	background-repeat: no-repeat;
