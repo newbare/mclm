@@ -5,7 +5,7 @@ Ext.define('MCLM.view.tools.FastChangeWindow', {
 	id:'fastChangeWindow',    	
 	xtype: 'fastChangeWindow',
 	title : "Troca Rápida de Cenários",
-	width : 218,
+	width : 286,
 	height: 70,
 	bodyStyle:"background:#FFFFFF;",
 	resizable: false,
@@ -26,22 +26,38 @@ Ext.define('MCLM.view.tools.FastChangeWindow', {
     listeners: {
 
     	close : function() {
-    		/*
-    		Ext.tip.QuickTipManager.unregister('showForecastID');    	
-    		Ext.tip.QuickTipManager.unregister('enableQueryLocationID');
-    		*/    	
+	    	var fastChange = Ext.getCmp("fastChange");
+			var buttons = fastChange.query('button');
+			Ext.Array.each(buttons, function(button) {
+	    		Ext.tip.QuickTipManager.unregister( button.id );
+			});  	    	
     	},
 	    
 	    afterrender : function ( cmp ) {
-        	/*
-    	    Ext.tip.QuickTipManager.register({
-    	        target: 'togglePrecipitationID',
-    	        title: 'Chuva',
-    	        text: 'Exibe / Oculta camada de chuva OpenWeatherMap.',
-    	        width: 180,
-    	        dismissDelay: 5000 
-    	    });			
-        	*/
+
+	    	var fastChange = Ext.getCmp("fastChange");
+			var buttons = fastChange.query('button');
+			Ext.Array.each(buttons, function(button) {
+				
+				var data = MCLM.Globals.fastChangeSlots[ button.id ];
+				if( data ) {
+					console.log( button.id );
+					
+		    		var title = data.get('sceneryName');
+		    		Ext.tip.QuickTipManager.unregister( button.id );
+		    	    Ext.tip.QuickTipManager.register({
+		    	        target: button.id,
+		    	        title: 'Abrir Cenário',
+		    	        text: 'Carrega o Cenário "' + title + '". As modificações não gravadas no Cenário atual serão perdidas.',
+		    	        width: 180,
+		    	        dismissDelay: 5000 
+		    	    });					
+					
+					
+				}
+				
+			});  	    	
+	    	
 	    	
         }
 	

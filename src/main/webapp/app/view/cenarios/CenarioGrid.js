@@ -10,7 +10,6 @@ Ext.define('MCLM.view.cenarios.CenarioGrid', {
     flex:1,
     loadMask: true,
     columns:[
-   	    /* {text:'Público', dataIndex:'isPublic', width:70, xtype: 'booleancolumn', falseText:'Não', trueText: 'Sim'}, */
    	     {text:'', dataIndex:'isPublic', width:30, renderer: function(value) {
    	    	if ( value ) {
    	    		return '<img style="width:15px;height:15px" src="img/public.svg" />';
@@ -26,6 +25,29 @@ Ext.define('MCLM.view.cenarios.CenarioGrid', {
         rowclick: function(grid, record, tr, rowIndex, e, eOpts) {
         	// Interceptado pelo controller MCLM.view.cenarios.CenarioController'
         },
+        
+        
+        itemcontextmenu : function(tree, record, item, index, e, eOpts ) {
+        	var me = MCLM.Functions;
+		    var menu_grid = new Ext.menu.Menu({ 
+		    	items: [
+		          { iconCls: 'one-icon', text: 'Acessar pelo botão 1', handler: function() { me.saveToSlot(record,'loadOneId'); } },
+		          { iconCls: 'two-icon', text: 'Acessar pelo botão 2', handler: function() { me.saveToSlot(record,'loadTwoId'); } },
+		          { iconCls: 'three-icon', text: 'Acessar pelo botão 3', handler: function() { me.saveToSlot(record,'loadThreeId'); } },
+		          { iconCls: 'four-icon', text: 'Acessar pelo botão 4', handler: function() { me.saveToSlot(record,'loadFourId'); } },
+		          { iconCls: 'five-icon', text: 'Acessar pelo botão 5', handler: function() { me.saveToSlot(record,'loadFiveId'); } },
+		          { iconCls: 'six-icon', text: 'Acessar pelo botão 6', handler: function() { me.saveToSlot(record,'loadSixId'); } },
+		          { iconCls: 'seven-icon', text: 'Acessar pelo botão 7', handler: function() { me.saveToSlot(record,'loadSevenId'); } },
+		          { iconCls: 'eight-icon', text: 'Acessar pelo botão 8', handler: function() { me.saveToSlot(record,'loadEightId'); } },
+		        ]
+		    });
+        	
+			var position = e.getXY();
+			e.stopEvent();
+			menu_grid.showAt(position);        	
+        	
+        },
+        
 		afterrender:function(){
 			
 		    Ext.tip.QuickTipManager.register({

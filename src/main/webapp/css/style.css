@@ -181,6 +181,18 @@ body {
 	background-image: url('../img/five.svg') !important;
 	background-repeat: no-repeat;
 }
+.six-icon {
+	background-image: url('../img/six.svg') !important;
+	background-repeat: no-repeat;
+}
+.seven-icon {
+	background-image: url('../img/seven.svg') !important;
+	background-repeat: no-repeat;
+}
+.eight-icon {
+	background-image: url('../img/eight.svg') !important;
+	background-repeat: no-repeat;
+}
 
 
 

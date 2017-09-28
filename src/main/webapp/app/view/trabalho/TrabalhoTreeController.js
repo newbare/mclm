@@ -817,7 +817,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     		fcw = Ext.create('MCLM.view.tools.FastChangeWindow');
     	}
     	fcw.show();
-    	fcw.alignTo(Ext.getBody(), "tl-tl", [350, 50]);
+    	fcw.alignTo(Ext.getBody(), "bl-bl", [7, -40]);
     	
     },
     

@@ -13,11 +13,13 @@ Ext.define('MCLM.view.tools.FastChangeController', {
 		});    
 		
 		this.currentSlot = exceptButton;
+		
 		if ( MCLM.Globals.fastChangeSlots[ exceptButton.id ] ) {
 	    	MCLM.Globals.currentSceneryData = MCLM.Globals.fastChangeSlots[ exceptButton.id ];
 	    	MCLM.Globals.currentScenery = MCLM.Globals.currentSceneryData.get('idScenery');
 	    	this.loadScenery();
 		}
+		
 		
     },
 
@@ -25,39 +27,35 @@ Ext.define('MCLM.view.tools.FastChangeController', {
     	this.releaseAll( button );
     	console.log( MCLM.Globals.fastChangeSlots[ button.id ] );
     },
-    
     loadTwo : function( button ) {
     	this.releaseAll( button );
     	console.log( MCLM.Globals.fastChangeSlots[ button.id ] );
     },
-    
     loadThree : function( button ) {
     	this.releaseAll( button );
     	console.log( MCLM.Globals.fastChangeSlots[ button.id ] );
     },
-
     loadFour : function( button ) {
     	this.releaseAll( button );
     	console.log( MCLM.Globals.fastChangeSlots[ button.id ] );
     },
-
     loadFive : function( button ) {
     	this.releaseAll( button );
     	console.log( MCLM.Globals.fastChangeSlots[ button.id ] );
     },
-    
-    saveToCurrentSlot : function() {
-    	
-    	if ( !this.currentSlot ) {
-			Ext.Msg.alert('Erro','Selecione uma posição para salvar o acesso a este Cenário.' );
-			return true;
-    	}
-    	console.log('Salvar acesso na posição: ' + this.currentSlot.id );
-    	
-    	MCLM.Globals.fastChangeSlots[ this.currentSlot.id ] = MCLM.Globals.currentSceneryData;
+    loadSix : function( button ) {
+    	this.releaseAll( button );
+    	console.log( MCLM.Globals.fastChangeSlots[ button.id ] );
+    },
+    loadSeven : function( button ) {
+    	this.releaseAll( button );
+    	console.log( MCLM.Globals.fastChangeSlots[ button.id ] );
+    },
+    loadEight : function( button ) {
+    	this.releaseAll( button );
+    	console.log( MCLM.Globals.fastChangeSlots[ button.id ] );
     },
     
-
     
     loadScenery : function() {
 		var row = MCLM.Globals.currentSceneryData;

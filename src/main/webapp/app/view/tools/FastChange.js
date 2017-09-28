@@ -17,7 +17,7 @@ Ext.define('MCLM.view.tools.FastChange', {
 	    height: MCLM.Globals.btnHeight,
 	    id : 'loadOneId',
         xtype: 'button',
-        enableToggle: true,
+        
     },{
 	    iconCls: 'two-icon',
         handler: 'loadTwo',
@@ -25,7 +25,7 @@ Ext.define('MCLM.view.tools.FastChange', {
 	    height: MCLM.Globals.btnHeight,
 	    id : 'loadTwoId',
         xtype: 'button',
-        enableToggle: true,
+        
     },{
 	    iconCls: 'three-icon',
         handler: 'loadThree',
@@ -33,7 +33,7 @@ Ext.define('MCLM.view.tools.FastChange', {
 	    height: MCLM.Globals.btnHeight,
 	    id : 'loadThreeId',
         xtype: 'button',
-        enableToggle: true,
+        
     },{
 	    iconCls: 'four-icon',
         handler: 'loadFour',
@@ -41,7 +41,7 @@ Ext.define('MCLM.view.tools.FastChange', {
 	    height: MCLM.Globals.btnHeight,
 	    id : 'loadFourId',
         xtype: 'button',
-        enableToggle: true,
+        
     },{
 	    iconCls: 'five-icon',
         handler: 'loadFive',
@@ -49,14 +49,31 @@ Ext.define('MCLM.view.tools.FastChange', {
 	    height: MCLM.Globals.btnHeight,
 	    id : 'loadFiveId',
         xtype: 'button',
-        enableToggle: true,
+        
     },{
-	    iconCls: 'save-icon',
-        handler: 'saveToCurrentSlot',
+	    iconCls: 'six-icon',
+        handler: 'loadSix',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
-	    id : 'saveToCurrentSlotId',
+	    id : 'loadSixId',
         xtype: 'button',
+        
+    },{
+	    iconCls: 'seven-icon',
+        handler: 'loadSeven',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    id : 'loadSevenId',
+        xtype: 'button',
+        
+    },{
+	    iconCls: 'eight-icon',
+        handler: 'loadEight',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+	    id : 'loadEightId',
+        xtype: 'button',
+        
     }],
 
 	

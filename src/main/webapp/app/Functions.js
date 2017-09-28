@@ -39,6 +39,26 @@ Ext.define('MCLM.Functions', {
 			metarImageWindow.show();
 		},
 		
+        saveToSlot : function( what, where ) {
+        	what.set('buttonId', where);
+        	MCLM.Globals.fastChangeSlots[ where ] = what;
+        	
+        	var fastChange = Ext.getCmp("fastChange");
+        	if ( fastChange ) {
+	    		var title = what.get('sceneryName');
+	    		Ext.tip.QuickTipManager.unregister( where );
+	    	    Ext.tip.QuickTipManager.register({
+	    	        target: where,
+	    	        title: 'Abrir Cenário',
+	    	        text: 'Carrega o Cenário "' + title + '". As modificações não gravadas no Cenário atual serão perdidas.',
+	    	        width: 180,
+	    	        dismissDelay: 5000 
+	    	    });
+        	}
+        	
+        	
+        },		
+		
 		getClimaDesc : function( value ) {
 			var climaDesc = [];
 			climaDesc["ec"] = "Encoberto com Chuvas Isoladas";
