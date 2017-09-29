@@ -28,6 +28,7 @@ Ext.define('MCLM.view.tools.PresentationWindow', {
     listeners: {
 
     	close : function() {
+    		MCLM.getApplication().fireEvent( "onCloseWindow");
     	},
 	    
 	    afterrender : function ( cmp ) {

@@ -686,7 +686,7 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.lente =  new ol.Overlay.Magnify({	
 				layers: [MCLM.Map.baseLayer],
-				zoomOffset: 2.5,
+				zoomOffset: 4,
 				projection: 'EPSG:4326'
 			});
 					
