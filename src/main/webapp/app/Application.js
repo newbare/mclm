@@ -11,7 +11,7 @@ Ext.define('MCLM.Application', {
        'MCLM.RouteHelper',
        'MCLM.ClimaHelper',
        'MCLM.view.photo.PhotoHelper',
-       
+       'MCLM.MeasureHelper',
     ],
     
     stores: [

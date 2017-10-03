@@ -795,6 +795,12 @@ Ext.define('MCLM.Functions', {
 		    	        width: 180,
 		    	        dismissDelay: 5000 
 		    	    },{
+		    	    	target: 'measureToolID',
+		    	    	title: 'Ferramentas de Medição',
+		    	    	text: 'Exibe a barra de ferramentas de medição.',
+		    	    	width: 180,
+		    	    	dismissDelay: 5000 
+		    	    },{
 		    	        target: 'magnifyID',
 		    	        title: 'Liga / Desliga Lupa',
 		    	        text: 'Amplia a camada de base sobre qualquer camada ativa. A camada de base precisa estar ativada.',

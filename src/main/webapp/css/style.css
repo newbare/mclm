@@ -929,6 +929,12 @@ body {
 	background-repeat: no-repeat; 
 }
 
+
+.measure-icon {
+	background-image: url('../img/measure.svg') !important;
+	background-repeat: no-repeat; 
+}
+
 .owm-temp-icon {
 	background-image: url('../img/owm_temperature.svg') !important;
 	background-repeat: no-repeat; 
@@ -1028,7 +1034,7 @@ body {
 
 .tooltip {
   position: relative;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(244, 47, 26, 0.5);
   border-radius: 4px;
   color: white;
   padding: 4px 8px;

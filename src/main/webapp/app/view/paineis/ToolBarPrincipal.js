@@ -11,8 +11,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
     
     
     
-    items: [
-    {
+    items: [{
     	// Config
     	xtype: 'button',
 		id: 'id111',
@@ -20,8 +19,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'setting-icon',
 	    handler : 'showConfig',
-    }, 
-    {
+    },{
     	// Exibe / Oculta Mapa de Base
     	xtype: 'button',
     	id: 'id119',
@@ -47,8 +45,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'server-icon',
         handler: 'manageServers'
-    }, 
-    {
+    },{ 
     	// Grade de coordenadas
     	xtype: 'button',
     	id: 'id115',
@@ -57,9 +54,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    iconCls: 'grid-icon',
 	    enableToggle: true,
         handler: 'toggleMapGrid'
-    }, 
-
-    {
+    },{
     	// Lista de Camadas
     	xtype: 'button',
     	id: 'id116',
@@ -67,8 +62,7 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'layers-icon',
         handler: 'showLayerStack'
-    }, 
-    {
+    },{
     	xtype: 'button',
     	id: 'id117',
 	    width: MCLM.Globals.btnWidth,
@@ -76,24 +70,21 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
 	    enableToggle: true,
 	    iconCls: 'query-icon',
         handler: 'toggleQueryTool'
-    }, 
-    {
+    },{
     	xtype: 'button',
     	id: 'id118',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'socket-icon',
         handler: 'checkInternetConnection'
-    }, 
-    {
+    },{
     	xtype: 'button',
     	id: 'id120',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
 	    iconCls: 'route-icon',
         handler: 'calcRoute'
-    }, 
-    {
+    },{
     	xtype: 'button',
     	id: 'btnStyle',
 	    width: MCLM.Globals.btnWidth,
@@ -122,5 +113,12 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
     	id: 'magnifyID',
     	enableToggle: true,
         handler : 'toggleMagnify'
+    },{
+    	iconCls: 'measure-icon',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+    	xtype: 'button',
+    	id: 'measureToolID',
+        handler : 'showMeasureTool'
     }]
 });

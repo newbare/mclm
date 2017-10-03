@@ -125,7 +125,7 @@ Ext.define('MCLM.view.trabalho.TrabalhoTree', {
 		    }, {
 		        target: 'clrWsBtn',
 		        title: 'Limpar Cenário',
-		        text: 'Cria um cenário em branco. As modificações não gravadas no cenário atual serão perdidas.',
+		        text: 'Limpa o Cenário. As modificações não gravadas no cenário atual serão perdidas.',
 		        width: 150,
 		        dismissDelay: 5000 
 		    }, {

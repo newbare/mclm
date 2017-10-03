@@ -170,4 +170,14 @@ Ext.define('MCLM.view.main.MainController', {
     	
     },
     
+    
+    showMeasureTool : function() {
+    	var measureWindow = Ext.getCmp('measureWindow');
+    	if( !measureWindow ) {
+    		measureWindow = Ext.create('MCLM.view.tools.MeasureWindow');
+    	}
+    	measureWindow.show();
+    	
+    },
+    
 });
