@@ -10,7 +10,7 @@ Ext.define('MCLM.view.draw.DrawToolBarWindow', {
     controller : 'drawToolBar',	
 	
 	
-	width : 410,
+	width : 450,
 	height: 150,
 	resizable: false,
 
@@ -28,6 +28,10 @@ Ext.define('MCLM.view.draw.DrawToolBarWindow', {
         	iconCls: 'plus-icon',
         	id: 'addDrawableLayerBtn',
             handler : 'addDrawableLayer'
+        },{
+        	iconCls: 'text-icon',
+        	id: 'adTextBtn',
+            handler : 'addTextToScenery'
         },{
         	iconCls: 'save-icon',
         	id: 'saveDrawableBtn',
@@ -124,6 +128,12 @@ Ext.define('MCLM.view.draw.DrawToolBarWindow', {
 		        width: 190,
 		        dismissDelay: 5000 
 		    },{
+		        target: 'adTextBtn',
+		        title: 'Adicionar caixa de texto',
+		        text: 'Adiciona uma caixa de texto ao Cenário.',
+		        width: 150,
+		        dismissDelay: 5000 
+		    },{
 		        target: 'saveDrawableBtn',
 		        title: 'Salvar Feição',
 		        text: 'Salva a feição atual.',
@@ -180,6 +190,7 @@ Ext.define('MCLM.view.draw.DrawToolBarWindow', {
 		 	 Ext.tip.QuickTipManager.unregister('drawSquareBtn');
 		 	 Ext.tip.QuickTipManager.unregister('drawCircleBtn');
 		 	 Ext.tip.QuickTipManager.unregister('saveDrawableBtn');
+		 	 Ext.tip.QuickTipManager.unregister('adTextBtn');
 		 	 MCLM.DrawHelper.finish();
 		},	
     }

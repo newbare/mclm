@@ -26,8 +26,6 @@ public class SceneryNodeService {
 	
 	public String updateOrCreateNodes(String data, Integer idScenery) {
 		
-		System.out.println( data );
-		
 		String result = "{ \"success\": true, \"msg\": \"Cenário atualizado com sucesso.\" }";
 
 		try {
@@ -46,8 +44,6 @@ public class SceneryNodeService {
 				
 				NodeData layer = gson.fromJson( jsonobj.toString(), NodeData.class);
 
-				System.out.println( layer.getFeicao().getMetadados() );
-				
 				int id = jsonobj.getInt( "id" );
 				SceneryNode sn = new SceneryNode();
 				
@@ -93,8 +89,8 @@ public class SceneryNodeService {
 		}
 	}
 	
-	public void insertSceneryNodeList(List<SceneryNode> SceneryNodeList) throws Exception {
-		rep.insertSceneryNodeList( SceneryNodeList );
+	public void insertSceneryNodeList(List<SceneryNode> sceneryNodeList) throws Exception {
+		rep.insertSceneryNodeList( sceneryNodeList );
 	}
 	
 	public SceneryNode insertSceneryNode(SceneryNode SceneryNode) throws InsertException {

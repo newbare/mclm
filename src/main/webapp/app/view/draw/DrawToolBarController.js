@@ -9,7 +9,57 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     		addDrawableLayer = Ext.create('MCLM.view.draw.AddDrawableLayerDialog');
     	}
     	addDrawableLayer.show();	    	
-    }, 
+    },
+    
+    addTextToScenery : function() {
+    	var me = this;
+    	
+		var textBoxWindow = Ext.getCmp('textBoxWindow');
+		if( !textBoxWindow ) {
+			textBoxWindow = Ext.create('MCLM.view.draw.TextBoxWindow');
+		}
+		textBoxWindow.show();
+		Ext.getCmp('boxTitleId').focus(true, 100);  
+		
+		MCLM.Map.onClickBindKey = MCLM.Map.map.on('click', function(event) {
+			var center = event.coordinate;
+			textBoxWindow.textBoxCenter = center;
+			Ext.getCmp('coordinateId').setValue( center );
+		});  		
+		
+		$("#painelCentral").css('cursor','copy');
+    	
+    },
+    
+    onTextFormClose : function() {
+    	var textBoxWindow = Ext.getCmp('textBoxWindow');
+    	textBoxWindow.close();
+    },
+    
+    onTextFormSubmit : function() {
+    	
+    	var boxDescription = Ext.getCmp('boxDescriptionId');
+    	var boxTitle = Ext.getCmp('boxTitleId');
+    	var boxCoordinate = Ext.getCmp('coordinateId');
+    	
+    	var textBoxWindow = Ext.getCmp('textBoxWindow');
+    	var center = textBoxWindow.textBoxCenter;
+
+    	alert( center );
+    	
+    	var feicaoNome = boxTitle.getValue();
+    	var feicaoDescricao = boxDescription.getValue();
+    	var feicaoCoordinate = boxCoordinate.getValue();
+    	var idEstilo = Ext.getCmp("idFeicaoStyle").getValue();
+    	
+    	if( ( feicaoNome != '') && ( feicaoDescricao != '')  && ( center != null )) {
+    		this.createText( center, feicaoNome, feicaoDescricao );   
+    	}    	
+    	
+
+
+    	this.onTextFormClose();
+    },
     
     // Desenha uma linha na camada
     drawLine : function() {
@@ -260,6 +310,123 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     	
     	
     	*/
-    }
+    },
+    
+    
+    /*
+    		----  CAIXA DE TEXTO ----
+    */
+    
+    createText : function( center, titulo, texto ) {
+    	
+    	alert( center + " " + titulo + " " + texto );
+    	
+    	MCLM.Globals.totalTextBoxes++;
+    	var qtd = MCLM.Globals.totalTextBoxes;
+    	var me = this;
+    	var divId = 'popup'+qtd;
+    	
+    	var div = $('<div id="'+divId+'"></div>').addClass("popupArea");
+    	$(document.body).append( div );
+    	var domDiv = document.getElementById(divId);
+    	
+		var popup = new ol.Overlay({
+			  element: domDiv,
+			  stopEvent: false,
+			  dragging: false,
+			  positioning: 'left-top',
+
+			  autoPan: true,
+			  autoPanAnimation: { duration: 250 },
+			  titulo : '',
+			  texto : '',
+				  			  
+			  
+		});
+		MCLM.Map.map.addOverlay(popup);    	
+		popup.setPosition( center );
+		
+		popup.set('titulo', titulo);
+		popup.set('texto', texto)
+		
+		var boxDiv = '<div class="popupText"><div class="popupTitle">'+titulo+'</div>' + 
+		'<div class="popupContent">'+texto+'</div></div>';
+		
+		domDiv.innerHTML = boxDiv;   	
+    	
+		var dragPan;
+		MCLM.Map.map.getInteractions().forEach(function(interaction){
+			if (interaction instanceof ol.interaction.DragPan) {
+				dragPan = interaction;  
+		  }
+		});
+
+		domDiv.addEventListener('mousedown', function(evt) {
+			dragPan.setActive(false);
+			popup.set('dragging', true);
+			console.info('start dragging ' + popup.get('titulo') );
+			$(this).css('opacity','1');
+		});
+
+		domDiv.addEventListener('mouseup', function(evt) {
+			$(this).css('opacity','0.7');
+		});
+		
+		MCLM.Map.map.on('pointermove', function(evt) {
+			if (popup.get('dragging') === true) {
+				popup.setPosition(evt.coordinate);
+				me.textBoxCenter = evt.coordinate;
+			}
+		});
+
+		MCLM.Map.map.on('pointerup', function(evt) {
+			if (popup.get('dragging') === true) {
+			    dragPan.setActive(true);
+			    popup.set('dragging', false);
+			}
+		});		
+		
+
+		// Cria o no no cenario
+		/*
+		var serialId = "FE" + MCLM.Functions.guid().substring(1, 8);
+		var trabalhoTree = Ext.getCmp('trabalhoTree');
+		var root = trabalhoTree.getRootNode();		
+		
+		var newId = 0;
+		root.cascadeBy( function(n) { 
+			var temp = n.get('id');
+			if ( temp > newId ) newId = temp;
+		});
+		newId++;		
+		
+		var feicao = {};
+		feicao.nome = titulo;
+		feicao.descricao = texto;
+		feicao.geomType = 'POINT';
+		feicao.metadados = center.toString();
+		
+		var newNode =  root.appendChild({
+			   'id' : newId,
+			   'text' : titulo,
+			   'layerAlias' : titulo,
+			   'layerName' : titulo,
+			   'layerType' : 'TXT',
+			   'description' : texto,
+			   'readOnly' : false,
+			   'checked' : true,
+			   'selected' : true,
+			   'institute' : 'Criado pelo Usuário',
+			   'indexOrder' : 0,
+			   'iconCls' : 'text-icon',
+			   'leaf' : true,
+			   'idNodeParent' : 0,
+			   'serialId' : serialId,
+			   'idNodeData' : -1,
+			   'feicao' : feicao
+		});			
+		*/
+    },
+    
     
 });

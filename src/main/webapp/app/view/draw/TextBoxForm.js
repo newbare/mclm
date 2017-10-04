@@ -1,4 +1,4 @@
-Ext.define('MCLM.view.trabalho.TextBoxForm', {
+Ext.define('MCLM.view.draw.TextBoxForm', {
 	extend: 'Ext.form.Panel',
 	
 	xtype : 'textBoxForm',
@@ -22,6 +22,11 @@ Ext.define('MCLM.view.trabalho.TextBoxForm', {
         width: 330,
         id:'boxTitleId',
         name: 'boxTitle',
+    },{
+        fieldLabel: 'Coordenadas',
+        width: 330,
+        id:'coordinateId',
+        name: 'coordinate',
     }, {
         fieldLabel: 'Descrição',
         width: 330,
@@ -33,10 +38,10 @@ Ext.define('MCLM.view.trabalho.TextBoxForm', {
     
     buttons: [{
 	          text: 'Cancelar',
-	          handler : 'onFormClose'
+	          handler : 'onTextFormClose'
 	      },{
 	          text: 'Gravar',
-	          handler : 'onFormSubmit'
+	          handler : 'onTextFormSubmit'
           }
 	]
 

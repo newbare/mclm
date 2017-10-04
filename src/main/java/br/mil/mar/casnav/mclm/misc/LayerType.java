@@ -8,10 +8,9 @@ package br.mil.mar.casnav.mclm.misc;
 // FDR : Pasta na árvore
 // FEI : Feicao
 // CRN : Root Node para os Cenários / Feições
-// TXT : Caixa de texto inserida pelo usuário
 
 public enum LayerType {
-	SHP, WMS, KML, FTR, TIF, FDR, DTA, FEI, CRN, TXT;
+	SHP, WMS, KML, FTR, TIF, FDR, DTA, FEI, CRN;
 
 	public String getLayerType() {
 		return this.name();
