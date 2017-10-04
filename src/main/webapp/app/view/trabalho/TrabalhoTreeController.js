@@ -924,11 +924,23 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		var serialId = node.get('serialId' );
 		var layerType = node.get('layerType' );
 		
-		if ( layerName == "" ) return;
-		
 		if( checked == true ) {
 			if( layerType == "FEI") {
 				MCLM.Map.addFeicao( node );
+			} else if ( layerType == "TXT" ) {
+				
+				// Adicionar Texto
+				console.log( node );
+				
+				/*
+					feicao.nome = titulo;
+					feicao.descricao = texto;
+					feicao.geomType = 'POINT';
+					feicao.metadados = center.toString();				
+				*/
+				//this.createText ( 'center', 'titulo', 'texto' );
+				
+				
 			} else {
 				// adiciona a camada no mapa
 				var layer = MCLM.Map.addLayer( node );
@@ -937,6 +949,12 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		} else {
 			if( layerType == "FEI") {
 				MCLM.Map.removeFeicao( node );
+			} else if( layerType == "TXT" ) {
+				
+				// Remover Texto
+				console.log( node.data );
+				
+				
 			} else {
 				// Remove a camada do mapa
 				MCLM.Map.removeLayer( serialId );

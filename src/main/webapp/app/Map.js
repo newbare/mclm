@@ -2005,8 +2005,7 @@ Ext.define('MCLM.Map', {
 						att.features = features;
 					}
 					// -------------------------------
-					//console.log( layerType );
-					//console.log( att );					
+				
 					
 					if ( !att.features ) {
 						MCLM.Functions.mainLog("Não existem dados na camada " + layerName );
@@ -2024,11 +2023,26 @@ Ext.define('MCLM.Map', {
 				        	var keys = feature.getKeys();
 			        		for( y=0; y < keys.length; y++ ) {
 			        			var value = feature.get( keys[y] );
-			        			if( (keys[y] != 'geometry') ) {
+			        			if( (keys[y] != 'geometry') && (keys[y] != 'attributes') && (keys[y] != 'feicaoNome')
+			        					&& (keys[y] != 'feicaoDescricao') && (keys[y] != 'idFeicao')  && (keys[y] != 'editing') 
+			        					&& (keys[y] != 'angle') ) {
 			        				// Seta o valor para a coluna
 			        				columnRefs[ keys[y] ] = value;
-					        		
 			        			}
+			        			
+			        			if ( keys[y] == 'attributes' ) {
+			        				for( zz=0; zz < value.length; zz++ ) {
+			        					var feicaoData = value[zz];
+			        					var translatedName = feicaoData['translatedName'];
+			        					var originalName = feicaoData['originalName'];
+			        					var dataValue = feicaoData['value'];
+			        					var columnName = translatedName;
+			        					if( !translatedName ) { columnName = originalName; } 
+			        					columnRefs[ columnName ] = dataValue;	
+			        				}
+			        				
+			        			}
+			        			
 			        		}
 			        		
 			        		// Passa para a verdadeira. Isso tudo é para manter o numero de colunas igual

@@ -138,9 +138,13 @@ Ext.define('MCLM.MeasureHelper', {
 			}
 			var output;
 			if (length > 100) {
-				output = (Math.round(length / 1000 * 100) / 100) + ' ' + 'km';
+				var inKm = (Math.round(length / 1000 * 100) / 100);
+				var inNm = (inKm * 0.539957);
+				inNm = Math.round(inNm * 100) / 100;
+				output = inKm + ' km <br>' + inNm + ' mn';
 			} else {
-				output = (Math.round(length * 100) / 100) + ' ' + 'm';
+				var inMeters = (Math.round(length * 100) / 100);
+				output = inMeters + ' m';
 			}
 			return output;
 			

@@ -3,31 +3,14 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
     alias: 'controller.cloneToCenario',
 
    
-    doClone : function( ) {
-    	var styleCombo = Ext.getCmp("idFeicaoStyle").getValue();
-    	var feicaoNome = Ext.getCmp("feicaoNome").getValue();
-    	var feicaoDescricao = Ext.getCmp("feicaoDescricao").getValue();
-    	
-    	if ( !feicaoNome || !feicaoDescricao ) {
-    		Ext.Msg.alert('Erro','Preencha todos os campos solicitados.');
-    		return true;
-    	}
-    	
-    	
-    	var cloneToCenarioWindow = Ext.getCmp('cloneToCenarioWindow');
-    	var obj = cloneToCenarioWindow.feicao;
-
-    	obj.features[0].properties.feicaoNome = feicaoNome;
-    	obj.features[0].properties.feicaoDescricao = feicaoDescricao;
-    	
+    saveFeicao : function( feicao, styleId ) {
     	
     	var feicao = Ext.encode( obj );
-    	
 		Ext.Ajax.request({
 		       url: 'newFeicao',
 		       params: {
 		           'data': feicao,
-		           'idFeatureStyle' : styleCombo
+		           'idFeatureStyle' : styleId
 		       },       
 		       success: function(response, opts) {
 		    	   
@@ -95,7 +78,7 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
 		    		   var tabTrabalho = Ext.getCmp("abaTrabalho"); 
 		    		   painelEsquerdo.setActiveTab(tabTrabalho);
 		    		   
-		    		   Ext.Msg.alert('Sucesso','Elemento gravada com sucesso.');
+		    		   Ext.Msg.alert('Sucesso','Elemento gravado com sucesso.');
 		    		   
 		    		   
 		    		   
@@ -109,6 +92,28 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
 		    	   Ext.Msg.alert('Erro','Erro ao gravar Elemento: ' + respObj.msg );
 		       }		       
 		});    	
+    	
+    	
+    },
+    
+    doClone : function( ) {
+    	var styleCombo = Ext.getCmp("idFeicaoStyle").getValue();
+    	var feicaoNome = Ext.getCmp("feicaoNome").getValue();
+    	var feicaoDescricao = Ext.getCmp("feicaoDescricao").getValue();
+    	
+    	if ( !feicaoNome || !feicaoDescricao ) {
+    		Ext.Msg.alert('Erro','Preencha todos os campos solicitados.');
+    		return true;
+    	}
+    	
+    	
+    	var cloneToCenarioWindow = Ext.getCmp('cloneToCenarioWindow');
+    	var obj = cloneToCenarioWindow.feicao;
+
+    	obj.features[0].properties.feicaoNome = feicaoNome;
+    	obj.features[0].properties.feicaoDescricao = feicaoDescricao;
+    	
+    	this.saveFeicao();
 		
     },
     
