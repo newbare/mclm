@@ -34,6 +34,9 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     onTextFormClose : function() {
     	var textBoxWindow = Ext.getCmp('textBoxWindow');
     	textBoxWindow.close();
+    	
+    	var drawToolBar = Ext.getCmp("drawToolBar");
+    	drawToolBar.close();
     },
     
     onTextFormSubmit : function() {
@@ -45,21 +48,162 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     	var textBoxWindow = Ext.getCmp('textBoxWindow');
     	var center = textBoxWindow.textBoxCenter;
 
-    	alert( center );
-    	
     	var feicaoNome = boxTitle.getValue();
     	var feicaoDescricao = boxDescription.getValue();
     	var feicaoCoordinate = boxCoordinate.getValue();
     	var idEstilo = Ext.getCmp("idFeicaoStyle").getValue();
     	
+    	
+    	if( !feicaoNome || !feicaoDescricao  ) {
+			Ext.Msg.alert('Operação Inválida', 'É necessário fornecer um título e uma descrição para a caixa de texto.' );
+			return true;
+    	}  
+    	
+    	if( !center  ) {
+			Ext.Msg.alert('Operação Inválida', 'Clique no mapa para definir a posição da caixa de texto.' );
+			return true;
+    	}       	
+    	
     	if( ( feicaoNome != '') && ( feicaoDescricao != '')  && ( center != null )) {
     		this.createText( center, feicaoNome, feicaoDescricao );   
     	}    	
+
+    	// Salva no cenário ...     	
+		var feicao = {};
+		feicao.nome = feicaoNome;
+		feicao.descricao = feicaoDescricao;
+		feicao.geomType = 'POINT';
+		feicao.metadados = center;    	
     	
-
-
+		var feature = this.toPointFeature( center, feicaoNome, feicaoDescricao );
+		
+		console.log( Ext.encode(feature) );
+		
+		var idEstilo = Ext.getCmp("idFeicaoStyle").getValue();
+		//var styleCombo = Ext.getCmp("idFeicaoStyle");
+		//var estiloNome = styleCombo.getRawValue();
+		
+    	this.saveFeicaoAndAddToNode( Ext.encode(feature), idEstilo, feicaoNome, feicaoDescricao, 'TXT' );
+		
     	this.onTextFormClose();
+    	
     },
+    
+    toPointFeature : function( center, feicaoNome, feicaoDescricao ) {
+    	var featureCollection = {};
+    	var feature = {};
+    	var geometry = {};
+    	var properties = {};
+    	var features = [];
+    	
+    	geometry.type = 'Point';
+    	geometry.coordinates=center;
+    	
+    	properties.feicaoNome = feicaoNome;
+    	properties.feicaoDescricao = feicaoDescricao;
+    	properties.feicaoTipo = 'TXT';
+    	
+    	feature.type = 'Feature';
+    	feature.geometry = geometry;
+    	feature.properties = properties;
+    	
+    	features.push( feature );
+    	
+    	featureCollection.type = 'FeatureCollection';
+    	featureCollection.features = features;
+    	
+    	return featureCollection;
+    },
+    
+    saveFeicaoAndAddToNode : function( data, idFeatureStyle, feicaoNome, feicaoDescricao, feicaoTipo ) {
+    	
+    	Ext.Ajax.request({
+    		   url: 'newFeicao',
+    		   params: {
+    			   'data': data,
+    			   'idFeatureStyle' : idFeatureStyle
+    		   },       
+    		   success: function(response, opts) {
+    			   var respObj = Ext.decode( response.responseText );
+    			   
+    			   if( respObj.success ) {
+
+    				   // A feicao foi gravada no banco. Cria um no para ela na arvore do cenario
+    				   var layerAlias = respObj.layerAlias;
+    				   var serialId = "FE" + MCLM.Functions.guid().substring(1, 8);
+    				   var trabalhoTree = Ext.getCmp('trabalhoTree');
+    				   var root = trabalhoTree.getRootNode();
+    				   var idLayer = respObj.idLayer;
+    				   var newFeicao = respObj.feicao;
+    				   
+    				   
+    				   // **************************************************
+    					var layerTree = Ext.getCmp('layerTree');
+    					var rootMaintree = layerTree.getRootNode();
+    					var feicaoRootNode = null;
+    					
+    					rootMaintree.cascadeBy( function(n) { 
+    						if ( n.get('layerType') == 'CRN' ) {
+    							feicaoRootNode = n;
+    						}
+    					});					    		
+    					
+    					if ( feicaoRootNode.get('expanded')  ) {
+    						var layerTreeStore = Ext.getStore('store.layerTree');
+    						layerTreeStore.load( { node: feicaoRootNode } );
+    					}
+    				   // **************************************************
+    				   
+    				   
+    				   var newId = 0;
+    				   root.cascadeBy( function(n) { 
+    					   console.log( n );
+    					   var temp = n.get('id');
+    					   if ( temp > newId ) newId = temp;
+    				   });
+    				   newId++;
+    				   
+    				   newNode =  root.appendChild({
+    					   'id' : newId,
+    					   'text' : feicaoNome,
+    					   'layerAlias' : layerAlias,
+    					   'layerName' : feicaoNome,
+    					   'layerType' : 'FEI',
+    					   'description' : feicaoDescricao,
+    					   'readOnly' : false,
+    					   'checked' : false,
+    					   'selected' : false,
+    					   'institute' : feicaoTipo,
+    					   'indexOrder' : 0,
+    					   'iconCls' : 'fei-icon',
+    					   'leaf' : true,
+    					   'idNodeParent' : 0,
+    					   'serialId' : serialId,
+    					   'idNodeData' : idLayer,
+    					   'feicao' : newFeicao
+    				   });			    		   
+    				   
+    				   // Torna a aba de cenario ativa, caso nao esteja
+    				   var painelEsquerdo = Ext.getCmp("painelesquerdo");
+    				   var tabTrabalho = Ext.getCmp("abaTrabalho"); 
+    				   painelEsquerdo.setActiveTab(tabTrabalho);
+    				   
+    				   Ext.Msg.alert('Sucesso','Feição gravada com sucesso.');
+    			   } else {
+    				   Ext.Msg.alert('Erro','Erro ao gravar Feição: ' + respObj.msg );
+    			   }
+    		   },
+    		   failure: function(response, opts) {
+    			   var respObj = Ext.decode( response.responseText );
+    			   Ext.Msg.alert('Erro','Erro ao gravar Feição: ' + respObj.msg );
+    		   }
+    	});   	  		  
+    	
+    	
+    },
+    
+    
+    
     
     // Desenha uma linha na camada
     drawLine : function() {
@@ -296,20 +440,6 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     	
     	Ext.getCmp("drawToolBar").close();
     	
-    	/*
-    	
-    	var anWindow = Ext.getCmp("anWindow");
-    	if ( !anWindow ) { 
-    		anWindow = Ext.create('MCLM.view.apolo.feicoes.AreasNotaveisWindow');
-    	}
-    	anWindow.show();	  
-    	
-    	Ext.getCmp("anData").setValue( data );
-    	Ext.getCmp("mappolycolor").setValue( obj.properties.feicaoEstilo.polygonFillColor );
-    	Ext.get('mappolycolorBox').setStyle('background-color', obj.properties.feicaoEstilo.polygonFillColor );
-    	
-    	
-    	*/
     },
     
     
@@ -318,8 +448,6 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
     */
     
     createText : function( center, titulo, texto ) {
-    	
-    	alert( center + " " + titulo + " " + texto );
     	
     	MCLM.Globals.totalTextBoxes++;
     	var qtd = MCLM.Globals.totalTextBoxes;
@@ -386,46 +514,6 @@ Ext.define('MCLM.view.draw.DrawToolBarController', {
 			}
 		});		
 		
-
-		// Cria o no no cenario
-		/*
-		var serialId = "FE" + MCLM.Functions.guid().substring(1, 8);
-		var trabalhoTree = Ext.getCmp('trabalhoTree');
-		var root = trabalhoTree.getRootNode();		
-		
-		var newId = 0;
-		root.cascadeBy( function(n) { 
-			var temp = n.get('id');
-			if ( temp > newId ) newId = temp;
-		});
-		newId++;		
-		
-		var feicao = {};
-		feicao.nome = titulo;
-		feicao.descricao = texto;
-		feicao.geomType = 'POINT';
-		feicao.metadados = center.toString();
-		
-		var newNode =  root.appendChild({
-			   'id' : newId,
-			   'text' : titulo,
-			   'layerAlias' : titulo,
-			   'layerName' : titulo,
-			   'layerType' : 'TXT',
-			   'description' : texto,
-			   'readOnly' : false,
-			   'checked' : true,
-			   'selected' : true,
-			   'institute' : 'Criado pelo Usuário',
-			   'indexOrder' : 0,
-			   'iconCls' : 'text-icon',
-			   'leaf' : true,
-			   'idNodeParent' : 0,
-			   'serialId' : serialId,
-			   'idNodeData' : -1,
-			   'feicao' : feicao
-		});			
-		*/
     },
     
     

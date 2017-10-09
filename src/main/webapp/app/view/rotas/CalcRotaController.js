@@ -74,25 +74,79 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 		var count = routeData.length;    	
 		   
 		if ( count == 0 ) {
-			Ext.Msg.alert('Rota Inexistente','Calcule uma rota antes de efetuar esta operação.' );
+			Ext.Msg.alert('Rota Inexistente','Calcule uma rota antes de executar esta operação.' );
 			return true;
 		}
 		
-		var geoJsonData = MCLM.RouteHelper.getAsJson();
-		Ext.Msg.alert('Não Implementado Ainda','MCLM.views.rotas.CalcRotaController :: addRouteToCurrentScenery' );
+		var geoJsonData = Ext.decode( MCLM.RouteHelper.getAsJson() );
+		
+		//console.log( geoJsonData );
+		
+		var parser = new jsts.io.OL3Parser();
+		var union = null;
+		var routeAsDirections = [];
+		
+		for ( x=0; x < geoJsonData.features.length; x++ ) {
+			var feature = geoJsonData.features[x];
+			routeAsDirections.push( feature.properties );
+			
+			var mls = new ol.geom.MultiLineString( feature.geometry.coordinates );
+			var jstsGeom = parser.read( mls );
+			
+			if ( union == null ) {
+				union = jstsGeom;
+			} else {
+				union = union.union( jstsGeom );
+			}
+			
+		}
+		
+		var mergedGeom = parser.write(union);
+
+		var feicao = this.createNewFeature( mergedGeom, routeAsDirections );
+		
+		var cloneToCenarioWindow = Ext.getCmp('cloneToCenarioWindow');
+		if ( !cloneToCenarioWindow ) cloneToCenarioWindow = Ext.create('MCLM.view.datawindow.CloneToCenarioWindow');
+		cloneToCenarioWindow.show();
+		cloneToCenarioWindow.feicao = feicao;
+
     },
-    /*
-    bindMapToInspectFeature : function() {
-    	var features = MCLM.RouteHelper.poiSource.getFeatures();
+    
+    
+    createNewFeature : function( geometry, routeAsDirections ) {
+    	var featureCollection = {};
+    	var feature = {};
+    	var properties = {};
+    	var features = [];
     	
-    	if( features.length == 0 ) {
-    		Ext.Msg.alert('Nada Para Interrogar','Selecione alguns pontos de interresse antes.' );
-    		return true;
+    	var desc = '';
+    	var prefix = '';
+    	for ( x=0; x < routeAsDirections.length; x++  ) {
+    		var dir = routeAsDirections[x];
+    		var desc = desc + prefix + dir.index + ':' +  dir.way_name + ' (' + dir.km + 'km)';
+    		prefix = ', ';
     	}
     	
-    	MCLM.Map.bindMapToInspectFeature();
+    	properties.directions = desc;
+		properties.feicaoNome = 'Rota';
+		properties.feicaoTipo = 'ROTA';
+		properties.feicaoDescricao = 'Rota';
+		
+    	feature.type = 'Feature';
+    	feature.geometry = {};
+    	feature.geometry.type = 'MultiLineString';
+    	feature.geometry.coordinates = geometry.getCoordinates();
+    	feature.properties = properties;
+    	
+    	
+    	features.push( feature );
+    	featureCollection.type = 'FeatureCollection';
+    	featureCollection.features = features;
+    	
+    	return featureCollection;
+    	
     },
-    */
+    
     
     disableButtons : function() {
     	var poiPanel = Ext.getCmp("routePoi");
@@ -127,7 +181,7 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     		var maxSeq = routeSeq + MCLM.RouteHelper.maxRouteSeq;
     		routeData[x].seq = maxSeq; 
     		
-    		var featureProperties = '{"way_name":"'+ routeData[x].way_name +'", "km":"'+ routeData[x].km + '"}';
+    		var featureProperties = '{"index":"'+ routeData[x].seq +'", "way_name":"'+ routeData[x].way_name +'", "km":"'+ routeData[x].km + '"}';
     		
     		geojsonObject = geojsonObject + prefix + '{"type": "Feature","properties": '+featureProperties+
     			',"geometry":' + JSON.stringify( routeData[x].geometry ) + '}';

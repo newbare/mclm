@@ -1418,12 +1418,10 @@ Ext.define('MCLM.Map', {
 			var layerStyle = geojsonStr.featureStyle;
 			var clustered = false;
 		
-			
 			// Carregas as features
 	    	var features = new ol.format.GeoJSON().readFeatures( geojsonStr.data, {
-	    	    //featureProjection: 'EPSG:3857'
 	    	});		   	
-		   	
+
 	    	// Cria um source para as features
 			var vectorSource = new ol.source.Vector({
 			});	
@@ -1486,7 +1484,7 @@ Ext.define('MCLM.Map', {
 				//console.log( me.replacePattern("A vaca caiu ${areakm2} e saiu voando até ${nome}...", props)  )
 
 				// ------------------------------------------------------------------------------
-				if ( featureGeomType == 'LineString' || featureGeomType == 'Line' ) {
+				if ( featureGeomType == 'LineString' || featureGeomType == 'Line' || featureGeomType == 'MultiLineString' ) {
 		        	var lineStyle = new ol.style.Style({
 						fill: new ol.style.Fill({
 							color: layerStyle.lineFillColor
@@ -1673,9 +1671,11 @@ Ext.define('MCLM.Map', {
 		removeLayerByName : function ( layerName ) {
 			var me = MCLM.Map;
 			MCLM.Map.map.getLayers().forEach( function ( layer ) {
-				if( layer.get("name") == layerName ) {
-					me.map.removeLayer( layer );	
-					return;
+				if ( layer ) {
+					if( layer.get("name") == layerName ) {
+						me.map.removeLayer( layer );	
+						return;
+					}
 				}
 			});
 		},

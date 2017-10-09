@@ -1,5 +1,8 @@
 package br.mil.mar.casnav.mclm.misc;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import br.mil.mar.casnav.mclm.persistence.entity.DataLayer;
 import br.mil.mar.casnav.mclm.persistence.entity.Feicao;
 import br.mil.mar.casnav.mclm.persistence.entity.FilterItem;
@@ -111,18 +114,45 @@ public class TreeNode {
 			}
 			// ====================================================================================
 			if ( this.layerType.equals("FEI") ) {
+				this.iconCls = "fei-icon";
 				try {
 					
 					dss.newTransaction();
 					Integer idFeicao = Integer.valueOf( ute.getData("id_feicao") );
 					this.feicao = dss.getFeicao( idFeicao );
-					
 					this.institute = "Feição '" + this.feicao.getGeomType() + "' estilo '" + this.feicao.getStyle().getFeatureStyleName() +"'" ;
+
+					String meta = this.feicao.getMetadados();
+					JSONObject featureCollection = new JSONObject( meta );
+					JSONArray features = featureCollection.getJSONArray("features");
+					JSONObject feature = features.getJSONObject(0);					
+					
+					String feicaoTipo = "";
+					try {
+						feicaoTipo = feature.getJSONObject("properties").getString("feicaoTipo");
+					} catch ( Exception e ) {
+					
+					}
+					if ( feicaoTipo.equals("TXT") ) {
+						this.iconCls = "text-icon";
+					}
+					if ( feicaoTipo.equals("Circle") ) {
+						this.iconCls = "circle-tool";
+					}					
+					if ( feicaoTipo.equals("Point") ) {
+						this.iconCls = "point-tool";
+					}					
+					if ( feicaoTipo.equals("LineString") || feicaoTipo.equals("Line") || feicaoTipo.equals("ROTA") ) {
+						this.iconCls = "line-tool";
+					}	
+					if ( feicaoTipo.equals("") ) {
+						this.iconCls = "wms-icon";
+					}					
 					
 				} catch ( Exception e ) {
 					e.printStackTrace();
 				}
-				this.iconCls = "fei-icon";
+				
 			}
 			
 			if ( this.layerType.equals("SHP") ) this.iconCls = "shp-icon";

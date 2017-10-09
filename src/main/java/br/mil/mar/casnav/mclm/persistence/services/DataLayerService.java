@@ -251,6 +251,8 @@ public class DataLayerService {
 	public String insertFeicao(String data, int idFeatureStyle) {
 		String result = "";
 		
+		System.out.println( data );
+		
 		try {
 		
 			FeatureStyle style = getFeatureStyle( idFeatureStyle );

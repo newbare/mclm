@@ -2,6 +2,8 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.trabalho',
     
+    textBoxes : [],
+    
     addingText : false,
     
     init : function(app) {
@@ -747,6 +749,48 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
     },
 	
     
+    createText : function( center, titulo, texto ) {
+    	
+    	MCLM.Globals.totalTextBoxes++;
+    	var qtd = MCLM.Globals.totalTextBoxes;
+    	var me = this;
+    	var divId = 'popup'+qtd;
+    	
+    	var div = $('<div id="'+divId+'"></div>').addClass("popupArea");
+    	$(document.body).append( div );
+    	var domDiv = document.getElementById(divId);
+    	
+		var popup = new ol.Overlay({
+			  element: domDiv,
+			  stopEvent: false,
+			  dragging: false,
+			  positioning: 'left-top',
+
+			  autoPan: true,
+			  autoPanAnimation: { duration: 250 },
+			  titulo : '',
+			  texto : '',
+				  			  
+			  
+		});
+		
+		this.textBoxes[titulo] = popup;
+		
+		MCLM.Map.map.addOverlay(popup);    	
+		popup.setPosition( center );
+		
+		popup.set('titulo', titulo);
+		popup.set('texto', texto)
+		
+		var boxDiv = '<div class="popupText"><div class="popupTitle">'+titulo+'</div>' + 
+		'<div class="popupContent">'+texto+'</div></div>';
+		
+		domDiv.innerHTML = boxDiv;   	
+ 	
+		
+    },
+    
+    
 	// Responde a mudanca de estado de um no ( selecionado/nao selecionado )
 	toggleNode: function( node ) {
 		var checked = node.get('checked');
@@ -757,6 +801,17 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		if( checked == true ) {
 			if( layerType == "FEI") {
 				MCLM.Map.addFeicao( node );
+
+				var metadados = Ext.decode( node.data.feicao.metadados );
+				var feicaoTipo = metadados.features[0].properties.feicaoTipo;
+				
+				if ( feicaoTipo == 'TXT ') {
+					var feicaoNome = metadados.features[0].properties.feicaoNome;
+					var feicaoDescricao = metadados.features[0].properties.feicaoDescricao;
+					var coordinates = metadados.features[0].geometry.coordinates;
+					this.createText( coordinates, feicaoNome, feicaoDescricao );
+				}
+				
 			} else {
 				// adiciona a camada no mapa
 				var layer = MCLM.Map.addLayer( node );
@@ -765,6 +820,13 @@ Ext.define('MCLM.view.trabalho.TrabalhoTreeController', {
 		} else {
 			if( layerType == "FEI") {
 				MCLM.Map.removeFeicao( node );
+				
+				var metadados = Ext.decode( node.data.feicao.metadados );
+				var feicaoNome = metadados.features[0].properties.feicaoNome;
+				var ovl = this.textBoxes[feicaoNome];
+				MCLM.Map.map.removeOverlay(ovl);
+				this.textBoxes[feicaoNome] = null;
+				
 			} else {
 				// Remove a camada do mapa
 				MCLM.Map.removeLayer( serialId );

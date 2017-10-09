@@ -3,9 +3,10 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
     alias: 'controller.cloneToCenario',
 
    
-    saveFeicao : function( feicao, styleId ) {
+    saveFeicao : function( obj, styleId ) {
     	
     	var feicao = Ext.encode( obj );
+    	
 		Ext.Ajax.request({
 		       url: 'newFeicao',
 		       params: {
@@ -113,7 +114,7 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
     	obj.features[0].properties.feicaoNome = feicaoNome;
     	obj.features[0].properties.feicaoDescricao = feicaoDescricao;
     	
-    	this.saveFeicao();
+    	this.saveFeicao( obj, styleCombo );
 		
     },
     

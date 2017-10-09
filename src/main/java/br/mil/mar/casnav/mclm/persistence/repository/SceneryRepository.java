@@ -90,9 +90,6 @@ public class SceneryRepository extends BasicRepository {
 		IDao<Scenery> fm = df.getDao(this.session, Scenery.class);
 		Set<Scenery> scenery = null;
 		try {
-			
-			System.out.println( "select * from sceneries where is_public = true or cpf_user='" + cpf + "'" );
-			
 			scenery = new HashSet<Scenery>( fm.getList("select * from sceneries where is_public = true or cpf_user='" + cpf + "'") );
 		} catch ( Exception e ) {
 			closeSession();

@@ -34,6 +34,8 @@
 	<link rel="stylesheet" media="screen" type="text/css" href="css/colorpicker.css" />
 	<script type="text/javascript" src="js/colorpicker.js"></script>
 
+<!-- JSTS -->
+	<script type="text/javascript" src="js/jsts.min.js"></script>
 
 <!-- INTERNO -->
 	<link rel="stylesheet" type="text/css" href="css/style.css">
