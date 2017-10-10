@@ -5,25 +5,35 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.entity.Scenery;
 import br.mil.mar.casnav.mclm.persistence.entity.SceneryNode;
 import br.mil.mar.casnav.mclm.persistence.services.SceneryService;
 
 
 public class PDFCreator {
+	private List<PDFLayerProperties> pdfLayerProperties;
 
 	private Paragraph getParagraph( float left, String text, Font footerFont ) {
         Paragraph pp = new Paragraph( text, footerFont );
@@ -32,7 +42,12 @@ public class PDFCreator {
 	}
 	
 	
-	public String gerarPDF( String path, int idCenario, User user ) throws Exception {
+	public String gerarPDF( String path, int idCenario, User user, String bbox ) throws Exception {
+		WebClient wc = new WebClient();
+		
+		
+		pdfLayerProperties = new ArrayList<PDFLayerProperties>();
+		
 		String outputFolder = PathFinder.getInstance().getPath() + "/tempmaps/" + path;
 		String pdfName = UUID.randomUUID().toString().toUpperCase().substring(0,8) + ".pdf";
 		String pdfFullPath = outputFolder + File.separator + pdfName;
@@ -83,7 +98,31 @@ public class PDFCreator {
 			document.add( getParagraph(0, "Impresso por : " + user.getName() , footerFont) );
 			document.add( new Paragraph("\n") );
 			document.add( getParagraph(0, "Camadas: " , footerFont) );
+			
 			for ( SceneryNode node : scenery.getNodes() ) {
+				NodeData theLayer = node.getLayer();
+				String layerAlias = theLayer.getLayerAlias();
+
+				// Pega os atributos de camadas WMS
+				if ( theLayer.getLayerType() == LayerType.WMS  ) {
+					String layerUrl = theLayer.getServer().getUrl();
+					String layerName = theLayer.getLayerName();
+					
+					String url= layerUrl + "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&QUERY_LAYERS=" + layerName + "&layers=" + layerName +
+							"&buffer=100&INFO_FORMAT=application/json&FEATURE_COUNT=500&X=65&Y=20&BBOX=" + bbox + "&WIDTH=256&HEIGHT=256";
+					
+					String features = wc.doGet( url );
+					pdfLayerProperties.add( getLayerProperties(features, layerAlias ) );
+				}	
+				
+				
+				
+				// Pega os atributos de Feições
+				if ( theLayer.getLayerType() == LayerType.FEI  ) {
+					String metadados = theLayer.getFeicao().getMetadados();
+					pdfLayerProperties.add( getLayerProperties(metadados, layerAlias ) );
+				}
+				
 				String thumbPath = outputFolder + "/" + node.getLayer().getSerialId() + ".png";
 				String error = "";
 				try {
@@ -151,9 +190,83 @@ public class PDFCreator {
 		document.add( p );
 		
 
+		if ( pdfLayerProperties.size() > 0 ) {
+			Font boldNormalFont = new Font(FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.BLACK );
+			
+			for ( PDFLayerProperties layerProperties : pdfLayerProperties ) {
+				document.newPage();
+				document.add(brasaoDefesa);
+				
+				Paragraph layerNameParagraph = new Paragraph( "Atributos da Camada \"" + layerProperties.getLayerName() + "\"", boldNormalFont ); 
+				layerNameParagraph.setAlignment( Element.ALIGN_CENTER );
+				
+				document.add( new Paragraph("\n") );
+				document.add( layerNameParagraph );
+				document.add( new Paragraph("\n\n") );		
+
+				PdfPTable table = new PdfPTable(2);
+				for ( PDFLayerProperty property :  layerProperties.getProperties() ) {
+					PdfPCell cellKey = new PdfPCell(new Phrase( property.getKey() , footerFont));
+					PdfPCell valueKey = new PdfPCell(new Phrase( property.getValue() , footerFont));
+					
+					table.addCell( cellKey );
+					table.addCell( valueKey );
+				}
+				
+				document.add(table);
+			}
+			
+			
+		}
+		
+		
 		document.close();
 		writer.close();
 		return pdfFullPath;
+	}
+	
+	private PDFLayerProperties getLayerProperties( String metadados, String layerAlias ) {
+		// Um metadado é uma FeatureCollection ( Um objeto com um array de Features )
+		JSONObject fc = new JSONObject( metadados );
+		JSONArray features = fc.getJSONArray("features");
+		// So tem uma feature por feicao.
+		JSONObject feature = features.getJSONObject(0);
+		// Por fim, pega as propriedades da feature
+		JSONObject properties = feature.getJSONObject("properties");
+
+		PDFLayerProperties layerProperties = new PDFLayerProperties( layerAlias ); 
+		for( Iterator<String> key=properties.keys(); key.hasNext(); ) {
+			String theKey = key.next();
+
+			// Caso especial para atributos de feições criadas a partir de camadas WMS
+			if ( theKey.equals("attributes") ) {
+				JSONArray attrs = properties.getJSONArray( theKey );
+
+				for( int x=0; x< attrs.length(); x++ ) {
+					JSONObject attr = attrs.getJSONObject(x);
+					
+					String originalName = attr.getString("originalName");
+					String translatedName = attr.getString("translatedName");
+					Object value = attr.get("value");
+					
+					String theName = originalName;
+					if ( !translatedName.equals("" ) ) {
+						theName = translatedName;
+					}
+					
+					PDFLayerProperty pdflp = new PDFLayerProperty( theName, String.valueOf( value ) );
+					layerProperties.addProperty( pdflp );
+				} 
+				
+			} else {
+				Object value = properties.get( theKey );
+				PDFLayerProperty pdflp = new PDFLayerProperty( theKey, String.valueOf( value ) );
+				layerProperties.addProperty( pdflp );
+			}
+		}
+		
+		return layerProperties;
+		
 	}
 
 }

@@ -79,9 +79,6 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
 		}
 		
 		var geoJsonData = Ext.decode( MCLM.RouteHelper.getAsJson() );
-		
-		//console.log( geoJsonData );
-		
 		var parser = new jsts.io.OL3Parser();
 		var union = null;
 		var routeAsDirections = [];
@@ -114,6 +111,13 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     
     
     createNewFeature : function( geometry, routeAsDirections ) {
+    	
+    	var compareFunction = function(a,b) {
+    		return a.index - b.index;
+    	}; 
+    	
+    	routeAsDirections.sort(compareFunction);
+    	
     	var featureCollection = {};
     	var feature = {};
     	var properties = {};
@@ -123,8 +127,8 @@ Ext.define('MCLM.view.rotas.CalcRotaController', {
     	var prefix = '';
     	for ( x=0; x < routeAsDirections.length; x++  ) {
     		var dir = routeAsDirections[x];
-    		var desc = desc + prefix + dir.index + ':' +  dir.way_name + ' (' + dir.km + 'km)';
-    		prefix = ', ';
+    		var desc = desc + prefix + dir.way_name + ' (' + dir.km + 'km)';
+    		prefix = '; ';
     	}
     	
     	properties.directions = desc;

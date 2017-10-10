@@ -454,7 +454,9 @@ Ext.define('MCLM.Map', {
 				    	   
 				    	   if( respText.result != 'error ') {
 				    		   var uuid = respText.uuid;
-				    		   window.open('getMapAsPDF?uuid='+uuid+'&idCenario='+idCenario,'_blank');
+				    		   var	bbox = MCLM.Map.getMapCurrentBbox();
+				    		   
+				    		   window.open('getMapAsPDF?uuid='+uuid+'&idCenario='+idCenario+'&bbox='+bbox,'_blank');
 				    		   
 				    		   mapImageWindow.update('<img style="width:500px;height:300px" src="'+respText.imagePath+'">');
 				    		   mapImageWindow.show();
@@ -1803,14 +1805,8 @@ Ext.define('MCLM.Map', {
 		// Retorna o bounding box atual do mapa
 		getMapCurrentBbox : function () {
 			var extent = MCLM.Map.map.getView().calculateExtent( MCLM.Map.map.getSize() );
-
-			//var bottomLeft = ol.proj.transform( ol.extent.getBottomLeft( extent ), 'EPSG:3857', 'EPSG:4326' );
-		    //var topRight = ol.proj.transform( ol.extent.getTopRight( extent ), 'EPSG:3857', 'EPSG:4326' );
-
 		    var bottomLeft = ol.extent.getBottomLeft( extent );
 		    var topRight = ol.extent.getTopRight( extent );
-		    
-		    
 		    return bottomLeft + "," + topRight;
 		},
 		// --------------------------------------------------------------------------------------------
@@ -1823,9 +1819,6 @@ Ext.define('MCLM.Map', {
 			if ( cqlFilter ) cql = "&cql_filter=" + cqlFilter.replace(" ", "");
 			var	bbox = MCLM.Map.getMapCurrentBbox();
 			var thumImg = serviceUrl + encodeURI("/?service=WMS&srs=EPSG:4326"+cql+"&width="+width+"&height="+height+"&version=1.3&transparent=true&request=GetMap&layers="+layerName+"&format=image/png&mode=8bit&bbox="+bbox);
-			
-			console.log( "GetMap: " + thumImg );
-			
 			return thumImg;
 		},		
 		// --------------------------------------------------------------------------------------------
@@ -1999,7 +1992,7 @@ Ext.define('MCLM.Map', {
 					}
 
 					
-					// Tete de interrogar FEI --------
+					// Interrogar FEICAO --------
 					if ( layerType == 'FEI' ) {
 						var features = [ feature ];
 						att.features = features;
@@ -2020,14 +2013,33 @@ Ext.define('MCLM.Map', {
 				        	    if(columnRefs.hasOwnProperty(p)) columnRefs[p] = '';
 				        	}
 				        	
+				        	
 				        	var keys = feature.getKeys();
 			        		for( y=0; y < keys.length; y++ ) {
 			        			var value = feature.get( keys[y] );
 			        			if( (keys[y] != 'geometry') && (keys[y] != 'attributes') && (keys[y] != 'feicaoNome')
+			        					&& (keys[y] != 'feicaoTipo') && (keys[y] != 'directions')
 			        					&& (keys[y] != 'feicaoDescricao') && (keys[y] != 'idFeicao')  && (keys[y] != 'editing') 
 			        					&& (keys[y] != 'angle') ) {
 			        				// Seta o valor para a coluna
 			        				columnRefs[ keys[y] ] = value;
+			        			}
+			        			
+			        			if ( keys[y] == 'directions' ) {
+			        				// todos os valores = feature.getProperties()
+			        				var dirs = value.split(";");
+			        				
+			        				console.log( dirs );
+			        				
+			        				var newValue = "";
+			        				var prefix = "";
+			        				for ( yx = 0; yx < dirs.length; yx++ ) {
+			        					var dir = dirs[yx];
+			        					newValue = newValue + prefix + dir;
+			        					prefix = "</br>";
+			        				}
+			        				value = newValue;
+			        				columnRefs[ "Instruções da Rota" ] = newValue;
 			        			}
 			        			
 			        			if ( keys[y] == 'attributes' ) {
@@ -2086,10 +2098,6 @@ Ext.define('MCLM.Map', {
 				
 				var idNodeData = layer.get("idNodeData");
 				var idDataWindow = layer.get("idDataWindow");
-				
-				//console.log( layer );
-				//console.log( idNodeData );
-				
 				var found = false;
 				
 				if ( layerName && ( !baseLayer ) ) {
@@ -2101,10 +2109,8 @@ Ext.define('MCLM.Map', {
 						found = true;
 						me.queryLayer( layerName, urlFeatureInfo, layerAlias, idNodeData, idDataWindow  );
 					} catch ( err ) { me.queryLayerError("Erro ao interrogar camada", layerName);  }
-				}				
-				//if( !found ) {
-				//	Ext.Msg.alert('Não é possível interrogar a camada de base','Não existem camadas a serem interrogadas.' );
-				//}
+				}
+				
 			});
 		},
 		

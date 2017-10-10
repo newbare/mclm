@@ -30,6 +30,7 @@ public class GetMapAsPDFAction extends BasicActionClass {
 	private int idCenario;
 	private String fileName;
 	private InputStream stream;
+	private String bbox;
 
 	public String execute(){
 
@@ -37,7 +38,7 @@ public class GetMapAsPDFAction extends BasicActionClass {
 			fileName = uuid + ".pdf";
 			
 			PDFCreator pdf = new PDFCreator();
-			String pdfFileName = pdf.gerarPDF( uuid, idCenario, getLoggedUser() );
+			String pdfFileName = pdf.gerarPDF( uuid, idCenario, getLoggedUser(), bbox );
 			
 			File pdfFile = new File( pdfFileName );
 	        stream = new FileInputStream( pdfFile );
@@ -46,16 +47,11 @@ public class GetMapAsPDFAction extends BasicActionClass {
 			e.printStackTrace();
 		}
 		
-		//LayerService ls = new LayerService();
-		//String resposta = ls.getLayersAsImage( urlList, feiEncodedCanvas );
-		
-        //File img = new File("/path/to/image/image.jpg");
-        //fileInputStream = new FileInputStream(img);		    
-	    
-		//File pdf = new File( pdfName );
-        //stream = new FileInputStream( pdf );
-		
 		return "ok";
+	}
+	
+	public void setBbox(String bbox) {
+		this.bbox = bbox;
 	}
 
 	public void setIdCenario(int idCenario) {

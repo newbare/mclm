@@ -87,10 +87,17 @@ Ext.define('MCLM.view.datawindow.CloneToCenarioController', {
 		    		   Ext.Msg.alert('Erro','Erro ao gravar Elemento: ' + respObj.msg );
 		    	   }
 		    	   
+		    	   var cloneToCenarioWindow = Ext.getCmp('cloneToCenarioWindow');
+		    	   cloneToCenarioWindow.close();
+		    	   
 		       },
 		       failure: function(response, opts) {
 		    	   var respObj = Ext.decode( response.responseText );
 		    	   Ext.Msg.alert('Erro','Erro ao gravar Elemento: ' + respObj.msg );
+		    	   
+		    	   var cloneToCenarioWindow = Ext.getCmp('cloneToCenarioWindow');
+		    	   cloneToCenarioWindow.close();
+		    	   
 		       }		       
 		});    	
     	
