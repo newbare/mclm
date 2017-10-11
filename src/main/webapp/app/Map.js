@@ -2174,7 +2174,24 @@ Ext.define('MCLM.Map', {
 			    				  attrName = translatedName;
 			    			  }
 			    			  
-			    			  if ( dataType == 'URL' ) attrValue = "<a target='_BLANK' href='" + attrValue + "'>Link Externo</a>";
+			    			  
+			    			  // Verificar se existe uma URL ou várias separadas por ponto e vírgula
+			    			  if ( dataType == 'URL' ) {
+				    			  if ( attrValue.indexOf(";") > -1) {
+				    				  var urlArray = attrValue.split(";");
+				    				  var finalUrlList = "";
+				    				  var prefix = "";
+				    				  a.forEach(function(entry) {
+				    					  finalUrlList = finalUrlList + prefix + "<a target='_BLANK' href='" + entry + "'>Link Externo</a>";
+				    					  prefix = "</br>";
+				    				  });				    				  
+				    				  attrValue = finalUrlList ;
+				    			  } else {
+				    				  attrValue = "<a target='_BLANK' href='" + attrValue + "'>Link Externo</a>";
+				    			  }
+			    			  }
+			    			  
+			    			   
 			    			  
 			    			  if ( dataType == 'COLOR' ) {
 			    				  theColor = attrValue.replace('#','');

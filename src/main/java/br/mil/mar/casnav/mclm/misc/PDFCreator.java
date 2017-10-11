@@ -43,7 +43,7 @@ public class PDFCreator {
 	
 	
 	public String gerarPDF( String path, int idCenario, User user, String bbox ) throws Exception {
-		WebClient wc = new WebClient();
+		//WebClient wc = new WebClient();
 		
 		
 		pdfLayerProperties = new ArrayList<PDFLayerProperties>();
@@ -56,7 +56,7 @@ public class PDFCreator {
 		PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream( pdfFullPath ) );
 		document.open();
 		document.addCreator("APOLO");
-		document.addAuthor("Carlos Magno Abreu");
+		document.addAuthor("Carlos Magno O. Abreu");
 		document.addTitle("CASNAV");
 		document.addCreationDate();
 		
@@ -104,6 +104,9 @@ public class PDFCreator {
 				String layerAlias = theLayer.getLayerAlias();
 
 				// Pega os atributos de camadas WMS
+				// Decidi não pegar porque teria que trazer todos os atributos de todos os elementos WMS 
+				// da camada no mapa e isso poderia consumir muito tempo, dando timeout no browser.
+				/*
 				if ( theLayer.getLayerType() == LayerType.WMS  ) {
 					String layerUrl = theLayer.getServer().getUrl();
 					String layerName = theLayer.getLayerName();
@@ -113,14 +116,15 @@ public class PDFCreator {
 					
 					String features = wc.doGet( url );
 					pdfLayerProperties.add( getLayerProperties(features, layerAlias ) );
-				}	
+				}
+				*/	
 				
 				
 				
 				// Pega os atributos de Feições
 				if ( theLayer.getLayerType() == LayerType.FEI  ) {
 					String metadados = theLayer.getFeicao().getMetadados();
-					pdfLayerProperties.add( getLayerProperties(metadados, layerAlias ) );
+					pdfLayerProperties.add( getLayerProperties( metadados, layerAlias ) );
 				}
 				
 				String thumbPath = outputFolder + "/" + node.getLayer().getSerialId() + ".png";
@@ -129,7 +133,7 @@ public class PDFCreator {
 					Image thumb = Image.getInstance( thumbPath );
 					thumbs.add( thumb );
 				} catch ( Exception e ) {
-					error = " ( Não foi possível gerar miniatura )";
+					error = " ( Sem miniatura )";
 				}
 				document.add( getParagraph(0, "    " + node.getLayerAlias() + error , footerFont) );
 			}
