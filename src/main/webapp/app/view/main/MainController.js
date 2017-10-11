@@ -177,7 +177,60 @@ Ext.define('MCLM.view.main.MainController', {
     		measureWindow = Ext.create('MCLM.view.tools.MeasureWindow');
     	}
     	measureWindow.show();
-    	
     },
+
+    show3DView : function() {
+    	var tDViewVWindow = Ext.getCmp('tDViewVWindow');
+    	if( !tDViewVWindow ) {
+    		tDViewVWindow = Ext.create('MCLM.view.td.TDViewWindow');
+    	}
+    	tDViewVWindow.show();
+    	
+    	
+        var theView = new ol.View({
+        	center: ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857'),
+            zoom: 2
+        });  	
+    	
+
+
+		var ddMap = new ol.Map({
+			layers: [ new ol.layer.Tile({ source: new ol.source.OSM() }) ],
+			target: 'ddMap',
+			view : theView,
+			renderer: 'webgl'
+		});    	
+    	
+    	
+		var tdMap = new ol.Map({
+			layers: [ MCLM.Map.worldTopoMap ],
+			target: 'tdMap',
+			view : theView,
+			renderer: 'webgl'
+		});
+		   
+		
+		var ol3d = new olcs.OLCesium({map: tdMap});
+		
+		
+		var scene = ol3d.getCesiumScene();
+		scene.terrainProvider = new Cesium.CesiumTerrainProvider({
+			url: 'https://assets.agi.com/stk-terrain/world'
+		});
+		ol3d.setEnabled(true);		
+
+		
+		var cam = ol3d.getCamera();
+		//var T = [1000,2000,3000,4000,5000,6000,7000,8000];
+		//cam.setPosition( ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857') );
+		cam.setAltitude(15000);
+		//cam.setCenter( ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857')  );
+		cam.setDistance(3000);
+		cam.setHeading(6.289);
+		cam.setTilt(1.4442318918054133);		
+		
+		
+    },
+    
     
 });

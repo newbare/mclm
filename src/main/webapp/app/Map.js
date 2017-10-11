@@ -763,7 +763,7 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.imageryMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					attributions: ["ArcGisOnline"],
+					//attributions: ["ArcGisOnline"],
 					url: 'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
 				})
 			});
@@ -1011,6 +1011,7 @@ Ext.define('MCLM.Map', {
 			} else {
 			
 				landLayer = new ol.layer.Tile({
+					//extent: [-180.0, -90.0, 180.0, 90.0],
 				    source: new ol.source.TileWMS({
 				        url: MCLM.Map.geoserverUrl,
 				        isBaseLayer : true,

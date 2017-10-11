@@ -24,11 +24,22 @@
 	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
 	
 <!-- OPENLAYERS -->
+<!-- 	
 	<script type="text/javascript" src="js/ol.js"></script>
+	
 	<link rel="stylesheet" href="css/ol.css" type="text/css">
+ 	-->
 
+<!-- CESIUM -->
+	<script type="text/javascript" src="js/ol-cesium-v1.31/Cesium/Cesium.js"></script>
+	<script type="text/javascript" src="js/ol-cesium-v1.31/olcesium.js"></script>
+	<link rel="stylesheet" href="js/ol-cesium-v1.31/ol.css" type="text/css">
+
+<!-- OL3 EXT -->
+	
 	<script type="text/javascript" src="js/ol3-ext.min.js"></script>
 	<link rel="stylesheet" href="css/ol3-ext.min.css" type="text/css">
+	
 
 <!-- COLOR PICKER -->
 	<link rel="stylesheet" media="screen" type="text/css" href="css/colorpicker.css" />
