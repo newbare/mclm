@@ -37,7 +37,7 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 
     	close : function() {
 		 	Ext.tip.QuickTipManager.unregister('maritmTrID');    	
-		 	//Ext.tip.QuickTipManager.unregister('aeroplaneID');    	
+		 	Ext.tip.QuickTipManager.unregister('tdviewID');    	
 		 	Ext.tip.QuickTipManager.unregister('photoID');    	
 		 	Ext.tip.QuickTipManager.unregister('seaMapID');    
 		 	Ext.tip.QuickTipManager.unregister('marineTrafficID'); 
@@ -117,13 +117,13 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     	        text: 'Exibe dados de tráfego marítimo AIS via SISTRAM.',
     	        width: 150,
     	        dismissDelay: 5000 
-    	    }/*,{
-    	        target: 'aeroplaneID',
-    	        title: 'Tráfego Aéreo',
-    	        text: 'Exibe tráfego aéreo.',
+    	    },{
+    	        target: 'tdviewID',
+    	        title: 'Visão 3D',
+    	        text: 'Exibe janela com visão 3D do terreno.',
     	        width: 150,
     	        dismissDelay: 5000 
-    	    }*/,{
+    	    },{
     	        target: 'seaMapID',
     	        title: 'Elementos de Navegação',
     	        text: 'Exibe elementos de carta náutica que auxiliam a navegação. Necessário nível de zoom apropriado.',

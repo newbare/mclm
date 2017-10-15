@@ -10,15 +10,14 @@ Ext.define('MCLM.view.tools.RestTools', {
         background: '#FFFFFF'
     }, 
     
-    items: [/*{
-	    iconCls: 'aeroplane-icon',
+    items: [{
+	    iconCls: 'tdview-icon',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
-	    handler: 'toggleAeroTraffic',
-	    enableToggle: true,
-        id : 'aeroplaneID',
+	    handler: 'show3dView',
+        id : 'tdviewID',
         xtype: 'button',
-    },*/{
+    },{
 	    iconCls: 'ship-icon',
 	    enableToggle: true,
 	    width: MCLM.Globals.btnWidth,
