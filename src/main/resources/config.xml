@@ -17,7 +17,7 @@
 		
 		<apoloRESTAddress>http://apolo.defesa.mil.br/</apoloRESTAddress>
 		<apoloUserName>postgres</apoloUserName>
-		<apoloPassword>!@#56ef10079ad6DDb</apoloPassword>
+		<apoloPassword>xxxx</apoloPassword>
 		<apoloDatabasePort>5432</apoloDatabasePort>
 		<apoloDatabaseAddr>10.5.115.137</apoloDatabaseAddr>
 		<apoloDatabaseName>siglmd</apoloDatabaseName>
