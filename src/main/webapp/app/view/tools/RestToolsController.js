@@ -67,7 +67,7 @@ Ext.define('MCLM.view.tools.RestToolsController', {
 		//cam.setAltitude(15000);
 		//cam.setCenter( ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857')  );
 		cam.setDistance(350000);
-		//cam.setHeading(6.289);
+		cam.setHeading(6.289);
 		cam.setTilt(1.0442318918054133);		
     	
 		if ( MCLM.Globals.onChangeCenter == null ) {
