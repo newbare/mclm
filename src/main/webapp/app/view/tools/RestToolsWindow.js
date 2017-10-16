@@ -120,7 +120,7 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     	    },{
     	        target: 'tdviewID',
     	        title: 'Visão 3D',
-    	        text: 'Exibe janela com visão 3D do terreno.',
+    	        text: 'Exibe mapa com visão 3D do terreno. Clique novamente para desativar.',
     	        width: 150,
     	        dismissDelay: 5000 
     	    },{

@@ -15,6 +15,7 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
 	    handler: 'show3dView',
+	    enableToggle: true,
         id : 'tdviewID',
         xtype: 'button',
     },{

@@ -11,7 +11,10 @@ Ext.define("MCLM.Globals", {
          lastServerSelectedID : null,
          totalTextBoxes : 0,
          currentSceneryData : null,
-         
+         tdView : null,
          fastChangeSlots : [],
-         
+         tdViewVisible : false,
+         onChangeRotation : null,
+         onChangeResolution : null,
+         onChangeCenter: null,
  });

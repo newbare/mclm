@@ -56,6 +56,8 @@ Ext.define('MCLM.view.main.MainController', {
     	restToolsWindow.show();    	
     	restToolsWindow.alignTo(Ext.getBody(), "tr-tr", [-90, 70]);
     	
+    	Ext.getCmp('tdviewID').toggle( MCLM.Globals.tdView );
+    	
 	},
 	
 	undoZoom : function() {

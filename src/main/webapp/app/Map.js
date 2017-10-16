@@ -763,7 +763,6 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.imageryMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					//attributions: ["ArcGisOnline"],
 					url: 'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
 				})
 			});
@@ -777,7 +776,6 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.oceanBaseMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					attributions: ["ArcGisOnline"],
 					url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}'
 				})
 			});
@@ -785,7 +783,6 @@ Ext.define('MCLM.Map', {
 
 			MCLM.Map.hillshadeMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					attributions: ["ArcGisOnline"],
 					url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}'
 				})
 			});				
@@ -793,24 +790,19 @@ Ext.define('MCLM.Map', {
 			
 			MCLM.Map.worldTopoMap = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					attributions: ["ArcGisOnline"],
 					url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
 				})
 			});
 							
 			
-			
-			// https://openweathermap.org/api/weathermaps#examples
 			MCLM.Map.pressureLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					attributions: ["OpenWeatherMap"],
 					url: 'http://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
 			});
 			
 			MCLM.Map.tempLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					attributions: ["OpenWeatherMap"],
 					url: 'http://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
 			});	
@@ -818,14 +810,12 @@ Ext.define('MCLM.Map', {
 				
 			MCLM.Map.windLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					attributions: ["OpenWeatherMap"],
 					url: 'http://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
 			});	
 				
 			MCLM.Map.precipitacaoLayer = new ol.layer.Tile({
 				source: new ol.source.XYZ({
-					attributions: ["OpenWeatherMap"],
 					url: 'http://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=810c5cf214be9635b7c73268bd0b516d'
 				})
 			});
@@ -833,7 +823,6 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.openSeaMapLayer = new ol.layer.Tile({
 				  source: new ol.source.OSM({
 				    crossOrigin: null,
-				    attributions: ["OpenSeaMap"],
 				    url: 'http://t1.openseamap.org/seamark/{z}/{x}/{y}.png'
 				})
 			});
@@ -1136,8 +1125,6 @@ Ext.define('MCLM.Map', {
 		// Atualiza algumas coisas quando o mapa eh arrastado ou o zoom muda
 		updateMapCenter : function() {
 			var center = MCLM.Map.map.getView().getCenter();
-			
-			//var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
 			var center2 = center;
 			
 			mapCenterLong = center2[0];
@@ -1156,14 +1143,12 @@ Ext.define('MCLM.Map', {
 		// Retorna o centro do mapa
 		getMapCenter : function() {
 			var center = MCLM.Map.map.getView().getCenter();
-			//var center2 = ol.proj.transform([center[0], center[1]], 'EPSG:3857', 'EPSG:4326');
 			var center2 = center;
-			
-			
 			mapCenterLong = center2[0];
 			mapCenterLat = center2[1];
 			return mapCenterLong + "," + mapCenterLat;
 		},
+		
 		// --------------------------------------------------------------------------------------------
 		// Retorna o zoom atual do mapa
 		getMapZoom : function() {

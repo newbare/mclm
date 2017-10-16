@@ -3,6 +3,33 @@ Ext.define('MCLM.Functions', {
 	statics: {
 		countLog : 0,
 		
+	    syncMaps : function( evt ) {
+	    	if( !MCLM.Globals.tdViewVisible ) return true;
+	    	
+	    	var type = evt.type.split(':');
+	    	
+	    	if (type[0] === 'change' && type.length === 2) {
+	    		var attribute = type[1];
+	    		var value = evt.target.get(attribute);
+	    		
+	    		if ( attribute == 'center' ) {
+	    			value = ol.proj.transform( value , 'EPSG:4326', 'EPSG:3857');
+	    			MCLM.Globals.tdView.set( attribute, value );
+	    		}
+	    		
+	    		if ( attribute == 'resolution') {
+	    			var mapZoom = MCLM.Map.map.getView().getZoom();
+	    			MCLM.Globals.tdView.setZoom( mapZoom );
+	    		}
+
+	    		if ( attribute == 'rotation') {
+	    			MCLM.Globals.tdView.set( attribute, value );
+	    		}
+	    		
+	    	}
+	    },
+		
+		
 		syntaxHighlight : function(json) {
 		    if (typeof json != 'string') {
 		         json = JSON.stringify(json, undefined, 2);

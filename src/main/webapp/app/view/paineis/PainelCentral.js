@@ -18,14 +18,17 @@ Ext.define('MCLM.view.paineis.PainelCentral', {
         
         afterrender:function(){
 			var container = this.body.dom.id;
-			MCLM.Map.loadMap( container ); 
 			
 			$("#" + container).append('<div id="mainLoadingIcon" style="position:absolute;top:10px;left:30px;">'+
 			    	'<img style="width:30px;height:30px;" src="img/hourglass.svg"></div><div id="mainLoadingInfo" style="font-size:9px;position:absolute;top:2px;left:35px;"></div>'+
 			    	'<div onClick="MCLM.Functions.hideMainLog();" id="mainLogDisplayContainer"><table style="width:100%;" id="mainLogDisplayTable"><tbody></tbody></table></div>');
 			
-			$("#" + container).css('background-color', MCLM.Globals.config.mapBackgroudColor );
 			
+			$("#" + container).append('<div style="width:100%;height:100%;float:left" id="mainFlatMap"></div>');
+			$("#" + container).append('<div style="display:none;border-left:2px solid #cacaca;width:50%;height:100%;float:left" id="tdMap"></div>');
+
+			$("#mainFlatMap").css('background-color', MCLM.Globals.config.mapBackgroudColor );
+			MCLM.Map.loadMap( 'mainFlatMap' ); 
 		}
 	} 
    

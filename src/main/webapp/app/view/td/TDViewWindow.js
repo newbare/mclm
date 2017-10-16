@@ -12,7 +12,10 @@ Ext.define('MCLM.view.td.TDViewWindow', {
 	constrain: true,
 	renderTo: Ext.getBody(),
 
-	html : '<div style="width:444px;height:500px;float:left" id="tdMap"></div><div style="width:444px;height:500px;float:right" id="ddMap"></div>',
+	html : '<div style="width:900px;height:500px;float:left" id="tdMap"></div>',
+
+	// html : '<div style="width:444px;height:500px;float:left" id="tdMap"></div><div style="width:444px;height:500px;float:right" id="ddMap"></div>',
+
 	
 	/*
     requires: [

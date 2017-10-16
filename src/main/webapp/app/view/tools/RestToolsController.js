@@ -2,57 +2,58 @@ Ext.define('MCLM.view.tools.RestToolsController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.restToolsController',
     
+    theView : null,
+    
     show3dView : function() {
-    	var tDViewVWindow = Ext.getCmp('tDViewVWindow');
-    	if( !tDViewVWindow ) {
-    		tDViewVWindow = Ext.create('MCLM.view.td.TDViewWindow');
+    	
+    	if( MCLM.Globals.tdViewVisible ) {
+        	$('#mainFlatMap').css('width','100%');
+        	$('#tdMap').css('display','none');
+        	MCLM.Globals.tdViewVisible = false;
+        	MCLM.Map.map.updateSize();
+        	MCLM.Map.worldTopoMap.setOpacity( 1 );
+        	return true;
     	}
-    	tDViewVWindow.show();
     	
     	
-        var theView = new ol.View({
-        	center: ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857'),
-            zoom: MCLM.Map.mapZoom
-        });  	
-    	
-
-
-		var ddMap = new ol.Map({
-			layers: [ new ol.layer.Tile({ source: new ol.source.OSM() }) ],
-			target: 'ddMap',
-			view : theView,
-			renderer: 'webgl',
-			controls: ol.control.defaults().extend([
-               new ol.control.Rotate({
-				   autoHide: false
-			   })			                                        
-			]),
-	        interactions: ol.interaction.defaults({
-	        	  shiftDragZoom: false
-	        }).extend([
-	            new ol.interaction.DragRotateAndZoom(),
-	            new ol.interaction.DragZoom({
-	            	duration: 200,
-	            	condition: function(mapBrowserEvent) {
-	            		var originalEvent = mapBrowserEvent.originalEvent;
-	            		return ( originalEvent.ctrlKey && !(originalEvent.metaKey || originalEvent.altKey) && !originalEvent.shiftKey);
-	            	}
-	            })
-	        ]),				
-		});    	
+    	MCLM.Globals.tdViewVisible = true;
     	
     	
+    	$('#mainFlatMap').css('width','50%');
+    	$('#tdMap').css('display','block');
+    	MCLM.Map.map.updateSize();
+    	
+    	if ( MCLM.Globals.tdView == null ) {
+    		
+	    	MCLM.Globals.tdView = new ol.View({
+	        	center: ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857'),
+	            zoom: MCLM.Map.mapZoom
+	        });
+	    	
+    	}
+        
 		var tdMap = new ol.Map({
-			layers: [ MCLM.Map.imageryMap ],
+			layers: [ MCLM.Map.imageryMap, MCLM.Map.worldTopoMap ],
 			target: 'tdMap',
-			view : theView,
-			renderer: 'webgl'
+			view : MCLM.Globals.tdView,
+			renderer: 'webgl',
+			
+			interactions: ol.interaction.defaults({
+			    doubleClickZoom :false,
+			    dragAndDrop: false,
+			    keyboardPan: false,
+			    keyboardZoom: false,
+			    mouseWheelZoom: false,
+			    pointer: false,
+			    select: false,
+			    dragPan: false,
+			    shiftDragZoom: false
+			}),
 		});
 		   
+		MCLM.Map.worldTopoMap.setOpacity( 0.4 );
 		
 		var ol3d = new olcs.OLCesium({map: tdMap});
-		
-		
 		var scene = ol3d.getCesiumScene();
 		scene.terrainProvider = new Cesium.CesiumTerrainProvider({
 			url: 'https://assets.agi.com/stk-terrain/world'
@@ -65,12 +66,24 @@ Ext.define('MCLM.view.tools.RestToolsController', {
 		//cam.setPosition( ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857') );
 		//cam.setAltitude(15000);
 		//cam.setCenter( ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857')  );
-		cam.setDistance(900000);
-		cam.setHeading(6.289);
+		cam.setDistance(350000);
+		//cam.setHeading(6.289);
 		cam.setTilt(1.0442318918054133);		
     	
+		if ( MCLM.Globals.onChangeCenter == null ) {
+			MCLM.Globals.onChangeCenter = MCLM.Map.theView.on('change:center', MCLM.Functions.syncMaps);
+		}
+		
+		if ( MCLM.Globals.onChangeRotation == null ) {
+			MCLM.Globals.onChangeRotation = MCLM.Map.theView.on('change:rotation', MCLM.Functions.syncMaps);
+		}
+		
+		if ( MCLM.Globals.onChangeResolution == null ) {
+			MCLM.Globals.onChangeResolution = MCLM.Map.theView.on('change:resolution', MCLM.Functions.syncMaps);
+		}
+		
+		
     },
-    
     
     
     toggleAeroTraffic : function() {
