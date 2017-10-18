@@ -17,4 +17,5 @@ Ext.define("MCLM.Globals", {
          onChangeRotation : null,
          onChangeResolution : null,
          onChangeCenter: null,
+         ol3d : null,
  });

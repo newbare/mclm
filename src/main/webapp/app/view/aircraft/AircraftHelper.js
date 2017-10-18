@@ -39,10 +39,11 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     		var callSign = props.callSign;
     		var flightNumber = props.flightNumber;
     		var tailPrefix = props.tailPrefix;
-    		var resultStyles = [];
     		
-    		//var fData = me.stringDivider(callSign + " " + aircraftText, 7, '\n');
-    		var fData = me.stringDivider(tailPrefix + " " + flightNumber, 10, '\n');
+    		var altitudemt = props.altitudemt; 
+    		
+    		var resultStyles = [];
+    		var fData = me.stringDivider(tailPrefix + " " + flightNumber /*+ " " + props.bearing + "º " + altitudemt + "m"*/, 10, '\n');
     		
         	var aircraftStyle = new ol.style.Style({
     			image: new ol.style.Icon(({
@@ -52,7 +53,8 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
     				anchorXUnits: 'fraction',
     				anchorYUnits: 'fraction',
     				opacity: 1.0,
-    				src: 'img/aero_yellow.png'
+    				src: 'img/aero_yellow.png',
+    				rotateWithView: true,
     			})),
 			      text: new ol.style.Text({
 			          font: '10px Consolas',
@@ -291,6 +293,13 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
             	feicao["type"] = "FeatureCollection";
             	var features = [];
             	
+            	var tdFeatures = [];
+            	
+            	if ( MCLM.Globals.ol3d ) {
+            		MCLM.Globals.ol3d.getDataSourceDisplay().defaultDataSource.entities.removeAll();
+            	}
+            	
+            	
             	for( var key in respObj ) {
             		var properties = {};
             		var feature = {};
@@ -302,18 +311,79 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 
             			properties["code"] = obj[0];
             			coordinates[1] = obj[ 1 ]; 
-            			coordinates[0] = obj[ 2 ]; 
-            			properties["bearing"] = obj[3];
+            			coordinates[0] = obj[ 2 ];
             			
+            			properties["bearing"] = obj[3];
+            			properties["altitudeft"] = obj[4]; // ft
+            			properties["altitudemt"] = obj[4] * 0.3048; // mt
             			properties["model"] = obj[8];
             			properties["tailPrefix"] = obj[9];
-            			
             			properties["airportSource"] = obj[11];
             			properties["airportDestination"] = obj[12];
             			properties["flightNumber"] = obj[13];
-            			
             			properties["callSign"] = obj[16];
-
+            			
+            			// Para 3D geometria apenas.
+            			if ( MCLM.Globals.ol3d ) {  
+            				
+	            			var lon = obj[1];
+	            			var lat = obj[2];
+	            			var alt = obj[4] * 0.3048;
+	            			var thePosition = Cesium.Cartesian3.fromDegrees(lat, lon, alt);
+	            			
+	            			var heading = Cesium.Math.toRadians( 0.0 + obj[3] );
+	            			var pitch = Cesium.Math.toRadians(0.0);
+	            			var roll = Cesium.Math.toRadians(0.0);
+	            			var hpr = new Cesium.HeadingPitchRoll(heading, pitch, roll);
+	            			var theOrientation = Cesium.Transforms.headingPitchRollQuaternion(thePosition, hpr);
+	            			
+	            			
+	            			// Reaproveitar:  viewer.entities.getById(_ENTITYNAME);
+	            			
+	            			var airPlane = new Cesium.Entity({
+	            			    position : thePosition,
+	            			    orientation : theOrientation,
+	            			    show : true,
+	            			    model : {
+	            			        uri : 'aeronaves/a319.glb',
+	            			        scale : 50.0
+	            			    },
+	            			    name : key,
+	            	            label: {
+	            	                text: obj[9],
+	            	                style : Cesium.LabelStyle.FILL,
+	            	                fillColor : new Cesium.Color(255, 255, 0, 1),
+	            	                outlineWidth : 1,
+	            	                font: '15px Consolas',
+	            	                eyeOffset : new Cesium.Cartesian3(0.0, 550.0, 0.0),
+	            	            },	            			    
+	            			});		
+	            			
+	            			/*
+	            			var yellowBall = new Cesium.Entity({
+	            			    name : key,
+	            	            label: {
+	            	                text: obj[9],
+	            	                style : Cesium.LabelStyle.FILL,
+	            	                fillColor : new Cesium.Color(255, 255, 0, 1),
+	            	                outlineWidth : 1,
+	            	                font: '18px Consolas',
+	            	                eyeOffset : new Cesium.Cartesian3(0.0, 250.0, 0.0),
+	            	            },
+	            			    position: thePosition,
+	            			    show : true,
+	            			    ellipsoid : {
+	            			        radii : new Cesium.Cartesian3(100.0, 100.0, 100.0),
+	            			        material : Cesium.Color.YELLOW.withAlpha(1),
+	            			    }
+	            			});
+	            			*/
+	            			
+	            			MCLM.Globals.ol3d.getDataSourceDisplay().defaultDataSource.entities.add( airPlane );
+            			
+            			}
+            			
+            			// ---------------------------------
             			
                 		var geometry = {};
                 		geometry["type"] = "Point";

@@ -11,7 +11,7 @@ Ext.define('MCLM.view.tools.RestToolsController', {
         	$('#tdMap').css('display','none');
         	MCLM.Globals.tdViewVisible = false;
         	MCLM.Map.map.updateSize();
-        	MCLM.Map.worldTopoMap.setOpacity( 1 );
+        	//MCLM.Map.worldTopoMap.setOpacity( 1 );
         	return true;
     	}
     	
@@ -32,43 +32,38 @@ Ext.define('MCLM.view.tools.RestToolsController', {
 	    	
     	}
         
-		var tdMap = new ol.Map({
-			layers: [ MCLM.Map.imageryMap, MCLM.Map.worldTopoMap ],
-			target: 'tdMap',
-			view : MCLM.Globals.tdView,
-			renderer: 'webgl',
+    	if ( MCLM.Map.tdMap === null ) {
+    		
+    		MCLM.Map.tdMap = new ol.Map({
+				layers: [ MCLM.Map.imageryMap ],
+				target: 'tdMap',
+				view : MCLM.Globals.tdView,
+				renderer: 'webgl',
+				controls: [],			
+			});
+    	}
 			
-			interactions: ol.interaction.defaults({
-			    doubleClickZoom :false,
-			    dragAndDrop: false,
-			    keyboardPan: false,
-			    keyboardZoom: false,
-			    mouseWheelZoom: false,
-			    pointer: false,
-			    select: false,
-			    dragPan: false,
-			    shiftDragZoom: false
-			}),
-		});
-		   
-		MCLM.Map.worldTopoMap.setOpacity( 0.4 );
 		
-		var ol3d = new olcs.OLCesium({map: tdMap});
-		var scene = ol3d.getCesiumScene();
+		MCLM.Globals.ol3d = new olcs.OLCesium({map: MCLM.Map.tdMap});
+		var scene = MCLM.Globals.ol3d.getCesiumScene();
+		
 		scene.terrainProvider = new Cesium.CesiumTerrainProvider({
-			url: 'https://assets.agi.com/stk-terrain/world'
+			url: 'https://assets.agi.com/stk-terrain/world',
+		    requestWaterMask : false, 
+		    requestVertexNormals : true			
 		});
-		ol3d.setEnabled(true);		
+		MCLM.Globals.ol3d.setEnabled(true);
 
+		scene.globe.enableLighting = true;
 		
-		var cam = ol3d.getCamera();
-		//var T = [1000,2000,3000,4000,5000,6000,7000,8000];
-		//cam.setPosition( ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857') );
-		//cam.setAltitude(15000);
-		//cam.setCenter( ol.proj.transform( MCLM.Map.arrayMapCenter , 'EPSG:4326', 'EPSG:3857')  );
+		// Desabilita o mapa 3D. 
+		scene.screenSpaceCameraController.enableZoom = false;
+		scene.screenSpaceCameraController.enableRotate = false;
+		
+		var cam = MCLM.Globals.ol3d.getCamera();
 		cam.setDistance(350000);
 		cam.setHeading(6.289);
-		cam.setTilt(1.0442318918054133);		
+		cam.setTilt(1.2442318918054133);		
     	
 		if ( MCLM.Globals.onChangeCenter == null ) {
 			MCLM.Globals.onChangeCenter = MCLM.Map.theView.on('change:center', MCLM.Functions.syncMaps);
@@ -82,7 +77,61 @@ Ext.define('MCLM.view.tools.RestToolsController', {
 			MCLM.Globals.onChangeResolution = MCLM.Map.theView.on('change:resolution', MCLM.Functions.syncMaps);
 		}
 		
+		// --------------------------  EXPERIMENTAL --------------------------------------------------
 		
+		var image = new Cesium.ImageMaterialProperty({
+			image : 'http://localhost:8080/mclm/img/apolo_logo_small.png',
+			transparent : true,
+		});
+
+		
+		var thePosition = Cesium.Cartesian3.fromDegrees(MCLM.Map.arrayMapCenter[0], MCLM.Map.arrayMapCenter[1], 100.0);
+		
+		var heading = Cesium.Math.toRadians(45.0);
+		var pitch = Cesium.Math.toRadians(0.0);
+		var roll = Cesium.Math.toRadians(0.0);
+		var hpr = new Cesium.HeadingPitchRoll(heading, pitch, roll);
+		var theOrientation = Cesium.Transforms.headingPitchRollQuaternion(thePosition, hpr);
+
+		
+		/*
+		var aBox = new Cesium.Entity({
+		    position : thePosition,
+		    show : true,
+		    model : {
+		        uri : 'aeronaves/Cesium_Ground.gltf',
+		        scale : 30000.0
+		    }
+		});
+					
+		
+		var airPlane = new Cesium.Entity({
+		    position : thePosition,
+		    orientation : theOrientation,
+		    show : true,
+		    model : {
+		        uri : 'aeronaves/a319.glb',
+		        scale : 200.0
+		    }
+		});		
+		
+		
+		var yellowBall = new Cesium.Entity({
+		    name : 'Red sphere with black outline',
+		    position: thePosition,
+		    show : true,
+		    ellipsoid : {
+		        radii : new Cesium.Cartesian3(3000.0, 3000.0, 3000.0),
+		        material : Cesium.Color.YELLOW.withAlpha(0.8),
+		    }
+		});
+		
+		
+		//MCLM.Globals.ol3d.getDataSourceDisplay().defaultDataSource.entities.add( yellowBall );		
+		MCLM.Globals.ol3d.getDataSourceDisplay().defaultDataSource.entities.add( airPlane );		
+		*/
+		
+		// -------------------------------------------------------------------------------------------
     },
     
     

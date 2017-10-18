@@ -15,6 +15,8 @@ Ext.define('MCLM.Map', {
 		streetPhotoEnabled : false,
 		queryLocationEnabled : false,
 		
+		tdMap : null,
+		
 	    topoEnabled : false,
 	    oceanEnabled : false,
 	    hillshadeEnabled : false,
@@ -2167,7 +2169,7 @@ Ext.define('MCLM.Map', {
 				    				  var urlArray = attrValue.split(";");
 				    				  var finalUrlList = "";
 				    				  var prefix = "";
-				    				  a.forEach(function(entry) {
+				    				  urlArray.forEach(function(entry) {
 				    					  finalUrlList = finalUrlList + prefix + "<a target='_BLANK' href='" + entry + "'>Link Externo</a>";
 				    					  prefix = "</br>";
 				    				  });				    				  
