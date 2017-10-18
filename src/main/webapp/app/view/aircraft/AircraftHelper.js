@@ -346,7 +346,7 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 	            			    show : true,
 	            			    model : {
 	            			        uri : 'aeronaves/a319.glb',
-	            			        scale : 50.0
+	            			        scale : 10.0
 	            			    },
 	            			    name : key,
 	            	            label: {
@@ -354,10 +354,14 @@ Ext.define("MCLM.view.aircraft.AircraftHelper", {
 	            	                style : Cesium.LabelStyle.FILL,
 	            	                fillColor : new Cesium.Color(255, 255, 0, 1),
 	            	                outlineWidth : 1,
-	            	                font: '15px Consolas',
-	            	                eyeOffset : new Cesium.Cartesian3(0.0, 550.0, 0.0),
+	            	                font: '10px Consolas',
+	            	                eyeOffset : new Cesium.Cartesian3(0.0, 140.0, 0.0),
 	            	            },	            			    
 	            			});		
+	            			
+	            			
+
+	            			
 	            			
 	            			/*
 	            			var yellowBall = new Cesium.Entity({

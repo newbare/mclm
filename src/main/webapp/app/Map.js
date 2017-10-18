@@ -1897,6 +1897,12 @@ Ext.define('MCLM.Map', {
 			if ( MCLM.Map.onClickBindKey ) {
 				ol.Observable.unByKey( MCLM.Map.onClickBindKey );
 			}
+			
+			if ( MCLM.Globals.ol3d ) {
+				//MCLM.Globals.ol3d.trackedFeature = undefined;
+			}
+			
+			
 		},		
 		// --------------------------------------------------------------------------------------------
 		bindMapToQueryPhoto : function () {
@@ -1963,8 +1969,11 @@ Ext.define('MCLM.Map', {
 					var layerName = layer.get("alias");
 					var att = feature.getProperties();
 					var layerType = layer.get("layerType");
-					
+
 					if ( (layerName == 'aircraftLayer') && MCLM.Map.aeroTrafficEnabled ) {
+						if ( MCLM.Globals.ol3d ) {
+							//MCLM.Globals.ol3d.trackedFeature = feature;
+						}
 						me.aircraftHelper.showAircraftDetails( att );
 						return true;
 					}

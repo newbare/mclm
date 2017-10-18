@@ -50,7 +50,7 @@ Ext.define('MCLM.view.tools.RestToolsController', {
 		scene.terrainProvider = new Cesium.CesiumTerrainProvider({
 			url: 'https://assets.agi.com/stk-terrain/world',
 		    requestWaterMask : false, 
-		    requestVertexNormals : true			
+		    requestVertexNormals : false			
 		});
 		MCLM.Globals.ol3d.setEnabled(true);
 
@@ -76,6 +76,18 @@ Ext.define('MCLM.view.tools.RestToolsController', {
 		if ( MCLM.Globals.onChangeResolution == null ) {
 			MCLM.Globals.onChangeResolution = MCLM.Map.theView.on('change:resolution', MCLM.Functions.syncMaps);
 		}
+		
+		
+		var handler = new Cesium.ScreenSpaceEventHandler( scene.canvas );
+		handler.setInputAction( function(click) {
+		    var pickedObject = scene.pick(click.position);
+		    if ( Cesium.defined( pickedObject ) ) {
+		    	//var carto = Cesium.Ellipsoid.WGS84.cartesianToCartographic( pickedObject.position );
+		    	console.log( pickedObject.olFeature );
+		    }
+		    
+		}, Cesium.ScreenSpaceEventType.LEFT_CLICK );		
+		
 		
 		// --------------------------  EXPERIMENTAL --------------------------------------------------
 		
