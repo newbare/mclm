@@ -329,7 +329,7 @@ Ext.define('MCLM.Functions', {
 		},
 		
 		showOrgMil : function( record ) {
-			
+			// http://apolo.defesa.mil.br//SIGLMD-web/api/v2/organizacoes/58040130101020006026?user-hash=34CE32F4CACDD770D6BB0977E066F74724B170F3CCF7002BAA802170711F99DF&token=a7fb187e-185f-416a-9f28-010fecc23bc6
 			Ext.Ajax.request({
 				url: 'apoloGetOM',
 				params: {

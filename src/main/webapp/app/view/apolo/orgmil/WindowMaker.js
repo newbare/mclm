@@ -30,7 +30,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 	
 	
 	getFunLogTab : function( data ) {
-		var funLogs = data.associations.funcoesLogisticas;
+		var funLogs = data.funcoesLogisticasPanel;
 		if( funLogs.length == 0 ) {
 			return this.noData();
 		}
@@ -67,7 +67,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 
 	
 	getProdutosTab : function( data ) {
-		var produtos = data.associations.produtos;
+		var produtos = data.produtosPanel;
 		if( produtos.length == 0 ) {
 			return this.noData();
 		}
@@ -101,7 +101,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 	
 	
 	getInstalacoesTab : function( data ) {
-		var installs = data.associations.instalacoes;
+		var installs = data.instalacoesPanel;
 		if( installs.length == 0 ) {
 			return this.noData();
 		}
@@ -133,7 +133,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 
 
 	getAcordosTab : function( data ) {
-		var acordos = data.associations.acordosAdministrativos;
+		var acordos = data.acordosAdministrativosPanel;
 		if( acordos.length == 0 ) {
 			return this.noData();
 		}
@@ -160,7 +160,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 	
 	
 	getServicosTab : function( data ) {
-		var servicos = data.associations.servicos;
+		var servicos = data.servicosPanel;
 		if( servicos.length == 0 ) {
 			return this.noData();
 		}
@@ -198,7 +198,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 	
 	
 	getCapLogTab : function( data ) {
-		var capLogs = data.associations.capacidadesLogisticas;
+		var capLogs = data.capacidadesLogisticasPanel;
 		if( capLogs.length == 0 ) {
 			return this.noData();
 		}
@@ -232,7 +232,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 	getTelefoneTab : function( data ) {
 		
 		
-		var telefones = data.associations.telefones;
+		var telefones = data.telefonePanel;
 		if( telefones.length == 0 ) {
 			return this.noData();
 		}
@@ -256,7 +256,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 	},
 	
 	getContatoTab : function( data ) {
-		var contatos = data.associations.contatos;
+		var contatos = data.contatoPanel;
 		
 		if( contatos.length == 0 ) {
 			return this.noData();
@@ -283,40 +283,62 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		return table;
 	},
 	
-	getInfoTab : function( data ) {
+	getInfoTab : function( jsonData ) {
 		
-		var sigla = data.sigla;
-		var nome = data.nome;
-		var codOM = data.codom;
-		var forca = data.forca.nome;
-		var comImSup = data.comImSup.nome;
-		var comImTec = data.comImTec.nome;
-		var cnpj = data.cnpj;
-		var tipoOm = data.tipo.nome;
-		var codUGR = data.codigoUgr;
-		var cep = data.cep;
-		var logradouro = data.logradouro;
-		var numeroEnd = data.numeroEnd;
-		var complemento = data.complemento;
-		var bairro = data.bairro;
-		var pais = data.pais.nome;
-		var estado = data.estado.nome;
-		var cidade = data.cidade.nome;
-		var coordenadas = "***";
-		var comandante = data.comandante;
-		var efetivoOficiais = data.efetivoOf; 	
-		var efetivoPracas = data.efetivoPr;
+		var data = jsonData.informacoesPanel;
+		var dadosGerais = data.dadosGeraisSubPanel;
+		var endereco = data.enderecoSubPanel;
+		var compl = data.informacoesComplementaresSubPanel;
+		var ramosAtividade = data.ramoAtividadeSubPanel;
+		
+		var homeCare = '';
+		var tipoEvacuacaoMedica = '';
+		var tipoEstabSaude = '';
+		var dadosEstabSaude = data.dadosEstabSaudeSubPanel;
+		if ( dadosEstabSaude ) {
+			tipoEvacuacaoMedica = dadosEstabSaude.tipoEvacuacaoMedica;
+			tipoEstabSaude = dadosEstabSaude.tipoEstabSaude;
+			servicoHomeCare = dadosEstabSaude.servicoHomeCare;
+			if ( servicoHomeCare === true ) {
+				homeCare = 'Sim';
+			} else {
+				homeCare = 'Não';
+			}
+		}
+		
+		var sigla = dadosGerais.sigla;
+		var nome = dadosGerais.nome;
+		var codOM = dadosGerais.codom;
+		var cnpj = dadosGerais.cnpj;
+		var forca = dadosGerais.nomeForca;
+		var comImSup = dadosGerais.nomeComandoSuperiorOperacional;
+		var comImTec = dadosGerais.nomeComandoSuperiorTecnico;
+		var tipoOm = dadosGerais.tipoOm;
+		var codUGR = dadosGerais.codigoUgr;
+		
+		var cep = endereco.cep;
+		var logradouro = endereco.logradouro;
+		var numeroEnd = endereco.numero;
+		var complemento = endereco.complemento;
+		var bairro = endereco.bairro;
+		var pais = endereco.pais;
+		var estado = endereco.estado;
+		var cidade = endereco.cidade;
+		var coordenadas = endereco.longitude + " " + endereco.latitude;
+		
+		var comandante = compl.comandante;
+		var efetivoOficiais = compl.efetivoOficiais; 	
+		var efetivoPracas = compl.efetivoPracas;
 		var solServLog = 'Não';
 		var isOperativa = 'Não';
-		var subordinacao = data.subordinacao;
-		var designacao = data.designacao;
-		var caractNotaveis = data.caractNotaveis; 
-		var paginaWeb = '***';
-		var corMapa = '***';
-		var ramosAtividade = data.associations.ramosAtividade;
+		var subordinacao = compl.subordinacao;
+		var designacao = compl.designacao;
+		var caractNotaveis = compl.caracteristicasNotaveis; 
+		var paginaWeb = compl.linkWeb;
+		var corMapa = compl.corMapa;
 		
-		if ( data.operativa === true ) isOPerativa = 'Sim';
-		if ( data.omSolicitanteLog === true ) solServLog = 'Sim';
+		if ( dadosGerais.operativa === true ) isOPerativa = 'Sim';
+		if ( dadosGerais.omSolicitanteServicosLogisticos === true ) solServLog = 'Sim';
 		
 		if( !comImSup ) comImSup = '';
 		if( !comImTec ) comImTec = '';
@@ -353,6 +375,15 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 				                      "<td class='dataWindowAttibute'>Coordenadas</td><td class='dataWindowValue'>"+coordenadas+"</td></tr>";
 
 		
+		if ( dadosEstabSaude ) {
+			table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>Dados Estab. Saúde</td></tr>";
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Tipo Estab. Saúde</td><td class='dataWindowValue'>"+tipoEstabSaude+"</td>" +
+            			"<td class='dataWindowAttibute'>Tipo Evac. Médica</td><td class='dataWindowValue'>"+tipoEvacuacaoMedica+"</td>" +
+            			"<td class='dataWindowAttibute'>Serv. Home Care</td><td class='dataWindowValue'>"+homeCare+"</td></tr>";
+			
+		}
+		
+		
 		table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>Informações Complementares</td></tr>";
 		table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Comandante</td><td colspan='5' class='dataWindowValue'>"+comandante+"</td>";
 
@@ -370,19 +401,11 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		
 		table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>Ramos de Atividade</td></tr>";
 		
-				for (x=0; x< ramosAtividade.length; x++ ) {
-					var ramoAtt = ramosAtividade[x];
-					var desc = ramoAtt.descricao;
-					var princ = 'Não';
-					var interesse = 'Não';
-					
-					if( ramoAtt.principalAtividade === true ) princ = 'Sim';
-					if( ramoAtt.atividade.interesse === true ) interesse = 'Sim';
-					
-					var table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Descrição</td><td class='dataWindowValue'>"+desc+"</td>"+
-	                    "<td class='dataWindowAttibute'>Principal Atividade</td><td class='dataWindowValue'>"+princ+"</td>" +
-	                    "<td class='dataWindowAttibute'>Interesse</td><td class='dataWindowValue'>"+interesse+"</td></tr>";
-				}
+		
+		for (x=0; x < ramosAtividade.length; x++ ) {
+			var ramoAtt = ramosAtividade[x];
+			var table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Descrição</td><td class='dataWindowValue'>"+ramoAtt+"</td></tr>";
+		}
 		
 		
 		
@@ -397,6 +420,44 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		return table;
 	},
 	
+	getLeitos : function(data) {
+		var leitos = data.leitosPanel;
+		if( !leitos ) return true;
+		
+		if( leitos.length == 0 ) {
+			return this.noData();
+		}
+
+		var table = "<table style='width:100%;' class='dataWindow'>";
+		for (x=0; x< leitos.length; x++ ) {
+			var leito = leitos[x];
+			
+			var codigo = leito.codigo;
+			var orgid = leito.orgid;
+			var quantidade = leito.quantidade;
+			var quantidadeSus = leito.quantidadeSus;
+			var descricao = leito.tipoLeito.descricao;
+			
+			
+			table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>"+descricao+"</td></tr>";
+			table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Qtd Total</td><td class='dataWindowValue'>"+quantidade+"</td>"+
+                "<td class='dataWindowAttibute'>Email</td><td class='dataWindowValue'>"+email+"</td>" +
+                "<td class='dataWindowAttibute'>Contato Principal</td><td class='dataWindowValue'>"+princContato+"</td></tr>";
+			
+		}
+		
+		table = table + "</table>";
+		return table;
+		
+		
+		
+	},
+	getEquipamentos : function(data) {
+		
+	},
+	getEpecialidades : function(data) {
+		
+	},
 	
 	// -----------------------------------------------------------------------------------------
 	makeWindow : function( data, record ) {
@@ -408,9 +469,12 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		
 		//orgMilWindow.geometry = Ext.decode( record.mclm_metadata_property.features[0] );
 		
-		var content = 'Nenhum conteúdo ainda...';
-		
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Informações', this.getInfoTab(data) ) );
+		
+		Ext.getCmp('orgMilTabContainer').add( this.createTab('Leitos', this.getLeitos(data) ) );
+		Ext.getCmp('orgMilTabContainer').add( this.createTab('Equipamentos', this.getEquipamentos(data) ) );
+		Ext.getCmp('orgMilTabContainer').add( this.createTab('Especialidades', this.getEpecialidades(data) ) );
+		
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Contato', this.getContatoTab(data) ) );
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Telefone', this.getTelefoneTab(data) ) );
 		Ext.getCmp('orgMilTabContainer').add( this.createTab('Fun. Log.', this.getFunLogTab(data) ) );

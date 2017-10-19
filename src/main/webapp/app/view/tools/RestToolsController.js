@@ -11,7 +11,6 @@ Ext.define('MCLM.view.tools.RestToolsController', {
         	$('#tdMap').css('display','none');
         	MCLM.Globals.tdViewVisible = false;
         	MCLM.Map.map.updateSize();
-        	//MCLM.Map.worldTopoMap.setOpacity( 1 );
         	return true;
     	}
     	
@@ -82,11 +81,15 @@ Ext.define('MCLM.view.tools.RestToolsController', {
 		handler.setInputAction( function(click) {
 		    var pickedObject = scene.pick(click.position);
 		    if ( Cesium.defined( pickedObject ) ) {
+		    	var entity = pickedObject.id;
 		    	//var carto = Cesium.Ellipsoid.WGS84.cartesianToCartographic( pickedObject.position );
-		    	console.log( pickedObject.olFeature );
+		    	//MCLM.Globals.ol3d.trackedEntity = entity;
+		    	//console.log( entity );
 		    }
 		    
 		}, Cesium.ScreenSpaceEventType.LEFT_CLICK );		
+		
+		
 		
 		
 		// --------------------------  EXPERIMENTAL --------------------------------------------------

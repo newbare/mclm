@@ -17,7 +17,9 @@ public class OrganizacoesMilitaresService extends BasicApoloService {
 		String idUser = user.getIdUser();
 		String apolo = Configurator.getInstance().getApoloRESTAddress();
 		
-		String urlApi = apolo + "/SIGLMD-web/api/v1/organizacoes/militares/"+orgid+"?user-hash="+idUser+"&token="+token ;
+		//String urlApi = "http://apolo.defesa.mil.br//SIGLMD-web/api/v2/estruturas/organizacoes?user-hash=34CE32F4CACDD770D6BB0977E066F74724B170F3CCF7002BAA802170711F99DF&token=a7fb187e-185f-416a-9f28-010fecc23bc6";
+		
+		String urlApi = apolo + "/SIGLMD-web/api/v2/organizacoes/"+orgid+"?user-hash="+idUser+"&token="+token ;
 		
 		WebClient wc = new WebClient();
 		String result = wc.doGet(urlApi);
