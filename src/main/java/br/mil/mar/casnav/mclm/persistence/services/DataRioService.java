@@ -13,10 +13,18 @@ public class DataRioService {
 		return result;
 	}
 
-	// http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/obterTodasPosicoes
-	public synchronized String getOnibus() throws Exception {
+	// http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/onibus
+	// http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/onibus/{linha1}
+	// http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/onibus/{códigoIdentificador}
+	public synchronized String getOnibus( String linha ) throws Exception {
+		
+		String url = "http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/onibus";
+		if ( !linha.equals("") ) {
+			url = "http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/onibus/" + linha;	
+		}
+		
+		
 		WebClient wc = new WebClient();
-		String url = "http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/rest/index.cfm/obterTodasPosicoes";
 		String result = wc.doGet(url);
 		return result;
 	}

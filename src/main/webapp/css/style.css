@@ -133,6 +133,17 @@ body {
 	background-repeat: no-repeat; 
 }
 
+.onibus-icon {
+	background-image: url('../img/onibus.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+.info-icon {
+	background-image: url('../img/info.svg') !important;
+	background-repeat: no-repeat; 
+}
+
+
 .cptec-anim-icon {
 	background-image: url('../img/cptec-anim.svg') !important;
 	background-repeat: no-repeat; 
@@ -1070,3 +1081,49 @@ body {
 .tooltip-static:before {
   border-top-color: #ffcc33;
 }
+
+
+/*
+		Pagina de Ajuda
+*/
+
+.gridbox {
+	padding : 10px;
+	margin : 0 auto;
+	width : 90%;
+}
+
+.grid {
+    width: 270px;
+    height : 240px;
+    padding: 7px;
+    border: 1px solid rgb(230, 230, 230);
+    float: left;
+    margin-right : 5px;
+    margin-bottom : 5px;
+}
+
+.videocontent{
+    height : 168px;
+    border : 1px solid #cacaca; 
+    margin-bottom : 4px;
+}
+
+.grid h3 {
+    font-size: 12px;
+    font-family: 'Ropa Sans', Tahoma;
+    padding-top: 4px;
+    padding-bottom: 4px;
+	margin-bottom: 5px;
+	margin-top: 0px;
+}
+
+.gridinfo {
+    margin: 0px;
+    border: 1px solid rgb(230, 230, 230);
+    font-size: 12px;
+    font-family: 'Ropa Sans', Tahoma;
+    height : 35px;
+    padding : 3px;    
+}
+

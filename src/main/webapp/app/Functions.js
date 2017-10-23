@@ -833,6 +833,12 @@ Ext.define('MCLM.Functions', {
 		    	        text: 'Amplia a camada de base sobre qualquer camada ativa. A camada de base precisa estar ativada.',
 		    	        width: 180,
 		    	        dismissDelay: 5000 
+		    	    },{
+		    	        target: 'ajudaID',
+		    	        title: 'Ajuda',
+		    	        text: 'Vai para a página de ajuda com explicações sobre o módulo.',
+		    	        width: 180,
+		    	        dismissDelay: 5000 
 		    	    }); 	
 		},
 

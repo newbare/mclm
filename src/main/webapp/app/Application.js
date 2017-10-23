@@ -45,6 +45,7 @@ Ext.define('MCLM.Application', {
         });        
         
     	Ext.Ajax.on("beforerequest", function (conn, options, eOpts) {
+    		
     		MCLM.Functions.showMainLoadingIcon( options.url );
     		
     		conn.setUseDefaultXhrHeader(false);

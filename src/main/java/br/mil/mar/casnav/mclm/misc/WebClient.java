@@ -279,8 +279,10 @@ public class WebClient {
 			getRequest.setConfig(config);			 
 		}
 		
-		getRequest.addHeader("Content-Type", "plain/text; charset=" + charset );
 		getRequest.setHeader("User-Agent", USER_AGENT);
+		getRequest.setHeader("Accept", "text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+		//getRequest.setHeader("Accept-Encoding", "gzip, deflate");
+		//getRequest.setHeader("Content-Type", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8; charset=" + charset );
 
 		HttpClientContext context = HttpClientContext.create();
 		
@@ -288,18 +290,19 @@ public class WebClient {
 		HttpResponse response = httpClient.execute(getRequest, context);
 		System.out.println("   > Fim.");
 		
+		/*
 		try {
 		    this.cookieStore = context.getCookieStore();
 		} catch ( Exception e ) {
 		    e.printStackTrace();
 		}		
+		*/
 		
-		
-		response.setHeader("Content-Type", "plain/text; charset=" + charset);
+		response.setHeader("Content-Type", "application/json; charset=" + charset);
 		int stCode = response.getStatusLine().getStatusCode();
 		
 		if ( stCode != 200) {
-			result = "Error " + stCode + " when accessing URL " + url;
+			result = "Erro " + stCode + " ao acessar " + url;
 			
 			System.out.println( result );
 			

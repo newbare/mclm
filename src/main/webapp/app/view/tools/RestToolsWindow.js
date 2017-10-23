@@ -38,7 +38,8 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     	close : function() {
 		 	Ext.tip.QuickTipManager.unregister('maritmTrID');    	
 		 	Ext.tip.QuickTipManager.unregister('tdviewID');    	
-		 	Ext.tip.QuickTipManager.unregister('photoID');    	
+		 	//Ext.tip.QuickTipManager.unregister('photoID');    	
+		 	Ext.tip.QuickTipManager.unregister('rioOnibusID');    	
 		 	Ext.tip.QuickTipManager.unregister('seaMapID');    
 		 	Ext.tip.QuickTipManager.unregister('marineTrafficID'); 
 		 	
@@ -135,13 +136,13 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
     	    	text: 'Exibe mapa com o tráfego marítimo oriundo do site MarineTraffic.',
     	    	width: 150,
     	    	dismissDelay: 5000 
-    	    },{
+    	    }/*,{
     	        target: 'photoID',
     	        title: 'Fotos de Rua',
     	        text: 'Permite consultar fotos criadas por usuários do Mapilary.',
     	        width: 150,
     	        dismissDelay: 5000 
-    	    },{
+    	    }*/,{
     	        target: 'toggleTopoID',
     	        title: 'Topografia',
     	        text: 'Ativa/Desativa camada de topografia do ArcGIS.',
@@ -175,6 +176,12 @@ Ext.define('MCLM.view.tools.RestToolsWindow', {
 		    	target: 'toggleAirTrafficID',
 		    	title: 'Monitorar Tráfego Aéreo',
 		    	text: 'Ativa/Desativa camada exibindo tráfego aéreo em tempo real.',
+		    	width: 150,
+		    	dismissDelay: 5000 
+		    },{
+		    	target: 'rioOnibusID',
+		    	title: 'Monitorar Onibus RJ',
+		    	text: 'EXPERIMENTAL. Monitora a frota de Onibus da região metropolitana do Rio de Janeiro.',
 		    	width: 150,
 		    	dismissDelay: 5000 
 		    });			

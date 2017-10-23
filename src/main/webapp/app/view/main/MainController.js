@@ -47,6 +47,10 @@ Ext.define('MCLM.view.main.MainController', {
 	toggleMapGrid : function( button ) {
 		MCLM.Map.toggleMapGrid();
 	},
+	
+	ajuda : function() {
+		window.open("help.jsp");
+	},
 
 	showRestTools : function( button ) {
     	var restToolsWindow = Ext.getCmp('restToolsWindow');
@@ -57,6 +61,7 @@ Ext.define('MCLM.view.main.MainController', {
     	restToolsWindow.alignTo(Ext.getBody(), "tr-tr", [-90, 70]);
     	
     	Ext.getCmp('tdviewID').toggle( MCLM.Globals.tdView );
+    	Ext.getCmp('rioOnibusID').toggle( MCLM.Map.onibusTrafficEnabled );
     	
 	},
 	

@@ -11,6 +11,7 @@ Ext.define('MCLM.Map', {
 		onClickBindKey: null,
 		graticuleEnabled: false,
 		aeroTrafficEnabled: false,
+		onibusTrafficEnabled: false,
 		shipTrafficEnabled: false,
 		streetPhotoEnabled : false,
 		queryLocationEnabled : false,
@@ -52,6 +53,7 @@ Ext.define('MCLM.Map', {
 		highlight : null,
 		interrogatingFeatures : false,
 		aircraftHelper : null,
+		onibusHelper : null,
 		shipsHelper : null,
 		canPhoto : true,
 		statusBar : null,
@@ -581,6 +583,14 @@ Ext.define('MCLM.Map', {
 				MCLM.Map.aircraftHelper.getAircraftsBbox();
 			}
 		},
+		
+		updateBusTraffic : function() {
+			if ( MCLM.Map.onibusTrafficEnabled ) {
+				MCLM.Map.onibusHelper.getOnibus();
+			}
+		},
+		
+		
 		updateMaritmTraffic : function() {
 			if ( MCLM.Map.shipTrafficEnabled ) {
 				MCLM.Map.shipsHelper.getShips();
@@ -728,6 +738,10 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.shipsHelper.init();
 			setInterval( MCLM.Map.updateMaritmTraffic , 300000); // 5 minutos			
 			
+			MCLM.Map.onibusHelper = Ext.create('MCLM.view.onibus.OnibusHelper');
+			MCLM.Map.onibusHelper.init();			
+			setInterval( MCLM.Map.updateBusTraffic , 30000); // 60 segundos			
+
 			
 			MCLM.Map.createSceneryInfoLayer();
 			
@@ -1337,6 +1351,32 @@ Ext.define('MCLM.Map', {
 			}
 		},	
 		// --------------------------------------------------------------------------------------------
+
+		toggleOnibusTraffic : function () {
+			MCLM.Map.onibusTrafficEnabled = !MCLM.Map.onibusTrafficEnabled ;
+			if ( !MCLM.Map.onibusTrafficEnabled ) {
+				MCLM.Map.onibusHelper.deleteOnibus();
+				MCLM.Map.removeLayer('onibusLayer');
+				MCLM.Map.removeFromLayerStack( 'onibusLayer' );				
+			} else {
+				MCLM.Map.map.addLayer( MCLM.Map.onibusHelper.activeOnibusLayer );
+	    		var data = {};
+	    		data.description = 'Monitoramento da Frota de Onibus do Rio de Janeiro';
+	    		data.institute = 'Serviço Externo';
+	    		data.layerName = 'Frota de Onibus';
+	    		data.layerAlias = 'Frota de Onibus';
+	    		data.serialId = 'onibusLayer';
+	    		data.layerType = 'Externo';				
+
+				MCLM.Map.addToLayerStack( data );
+				MCLM.Map.onibusHelper.getOnibus();
+	    		
+	    		
+			}
+		},
+		
+		
+		// --------------------------------------------------------------------------------------------
 		// Liga / desliga controle de tráfego aéreo
 		toggleAeroTraffic : function () {
 			MCLM.Map.aeroTrafficEnabled = !MCLM.Map.aeroTrafficEnabled ;
@@ -1357,7 +1397,6 @@ Ext.define('MCLM.Map', {
 	    		data.layerType = 'Externo';
 				
 				MCLM.Map.addToLayerStack( data );
-				
 				MCLM.Map.aircraftHelper.getAircraftsBbox();
 			}
 		},		
@@ -1977,6 +2016,13 @@ Ext.define('MCLM.Map', {
 						me.aircraftHelper.showAircraftDetails( att );
 						return true;
 					}
+
+					
+					if ( (layerName == 'onibusLayer') && MCLM.Map.onibusTrafficEnabled ) {
+						me.onibusHelper.showOnibusDetails( att );
+						return true;
+					}
+					
 					
 					if ( layerName == 'climaLayer' ) {
 						MCLM.ClimaHelper.showDetails( feature, event.coordinate );

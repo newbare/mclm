@@ -120,5 +120,12 @@ Ext.define('MCLM.view.paineis.ToolBarPrincipal', {
     	xtype: 'button',
     	id: 'measureToolID',
         handler : 'showMeasureTool'
+    },{
+    	iconCls: 'info-icon',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+    	xtype: 'button',
+    	id: 'ajudaID',
+        handler : 'ajuda'
     }]
 });

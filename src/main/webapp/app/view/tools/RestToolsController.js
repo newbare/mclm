@@ -3,6 +3,13 @@ Ext.define('MCLM.view.tools.RestToolsController', {
     alias: 'controller.restToolsController',
     
     theView : null,
+
+    
+	rioOnibus : function() {
+		MCLM.Map.toggleOnibusTraffic();
+	},
+	
+    
     
     show3dView : function() {
     	

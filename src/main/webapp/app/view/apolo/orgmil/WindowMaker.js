@@ -284,6 +284,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 	},
 	
 	getInfoTab : function( jsonData ) {
+		var isOperativa = 'Não';
 		
 		var data = jsonData.informacoesPanel;
 		var dadosGerais = data.dadosGeraisSubPanel;
@@ -294,6 +295,7 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		var homeCare = '';
 		var tipoEvacuacaoMedica = '';
 		var tipoEstabSaude = '';
+
 		var dadosEstabSaude = data.dadosEstabSaudeSubPanel;
 		if ( dadosEstabSaude ) {
 			tipoEvacuacaoMedica = dadosEstabSaude.tipoEvacuacaoMedica;
@@ -306,15 +308,26 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 			}
 		}
 		
+		
+		var cnpj = dadosGerais.cnpj;
+		if ( tipo == 'MIL' ) {
+			var restricao = dadosGerais.restricao;
+			var validadeDataPosicaoOperativa = dadosGerais.validadeDataPosicaoOperativa;
+			var situacaoOperacional = dadosGerais.situacaoOperacional;
+			if ( dadosGerais.operativa === true ) isOPerativa = 'Sim';
+			var comImSup = dadosGerais.nomeComandoSuperiorOperacional;
+			var longitudeOperativa = dadosGerais.longitudeOperativa;
+			
+		}
 		var sigla = dadosGerais.sigla;
 		var nome = dadosGerais.nome;
 		var codOM = dadosGerais.codom;
-		var cnpj = dadosGerais.cnpj;
 		var forca = dadosGerais.nomeForca;
-		var comImSup = dadosGerais.nomeComandoSuperiorOperacional;
 		var comImTec = dadosGerais.nomeComandoSuperiorTecnico;
 		var tipoOm = dadosGerais.tipoOm;
 		var codUGR = dadosGerais.codigoUgr;
+
+		
 		
 		var cep = endereco.cep;
 		var logradouro = endereco.logradouro;
@@ -330,14 +343,12 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		var efetivoOficiais = compl.efetivoOficiais; 	
 		var efetivoPracas = compl.efetivoPracas;
 		var solServLog = 'Não';
-		var isOperativa = 'Não';
 		var subordinacao = compl.subordinacao;
 		var designacao = compl.designacao;
 		var caractNotaveis = compl.caracteristicasNotaveis; 
 		var paginaWeb = compl.linkWeb;
 		var corMapa = compl.corMapa;
 		
-		if ( dadosGerais.operativa === true ) isOPerativa = 'Sim';
 		if ( dadosGerais.omSolicitanteServicosLogisticos === true ) solServLog = 'Sim';
 		
 		if( !comImSup ) comImSup = '';

@@ -33,7 +33,7 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    handler: 'shoMarineTraffic',
         id : 'marineTrafficID',
         xtype: 'button',
-    },{
+    }/*,{
 	    iconCls: 'photo-icon',
 	    enableToggle: true,
 	    width: MCLM.Globals.btnWidth,
@@ -41,6 +41,14 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    handler: 'showStreetPhoto',
         id : 'photoID',
         xtype: 'button',
+    }*/,{
+    	iconCls: 'onibus-icon',
+	    width: MCLM.Globals.btnWidth,
+	    height: MCLM.Globals.btnHeight,
+    	xtype: 'button',
+    	id: 'rioOnibusID',
+    	enableToggle: true,
+        handler : 'rioOnibus'
     }],
 
 	
