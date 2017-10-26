@@ -144,7 +144,7 @@ Ext.define("MCLM.view.onibus.OnibusHelper", {
 	getOnibus : function() {
 		var me = this;
 
-		var linha = '397';
+		var linha = '422';
 		
 		
     	Ext.Ajax.request({
@@ -200,8 +200,6 @@ Ext.define("MCLM.view.onibus.OnibusHelper", {
     				var features = new ol.format.GeoJSON().readFeatures( feicao , {
     					//featureProjection: 'EPSG:3857'
     				});
-    				
-    				console.log( 'Chegaram ' + features.length + ' onibus.');
     				
     				for (var i = 0; i < features.length; i++) {
     					me.vectorSource.addFeature( features[i] );

@@ -284,8 +284,12 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 	},
 	
 	getInfoTab : function( jsonData ) {
-		var isOperativa = 'Não';
 		
+		console.log( jsonData );
+		return "Nada";
+		
+		var tipoOrg = 'MIL';
+
 		var data = jsonData.informacoesPanel;
 		var dadosGerais = data.dadosGeraisSubPanel;
 		var endereco = data.enderecoSubPanel;
@@ -309,26 +313,95 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		}
 		
 		
+		var dadosGeraisHTML = '';
+		
+		// Todos
 		var cnpj = dadosGerais.cnpj;
-		if ( tipo == 'MIL' ) {
+		
+		// Org MIL
+		if ( tipoOrg == 'MIL' ) {
 			var restricao = dadosGerais.restricao;
 			var validadeDataPosicaoOperativa = dadosGerais.validadeDataPosicaoOperativa;
 			var situacaoOperacional = dadosGerais.situacaoOperacional;
+			var isOperativa = 'Não';
 			if ( dadosGerais.operativa === true ) isOPerativa = 'Sim';
 			var comImSup = dadosGerais.nomeComandoSuperiorOperacional;
 			var longitudeOperativa = dadosGerais.longitudeOperativa;
+			var simboloOperativa = dadosGerais.simboloOperativa;
+			var corOperativa = dadosGerais.corOperativa;
+			var indicativo = dadosGerais.indicativo;
+			var nomeSimboloOperativa = dadosGerais.nomeSimboloOperativa;
+			var codigoOm = dadosGerais.codigoOm;
+			var dataPosicaoOperativa = dadosGerais.dataPosicaoOperativa;
+			var nomeForca = dadosGerais.nomeForca;
+			var comImTec = dadosGerais.nomeComandoSuperiorTecnico;			
+			var latitudeOperativa = dadosGerais.latitudeOperativa;
+			var tipoOm = dadosGerais.tipoOm;
+			var dataHora = dadosGerais.dataHora;
+			var isProntoEmprego = 'Não';
+			if ( dadosGerais.prontoEmprego === true ) isProntoEmprego = 'Sim';
+			
+			var sigla = dadosGerais.sigla;
+			var nome = dadosGerais.nome;
+			var codigoUgr = dadosGerais.codigoUgr;
+			
+			dadosGeraisHTML = "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>Dados Gerais</td></tr>";
+			dadosGeraisHTML = dadosGeraisHTML + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Nome</td><td colspan='5' class='dataWindowValue'>"+nome+"</td></tr>" +
+					"<tr class='dataWindowLine'><td class='dataWindowAttibute'>Código OM</td><td class='dataWindowValue'>"+codOM+"</td>" +
+					                      "<td class='dataWindowAttibute'>Sigla</td><td class='dataWindowValue'>"+sigla+"</td>" +
+					                      "<td class='dataWindowAttibute'>Código UGR</td><td class='dataWindowValue'>"+codUGR+"</td></tr>";
+			dadosGeraisHTML = dadosGeraisHTML + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Força</td><td colspan='5' class='dataWindowValue'>"+forca+"</td>";
+
+			dadosGeraisHTML = dadosGeraisHTML + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>CNPJ</td><td class='dataWindowValue'>"+cnpj+"</td>" +
+					                      "<td class='dataWindowAttibute'>Tipo OM</td><td class='dataWindowValue'>"+tipoOm+"</td>" +
+					                      "<td class='dataWindowAttibute'>Operativa</td><td class='dataWindowValue'>"+isOperativa+"</td></tr>";
+			
+			dadosGeraisHTML = dadosGeraisHTML + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Com. Sup. Operacional</td><td colspan='5' class='dataWindowValue'>"+comImSup+"</td></tr>" +
+					                      "<tr><td class='dataWindowAttibute'>Com. Sup. Técnico</td><td colspan='5' class='dataWindowValue'>"+comImTec+"</td></tr>";
+			
 			
 		}
-		var sigla = dadosGerais.sigla;
-		var nome = dadosGerais.nome;
-		var codOM = dadosGerais.codom;
-		var forca = dadosGerais.nomeForca;
-		var comImTec = dadosGerais.nomeComandoSuperiorTecnico;
-		var tipoOm = dadosGerais.tipoOm;
-		var codUGR = dadosGerais.codigoUgr;
+		// ====================================================================================
+		// Publica
+		if ( tipoOrg === 'PUB' ) {
+			var sigla = dadosGerais.sigla;
+			var nome = dadosGerais.nome;
+			var tipo = dadosGerais.tipo;
+			var esferaAdministrativa = dadosGerais.esferaAdministrativa;
+			var codigoUgr = dadosGerais.codigoUgr;
+
+			dadosGeraisHTML = "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>Dados Gerais</td></tr>";
+			dadosGeraisHTML = dadosGeraisHTML + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Nome</td><td colspan='5' class='dataWindowValue'>"+nome+"</td></tr>" +
+					"<tr class='dataWindowLine'><td class='dataWindowAttibute'>Código OM</td><td class='dataWindowValue'>"+codOM+"</td>" +
+					                      "<td class='dataWindowAttibute'>Sigla</td><td class='dataWindowValue'>"+sigla+"</td>" +
+					                      "<td class='dataWindowAttibute'>Código UGR</td><td class='dataWindowValue'>"+codUGR+"</td></tr>";
+			
+			
+		}
+		// ====================================================================================
+
+		if ( tipoOrg === 'PRIV' ) {
+			var tipo = dadosGerais.tipo;
+			var tipocapital = dadosGerais.tipocapital;
+			var nomeFantasia = dadosGerais.nomeFantasia;
+			var sicaf = dadosGerais.sicaf;
+			var empresaInteresseDefesa = dadosGerais.empresaInteresseDefesa;
+			var comprasNet = dadosGerais.comprasNet;
+			var empresaEstrategiaDefesa = dadosGerais.empresaEstrategiaDefesa;
+			var razaoSocial = dadosGerais.razaoSocial;
+			
+			var isInteresseDefesa = 'Não';
+			if ( empresaInteresseDefesa === true ) isInteresseDefesa = 'Sim';			
+			var isEstrategiaDefesa = 'Não';
+			if ( empresaEstrategiaDefesa === true ) isEstrategiaDefesa = 'Sim';		
+			
+			
+		}
 
 		
 		
+		
+		// ====================================================================================
 		var cep = endereco.cep;
 		var logradouro = endereco.logradouro;
 		var numeroEnd = endereco.numero;
@@ -349,28 +422,13 @@ Ext.define('MCLM.view.apolo.orgmil.WindowMaker', {
 		var paginaWeb = compl.linkWeb;
 		var corMapa = compl.corMapa;
 		
-		if ( dadosGerais.omSolicitanteServicosLogisticos === true ) solServLog = 'Sim';
-		
 		if( !comImSup ) comImSup = '';
 		if( !comImTec ) comImTec = '';
 		
 		var table = "<table style='width:100%;' class='dataWindow'>";
 
-		table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>Dados Gerais</td></tr>";
-		table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Nome</td><td colspan='5' class='dataWindowValue'>"+nome+"</td></tr>" +
-				"<tr class='dataWindowLine'><td class='dataWindowAttibute'>Código OM</td><td class='dataWindowValue'>"+codOM+"</td>" +
-				                      "<td class='dataWindowAttibute'>Sigla</td><td class='dataWindowValue'>"+sigla+"</td>" +
-				                      "<td class='dataWindowAttibute'>Código UGR</td><td class='dataWindowValue'>"+codUGR+"</td></tr>";
-		table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Força</td><td colspan='5' class='dataWindowValue'>"+forca+"</td>";
-
-		table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>CNPJ</td><td class='dataWindowValue'>"+cnpj+"</td>" +
-				                      "<td class='dataWindowAttibute'>Tipo OM</td><td class='dataWindowValue'>"+tipoOm+"</td>" +
-				                      "<td class='dataWindowAttibute'>Operativa</td><td class='dataWindowValue'>"+isOperativa+"</td></tr>";
+		table = table + dadosGeraisHTML;
 		
-		table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>Com. Sup. Operacional</td><td colspan='5' class='dataWindowValue'>"+comImSup+"</td></tr>" +
-				                      "<tr><td class='dataWindowAttibute'>Com. Sup. Técnico</td><td colspan='5' class='dataWindowValue'>"+comImTec+"</td></tr>";
-				                      
-
 		
 		table = table + "<tr class='dataWindowLine'><td class='lineSeparator' colspan='6'>Endereço</td></tr>";
 		table = table + "<tr class='dataWindowLine'><td class='dataWindowAttibute'>CEP</td><td class='dataWindowValue'>"+cep+"</td>" +

@@ -241,6 +241,9 @@ Ext.define('MCLM.ClimaHelper', {
                 	
                 },
                 success: function (response, opts) {
+                	
+                	console.log( response );
+                	
                 	var respObj = Ext.decode(response.responseText);
                 	var description = respObj.alert.info.description;
                 	var coords = respObj.alert.info.area.polygon.split(' ');
@@ -279,7 +282,7 @@ Ext.define('MCLM.ClimaHelper', {
                 	}
 
                 	var polygon = new ol.geom.Polygon([polyCoords]);
-                	polygon.transform('EPSG:4326','EPSG:3857');
+                	//polygon.transform('EPSG:4326','EPSG:3857');
                 	
                     var feature = new ol.Feature({
                         geometry: polygon
