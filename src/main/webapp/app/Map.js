@@ -2225,12 +2225,26 @@ Ext.define('MCLM.Map', {
 				    				  var finalUrlList = "";
 				    				  var prefix = "";
 				    				  urlArray.forEach(function(entry) {
-				    					  finalUrlList = finalUrlList + prefix + "<a target='_BLANK' href='" + entry + "'>Link Externo</a>";
+				    					  
+				    					  console.log( entry );
+				    					  
+				    					  var urlLabel = 'Link Externo';
+				    					  if ( entry.indexOf("@") > -1) {
+				    						  var urlLabelTarget = entry.split("@");
+				    						  urlLabel = urlLabelTarget[0];
+				    						  entry = urlLabelTarget[1];
+				    					  }
+				    					  finalUrlList = finalUrlList + prefix + "<a target='_BLANK' href='" + entry + "'>"+urlLabel+"</a>";
 				    					  prefix = "</br>";
 				    				  });				    				  
 				    				  attrValue = finalUrlList ;
 				    			  } else {
-				    				  attrValue = "<a target='_BLANK' href='" + attrValue + "'>Link Externo</a>";
+			    					  if ( entry.indexOf("@") > -1) {
+			    						  var urlLabelTarget = entry.split("@");
+			    						  urlLabel = urlLabelTarget[0];
+			    						  entry = urlLabelTarget[1];
+			    					  }
+				    				  attrValue = "<a target='_BLANK' href='" + attrValue + "'>"+urlLabel+"</a>";
 				    			  }
 			    			  }
 			    			  
