@@ -16,22 +16,22 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
     	var customStyleFunction = function( feature, resolution ) {
     		var props = feature.getProperties();
     		
-    		var bearing = props.course;
-    		var shipName = props.shipName;
-    		var speed = props.speed;
-    		var imo = props.imo;
+    		var bearing = props.direcao;//props.course;
+    		//var shipName = props.shipName;
+    		//var speed = props.speed;
+    		//var imo = props.imo;
     		var resultStyles = [];
     		
         	var shipsStyle = new ol.style.Style({
     			image: new ol.style.Icon(({
     				scale : 0.6,
     				anchor: [0.5, 0.5],
-    				rotation : bearing,
+    				rotation : bearing * 0.01745329251,
     				anchorXUnits: 'fraction',
     				anchorYUnits: 'fraction',
     				opacity: 1.0,
     				src: 'img/ship.png'
-    			})),
+    			}))/*,
 			      text: new ol.style.Text({
 			          font: '10px Consolas',
 			          textAlign: 'center',
@@ -44,7 +44,7 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
 			            color: '#FFFFFF', width: 1
 			          }),
 			          text: shipName,
-			        })    			
+			        })*/    			
         	});	 
         	
         	resultStyles.push( shipsStyle );
@@ -82,13 +82,63 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
 		var me = this;
 		
 		Ext.Ajax.request({
-            url: 'aisGetShips',
+            //url: 'aisGetShips',
+            url: 'getVessel',
             failure: function (response, opts) {
             	//me.deleteShips();
             	
             },
             success: function (response, opts) {
-            	var respObj = Ext.decode(response.responseText);
+            	var result = Ext.decode(response.responseText);
+            	
+            	/* 
+            		COLOCADO PARA MINHA SIMULACAO
+            	*/
+            	var feicao = {};
+            	feicao["type"] = "FeatureCollection";
+            	var features = [];
+            	
+        		var properties = {};
+        		var feature = {};
+        		var coordinates = [];
+        		
+       			properties["latitude"] = result.latitude;
+       			properties["longitude"] = result.longitude;
+       			properties["velocidade"] = result.speed;
+       			properties["direcao"] = result.heading;        		
+       			properties["targetAzimuth"] = result.targetAzimuth;
+       			properties["rudder"] = result.rudder;
+
+       			
+       			$("#imgCompass").css('transform','rotate(' + result.heading + 'deg)');
+       			var position = [result.latitude, result.longitude];
+       			var coord = ol.coordinate.toStringHDMS( position );
+       			$("#shipPosition").text( coord );
+       			
+       			$("#shipRudder").text( "Leme: " + result.rudder + " º" );
+       			
+       			
+    			coordinates[1] = result.latitude; 
+    			coordinates[0] = result.longitude;
+       			
+        		var geometry = {};
+        		geometry["type"] = "Point";
+        		geometry["coordinates"] = coordinates;       			
+       			
+        		feature["geometry"] = geometry;
+        		feature["type"] = "Feature";
+        		feature["properties"] = properties;            			
+    			
+    			features.push( feature );       			
+       			
+    			feicao["features"] = features;
+    			
+            	var respObj = feicao;
+            	// =========================================
+            	
+            	//var respObj = result;
+            	
+            	console.log( respObj );
             	
 				var features = new ol.format.GeoJSON().readFeatures( respObj , {
 					//featureProjection: 'EPSG:3857'

@@ -736,7 +736,7 @@ Ext.define('MCLM.Map', {
 
 			MCLM.Map.shipsHelper = Ext.create('MCLM.view.ships.ShipsHelper');
 			MCLM.Map.shipsHelper.init();
-			setInterval( MCLM.Map.updateMaritmTraffic , 300000); // 5 minutos			
+			setInterval( MCLM.Map.updateMaritmTraffic , 2000); // 300000 = 5 minutos			
 			
 			MCLM.Map.onibusHelper = Ext.create('MCLM.view.onibus.OnibusHelper');
 			MCLM.Map.onibusHelper.init();			
@@ -1346,8 +1346,21 @@ Ext.define('MCLM.Map', {
 			MCLM.Map.shipTrafficEnabled = !MCLM.Map.shipTrafficEnabled ;
 			if ( !MCLM.Map.shipTrafficEnabled ) {
 				MCLM.Map.shipsHelper.deleteShips();
+				
+				var hud = Ext.getCmp('shipsHUDWindow');
+				if ( hud ) {
+					hud.close();
+				}
+				
 			} else {
 				MCLM.Map.shipsHelper.getShips();
+				
+				var hud = Ext.getCmp('shipsHUDWindow');
+				if ( !hud ) {
+					hud = Ext.create('MCLM.view.ships.ShipsHUDWindow');
+				}
+				hud.show();
+				
 			}
 		},	
 		// --------------------------------------------------------------------------------------------

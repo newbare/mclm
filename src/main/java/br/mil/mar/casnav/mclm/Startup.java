@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 
 import br.mil.mar.casnav.mclm.misc.Configurator;
 import br.mil.mar.casnav.mclm.misc.PathFinder;
+import br.mil.mar.casnav.mclm.misc.SimulatorController;
 import br.mil.mar.casnav.mclm.persistence.entity.Config;
 import br.mil.mar.casnav.mclm.persistence.entity.NodeData;
 import br.mil.mar.casnav.mclm.persistence.exceptions.NotFoundException;
@@ -32,6 +33,9 @@ public class Startup implements ServletContextListener {
 
     	try {
        
+    		
+    		SimulatorController.init();
+    		
     		String imagesPath = PathFinder.getInstance().getPath() + "/tempmaps/";
     		FileUtils.deleteDirectory( new File(imagesPath) );
     		
