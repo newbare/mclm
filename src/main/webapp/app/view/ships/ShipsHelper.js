@@ -8,15 +8,54 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
     vectorSource : null,
     activeShipsLayer : null,
 
+    currentRudder : 0,
+    
+    toRight : function() {
+		if( this.currentRudder < 5 ) this.currentRudder++;
+		this.commandRudder();
+    },
+    
+    toLeft : function() {
+		if( this.currentRudder > -5 ) this.currentRudder--;
+		this.commandRudder();
+    },
+    
+    commandRudder : function() {
+    	
+    	var angle = this.currentRudder * 2;
+    	
+		var rdrDegVal = 90 + angle;
+		var rdrDegree = "rotate(" + rdrDegVal + "deg)";
+		$("#theRudder").css("transform",rdrDegree);
+   			
+    	
+    	
+		Ext.Ajax.request({
+            url: 'commandVessel',
+			params: {
+				'value': this.currentRudder,
+				'command':'TRN'
+			},       
+            failure: function (response, opts) {
+            	
+            	
+            },
+            success: function (response, opts) {
+            	
+            }
+		});
+    },
+    
     init: function () {
+
     	
     	this.vectorSource = new ol.source.Vector();
     	var me = this;
     	
     	var customStyleFunction = function( feature, resolution ) {
     		var props = feature.getProperties();
-    		
     		var bearing = props.direcao;//props.course;
+    		
     		//var shipName = props.shipName;
     		//var speed = props.speed;
     		//var imo = props.imo;
@@ -106,18 +145,20 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
        			properties["longitude"] = result.longitude;
        			properties["velocidade"] = result.speed;
        			properties["direcao"] = result.heading;        		
-       			properties["targetAzimuth"] = result.targetAzimuth;
        			properties["rudder"] = result.rudder;
 
+       			var degree = "rotate(" + result.heading + "deg)";
+       			$("#imgCompass").css("transform",degree);
        			
-       			$("#imgCompass").css('transform','rotate(' + result.heading + 'deg)');
+       			
        			var position = [result.latitude, result.longitude];
        			var coord = ol.coordinate.toStringHDMS( position );
        			$("#shipPosition").text( coord );
        			
-       			$("#shipRudder").text( "Leme: " + result.rudder + " º" );
-       			
-       			
+       			$("#shipRudder").text( "Leme: " + result.rudder + "º" );
+       			$("#shipHeading").text( "Rumo: " + result.heading + "º" );
+       			$("#shipSpeed").text( "Veloc.: " + result.speed + "kt" );
+
     			coordinates[1] = result.latitude; 
     			coordinates[0] = result.longitude;
        			
@@ -138,7 +179,7 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
             	
             	//var respObj = result;
             	
-            	console.log( respObj );
+            	//console.log( respObj );
             	
 				var features = new ol.format.GeoJSON().readFeatures( respObj , {
 					//featureProjection: 'EPSG:3857'

@@ -1358,8 +1358,22 @@ Ext.define('MCLM.Map', {
 				var hud = Ext.getCmp('shipsHUDWindow');
 				if ( !hud ) {
 					hud = Ext.create('MCLM.view.ships.ShipsHUDWindow');
+
+			    	$("#rudderToRight").click(function(){
+			    		MCLM.Map.shipsHelper.toRight();
+			    	});
+			    	
+			    	$("#rudderToLeft").click(function(){
+			    		MCLM.Map.shipsHelper.toLeft();
+			    	});
+			    	
+					var rdrDegree = "rotate(90deg)";
+					$("#theRudder").css("transform",rdrDegree);
+					
 				}
 				hud.show();
+
+			
 				
 			}
 		},	

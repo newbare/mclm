@@ -28,19 +28,22 @@ public class GetVesselAction {
 			double heading = SimulatorController.vessel.GetHeading();
 			double latitude = SimulatorController.vessel.GetLatitude();
 			double longitude = SimulatorController.vessel.GetLongitude();
-			int rudder = SimulatorController.pilot.getRudderPosition();
-			double targetAzimuth = SimulatorController.pilot.getTargetAzimuth(); 
-			double currentAzimuth = SimulatorController.pilot.getCurrentAzimuth(); 
+			
+			int rudder = SimulatorController.vessel.getRudderPosition();
+			//double targetAzimuth = SimulatorController.pilot.getTargetAzimuth(); 
+			//double currentAzimuth = SimulatorController.pilot.getCurrentAzimuth(); 
+
 			double speed = SimulatorController.vessel.GetBoatSpeed();
 			double apparentWindAngle = SimulatorController.vessel.GetApparentWindAngle();
 			double trueWindAngle = SimulatorController.vessel.GetTrueWindAngle();
 			double apparentWindSpeed = SimulatorController.vessel.GetApparentWindSpeed();
 			double trueWindSpeed = SimulatorController.vessel.GetTrueWindSpeed();
 			
+			
+			
 			String wind = "{\"trueAngle\":" + trueWindAngle + ",\"trueSpeed\":" + trueWindSpeed + ",\"apparentSpeed\":" + apparentWindSpeed + ",\"apparentAngle\":" + apparentWindAngle + "}";
 			
-			String resposta = "{\"wind\":" + wind + ",\"speed\":" + speed + ",\"heading\":" + heading + ",\"latitude\":"+latitude+",\"longitude\":"+longitude+",\"rudder\":" + rudder +
-					",\"targetAzimuth\":"+targetAzimuth+",\"currentAzimuth\":"+currentAzimuth+"}";
+			String resposta = "{\"wind\":" + wind + ",\"speed\":" + speed + ",\"heading\":" + heading + ",\"latitude\":"+latitude+",\"longitude\":"+longitude+",\"rudder\":" + rudder +	"}";
 			
 			HttpServletResponse response = (HttpServletResponse)ActionContext.getContext().get(StrutsStatics.HTTP_RESPONSE);
 			response.setCharacterEncoding("UTF-8"); 

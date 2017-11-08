@@ -1,11 +1,8 @@
 package br.mil.mar.casnav.mclm.misc;
 
-import ship.AutoPilot;
 import ship.Ships;
 import ship.Vessel;
-import ship.observers.BasicPilotObserver;
 import ship.observers.ObserverFactory;
-import ship.observers.PilotObserver;
 
 public class SimulatorController {
 	public static double interval = 2.0;
@@ -18,17 +15,17 @@ public class SimulatorController {
 	public static int throttleposition = 0;
 	
 	public static Vessel vessel;
-	public static AutoPilot pilot;
+	//public static AutoPilot pilot;
 	
 	public static void init() {
 		vessel = new Vessel( ObserverFactory.getObserver() , interval, Ships.FRAGATA_NITEROI, boatspeed, heading, 
 				latitude, longitude, altitude, rudderposition, throttleposition, 2.0);
 		vessel.start();
 
-		pilot = new AutoPilot( vessel, vessel.GetHeading() );
-		PilotObserver pilotObs = new BasicPilotObserver();
-		pilot.setObserver( pilotObs );
-		pilot.start();
+		//pilot = new AutoPilot( vessel, vessel.GetHeading() );
+		//PilotObserver pilotObs = new BasicPilotObserver();
+		//pilot.setObserver( pilotObs );
+		//pilot.start();
 		
 	}
 	

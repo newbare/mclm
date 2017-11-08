@@ -28,8 +28,8 @@ public class CommandVesselAction {
 
 			// Rumo
 			if( command.equals("TRN") ) {
-				double azimuth = Double.valueOf( value );
-				SimulatorController.pilot.setCourseTo( azimuth );
+				int rudder = Integer.valueOf( value );
+				SimulatorController.vessel.SetRudderPosition( rudder );
 			}
 			
 			// Maquinas
