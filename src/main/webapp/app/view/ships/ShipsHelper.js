@@ -7,16 +7,17 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
     vectorLayerMarker: null,
     vectorSource : null,
     activeShipsLayer : null,
+    rudderLimit : 5,
 
     currentRudder : 0,
     
     toRight : function() {
-		if( this.currentRudder < 5 ) this.currentRudder++;
+		if( this.currentRudder < this.rudderLimit ) this.currentRudder++;
 		this.commandRudder();
     },
     
     toLeft : function() {
-		if( this.currentRudder > -5 ) this.currentRudder--;
+		if( this.currentRudder > -this.rudderLimit ) this.currentRudder--;
 		this.commandRudder();
     },
     
@@ -28,8 +29,6 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
 		var rdrDegree = "rotate(" + rdrDegVal + "deg)";
 		$("#theRudder").css("transform",rdrDegree);
    			
-    	
-    	
 		Ext.Ajax.request({
             url: 'commandVessel',
 			params: {
@@ -37,17 +36,17 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
 				'command':'TRN'
 			},       
             failure: function (response, opts) {
-            	
-            	
+            	//
             },
             success: function (response, opts) {
-            	
+            	//
             }
 		});
     },
     
     init: function () {
 
+    	startWebSocket( this );
     	
     	this.vectorSource = new ol.source.Vector();
     	var me = this;
@@ -105,7 +104,16 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
     	this.activeShipsLayer.set('ready', true);  
 		
 		MCLM.Map.removeLayerByName('shipsLayer');
-		MCLM.Map.map.addLayer( this.activeShipsLayer );			
+		MCLM.Map.map.addLayer( this.activeShipsLayer );		
+		
+		var data = {};
+		data.description = 'Navegação';
+		data.institute = 'www.cmabreu.com.br';
+		data.layerName = 'shipsLayer';
+		data.layerAlias = 'shipsLayer';
+		data.serialId = 'shipsLayer';
+		data.layerType = 'External';
+		MCLM.Map.addToLayerStack( data );
 
     },
 
@@ -117,6 +125,78 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
     	}
     },	
 	
+    updateLayer : function( response ) {
+    	var me = this;
+    	var result = Ext.decode(response);
+    	
+    	var feicao = {};
+    	feicao["type"] = "FeatureCollection";
+    	var features = [];
+    	
+		var properties = {};
+		var feature = {};
+		var coordinates = [];
+		
+			properties["latitude"] = result.latitude;
+			properties["longitude"] = result.longitude;
+			properties["velocidade"] = result.speed;
+			properties["direcao"] = result.heading;        		
+			properties["rudder"] = result.rudder;
+
+			var degree = "rotate(" + result.heading + "deg)";
+			$("#imgCompass").css("transform",degree);
+			
+			var rudderAnglePos = result.rudder * 4;
+			var rudderAngle = "rotate(" + -rudderAnglePos + "deg)";
+			$("#rudderPointer").css("transform",rudderAngle);
+			
+			
+			var position = [result.longitude, result.latitude];
+			var coord = ol.coordinate.toStringHDMS( position );
+			$("#shipPosition").text( coord );
+			
+			var rr = "BE";
+			var rv = result.rudder;
+			if ( result.rudder == 0 ) {
+				rr = "CE";
+			}
+			if ( result.rudder < 0 ) {
+   			var rr = "BB";
+   			var rv = -result.rudder;
+			} 
+			
+			$("#shipRudder").text( rv + "º " + rr );
+			$("#shipHeading").text( result.heading + "º" );
+			$("#shipSpeed").text( result.speed + "kt" );
+
+		coordinates[1] = result.latitude; 
+		coordinates[0] = result.longitude;
+			
+		var geometry = {};
+		geometry["type"] = "Point";
+		geometry["coordinates"] = coordinates;       			
+			
+		feature["geometry"] = geometry;
+		feature["type"] = "Feature";
+		feature["properties"] = properties;            			
+		
+		features.push( feature );       			
+			
+		feicao["features"] = features;
+
+    	
+		var features = new ol.format.GeoJSON().readFeatures( feicao , {
+			//featureProjection: 'EPSG:3857'
+		});
+		
+		me.deleteShips();
+		
+		for (var i = 0; i < features.length; i++) {
+			me.vectorSource.addFeature( features[i] );
+		}
+		
+    },
+    
 	getShips : function() {
 		var me = this;
 		
@@ -128,70 +208,7 @@ Ext.define("MCLM.view.ships.ShipsHelper", {
             	
             },
             success: function (response, opts) {
-            	var result = Ext.decode(response.responseText);
-            	
-            	/* 
-            		COLOCADO PARA MINHA SIMULACAO
-            	*/
-            	var feicao = {};
-            	feicao["type"] = "FeatureCollection";
-            	var features = [];
-            	
-        		var properties = {};
-        		var feature = {};
-        		var coordinates = [];
-        		
-       			properties["latitude"] = result.latitude;
-       			properties["longitude"] = result.longitude;
-       			properties["velocidade"] = result.speed;
-       			properties["direcao"] = result.heading;        		
-       			properties["rudder"] = result.rudder;
-
-       			var degree = "rotate(" + result.heading + "deg)";
-       			$("#imgCompass").css("transform",degree);
-       			
-       			
-       			var position = [result.latitude, result.longitude];
-       			var coord = ol.coordinate.toStringHDMS( position );
-       			$("#shipPosition").text( coord );
-       			
-       			$("#shipRudder").text( "Leme: " + result.rudder + "º" );
-       			$("#shipHeading").text( "Rumo: " + result.heading + "º" );
-       			$("#shipSpeed").text( "Veloc.: " + result.speed + "kt" );
-
-    			coordinates[1] = result.latitude; 
-    			coordinates[0] = result.longitude;
-       			
-        		var geometry = {};
-        		geometry["type"] = "Point";
-        		geometry["coordinates"] = coordinates;       			
-       			
-        		feature["geometry"] = geometry;
-        		feature["type"] = "Feature";
-        		feature["properties"] = properties;            			
-    			
-    			features.push( feature );       			
-       			
-    			feicao["features"] = features;
-    			
-            	var respObj = feicao;
-            	// =========================================
-            	
-            	//var respObj = result;
-            	
-            	//console.log( respObj );
-            	
-				var features = new ol.format.GeoJSON().readFeatures( respObj , {
-					//featureProjection: 'EPSG:3857'
-				});
-				
-				me.deleteShips();
-				
-				for (var i = 0; i < features.length; i++) {
-					me.vectorSource.addFeature( features[i] );
-				}
-				
-		    	   
+            	me.updateLayer( response.responseText );
             }
         });
 		

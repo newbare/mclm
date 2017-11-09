@@ -596,6 +596,7 @@ Ext.define('MCLM.Map', {
 				MCLM.Map.shipsHelper.getShips();
 			}
 		},	
+		
 		toDefault : function() {
 			var zoom = MCLM.Map.mapZoom;
 			MCLM.Map.panTo( MCLM.Map.arrayMapCenter[0] + ',' + MCLM.Map.arrayMapCenter[1], zoom);
@@ -736,7 +737,7 @@ Ext.define('MCLM.Map', {
 
 			MCLM.Map.shipsHelper = Ext.create('MCLM.view.ships.ShipsHelper');
 			MCLM.Map.shipsHelper.init();
-			setInterval( MCLM.Map.updateMaritmTraffic , 2000); // 300000 = 5 minutos			
+			//setInterval( MCLM.Map.updateMaritmTraffic , 2000); // 300000 = 5 minutos			
 			
 			MCLM.Map.onibusHelper = Ext.create('MCLM.view.onibus.OnibusHelper');
 			MCLM.Map.onibusHelper.init();			

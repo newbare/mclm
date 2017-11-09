@@ -6,7 +6,7 @@
 <struts>
 	<constant name="struts.devMode" value="false" />
 	<constant name="struts.multipart.maxSize" value="734003200" />
-	
+	<constant name="struts.action.excludePattern" value="/websocket"/>	
 
 	<package name="default" extends="struts-default">
 	
