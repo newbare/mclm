@@ -18,7 +18,7 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    enableToggle: true,
         id : 'tdviewID',
         xtype: 'button',
-    },{
+    }/*,{
 	    iconCls: 'ship-icon',
 	    enableToggle: true,
 	    width: MCLM.Globals.btnWidth,
@@ -26,7 +26,7 @@ Ext.define('MCLM.view.tools.RestTools', {
 	    handler: 'updateMaritmTraffic',
         id : 'maritmTrID',
         xtype: 'button',
-    },{
+    }*/,{
 	    iconCls: 'ship-icon',
 	    width: MCLM.Globals.btnWidth,
 	    height: MCLM.Globals.btnHeight,
