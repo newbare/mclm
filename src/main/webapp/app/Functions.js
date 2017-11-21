@@ -758,7 +758,7 @@ Ext.define('MCLM.Functions', {
 					},{
 						target: 'id118',
 						title: 'Verificar Conectividade',
-						text: 'Verifica se o Sistema possui acesso externo à Ineternet (não o usuário).',
+						text: 'Verifica se o Sistema possui acesso externo à Internet (não o usuário).',
 						width: 150,
 						dismissDelay: 5000 
 					}, {
